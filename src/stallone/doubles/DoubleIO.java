@@ -139,20 +139,20 @@ public class DoubleIO
     {
         if (arr.order() <= 1)
             return(toString(arr, ", "));
-        if (arr.order() == 2)
+        else if (arr.order() == 2)
             return (toString(arr, ", ", "\n"));
-
-        throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
+        else 
+            throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
     }
     
     public static void print(IDoubleArray arr, Appendable out)
     {
         if (arr.order() <= 1)
             print(arr, ", ", out);
-        if (arr.order() == 2)
+        else if (arr.order() == 2)
             print(arr, ", ", "\n", out);
-
-        throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
+        else
+            throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
     }
 
     public static void print(IDoubleArray arr)
