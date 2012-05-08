@@ -6,9 +6,16 @@ package stallone.api.hmm;
 
 import java.util.List;
 import stallone.api.algebra.Algebra;
+import stallone.api.cluster.Clustering;
+import stallone.api.cluster.IClustering;
+import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.function.IParametricFunction;
+import stallone.api.ints.IIntArray;
+import stallone.api.stat.IParameterEstimator;
+import stallone.api.stat.Statistics;
 import stallone.hmm.EM;
 import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
@@ -19,25 +26,64 @@ import stallone.stat.GaussianUnivariate;
  */
 public class HMMFactory
 {
-    private IHMMParameters initialParametersGaussian1D(List<IDataSequence> _obs)
+    private IDataSequence concat(List<IDataSequence> _obs, int maxsize)
     {
-        return null;
+        IDataSequence res = null;
+        int size = DataSequence.util.size(_obs);
+        int interleaf = (int)Math.max(1, size / maxsize);
+        return DataSequence.util.concat(_obs, interleaf);
+    }
+    
+    private IDoubleArray[] initialParametersGaussian1D(List<IDataSequence> _obs, int nstates)
+    {
+        // cluster data
+        IDataSequence obscat = concat(_obs, nstates*1000);
+        
+        System.out.println("Data concatenated to size "+obscat.size());
+
+        System.out.println("Clustering...");
+        
+        IClustering cluster = Clustering.util.densityBased(obscat, nstates);
+
+        System.out.println("done.");
+        
+        IIntArray ci = cluster.getClusterIndexes();
+        IDoubleArray[] res = new IDoubleArray[nstates];
+        for (int state=0; state<nstates; state++)
+        {
+            IParameterEstimator estimator = Statistics.create.parameterEstimatorGaussian1D();
+            res[state] = estimator.estimate(obscat, Clustering.util.membershipToState(cluster, state));
+        }
+        return res;
     }
 
-    public IHMMParameters initialParametersGaussian(List<IDataSequence> _obs)
+    public IDoubleArray[] initialParametersGaussian(List<IDataSequence> _obs, int nstates)
     {
         int dim = _obs.get(0).dimension();
-        if (dim <= 1)
+        if (dim < 1)
             throw(new IllegalArgumentException("Data dimension is <= 0 but must be 1 at least"));
         if (dim == 1)
-            return initialParametersGaussian1D(_obs);
+            return initialParametersGaussian1D(_obs, nstates);
         else
         {
             throw new java.lang.UnsupportedOperationException("N-dimensional Gaussian HMM not yet implemented");
         }
     }
+
+    public IHMMOptimizer createHmm(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters)
+    {
+        // check if the data is event-based
+        boolean eventBased = true;
+        
+        // save memory?
+        boolean saveMemory = false;
+        
+        EM em = new EM(_obs, eventBased, initialParameters, outputModel, outputEstimator, saveMemory);
+        
+        return em;
+    }    
     
-    public EM createGaussianHmm(List<IDataSequence> _obs, IHMMParameters initialParameters)
+    public IHMMOptimizer createGaussianHmm(List<IDataSequence> _obs, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = true;
@@ -52,25 +98,17 @@ public class HMMFactory
         return em;
     }    
     
-    public EM createGaussianHmm(List<IDataSequence> _obs, int nstates)
+    public IHMMOptimizer createGaussianHmm(List<IDataSequence> _obs, int nstates)
     {
         // check if the data is event-based
         boolean eventBased = true;
         
-        // generate initial paramters
-
         // initial T
         IDoubleArray T = Algebra.util.add(Doubles.create.diag(nstates, 0.9), Doubles.create.matrix(nstates, nstates, 0.1/(double)nstates));
         // initial p0
         IDoubleArray p0 = Doubles.create.array(nstates, 1.0/(double)nstates);
         // initial output parameters
-        IDoubleArray[] parOut = new IDoubleArray[nstates];
-        for (int i=0; i<parOut.length; i++)
-        {
-            //parOut[i] = Doubles.create.arrayFrom((2.0*Math.random())-1.0, 1.0);
-            parOut[i] = Doubles.create.arrayFrom(i*2 -1, 1.0);
-            
-        }
+        IDoubleArray[] parOut = initialParametersGaussian(_obs, nstates);
         // initial parameters
         IHMMParameters initialParameters = new HMMParameters(T, p0, parOut, false, true);
 

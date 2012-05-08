@@ -30,8 +30,8 @@ import stallone.doubles.EuclideanDistance;
  */
 public class DensityBasedClusteringSimple extends AbstractRegularClustering
 {
-    private IDataSequence datasequence;
-    private INeighborSearch neighborSearch;
+    protected IDataSequence datasequence;
+    protected INeighborSearch neighborSearch = new NeighborSearchTrivial(null,new EuclideanDistance());
     
     // working data
     private int[] nneighbors;
@@ -40,15 +40,16 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     private boolean[] done;
     
     // parameters
-    private double eps; // distance
-    private int minpts; // minpoints
+    protected double eps; // distance
+    protected int minpts; // minpoints
+
+        protected DensityBasedClusteringSimple()
+        {}
 
     public DensityBasedClusteringSimple(double _epsilon, int _minpoints)
     {
         this.eps = _epsilon;
         this.minpts = _minpoints;
-        
-        neighborSearch = new NeighborSearchTrivial(null,new EuclideanDistance());
     }
 
     @Override
@@ -59,13 +60,10 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         neighborSearch.setData(data);
 
         this.nneighbors = new int[data.size()];
-        java.util.Arrays.fill(this.nneighbors, -1);
 
         this.cluster = new int[data.size()];
-        java.util.Arrays.fill(this.nneighbors, -1);
         
         done = new boolean[data.size()];
-        java.util.Arrays.fill(done, false);
     }
 
     @Override
@@ -84,8 +82,11 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     @Override
     public void perform()
     {
-        // initialize clusters:
-        super.clusterCenters = DataSequence.create.createDatalist(datasize);
+        // initialize all:
+        super.clusterCenters = DataSequence.create.createDatalist();
+        java.util.Arrays.fill(this.nneighbors, -1);
+        java.util.Arrays.fill(this.nneighbors, -1);
+        java.util.Arrays.fill(done, false);
 
         // compute all densities (we can integrate this into the algorithm below, in order to avoid unnecessary doubling)
         for (int i=0; i<nneighbors.length; i++)
@@ -135,7 +136,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         }
         
         nClusters = currentCluster+1;
-        
+        super.resultsAvailable = true;
     }
 
     
@@ -147,14 +148,15 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         return Ints.create.arrayFrom(cluster);
     }
     
-    public int getNClusters()
+    @Override
+    public int getNumberOfClusters()
     {
         return nClusters;
     }
     
     public static void main(String[] args)
     {
-        IDataList data = DataSequence.create.createDatalist(1);
+        IDataList data = DataSequence.create.createDatalist();
         data.add(Doubles.create.arrayFrom(-1.4));
         data.add(Doubles.create.arrayFrom(-1.3));
         data.add(Doubles.create.arrayFrom(-1.2));
@@ -179,7 +181,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
                 clustering.setClusterInput(data);
                 clustering.setMetric(new EuclideanDistance());
                 clustering.perform();
-                System.out.println(d+"\t"+clustering.getNClusters());
+                System.out.println(d+"\t"+clustering.getNumberOfClusters());
         }
 
     }

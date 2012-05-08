@@ -12,6 +12,7 @@ import stallone.api.doubles.IMetric;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.cluster.*;
 import stallone.api.doubles.IDoubleArray;
+import stallone.cluster.*;
 
 import stallone.doubles.MinimalRMSDistance3D;
 
@@ -131,4 +132,30 @@ public class ClusterFactory
         return (createRegularSpatial(data, new EuclideanDistance(), dmin));
     }
 
+    public IClustering createDensityBased(IDataSequence data, IMetric metric, double dmin, int minpts)
+    {
+        DensityBasedClusteringSimple clustering = new DensityBasedClusteringSimple(dmin, minpts);
+        clustering.setMetric(metric);
+        clustering.setClusterInput(data);
+        return (clustering);
+    }
+    
+    public IClustering createDensityBased(IDataSequence data, double dmin, int minpts)
+    {
+        return createDensityBased(data, new EuclideanDistance(), dmin, minpts);
+    }    
+    
+    public IClustering createDensityBased(IDataSequence data, IMetric metric, int N)
+    {
+        DensityBasedClusteringSimpleN clustering = new DensityBasedClusteringSimpleN(N);
+        clustering.setMetric(metric);
+        clustering.setClusterInput(data);
+        return (clustering);
+    }
+    
+    public IClustering createDensityBased(IDataSequence data, int N)
+    {
+        return createDensityBased(data, new EuclideanDistance(), N);
+    }    
+    
 }

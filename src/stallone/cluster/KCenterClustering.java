@@ -24,7 +24,7 @@ import stallone.doubles.fastutils.IntArrayList;
 public class KCenterClustering implements IClustering, IDiscretization
 {
 
-    private IDataList clusters = DataSequence.create.createDatalist(0);
+    private IDataList clusters = DataSequence.create.createDatalist();
     /**
      * data points which are going to be clustered.
      */

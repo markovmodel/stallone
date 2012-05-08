@@ -22,7 +22,7 @@ public class GaussianTest
     {
         Random rand = new Random();
         // Gaussian fit test
-        IDataList seq = DataSequence.create.createDatalist(1);
+        IDataList seq = DataSequence.create.createDatalist();
         for (int i=0; i<10000; i++)
         {
             IDoubleArray x = Doubles.create.arrayFrom(rand.nextGaussian());

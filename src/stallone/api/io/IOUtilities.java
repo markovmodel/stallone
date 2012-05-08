@@ -2,6 +2,8 @@ package stallone.api.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import java.lang.String;
 import java.util.ArrayList;
@@ -91,6 +93,11 @@ public class IOUtilities
         return foundFiles;
     }
 
+    public List<String> listFileNames(String wildcardFilename)
+    {
+        return toStrings(listFiles(wildcardFilename));
+    }
+    
     /**
      * Determine file extension.
      *
@@ -150,5 +157,19 @@ public class IOUtilities
         return(res);
     }
     
+    public void writeString(String fileName, String content)
+    {
+	try
+	    {
+		FileOutputStream out = new FileOutputStream(fileName);
+		out.write(content.getBytes());
+		out.close();
+	    }
+	catch(IOException e)
+	    {
+		e.printStackTrace();
+		System.exit(-1);
+	    }
+    }
     
 }

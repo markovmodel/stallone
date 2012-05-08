@@ -129,9 +129,5 @@ public abstract class AbstractRegularClustering implements IClustering
         return(voronoiPartitioning.assignFuzzy(data));
     }
     
-    public void close()
-    {
-        // nothing to do
-    }
     
 }

@@ -83,7 +83,7 @@ public class KMeansClustering implements IClustering
 
     private void initialize()
     {
-        this.clusterCenters = DataSequence.create.createDatalist(0);
+        this.clusterCenters = DataSequence.create.createDatalist();
         this.assignments = new IntArrayList();
 
         if (initMode == INIT_RANDOM)

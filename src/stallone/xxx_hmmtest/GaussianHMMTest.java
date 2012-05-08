@@ -13,12 +13,7 @@ import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.hmm.HMM;
-import stallone.api.hmm.IHMMHiddenVariables;
-import stallone.api.hmm.IHMMParameters;
-import stallone.api.hmm.ParameterEstimationException;
-import stallone.hmm.EM;
-import stallone.stat.GaussianUnivariate;
+import stallone.api.hmm.*;
 
 /**
  *
@@ -31,7 +26,7 @@ public class GaussianHMMTest
         
         // prepare observation
         Random rand = new Random();
-        IDataList seq = DataSequence.create.createDatalist(1);
+        IDataList seq = DataSequence.create.createDatalist();
         for (int i=0; i<10000; i++)
         {
             IDoubleArray x;
@@ -41,11 +36,15 @@ public class GaussianHMMTest
                  x = Doubles.create.arrayFrom(rand.nextGaussian()+1);
             seq.add(x);
         }
-
+        
         List<IDataSequence> obs = new ArrayList();
         obs.add(seq);
 
-        EM em = HMM.create.createGaussianHmm(obs, 2);
+        IHMMOptimizer em = HMM.create.createGaussianHmm(obs, 2);
+        
+        // print initial parameters
+        System.out.println("Initial Parameters: "+em.getParameters());
+        
         double[] L = em.run(100, 1);
         
         DoublesPrimitive.util.print(L,"\n");

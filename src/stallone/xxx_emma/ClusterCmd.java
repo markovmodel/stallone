@@ -270,7 +270,7 @@ public class ClusterCmd //extends AbstractCmd
     private IDataSequence load(Iterable<IDoubleArray> trajectoryFrames, int dimension)
     {
         System.out.println("Copying trajectories to memory.");
-        IDataList res = DataSequence.create.createDatalist(dimension);
+        IDataList res = DataSequence.create.createDatalist();
         for (IDoubleArray v : trajectoryFrames)
         {
             res.add(v.copy());
@@ -314,7 +314,7 @@ public class ClusterCmd //extends AbstractCmd
         else if (v_algorithm.equals("regularspatial"))
         {
             System.out.println("Using Cluster method: regular spatial.");
-            clustering = Clustering.util.createRegularSpatial(data, size, metric, v_dmin);
+            clustering = Clustering.util.regularSpatial(data, size, metric, v_dmin);
             res = clustering.getClusterCenters();
         }
         else if (v_algorithm.equals("regulartemporal"))

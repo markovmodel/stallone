@@ -207,7 +207,7 @@ public class AsciiDataSequenceReader
     @Override
     public IDataSequence load()
     {
-        IDataList res = DataSequence.create.createDatalist(dimension());
+        IDataList res = DataSequence.create.createDatalist();
         for (Iterator<IDoubleArray> it = iterator(); it.hasNext();)
         {
             res.add(it.next());

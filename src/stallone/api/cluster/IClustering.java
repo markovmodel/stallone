@@ -83,6 +83,8 @@ public interface IClustering extends IDiscretization
      */
     //public IDoubleArray getMembership(int i);
 
+    //public IDoubleArray getMembershipsBystate(int state);
+    
     /**
      * Obtain an interface which can be used to query yet unassigned datapoints. (thus not within datapoints passed via
      * setClusterInput).

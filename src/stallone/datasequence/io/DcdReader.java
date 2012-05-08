@@ -577,7 +577,7 @@ public class DcdReader implements IDataReader
     @Override
     public IDataSequence load()
     {
-        IDataList res = DataSequence.create.createDatalist(this.dimension());
+        IDataList res = DataSequence.create.createDatalist();
         for (int i=0; i<this.size(); i++)
             res.add(get(i).copy());
         return res;

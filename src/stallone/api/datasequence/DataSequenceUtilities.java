@@ -10,11 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
-import stallone.datasequence.DataList;
-import stallone.datasequence.DataSequenceArray;
+import stallone.datasequence.*;
 import stallone.doubles.PrimitiveDoubleTable;
 
 /**
@@ -169,4 +169,88 @@ public class DataSequenceUtilities
         writer.addAll(data);
         writer.close();
     }
+
+    public int size(List<IDataSequence> data)
+    {
+        int size = 0;
+        for (int i=0; i<data.size(); i++)
+            size += data.size();
+        return size;
+    }
+    
+    public IDataSequence concat(List<IDataSequence> data)
+    {
+        return new DataSequenceConcatenated(data);
+    }
+    
+    public IDataSequence concat(List<IDataSequence> data, int interleaf)
+    {
+        return new DataSequenceConcatenatedInterleaved(data, interleaf);
+    }
+
+    public IDoubleArray mean(Iterable<IDoubleArray> data)
+    {
+        IDoubleArray res = null;
+        int N = 0;
+        
+        for (IDoubleArray x : data)
+        {
+            if (res == null)
+            {
+                res = x.copy();
+            }
+            else
+            {
+                Algebra.util.addTo(res, x);
+            }
+            
+            N++;
+        }
+        
+        Algebra.util.scale(1.0/(double)N, res);
+        return res;
+    }
+    
+    /**
+     * Gyration radius of the data
+     * @param data
+     * @return 
+     */
+    public double rgyr(Iterable<IDoubleArray> data)
+    {
+        IDoubleArray mean = mean(data);
+        
+        double sum = 0;
+        int N = 0;
+        
+        for (IDoubleArray x : data)
+        {
+            double d = Algebra.util.norm(Algebra.util.subtract(x, mean));
+            sum += d*d;
+            N++;
+        }
+        
+        return (1.0 / ((double)N))*Math.sqrt(sum);
+    }
+
+    /**
+     * Maximum radius of the data, i.e. maximum distance from the center
+     * @param data
+     * @return 
+     */
+    public double rmax(Iterable<IDoubleArray> data)
+    {
+        IDoubleArray mean = mean(data);
+
+        double max = 0;
+        
+        for (IDoubleArray x : data)
+        {
+            double d = Algebra.util.norm(Algebra.util.subtract(x, mean));
+            if (d > max)
+                max = d;
+        }
+
+        return max;
+    }    
 }

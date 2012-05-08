@@ -48,7 +48,7 @@ public class DataSequenceFactory
         return new DataSequenceLoader_SingleDataIterable(loader,stepsize);
     }
     
-    public IDataList createDatalist(int dimension)
+    public IDataList createDatalist()
     {
         DataList ds = new DataList();
         return(ds);

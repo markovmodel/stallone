@@ -4,7 +4,7 @@
  */
 package stallone.api.stat;
 
-import stallone.stat.RunningAverage;
+import stallone.stat.*;
 
 /**
  *
@@ -16,4 +16,9 @@ public class StatisticsFactory
     {
         return(new RunningAverage());
     }    
+    
+    public IParameterEstimator parameterEstimatorGaussian1D()
+    {
+        return new GaussianUnivariate(0,0);
+    }
 }

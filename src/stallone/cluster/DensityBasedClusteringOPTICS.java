@@ -89,7 +89,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     public void perform()
     {
         // initialize clusters:
-        super.clusterCenters = DataSequence.create.createDatalist(datasize);
+        super.clusterCenters = DataSequence.create.createDatalist();
 
         optics();
         
@@ -270,7 +270,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     
     public static void main(String[] args)
     {
-        IDataList data = DataSequence.create.createDatalist(1);
+        IDataList data = DataSequence.create.createDatalist();
         data.add(Doubles.create.arrayFrom(-1.4));
         data.add(Doubles.create.arrayFrom(-1));
         data.add(Doubles.create.arrayFrom(1));

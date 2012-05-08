@@ -8,6 +8,8 @@ import java.util.List;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.function.IParametricFunction;
+import stallone.api.hmm.IHMMHiddenVariables;
+import stallone.api.hmm.IHMMOptimizer;
 import stallone.api.hmm.IHMMParameters;
 import stallone.api.hmm.ParameterEstimationException;
 import stallone.api.io.IO;
@@ -17,7 +19,7 @@ import stallone.api.stat.IParameterEstimator;
  *
  * @author noe
  */
-public class EM
+public class EM implements IHMMOptimizer
 {
     private List<IDataSequence> obs;
     private HMMForwardModel model;
@@ -176,7 +178,7 @@ public class EM
 
     }
 
-    public HMMHiddenVariables getHidden(int itraj)
+    public IHMMHiddenVariables getHidden(int itraj)
     {
         if (saveMemory)
         {

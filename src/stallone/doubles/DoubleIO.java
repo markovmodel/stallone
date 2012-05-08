@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
-import stallone.doubles.io.BlockFileReader;
+import stallone.io.BlockFileReader;
 import stallone.util.StringTools;
 
 /**
@@ -216,7 +216,7 @@ public class DoubleIO
     {
         BlockFileReader reader = new BlockFileReader(file);
         reader.scan();
-
+        
         // find out whether the matrix is saved in sparse or dense format.
         boolean sparse = isSparseFormat(reader);
         

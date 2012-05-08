@@ -30,7 +30,7 @@ public class HMMParameters implements IHMMParameters
     private int nparameters;
     private IDoubleArray[] parOut;
 
-    public HMMParameters()
+    public HMMParameters(boolean _isReversible, boolean _isStationary)
     {
     }
     
