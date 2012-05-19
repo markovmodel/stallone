@@ -30,8 +30,12 @@ public class HMMParameters implements IHMMParameters
     private int nparameters;
     private IDoubleArray[] parOut;
 
-    public HMMParameters(boolean _isReversible, boolean _isStationary)
+    public HMMParameters(int _nstates, boolean _isReversible, boolean _isStationary)
     {
+        this.nstates = _nstates;
+        this.isReversible = _isReversible;
+        this.isStationary = _isStationary;
+        this.parOut = new IDoubleArray[_nstates];
     }
     
     public HMMParameters(IDoubleArray _T, IDoubleArray _p0, IDoubleArray[] _parOut, boolean _isReversible, boolean _isStationary)

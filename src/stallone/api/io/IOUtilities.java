@@ -23,7 +23,9 @@ public class IOUtilities
 
     public void error(String msg)
     {
-        System.out.println(msg);
+        Thread.dumpStack();
+        System.out.println();
+        System.out.println("ERROR: "+msg);
         System.exit(-1);
     }
     
@@ -122,8 +124,9 @@ public class IOUtilities
         return getBasename(f.getName());
     }
 
-    public String getBasename(String filename)
+    public String getBasename(String fullname)
     {
+        String filename = (new File(fullname)).getName();
         int index = filename.lastIndexOf('.');
         if (index == -1)
         {

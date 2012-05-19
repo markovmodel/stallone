@@ -70,6 +70,12 @@ public class HMMFactory
         }
     }
 
+    public IHMMParameters parameters(int nstates, boolean _isReversible, boolean _isStationary)
+    {
+        IHMMParameters par = new HMMParameters(nstates, _isReversible, _isStationary);
+        return par;
+    }
+    
     public IHMMOptimizer createHmm(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters)
     {
         // check if the data is event-based

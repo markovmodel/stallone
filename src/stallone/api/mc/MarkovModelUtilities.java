@@ -18,6 +18,7 @@ import stallone.api.graph.IIntGraph;
 import stallone.cluster.MilestoningFilter;
 import stallone.graph.MatrixGraph;
 import stallone.graph.connectivity.IntStrongConnectivity;
+import stallone.mc.MarkovChain;
 import stallone.mc.StationaryDistribution;
 import stallone.mc.correlations.DynamicalExpectations;
 import stallone.mc.correlations.DynamicalExpectationsSpectral;
@@ -480,5 +481,15 @@ public class MarkovModelUtilities
         dexp.calculatePerturbationExpectation(p0, observable);
         IDoubleArray res = Doubles.util.mergeColumns(dexp.getTimescales(), dexp.getAmplitudes());
         return(res);        
+    }
+    
+    
+    /**
+     * Creates a stochastic realization of the chain
+     */
+    public IIntArray trajectory(IDoubleArray T, int s, int length)
+    {
+        MarkovChain mc = new MarkovChain(T);
+        return mc.randomTrajectory(s, length);        
     }
 }

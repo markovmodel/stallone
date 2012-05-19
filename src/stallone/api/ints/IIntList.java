@@ -28,4 +28,6 @@ public interface IIntList extends IIntArray
     public void removeRange(int from, int to);
     
     public void removeByValue(int value);
+    
+    public void clear();
 }

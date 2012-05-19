@@ -17,12 +17,16 @@ public class IOFactory
 {
     public CachedAsciiFileReader asciiReader(String file) throws FileNotFoundException, IOException
     {
-        return new CachedAsciiFileReader(file);
+        CachedAsciiFileReader reader = new CachedAsciiFileReader(file);
+        reader.scan();
+        return reader;
     }
 
     public BlockFileReader asciiNumberReader(String file) throws FileNotFoundException, IOException
     {
-        return new BlockFileReader(file);
+        BlockFileReader reader = new BlockFileReader(file);
+        reader.scan();
+        return reader;
     }
     
 }

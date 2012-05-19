@@ -16,7 +16,6 @@ public class DoubleArrayNonzeroIterator extends DoubleArrayIterator
     public DoubleArrayNonzeroIterator(IDoubleArray _x)
     {
         super(_x);
-
         goToFirstNonzero();
     }
     

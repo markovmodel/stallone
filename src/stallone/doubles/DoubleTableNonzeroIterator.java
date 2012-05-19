@@ -16,13 +16,13 @@ public class DoubleTableNonzeroIterator extends DoubleTableIterator
     public DoubleTableNonzeroIterator(IDoubleArray _x)
     {
         super(_x);
-
         proceedToNonzero();
     }
 
     @Override
     public void reset()
     {
+        super.reset();
         proceedToNonzero();
     }
 

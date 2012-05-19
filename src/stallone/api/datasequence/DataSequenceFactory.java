@@ -7,13 +7,12 @@ package stallone.api.datasequence;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.io.IO;
 import stallone.datasequence.*;
 import stallone.datasequence.io.AsciiDataSequenceReader;
 import stallone.datasequence.io.DataSequenceFileFormats;
-import stallone.datasequence.io.DcdWriter;
 
 /**
  *
@@ -21,6 +20,10 @@ import stallone.datasequence.io.DcdWriter;
  */
 public class DataSequenceFactory
 {
+    public Iterator<IDoubleArray> iterator(IDataSequence seq)
+    {
+        return new DataSequenceIterator(seq);
+    }
     public IDataSequenceLoader dataSequenceLoader(List<String> files, IDataReader sequenceLoader)
             throws IOException
     {

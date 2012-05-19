@@ -38,9 +38,9 @@ public class MatrixDensityClustering
         double dmin = Strings.util.toDouble(args[1]);
         int minpts = Strings.util.toInt(args[2]);
         */
-        String matrixfile = "/Users/noe/data/temp/francesca_matrix_clustering/matrix_rmsd.dat";
-        double dmin = .5;
-        int minpts = 3;
+        String matrixfile = "/Users/noe/data/temp/francesca_matrix_clustering/matrix_rmsd1.dat";
+        double dmin = .7;
+        int minpts = 2;
         
         // read density matrix
         IDoubleArray distanceMatrix = Doubles.create.fromFile(matrixfile);

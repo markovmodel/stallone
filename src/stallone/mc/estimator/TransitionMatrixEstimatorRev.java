@@ -84,14 +84,17 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
         itX.reset();
         int i, j;
 
+        //System.out.println("Calculating likelihood: ");
         while (itX.hasNext())
         {
             i = itX.row();
             j = itX.column();
+            //System.out.println(" ("+i+","+j+") : "+X.get(i,j));
 
             if (X.get(i, j) > 0)
             {
                 ll += C.get(i, j) * Math.log(X.get(i, j) / Xrow[i]);
+                //System.out.println(" += "+(C.get(i, j) * Math.log(X.get(i, j) / Xrow[i])));
             }
 
             itX.advance();
@@ -126,6 +129,9 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
      */
     public void step()
     {
+        //System.out.println("stepping: ");
+        
+        
         itX.reset();
         int i, j;
         double xij;
@@ -157,6 +163,8 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
             System.out.println((logliks.size() + 1) + "\t" + ll);
         }
 
+        //System.out.println("X = \n"+X+"\n");
+        
         this.logliks.append(ll);
     }
 

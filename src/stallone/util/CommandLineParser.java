@@ -388,7 +388,7 @@ public class CommandLineParser
         {
             throw (new IllegalArgumentException("Trying to read argument " + iArg + " of command " + cmd + " as double argument, but it is of a different type"));
         }
-        return ((IntArgument) ea).value;
+        return ((DoubleArgument) ea).value;
     }
 
     public double[] getDoubleArray(String cmd)
@@ -445,13 +445,17 @@ class Command
     public void setArguments(Arguments _args)
     {
         this.args = _args;
+        this.nargsFound = 0;
+        if (_args.hasCommand(command))
+            this.nargsFound = _args.getNArguments(command);
     }
 
-    public void setNumberOfFoundArgs(int _nargs)
+/*    public void setNumberOfFoundArgs(int _nargs)
     {
+        System.out.println("setting number of found args in "+command+": "+_nargs);
         this.nargsFound = _nargs;
     }
-
+*/
     public boolean parse()
     {
         // check if command is present

@@ -98,7 +98,7 @@ public class HMMForwardModel// implements IHMMFowardModel
         else
         {
             IDataSequence seq = obs.get(traj);
-            int dt = (int)Math.round(seq.getTime(timeindex1+1)-seq.getTime(timeindex1));
+            int dt = (int)(seq.getTime(timeindex1+1)-seq.getTime(timeindex1));
             return matrixPower.getPowerElement(par.getTransitionMatrix(), dt, state1, state2);
         }
     }

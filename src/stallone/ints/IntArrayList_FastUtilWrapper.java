@@ -82,6 +82,12 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         list.rem(value);
     }
+    
+    @Override
+    public void clear()
+    {
+        list.clear();
+    }
 
     @Override
     public int get(int i)

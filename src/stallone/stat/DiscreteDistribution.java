@@ -23,7 +23,7 @@ public class DiscreteDistribution
         pinc[0] = _p[0];
         for (int j = 1; j < pinc.length; j++)
         {
-            pinc[j] = pinc[j - 1] + pinc[j];
+            pinc[j] = pinc[j - 1] + _p[j];
         }
     }
     

@@ -7,6 +7,7 @@ package stallone.hmm;
 import java.util.List;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.DoublesPrimitive;
+import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IParametricFunction;
 import stallone.api.hmm.IHMMHiddenVariables;
 import stallone.api.hmm.IHMMOptimizer;
@@ -44,6 +45,11 @@ public class EM implements IHMMOptimizer
               IHMMParameters initialParameters, IParametricFunction _fOut, IParameterEstimator _outputModelEstimator, 
               boolean _saveMemory)
     {
+        if (_obs == null)
+            throw new IllegalArgumentException("Observation is "+null);
+        if (_obs.size() == 0)
+            throw new IllegalArgumentException("Observation has zero Elements");
+        
         this.obs = _obs;
         this.model = new HMMForwardModel(_obs, eventBased, initialParameters, _fOut);
         this.saveMemory = _saveMemory;
@@ -134,7 +140,7 @@ public class EM implements IHMMOptimizer
                 }
 
                 trajEstimator.computePath(i, hiddenCur);
-
+                
                 res[n] += hiddenCur.logLikelihood();
                 if (Double.isNaN(res[n]))
                 {
@@ -167,11 +173,18 @@ public class EM implements IHMMOptimizer
             }
 
             // complete maximization step
-            this.model.setTransitionCounts(countMatrixEstimator.getEstimate());
+            IDoubleArray C = countMatrixEstimator.getEstimate();
+            this.model.setTransitionCounts(C);
             for (int s = 0; s < outputModelEstimators.length; s++)
             {
                 this.model.setOutputParameters(s, outputModelEstimators[s].getEstimate());
             }
+            
+            /*
+            System.out.println(" C = "+C);
+            System.out.println(" T = "+model.getParameters().getTransitionMatrix());
+            System.out.println(" pi = "+model.getParameters().getInitialDistribution());
+            */
         }
 
         return (res);
@@ -201,5 +214,10 @@ public class EM implements IHMMOptimizer
     public IHMMParameters getParameters()
     {
         return model.getParameters();
+    }
+    
+    public double getLogLikelihood()
+    {
+        return logLikelihood;
     }
 }

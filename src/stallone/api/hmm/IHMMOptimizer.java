@@ -18,4 +18,5 @@ public interface IHMMOptimizer
     
     public IHMMHiddenVariables getHidden(int itraj);
     
+    public double getLogLikelihood();
 }
