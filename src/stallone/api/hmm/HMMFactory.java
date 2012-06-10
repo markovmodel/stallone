@@ -17,6 +17,8 @@ import stallone.api.ints.IIntArray;
 import stallone.api.stat.IParameterEstimator;
 import stallone.api.stat.Statistics;
 import stallone.hmm.EM;
+import stallone.hmm.EMHierarchical;
+import stallone.hmm.EMMultiStart;
 import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
 
@@ -76,7 +78,7 @@ public class HMMFactory
         return par;
     }
     
-    public IHMMOptimizer createHmm(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters)
+    public IExpectationMaximization em(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = true;
@@ -84,12 +86,47 @@ public class HMMFactory
         // save memory?
         boolean saveMemory = false;
         
-        EM em = new EM(_obs, eventBased, initialParameters, outputModel, outputEstimator, saveMemory);
+        IExpectationMaximization em = new EM(_obs, eventBased, initialParameters, outputModel, outputEstimator, saveMemory);
         
         return em;
     }    
     
-    public IHMMOptimizer createGaussianHmm(List<IDataSequence> _obs, IHMMParameters initialParameters)
+    public IHMMOptimizer emMultiStart(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters,
+            int nscansteps, int nscans, int nconvsteps, double dectol)
+    {
+        // check if the data is event-based
+        boolean eventBased = true;
+        
+        // save memory?
+        boolean saveMemory = false;
+        
+        EMMultiStart em = new EMMultiStart(_obs, outputModel, outputEstimator, initialParameters);
+        em.setNumberOfScanningSteps(nscansteps);
+        em.setNumberOfScans(nscans);
+        em.setNumberOfConvergenceSteps(nconvsteps);
+        em.setLikelihoodDecreaseTolerance(dectol);
+        
+        return em;
+    }        
+
+    public IHMMOptimizer emHierarchical(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, 
+            IHMMParameters[] initialParameters, int nInitialSteps, double dectol)
+    {
+        // check if the data is event-based
+        boolean eventBased = true;
+        
+        // save memory?
+        boolean saveMemory = false;
+        
+        EMHierarchical em = new EMHierarchical(_obs, outputModel, outputEstimator);
+        em.setInitialParameters(initialParameters);
+        em.setInitialNumberOfSteps(nInitialSteps);
+        em.setLikelihoodDecreaseTolerance(dectol);
+        
+        return em;
+    }        
+    
+    public IExpectationMaximization emGaussian(List<IDataSequence> _obs, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = true;
@@ -104,7 +141,7 @@ public class HMMFactory
         return em;
     }    
     
-    public IHMMOptimizer createGaussianHmm(List<IDataSequence> _obs, int nstates)
+    public IExpectationMaximization createGaussianHmm(List<IDataSequence> _obs, int nstates)
     {
         // check if the data is event-based
         boolean eventBased = true;
@@ -118,6 +155,6 @@ public class HMMFactory
         // initial parameters
         IHMMParameters initialParameters = new HMMParameters(T, p0, parOut, false, true);
 
-        return createGaussianHmm(_obs, initialParameters);
+        return emGaussian(_obs, initialParameters);
     }
 }

@@ -14,11 +14,11 @@ import stallone.api.intsequence.IIntWriter;
  *
  * @author noe
  */
-public class IntSequenceWriter implements IIntWriter
+public class IntSequenceWriterAsciiDense implements IIntWriter
 {
     PrintStream ps;
     
-    public IntSequenceWriter(String file)
+    public IntSequenceWriterAsciiDense(String file)
             throws IOException
     {
         ps = new PrintStream(file);

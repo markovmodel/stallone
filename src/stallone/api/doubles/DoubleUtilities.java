@@ -168,7 +168,10 @@ public class DoubleUtilities
         T res = (T)arr.create(end - start);
         for (int i = start; i < end; i++)
         {
-            res.set(i - start, arr.get(i));
+            if (res instanceof IDoubleList)
+                ((IDoubleList)res).append(arr.get(i));
+            else
+                res.set(i - start, arr.get(i));
         }
         return (res);
     }
@@ -178,7 +181,10 @@ public class DoubleUtilities
         T res = (T)arr.create(indexes.size());
         for (int i = 0; i < indexes.size(); i++)
         {
-            res.set(i, arr.get(indexes.get(i)));
+            if (res instanceof IDoubleList)
+                ((IDoubleList)res).append(arr.get(indexes.get(i)));
+            else
+                res.set(i, arr.get(indexes.get(i)));
         }
         return (res);
     }

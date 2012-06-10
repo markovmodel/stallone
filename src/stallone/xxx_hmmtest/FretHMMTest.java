@@ -13,10 +13,7 @@ import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.hmm.HMM;
-import stallone.api.hmm.IHMMOptimizer;
-import stallone.api.hmm.IHMMParameters;
-import stallone.api.hmm.ParameterEstimationException;
+import stallone.api.hmm.*;
 import stallone.api.ints.IIntArray;
 import stallone.api.mc.MarkovModel;
 
@@ -26,10 +23,10 @@ import stallone.api.mc.MarkovModel;
  */
 public class FretHMMTest
 {
-    public static IHMMOptimizer createFretHmm(List<IDataSequence> obs, IHMMParameters par)
+    public static IExpectationMaximization emFRET(List<IDataSequence> obs, IHMMParameters par)
     {
             BinnedFretEfficiencyOutputModel_tmp model = new BinnedFretEfficiencyOutputModel_tmp(0);
-            return HMM.create.createHmm(obs, model, model, par);
+            return HMM.create.em(obs, model, model, par);
     }    
     
     public static void main(String[] args)
@@ -68,11 +65,14 @@ public class FretHMMTest
         par0.setOutputParameters(1, Doubles.create.arrayFrom(0.8));
 
         // EM
-        IHMMOptimizer em = createFretHmm(obs, par0);
+        IExpectationMaximization em = emFRET(obs, par0);
         try
         {
             // optimize
-            double[] logHistory = em.run(100, 0.1);
+            em.setMaximumNumberOfStep(100);
+            em.setLikelihoodDecreaseTolerance(0.1);
+            em.run();
+            double[] logHistory = em.getLikelihoodHistory();
             
             /*
             System.out.println("path: ");
@@ -89,7 +89,7 @@ public class FretHMMTest
             //Logger.getLogger(FretFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        IHMMParameters par = em.getParameters();
+        IHMMParameters par = em.getHMM().getParameters();
         /*
         System.out.println("final parameters: ");
         System.out.println(par);

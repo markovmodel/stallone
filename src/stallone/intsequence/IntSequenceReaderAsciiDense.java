@@ -5,7 +5,6 @@
 package stallone.intsequence;
 
 import java.io.IOException;
-import stallone.datasequence.*;
 import stallone.api.strings.Strings;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
@@ -21,7 +20,7 @@ import stallone.io.CachedAsciiFileReader;
  *
  * @author noe
  */
-public class IntReaderAscii extends CachedAsciiFileReader
+public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
     implements IIntReader
 {    
     private boolean scanned = false;
@@ -30,11 +29,11 @@ public class IntReaderAscii extends CachedAsciiFileReader
     private int dimension = 0;
     private int line = 0;
 
-    public IntReaderAscii()
+    public IntSequenceReaderAsciiDense()
     {
     }
     
-    public IntReaderAscii(String _file)
+    public IntSequenceReaderAsciiDense(String _file)
             throws IOException
     {
         super(_file);
@@ -105,7 +104,7 @@ public class IntReaderAscii extends CachedAsciiFileReader
         }
         catch(NumberFormatException e)
         {
-            throw(new IllegalArgumentException("Line "+i+" of file "+filename+" is not a double array:\n "+strline));
+            throw(new IllegalArgumentException("Line "+i+" of file "+filename+" is not an integer:\n "+strline));
         }
         return res;
     }

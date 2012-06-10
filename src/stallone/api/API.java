@@ -29,6 +29,8 @@ import stallone.api.mc.*;
 import stallone.api.potential.PotentialFactory;
 import stallone.api.potential.PotentialUtilities;
 import stallone.api.stat.*;
+import stallone.doubles.PrimitiveDoubleTools;
+import stallone.ints.PrimitiveIntTools;
 
 /**
  *
@@ -38,10 +40,12 @@ public class API
 {    
     public static IntUtilities ints = new IntUtilities();
     public static IntFactory intsNew = new IntFactory();
+    public static PrimitiveIntTools intArrays = new PrimitiveIntTools();
 
     public static DoubleUtilities doubles = new DoubleUtilities();
     public static DoubleFactory doublesNew = new DoubleFactory();
-
+    public static PrimitiveDoubleTools doubleArrays = new PrimitiveDoubleTools();
+    
     public static IntSequenceUtilities intseq = new IntSequenceUtilities();
     public static IntSequenceFactory intseqNew = new IntSequenceFactory();
     

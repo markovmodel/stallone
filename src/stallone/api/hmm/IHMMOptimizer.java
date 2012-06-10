@@ -11,12 +11,8 @@ package stallone.api.hmm;
  */
 public interface IHMMOptimizer
 {
-    public double[] run(int nsteps, double dectol)
+    public void run()
             throws ParameterEstimationException;
 
-    public IHMMParameters getParameters();
-    
-    public IHMMHiddenVariables getHidden(int itraj);
-    
-    public double getLogLikelihood();
+    public IHMM getHMM();
 }

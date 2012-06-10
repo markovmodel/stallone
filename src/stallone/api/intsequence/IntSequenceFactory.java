@@ -6,7 +6,10 @@ package stallone.api.intsequence;
 
 import java.io.IOException;
 import java.util.List;
+import stallone.api.io.IO;
+import stallone.api.strings.Strings;
 import stallone.intsequence.*;
+import stallone.io.CachedAsciiFileReader;
 
 /**
  *
@@ -14,9 +17,22 @@ import stallone.intsequence.*;
  */
 public class IntSequenceFactory
 {
-    public IIntSequenceLoader intSequenceLoader(List<String> files)
+    public IIntSequenceLoader intSequenceLoader(List<String> files) 
+            throws IOException
     {
-        IIntReader sequenceLoader = new IntReaderAscii();
+        // test first file
+        String firstFile = files.get(0);
+        CachedAsciiFileReader firstReader = IO.create.asciiReader(firstFile);
+        String[] words = Strings.util.split(firstReader.getLine(0));
+        IIntReader sequenceLoader;
+        if (words.length == 1)
+        {
+            sequenceLoader = new IntSequenceReaderAsciiDense();
+        }
+        else
+        {
+            sequenceLoader = new IntSequenceReaderAsciiSparse();
+        }
         return intSequenceLoader(files, sequenceLoader);
     }
 
@@ -32,6 +48,6 @@ public class IntSequenceFactory
     public IIntWriter intSequenceWriter(String file)
             throws IOException
     {
-        return new IntSequenceWriter(file);
+        return new IntSequenceWriterAsciiDense(file);
     }
 }

@@ -40,23 +40,26 @@ public class GaussianHMMTest
         List<IDataSequence> obs = new ArrayList();
         obs.add(seq);
 
-        IHMMOptimizer em = HMM.create.createGaussianHmm(obs, 2);
+        IExpectationMaximization em = HMM.create.createGaussianHmm(obs, 2);
+        em.setMaximumNumberOfStep(100);
+        em.setLikelihoodDecreaseTolerance(1);
         
         // print initial parameters
-        System.out.println("Initial Parameters: "+em.getParameters());
+        System.out.println("Initial Parameters: "+em.getHMM().getParameters());
         
-        double[] L = em.run(100, 1);
+        em.run();
+        double[] L = em.getLikelihoodHistory();
         
         DoublesPrimitive.util.print(L,"\n");
         
         // print hidden trace
-        IHMMHiddenVariables hidden = em.getHidden(0);
+        IHMMHiddenVariables hidden = em.getHMM().getHidden(0);
         for (int i=0; i<hidden.size(); i++)
             System.out.println(i+ "\t" + hidden.mostProbableState(i));
         
         // print parameters
         System.out.println("Parameters: ");
-        IHMMParameters par = em.getParameters();
+        IHMMParameters par = em.getHMM().getParameters();
         System.out.println(par);
     }
 }

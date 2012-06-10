@@ -7,14 +7,16 @@ package stallone.api.stat;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.Algebra;
+import stallone.api.doubles.IDoubleList;
+import stallone.api.ints.IIntList;
+import stallone.stat.modelselection.ExitTimeSplitter;
 
 /**
  *
  * @author noe
  */
 public class StatisticsUtilities
-{
-    
+{    
     /**
     @return the mean (or average) value of the array
      */
@@ -104,5 +106,33 @@ public class StatisticsUtilities
     }    
     
 
+    /**
+     * Splits states with nonexponential lifetime distributions.
+     * @param states for each event the state index of that event
+     * @param lifetimes for each event its lifetime
+     * @return the new state index assignment
+     */
+    public int[] splitNonexponentialLifetimes(IIntList states, IDoubleList lifetimes)
+    {
+        ExitTimeSplitter splitter = new ExitTimeSplitter();
+        for (int i=0; i<states.size(); i++)
+            splitter.add(states.get(i), lifetimes.get(i));
+        splitter.run();
+        return splitter.getNewStateAssignment();
+    }
 
+    /**
+     * Splits states with nonexponential lifetime distributions.
+     * @param states for each event the state index of that event
+     * @param lifetimes for each event its lifetime
+     * @return the new state index assignment
+     */
+    public int[] splitNonexponentialLifetimes(int[] states, double[] lifetimes)
+    {
+        ExitTimeSplitter splitter = new ExitTimeSplitter();
+        for (int i=0; i<states.length; i++)
+            splitter.add(states[i], lifetimes[i]);
+        splitter.run();
+        return splitter.getNewStateAssignment();
+    }
 }
