@@ -4,12 +4,19 @@
  */
 package stallone.api.hmm;
 
+import java.util.List;
+import stallone.api.ints.IIntArray;
+
 /**
  *
  * @author noe
  */
 public interface IExpectationMaximization extends IHMMOptimizer
 {
+    public void setInitialParameters(IHMMParameters par);
+            
+    public void setInitialPaths(List<IIntArray> paths);
+    
     /**
      * Sets the number of EM steps after which the algorithm terminates
      * @param nsteps 

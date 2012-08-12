@@ -45,7 +45,7 @@ public class MatrixProduct //implements IMatrixProduct
         // check dimensions
         assertCanMultiply(a,b);
         assertRows(target, a.rows());
-        assertRows(target, b.columns());
+        assertColumns(target, b.columns());
 
         for (int l = 0; l < colsB; l++)
         {

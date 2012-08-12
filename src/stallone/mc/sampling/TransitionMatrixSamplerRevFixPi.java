@@ -4,7 +4,9 @@
  */
 package stallone.mc.sampling;
 
+import stallone.api.algebra.Algebra;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.mc.MarkovModel;
 import stallone.util.MathTools;
 
 /**
@@ -14,16 +16,12 @@ import stallone.util.MathTools;
 public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerRev
 {
 
-    public TransitionMatrixSamplerRevFixPi(IDoubleArray counts)
+    public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray piFixed)
     {
-        super(counts);
+        super(counts, MarkovModel.util.estimateTrev(eraseNegatives(counts), piFixed));
+        super.pi = piFixed;
     }
-
-    public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray Tinit)
-    {
-        super(counts, Tinit);
-    }
-
+    
     @Override
     protected boolean step()
     {
@@ -47,7 +45,7 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerRev
 
         double d1 = MathTools.randomDouble(dmin, dmax);
         double d2 = d1 / q;
-
+        
         double pacc =
                 Math.pow((T.get(i, i) + d1) / T.get(i, i), C.get(i, i))
                 * Math.pow((T.get(i, j) - d1) / T.get(i, j), C.get(i, j))
@@ -57,9 +55,21 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerRev
         if (Math.random() <= pacc)
         {
             T.set(i, i, T.get(i,i)+d1);
-            T.set(i, j, T.get(i,j)+-d1);
+            T.set(i, j, T.get(i,j)-d1);
             T.set(j, j, T.get(j,j)+d2);
-            T.set(j, i, T.get(j,i)+-d2);
+            T.set(j, i, T.get(j,i)-d2);
+            
+            // numerical corrections:
+            validateElement(i, j);
+            validateElement(i, i);
+            validateElement(j, i);
+            validateElement(j, j);
+            if (Math.random() < 0.0001) // do a row rescaling every 10000 steps
+            {
+                validateRow(i);
+                validateRow(j);
+            }
+            
             return (true);
         }
         else

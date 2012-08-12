@@ -41,15 +41,15 @@ public class Committor
         this.A = _A;
         this.B = _B;
         this.AB = Ints.util.mergeToNew(A,B);
-        this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(K.rows()), AB);
+        this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(M.rows()), AB);
     }
     
-    public Committor(IIntArray _A, IIntArray _B)
+    public Committor(int nstates, IIntArray _A, IIntArray _B)
     {
         this.A = _A;
         this.B = _B;
         this.AB = Ints.util.mergeToNew(A,B);
-        this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(K.rows()), AB);
+        this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(nstates), AB);
     }
     
     public final void setTransitionMatrix(IDoubleArray _T)

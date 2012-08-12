@@ -156,9 +156,10 @@ public class MarkovModelFactory
      * @param piFix the fixed stationary distribution
      * @return 
      */
-    public ITransitionMatrixSampler createTransitionMatrixSamplerNonrev(IDoubleArray counts, IDoubleArray piFix)
+    public ITransitionMatrixSampler createTransitionMatrixSamplerRev(IDoubleArray counts, IDoubleArray piFix)
     {
-        ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevFixPi(counts);
+        ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevFixPi(counts, piFix);
+        
         return(sampler);
     }
 

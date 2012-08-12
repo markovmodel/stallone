@@ -4,10 +4,12 @@
  */
 package stallone.hmm;
 
+import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.hmm.IHMMHiddenVariables;
+import stallone.api.ints.IIntArray;
 import stallone.api.io.IO;
 
 /**
@@ -56,6 +58,57 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
         
         this.length = l;
     }
+    
+    /**
+     * Sets the hidden variables on the observed events according to this path
+     */
+    public void setPath(IDataSequence observation, IIntArray path)
+    {
+        int L;
+        if (observation != null)
+        {
+            L = observation.size();
+        }
+        else
+        {
+            L = path.size();
+        }
+        setLength(L);
+
+        System.out.println("L = "+L+" obs size = "+observation.size()+" path length = "+path.size());
+        
+        double x;
+        for (int t=0; t<L; t++)
+        {
+            int ti=t;
+            if (observation != null)
+                ti = (int)Math.round(observation.getTime(t));
+            
+            for (int s=0; s<nstates; s++)
+            {
+                if (s == path.get(ti))
+                {
+                    x = 1;
+                }
+                else
+                {
+                    x = 0;
+                }
+
+                setAlpha(t,s,x);
+                setBeta(t,s,x);
+                setPout(t,s,x);
+            }            
+        }
+        
+        updateGamma();
+    }
+    
+    public void setPath(IIntArray path)
+    {
+        setPath(null, path);
+    }
+
     
     public int getCapacity()
     {

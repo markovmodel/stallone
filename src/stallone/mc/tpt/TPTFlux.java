@@ -37,6 +37,11 @@ public class TPTFlux
      */
     public TPTFlux(IDoubleArray M, IIntArray _A, IIntArray _B)
     {
+        this.A = _A;
+        this.B = _B;
+        this.committor = new Committor(M.rows(),A,B);
+        this.statdist = new StationaryDistribution();
+
         if (MarkovModel.util.isTransitionMatrix(M))
         {
             setTransitionMatrix(M);
@@ -50,10 +55,6 @@ public class TPTFlux
             throw (new IllegalArgumentException("Trying to construct TPT with a matrix that is neither a transition nor a rate matrix"));
         }
         
-        this.A = _A;
-        this.B = _B;
-        this.committor = new Committor(A,B);
-        this.statdist = new StationaryDistribution();
     }
     
     public final void setTransitionMatrix(IDoubleArray _T)

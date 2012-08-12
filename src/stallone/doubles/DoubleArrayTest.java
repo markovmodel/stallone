@@ -67,8 +67,8 @@ public class DoubleArrayTest
 
     public static void assertColumns(IDoubleArray a1, int ncols)
     {
-        if (ncols != a1.rows())
-            throw(new IllegalArgumentException("Array of dimension "+a1.rows()+" x "+a1.columns()+" found but expected: "+ncols+" rows"));
+        if (ncols != a1.columns())
+            throw(new IllegalArgumentException("Array of dimension "+a1.rows()+" x "+a1.columns()+" found but expected: "+ncols+" columns"));
     }
 
     public static void assertSquare(IDoubleArray a1)

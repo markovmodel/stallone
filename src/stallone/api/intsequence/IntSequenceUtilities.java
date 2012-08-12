@@ -48,7 +48,6 @@ public class IntSequenceUtilities
         int n = 0;
         for (IIntArray p : paths)
         {
-            System.out.println("path length "+p.size());
             n = Math.max(n, Ints.util.max(p));
         }
         return n;

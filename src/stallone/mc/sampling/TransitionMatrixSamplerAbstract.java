@@ -4,9 +4,11 @@
  */
 package stallone.mc.sampling;
 
+import static stallone.api.API.*;
 import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.doubles.IDoubleIterator;
 import stallone.api.mc.MarkovModel;
 
 /**
@@ -15,7 +17,7 @@ import stallone.api.mc.MarkovModel;
  */
 public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatrixSampler
 {
-
+    // transition matrix, posterior, observed counts
     protected IDoubleArray T, C;
     protected double logLikelihood = 0;
     
@@ -26,25 +28,38 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
 
     public TransitionMatrixSamplerAbstract(IDoubleArray counts, IDoubleArray Tinit)
     {
-        this.init(counts,Tinit);
+        this.init(counts, Tinit);
     }
     
     @Override
-    public final void init(IDoubleArray counts)
+    public void init(IDoubleArray _C, IDoubleArray Tinit)
     {
-        this.C = counts;
-        this.T = MarkovModel.util.estimateT(counts);
+        this.C = _C;
+        if (Tinit == null)
+            this.T = MarkovModel.util.estimateT(eraseNegatives(_C));
+        else
+            this.T = Tinit;
         this.logLikelihood = MarkovModel.util.logLikelihood(T, C);
     }
 
     @Override
-    public final void init(IDoubleArray counts, IDoubleArray Tinit)
+    public final void init(IDoubleArray _C)
     {
-        this.C = counts;
-        this.T = Tinit;
-        this.logLikelihood = MarkovModel.util.logLikelihood(T, C);
+        init(_C, null);
     }
-
+    
+    protected static IDoubleArray eraseNegatives(IDoubleArray cin)
+    {
+        IDoubleArray cout = cin.copy();
+        for (IDoubleIterator it = cout.nonzeroIterator(); it.hasNext(); it.advance())
+        {
+            if (it.get()<0)
+                it.set(0);
+        }
+        return cout;
+    }
+    
+    
     @Override
     public IDoubleArray sample(int steps)
     {

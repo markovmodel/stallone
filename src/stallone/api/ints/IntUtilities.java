@@ -727,14 +727,34 @@ public class IntUtilities
         return (res);
     }
 
-    public IIntArray removeIndexToNew(IIntArray arr, IIntArray index)
+    public IIntArray removeIndexToNew(IIntArray arr, IIntArray indexes)
     {
         if (arr.size() == 0)
         {
             return (arr);
         }
-        IIntArray keep = this.removeValueToNew(Ints.create.arrayRange(arr.size()), index);
-        return (subToNew(arr, keep));
+        
+        boolean[] exclude = new boolean[arr.size()];
+        int nex = 0;
+        for (int i = 0; i < indexes.size(); i++)
+        {
+            if (!exclude[indexes.get(i)])
+            {
+                exclude[indexes.get(i)] = true;
+                nex++;
+            }
+        }
+        IIntArray res = arr.create(arr.size() - nex);
+        int j = 0;
+        for (int i = 0; i < arr.size(); i++)
+        {
+            if (!exclude[i])
+            {
+                res.set(j, arr.get(i));
+                j++;
+            }
+        }
+        return (res);        
     }
 
     /**

@@ -23,6 +23,8 @@ import stallone.api.mc.MarkovModel;
 public class HMMForwardModel// implements IHMMFowardModel
 {
     private List<IDataSequence> obs;
+
+    private int nstates;
     private boolean eventBased = false;
     private IHMMParameters par;
     private IParametricFunction[] fOut;
@@ -30,16 +32,15 @@ public class HMMForwardModel// implements IHMMFowardModel
     private ITransitionMatrixEstimator Testimator;
     private MatrixPowerCache matrixPower;
     
-    public HMMForwardModel(List<IDataSequence> _obs, boolean _eventBased, IHMMParameters initialParameters, IParametricFunction _fOut)
+    public HMMForwardModel(List<IDataSequence> _obs, boolean _eventBased, int _nstates, boolean reversible, IParametricFunction _fOut)
     {
         obs = _obs;
+        this.nstates = _nstates;
         eventBased = _eventBased;
-        par = initialParameters;
-        fOut = new IParametricFunction[initialParameters.getNStates()];
+        fOut = new IParametricFunction[nstates];
         for (int i=0; i<fOut.length; i++)
         {
             fOut[i] = _fOut.copy();
-            fOut[i].setParameters(initialParameters.getOutputParameters(i));
         }
         
         // find out what is the maximum time step and initialized matrix power cache.
@@ -59,7 +60,7 @@ public class HMMForwardModel// implements IHMMFowardModel
         }
         
         // construct transition matrix estimator
-        if (par.isReversible())
+        if (reversible)
         {
             Testimator = MarkovModel.create.createTransitionMatrixEstimatorRev();
         }
@@ -70,18 +71,38 @@ public class HMMForwardModel// implements IHMMFowardModel
     }
     
     /**
+     * Sets the underlying parameter set.
+     * @param _par 
+     */
+    public void setParameters(IHMMParameters _par)
+    {
+        par = _par;
+        for (int i=0; i<fOut.length; i++)
+        {
+            fOut[i].setParameters(_par.getOutputParameters(i));
+        }
+    }
+    
+    /**
      * Creates deep copy
      * @return
      */
     public HMMForwardModel copy()
     {
-        return(new HMMForwardModel(obs, eventBased, par, fOut[0]));
+        HMMForwardModel res = new HMMForwardModel(obs, eventBased, fOut.length, par.isReversible(), fOut[0]);
+        res.setParameters(par);
+        return res;
     }
 
     //@Override
     public int getNStates()
     {
-        return par.getNStates();
+        return nstates;
+    }
+    
+    public boolean isEventBased()
+    {
+        return eventBased;
     }
 
     //@Override

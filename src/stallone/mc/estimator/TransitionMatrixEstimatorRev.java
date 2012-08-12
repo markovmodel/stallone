@@ -76,7 +76,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
         }        
     }
 
-    private double logL()
+    public double logL()
     {
         // compute likelihood using the matrix iterator
         double ll = 0;
@@ -151,7 +151,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
         updateXrow();
 
         // correct elements if necessary.
-        if (Xsum-1.0 > 1e-6)
+        if (Math.abs(Xsum-1.0) > 1e-6)
         {
             Algebra.util.scale(1.0/Xsum, X);
         }

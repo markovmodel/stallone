@@ -10,7 +10,9 @@ import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IParametricFunction;
 import stallone.api.hmm.*;
+import stallone.api.ints.IIntArray;
 import stallone.api.io.IO;
+import stallone.api.mc.MarkovModel;
 import stallone.api.stat.IParameterEstimator;
 
 /**
@@ -25,6 +27,9 @@ public class EM implements IExpectationMaximization, IHMM
     private IParameterEstimator[] outputModelEstimators;
     private ForwardBackward trajEstimator;
     double  logLikelihood = Double.NEGATIVE_INFINITY;
+    
+    // initial hidden path, if set
+    private List<IIntArray> initPaths;
 
     // hidden variables are stored when saveMemory mode is off
     private HMMHiddenVariables[] hidden = null;
@@ -45,8 +50,8 @@ public class EM implements IExpectationMaximization, IHMM
      * @param _outputModelEstimator the estimator for the output model
      * @param _saveMemory if the hidden trajectories should be always constructed on the fly.
      */
-    public EM(List<IDataSequence> _obs, boolean eventBased, 
-              IHMMParameters initialParameters, IParametricFunction _fOut, IParameterEstimator _outputModelEstimator, 
+    public EM(List<IDataSequence> _obs, boolean eventBased, int nstates, boolean reversible,
+              IParametricFunction _fOut, IParameterEstimator _outputModelEstimator, 
               boolean _saveMemory)
     {
         if (_obs == null)
@@ -55,7 +60,7 @@ public class EM implements IExpectationMaximization, IHMM
             throw new IllegalArgumentException("Observation has zero Elements");
         
         this.obs = _obs;
-        this.model = new HMMForwardModel(_obs, eventBased, initialParameters, _fOut);
+        this.model = new HMMForwardModel(_obs, eventBased, nstates, reversible, _fOut);
         this.saveMemory = _saveMemory;
 
         // init E-estimators
@@ -92,6 +97,22 @@ public class EM implements IExpectationMaximization, IHMM
         }
     }
 
+    /**
+     * Initializes the EM by providing the initial parameter set.
+     * @param _par 
+     */
+    public void setInitialParameters(IHMMParameters _par)
+    {
+        model.setParameters(_par);
+    }
+    
+    public void setInitialPaths(List<IIntArray> _initPaths)
+    {
+        this.initPaths = _initPaths;
+        // set initial counts to make sure Baum-Welch works
+        model.setTransitionCounts(MarkovModel.util.estimateC(initPaths, 1));
+    }
+    
     /**
      * If false, all hidden pathways will be kept in memory. This is the faster
      * option If true, each hidden pathway will be regenerated whenever needed.
@@ -137,47 +158,22 @@ public class EM implements IExpectationMaximization, IHMM
         double[] res = new double[nStepsMax];
         logLikelihood = Double.NEGATIVE_INFINITY;
 
+        // if given initial path, take an M-step first with this initial path
+        
+        //System.out.println("initial logL = "+logLikelihood);
+        
+        if (initPaths != null)
+            emStep(initPaths);
+        
+        //System.out.println("after 1 em step logL = "+logLikelihood);
+
         for (int n = 0; n < nStepsMax; n++)
         {
-            // Initialize maximization step
-            //IHMMParameters curpar = par.copy(); // working parameters
-            countMatrixEstimator.initialize();
-            for (int s = 0; s < outputModelEstimators.length; s++)
-            {
-                outputModelEstimators[s].initialize();
-            }
+            res[n] = emStep(null);
 
-            for (int i = 0; i < obs.size(); i++)
-            {
-                // Estimation step
-                HMMHiddenVariables hiddenCur = null;
-                if (saveMemory)
-                {
-                    hidden[0].setLength(obs.get(i).size());
-                    hiddenCur = hidden[0];
-                }
-                else
-                {
-                    hiddenCur = hidden[i];
-                }
-
-                trajEstimator.computePath(i, hiddenCur);
-                
-                res[n] += hiddenCur.logLikelihood();
-                if (Double.isNaN(res[n]))
-                {
-                    break;
-                }
-
-                // Update maximization step
-                countMatrixEstimator.addToEstimate(obs.get(i), i, hiddenCur);
-                for (int s = 0; s < outputModelEstimators.length; s++)
-                {
-                    outputModelEstimators[s].addToEstimate(obs.get(i), hiddenCur.getGammaByState(s));
-                }
-            }
-
-            if (res[n] < logLikelihood - dectol)
+            //System.out.println("res[n] logL = "+res[n]+" compare to "+logLikelihood);
+            
+            if (res[n] + dectol < logLikelihood)
             {
                 System.out.println(" next likelihood = " + res[n] + " exiting.");
                 likelihoods = DoublesPrimitive.util.subarray(res, 0, n);
@@ -196,14 +192,6 @@ public class EM implements IExpectationMaximization, IHMM
                 return;
             }
 
-            // complete maximization step
-            IDoubleArray C = countMatrixEstimator.getEstimate();
-            this.model.setTransitionCounts(C);
-            for (int s = 0; s < outputModelEstimators.length; s++)
-            {
-                this.model.setOutputParameters(s, outputModelEstimators[s].getEstimate());
-            }
-            
             /*
             System.out.println(" C = "+C);
             System.out.println(" T = "+model.getParameters().getTransitionMatrix());
@@ -215,6 +203,85 @@ public class EM implements IExpectationMaximization, IHMM
 
     }
 
+    /**
+     * 
+     * @param initPaths Set to the initial pathway (E-step will be skipped) or to null (E-step will be computed)
+     * @return
+     * @throws ParameterEstimationException 
+     */
+    private double emStep(List<IIntArray> _initPaths)
+            throws ParameterEstimationException
+    {
+        double res = 0;
+
+        // Initialize maximization step
+        //IHMMParameters curpar = par.copy(); // working parameters
+        countMatrixEstimator.initialize();
+        for (int s = 0; s < outputModelEstimators.length; s++)
+        {
+            outputModelEstimators[s].initialize();
+        }
+
+        for (int i = 0; i < obs.size(); i++)
+        {
+            // Estimation step
+            HMMHiddenVariables hiddenCur = null;
+            if (saveMemory)
+            {
+                hidden[0].setLength(obs.get(i).size());
+                hiddenCur = hidden[0];
+            }
+            else
+            {
+                hiddenCur = hidden[i];
+            }
+
+            // Calculate Hidden Variables. Either using the E-step or from the path provided.
+            if (_initPaths == null)
+            {
+                trajEstimator.computePath(i, hiddenCur);
+            }
+            else
+            {
+                if (model.isEventBased())
+                {
+                    hiddenCur.setPath(obs.get(i), _initPaths.get(i));
+                }
+                else
+                {
+                    hiddenCur.setPath(_initPaths.get(i));
+                }
+            }
+
+            // calculate likelihood
+            res += hiddenCur.logLikelihood();
+            if (Double.isNaN(res))
+            {
+                break;
+            }
+
+            // Update maximization step
+            countMatrixEstimator.addToEstimate(obs.get(i), i, hiddenCur);
+            for (int s = 0; s < outputModelEstimators.length; s++)
+            {
+                outputModelEstimators[s].addToEstimate(obs.get(i), hiddenCur.getGammaByState(s));
+            }
+        }
+
+        // Complete M-Step
+        if (!((res < logLikelihood - dectol) || Double.isNaN(res)))
+        {
+            IDoubleArray C = countMatrixEstimator.getEstimate();
+            this.model.setTransitionCounts(C);
+            for (int s = 0; s < outputModelEstimators.length; s++)
+            {
+                this.model.setOutputParameters(s, outputModelEstimators[s].getEstimate());
+            }
+        }         
+
+        return res;
+    }
+    
     public IHMMHiddenVariables getHidden(int itraj)
     {
         if (saveMemory)

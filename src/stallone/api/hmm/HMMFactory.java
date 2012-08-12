@@ -14,6 +14,7 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IParametricFunction;
 import stallone.api.ints.IIntArray;
+import stallone.api.intsequence.IntSequence;
 import stallone.api.stat.IParameterEstimator;
 import stallone.api.stat.Statistics;
 import stallone.hmm.EM;
@@ -21,6 +22,8 @@ import stallone.hmm.EMHierarchical;
 import stallone.hmm.EMMultiStart;
 import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
+
+import static stallone.api.API.*;
 
 /**
  *
@@ -75,6 +78,20 @@ public class HMMFactory
     public IHMMParameters parameters(int nstates, boolean _isReversible, boolean _isStationary)
     {
         IHMMParameters par = new HMMParameters(nstates, _isReversible, _isStationary);
+        // initialize transition matrix
+        IDoubleArray T0 = doublesNew.matrix(nstates,nstates);
+        doubles.fill(T0, 1.0/(double)nstates);
+        par.setTransitionMatrix(T0);
+        return par;
+    }
+    
+    public IHMMParameters parameters(int nstates, boolean _isReversible, boolean _isStationary, IParametricFunction outputModel)
+    {
+        IHMMParameters par = parameters(nstates, _isReversible, _isStationary);
+        // initialize parameters
+        int npar = outputModel.getParameters().size();
+        for (int i=0; i<nstates; i++)
+            par.setOutputParameters(i, doublesNew.array(npar));
         return par;
     }
     
@@ -86,7 +103,30 @@ public class HMMFactory
         // save memory?
         boolean saveMemory = false;
         
-        IExpectationMaximization em = new EM(_obs, eventBased, initialParameters, outputModel, outputEstimator, saveMemory);
+        IExpectationMaximization em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), outputModel, outputEstimator, saveMemory);
+        em.setInitialParameters(initialParameters);
+        
+        return em;
+    }    
+
+    public IExpectationMaximization em(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, List<IIntArray> initialPaths, boolean reversible)
+    {
+        // check if the data is event-based
+        boolean eventBased = true;
+        
+        // save memory?
+        boolean saveMemory = false;
+
+        // count states:
+        int nstates = IntSequence.util.max(initialPaths)+1;
+
+        // construct em:
+        IExpectationMaximization em = new EM(_obs, eventBased, nstates, reversible, outputModel, outputEstimator, saveMemory);
+        // default parameters:
+        IHMMParameters par0 = parameters(nstates, reversible, true, outputModel);        
+        em.setInitialParameters(par0);
+
+        em.setInitialPaths(initialPaths);
         
         return em;
     }    
@@ -135,8 +175,27 @@ public class HMMFactory
         boolean saveMemory = false;
         // output model and parametrizer
         GaussianUnivariate gauss = new GaussianUnivariate(0,1);
+        EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), gauss, gauss, saveMemory);
+        em.setInitialParameters(initialParameters);
         
-        EM em = new EM(_obs, eventBased, initialParameters, gauss, gauss, saveMemory);
+        return em;
+    }    
+
+    public IExpectationMaximization emGaussian(List<IDataSequence> _obs, List<IIntArray> initialPaths, boolean reversible)
+    {
+        // check if the data is event-based
+        boolean eventBased = true;
+        
+        // save memory?
+        boolean saveMemory = false;
+        // output model and parametrizer
+        GaussianUnivariate gauss = new GaussianUnivariate(0,1);
+
+        // count states:
+        int nstates = IntSequence.util.max(initialPaths)+1;
+        
+        EM em = new EM(_obs, eventBased, nstates, reversible, gauss, gauss, saveMemory);
+        em.setInitialPaths(initialPaths);
         
         return em;
     }    

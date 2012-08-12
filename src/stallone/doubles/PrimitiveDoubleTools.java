@@ -153,7 +153,7 @@ public class PrimitiveDoubleTools
      */
     public static double[] range(double start, double end, double step)
     {
-        int N = (int) ((end - start) / step);
+        int N = (int) Math.ceil((end - start) / step);
         double[] res = new double[N];
         res[0] = start;
         for (int i = 1; i < res.length; i++)

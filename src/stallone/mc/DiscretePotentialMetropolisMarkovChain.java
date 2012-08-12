@@ -32,7 +32,7 @@ public class DiscretePotentialMetropolisMarkovChain extends MarkovChain
                 int n = neighbors.get(j);
                 IDoubleArray xj = f.get(neighbors.get(j));
                 double Ej = f.f(xj);
-                double pjump = (1.0 / neighbors.size()) * Math.min(1, Math.exp((Ej-Ei) / kT));
+                double pjump = (1.0 / neighbors.size()) * Math.min(1, Math.exp(-(Ej-Ei) / kT));
                 psum += pjump;
                 T.set(i, n, pjump);
             }

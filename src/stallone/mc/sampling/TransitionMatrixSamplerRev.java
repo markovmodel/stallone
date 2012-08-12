@@ -31,12 +31,24 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         initRev();
     }
 
+
     public TransitionMatrixSamplerRev(IDoubleArray counts, IDoubleArray Tinit)
     {
         super(counts, Tinit);
         initRev();
     }
 
+    @Override
+    public final void init(IDoubleArray _C, IDoubleArray Tinit)
+    {
+        this.C = _C;
+        if (Tinit == null)
+            this.T = MarkovModel.util.estimateTrev(eraseNegatives(_C));
+        else
+            this.T = Tinit;
+        this.logLikelihood = MarkovModel.util.logLikelihood(T, C);
+    }
+    
     protected final void initRev()
     {
         // stationary distribution
@@ -50,7 +62,7 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         {
             int i = it.row();
             int j = it.column();
-            if (C.get(i, j) >= 0)
+            if (C.get(i, j) >= -1)
             {
                 dof[i]++;
                 Csum[i] += C.get(i, j);

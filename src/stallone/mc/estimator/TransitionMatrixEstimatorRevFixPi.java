@@ -4,6 +4,7 @@
  */
 package stallone.mc.estimator;
 
+import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleIterator;
@@ -41,8 +42,8 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
     public TransitionMatrixEstimatorRevFixPi(IDoubleArray _pi)
     {
         this.pi = _pi;
-    }
-
+    }    
+    
     private void initX()
     {
         // initial T(tau)
@@ -90,9 +91,9 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
             o = Math.max(o, Doubles.util.sum(X.viewRow(i)) / pi.get(i));
         }
 
-        if (o > 1)
+        if (o > 0.9)
         {
-            Algebra.util.scale(1.0 / o, X);
+            Algebra.util.scale((0.9 / o), X);
         }
 
         // enforce stationary distribution
@@ -111,7 +112,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         }
         double[] sd2 = StationaryDistribution.calculateReversible(T2);*/
     }
-
+    
     private double logL()
     {        
         // compute likelihood using the matrix iterator

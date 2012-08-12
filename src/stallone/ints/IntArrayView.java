@@ -37,7 +37,8 @@ public class IntArrayView implements IIntArray
     {
         if (_data.order() > 1)
             throw(new IllegalArgumentException("Cannot use order-1 array view constructor for a table"));
-        
+
+        this.data = _data;
         this.setView(_from, _to);
     }
     

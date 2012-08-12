@@ -628,7 +628,7 @@ class IntArrayCommand extends Command
         minValue = _minValue;
         maxValue = _maxValue;
 
-        if (!mandatory)
+        if (_defaultValue != null)
         {
             for (int dv : _defaultValue)
             {
@@ -683,7 +683,7 @@ class DoubleArrayCommand extends Command
         minValue = _minValue;
         maxValue = _maxValue;
 
-        if (!mandatory)
+        if (_defaultValue != null)
         {
             for (double dv : _defaultValue)
             {

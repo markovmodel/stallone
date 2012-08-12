@@ -492,4 +492,13 @@ public class MarkovModelUtilities
         MarkovChain mc = new MarkovChain(T);
         return mc.randomTrajectory(s, length);        
     }
+
+    /**
+     * Creates a stochastic realization of the chain
+     */
+    public IIntArray trajectoryToState(IDoubleArray T, int s, int[] endStates)
+    {
+        MarkovChain mc = new MarkovChain(T);
+        return mc.randomTrajectoryToState(s, endStates);        
+    }    
 }

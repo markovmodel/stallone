@@ -14,18 +14,6 @@ public class TransitionMatrixSamplerRevNew implements ITransitionMatrixSampler
 {
 
     @Override
-    public void init(IDoubleArray counts)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void init(IDoubleArray counts, IDoubleArray Tinit)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public IDoubleArray sample(int steps)
     {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -297,4 +285,16 @@ public class TransitionMatrixSamplerRevNew implements ITransitionMatrixSampler
 //        
 //        return(accept);
 //    }
+
+    @Override
+    public void init(IDoubleArray counts)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void init(IDoubleArray counts, IDoubleArray Tinit)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
