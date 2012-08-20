@@ -15,6 +15,8 @@ import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IntsPrimitive;
+import stallone.intsequence.IntSequenceWriterAsciiDense;
+import stallone.intsequence.IntSequenceWriterAsciiSparse;
 
 /**
  *
@@ -28,6 +30,14 @@ public class IntSequenceUtilities
         return IntSequence.create.intSequenceLoader(files).loadAll();
     }    
 
+    public void writeIntSequence(IIntArray data, String file)
+            throws IOException
+    {
+            IntSequenceWriterAsciiDense writer = new IntSequenceWriterAsciiDense(file);
+            writer.addAll(data);
+            writer.close();
+    }    
+    
     public void writeIntSequences(List<IIntArray> data, List<String> files)
             throws IOException
     {
@@ -36,13 +46,31 @@ public class IntSequenceUtilities
         
         for (int itraj=0; itraj<data.size(); itraj++)
         {
-            PrintStream ps = new PrintStream(files.get(itraj));
-            for (int i=0; i<data.get(itraj).size(); i++)
-                ps.println(data.get(itraj).get(i));
-            ps.close();
+            writeIntSequence(data.get(itraj), files.get(itraj));
         }
     }    
 
+    public void writeIntSequenceSparse(IIntArray data, String file)
+            throws IOException
+    {
+            IntSequenceWriterAsciiSparse writer = new IntSequenceWriterAsciiSparse(file);
+            writer.addAll(data);
+            writer.close();
+    }
+    
+    public void writeIntSequencesSparse(List<IIntArray> data, List<String> files)
+            throws IOException
+    {
+        if (data.size() != files.size())
+            throw new IllegalArgumentException("Number of sequences is different from number of target files");
+        
+        for (int itraj=0; itraj<data.size(); itraj++)
+        {
+            writeIntSequenceSparse(data.get(itraj), files.get(itraj));
+        }
+    }    
+    
+    
     public int max(Iterable<IIntArray> paths)
     {
         int n = 0;

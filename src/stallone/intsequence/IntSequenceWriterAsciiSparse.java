@@ -55,6 +55,7 @@ public class IntSequenceWriterAsciiSparse implements IIntWriter
             }
             ps.println(time+"\t"+data);
             lastDataWritten = true;
+            lastData = data;
         }
         else
         {
@@ -68,6 +69,7 @@ public class IntSequenceWriterAsciiSparse implements IIntWriter
     public void addAll(IIntArray data)
     {
         for (int i=0; i<data.size(); i++)
-            ps.println(data.get(i));
+            add(data.get(i));
+            //ps.println(data.get(i));
     }
 }
