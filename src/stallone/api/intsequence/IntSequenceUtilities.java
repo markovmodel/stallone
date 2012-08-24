@@ -176,7 +176,8 @@ public class IntSequenceUtilities
         // find the largest lifetime
         int maxtime = 0;
         for (IIntList l : times)
-            maxtime = Math.max(maxtime, Ints.util.max(l));
+            if (l.size() > 0)
+                maxtime = Math.max(maxtime, Ints.util.max(l));
 
         // get cum dists by state
         double[][] cumdist = new double[maxtime+1][nstates];
@@ -192,9 +193,12 @@ public class IntSequenceUtilities
             for (int t = cumdist.length-1; t>=0; t--)
             {
                 // count occurances longer than t
-                while (times[s].get(n) >= t && n < times[s].size()-1)
-                    n++;
-                cumdist[t][s] = (double)n / (double)(times[s].size());
+                if (times[s].size() > 0)
+                {
+                    while (times[s].get(n) >= t && n < times[s].size()-1)
+                        n++;
+                    cumdist[t][s] = (double)n / (double)(times[s].size());
+                }
             }            
         }
                 
