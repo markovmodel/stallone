@@ -4,7 +4,10 @@
  */
 package stallone.api.stat;
 
+import stallone.api.doubles.IDoubleList;
+import stallone.api.ints.IIntList;
 import stallone.stat.*;
+import stallone.stat.modelselection.ExitTimeSplitter;
 
 /**
  *
@@ -21,4 +24,13 @@ public class StatisticsFactory
     {
         return new GaussianUnivariate(0,0);
     }
+    
+    public ExitTimeSplitter exitTimeSplitter(IIntList states, IDoubleList lifetimes)
+    {
+        ExitTimeSplitter splitter = new ExitTimeSplitter();
+        for (int i=0; i<states.size(); i++)
+            splitter.add(states.get(i), lifetimes.get(i));
+        
+        return splitter;
+    }    
 }

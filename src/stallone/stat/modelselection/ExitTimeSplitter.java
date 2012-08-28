@@ -17,7 +17,9 @@ public class ExitTimeSplitter
 {
 
     public static boolean VERBOSE = false;
-    private int nburnin = 1000, nsample = 10000;
+    private double splitAt = 1.5;
+    
+    private int nburnin = 1000, nsample = 100000;
     // input
     private IIntList states = intsNew.list(0);
     private IDoubleList exitTimes = doublesNew.list(0);
@@ -48,6 +50,20 @@ public class ExitTimeSplitter
         exitTimes.append(lifetime);
     }
 
+    public void setSplitAt(double _splitAt)
+    {
+        splitAt = _splitAt;
+    }
+    
+    public int getNsamples(int i)
+    {
+        if (exitTimesByState[i].length > 10000)
+            return 10000;
+        if (exitTimesByState[i].length > 1000)
+            return 100000;
+        return 1000000;
+    }
+    
     public void run()
     {
         // count states
@@ -74,10 +90,10 @@ public class ExitTimeSplitter
             if (exitTimesByState[i].length > 1)
             {
                 et[i] = new ExitTimes(exitTimesByState[i]);
-                et[i].run(nburnin, nsample);
+                et[i].run(nburnin, getNsamples(i));
 
                 // is split?
-                isStateSplit[i] = (et[i].getNumberOfStates() > 1.5);
+                isStateSplit[i] = (et[i].getNumberOfStates() > splitAt);
                 populatedStates[i] = et[i].getNumberOfStates();
 
                 if (isStateSplit[i])
@@ -108,8 +124,8 @@ public class ExitTimeSplitter
                 }
                 else
                 {
-                    splittingParameters[i][1] = 1;
-                    splittingParameters[i][2] = et[i].getMeanK();
+                    splittingParameters[i][0] = 1;
+                    splittingParameters[i][1] = et[i].getMeanK();
                 }
             }
         }
@@ -145,10 +161,13 @@ public class ExitTimeSplitter
 
     public void printResult()
     {
-        System.out.println("state\tnstates\tsplit?\tamplitude\trate k1\trate k2");
+        System.out.println("state\tevents\tsamples\tnstates\tsplit?\tamplitude\trate k1\trate k2");
         for (int i = 0; i < isStateSplit.length; i++)
         {
-            System.out.println(i + "\t" + populatedStates[i]
+            System.out.println(i 
+                    + "\t" + exitTimesByState[i].length
+                    + "\t" + getNsamples(i)
+                    + "\t" + populatedStates[i]
                     + "\t" + isStateSplit[i]
                     + "\t" + splittingParameters[i][0] + "\t" + splittingParameters[i][1] + "\t" + splittingParameters[i][2]);
         }

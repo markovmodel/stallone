@@ -184,17 +184,6 @@ public class IDoubleArrayTest
         }        
         assertEquals(nelements, matrix.size());
         assertEquals((int)sum, (int)Algebra.util.sum(matrix));
-
-        sum = 0;
-        nelements = 0;
-        for (IDoubleIterator it = sparseMatrix.nonzeroIterator(); it.hasNext(); it.advance())
-        {
-            sum += it.get();
-            nelements++;
-        }        
-        assertEquals(nelements, sparseMatrixNonzero);
-        assertEquals((int)sum, (int)Algebra.util.sum(sparseMatrix));
-        
     }
 
     /**
@@ -203,7 +192,15 @@ public class IDoubleArrayTest
     @Test
     public void testNonzeroIterator()
     {
-
+        double sum = 0;
+        int nelements = 0;
+        for (IDoubleIterator it = sparseMatrix.nonzeroIterator(); it.hasNext(); it.advance())
+        {
+            sum += it.get();
+            nelements++;
+        }        
+        assertEquals(nelements, sparseMatrixNonzero);
+        assertEquals((int)sum, (int)Algebra.util.sum(sparseMatrix));
     }
 
     /**

@@ -75,7 +75,15 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
         }
         setLength(L);
 
+        /*
         System.out.println("L = "+L+" obs size = "+observation.size()+" path length = "+path.size());
+        
+        if (L == 7849)
+        {
+            System.out.println("first: "+observation.getTime(0)+"\t"+observation.get(0));
+            System.out.println("first: "+observation.getTime(7848)+"\t"+observation.get(7848));
+            System.exit(0);
+        }*/
         
         double x;
         for (int t=0; t<L; t++)

@@ -24,6 +24,7 @@ public class AsciiDataSequenceReader
         extends CachedAsciiFileReader
         implements IDataReader
 {
+
     private int noOfElements = 0;
     private int dimension = 0;
     private boolean noElementsDetermined = false;
@@ -39,12 +40,11 @@ public class AsciiDataSequenceReader
     private int[] selectedColumns = null;
 
     public AsciiDataSequenceReader(String filename)
-        throws FileNotFoundException, IOException
+            throws FileNotFoundException, IOException
     {
         super(filename);
     }
 
-    
     /**
      *
      * @param referencedReader
@@ -54,24 +54,21 @@ public class AsciiDataSequenceReader
      * @param selectedColumns
      */
     public AsciiDataSequenceReader(String filename, int _dataStartLine, int _timeColumn, int[] _selectedColumns)
-        throws FileNotFoundException, IOException
+            throws FileNotFoundException, IOException
     {
         super(filename);
-        
+
         this.dataStartLine = _dataStartLine;
         //this.dataEndLine = dataEndLine;
 
         /*
          * if ( dataEndLine <= dataStartLine ) { throw new
-         * IllegalArgumentException("Invalid start position of trajectory.");
-        }
+         * IllegalArgumentException("Invalid start position of trajectory."); }
          */
 
         this.timeColumn = _timeColumn;
         this.selectedColumns = _selectedColumns;
     }
-    
-    
 
     @Override
     protected boolean scanLine(String textline, int currentLineNumber)
@@ -84,14 +81,17 @@ public class AsciiDataSequenceReader
         {
             String[] words = StringTools.split(textline);
             words = StringTools.subarray(words, selectedColumns);
-            for (int i=0; i<words.length; i++)
+            for (int i = 0; i < words.length; i++)
+            {
                 if (!StringTools.isDouble(words[i]))
+                {
                     return false;
+                }
+            }
             return true;
         }
     }
-    
-    
+
     /**
      *
      * @param lineNumber
@@ -144,33 +144,34 @@ public class AsciiDataSequenceReader
     public double getTime(int frameIndex)
     {
         if (timeColumn == -1)
+        {
             return frameIndex;
-        
+        }
+
         String[] entries = readTokens(frameIndex);
 
         double value = 0;
         try
         {
             value = Double.parseDouble(entries[timeColumn]);
-        } 
-        catch (NumberFormatException nfe)
+        } catch (NumberFormatException nfe)
         {
             System.out.println("frameIndex : " + frameIndex);
             //System.out.println(dataStartLine + " " + dataEndLine);
         }
         return value;
-    }    
-    
+    }
+
     @Override
     public IDoubleArray get(int index)
     {
-        return get(index, Doubles.create.array(selectedColumns.length));
+        return get(index, null);
     }
-    
+
     @Override
     public IDoubleArray getView(int index)
     {
-        return(get(index));
+        return (get(index));
     }
 
     /**
@@ -182,20 +183,42 @@ public class AsciiDataSequenceReader
     public IDoubleArray get(int frameIndex, IDoubleArray target)
     {
         String[] entries = readTokens(frameIndex);
-
-        // creation should be moved outside
-        int n = selectedColumns.length;
+        if (target == null)
+        {
+            if (selectedColumns == null)
+            {
+                target = Doubles.create.array(entries.length);
+            }
+            else
+            {
+                target = Doubles.create.array(selectedColumns.length);
+            }
+        }
 
         try
         {
-            for (int i = 0; i < n; i++)
+            if (selectedColumns == null)
             {
-                int pos = selectedColumns[i];
-                double value = Double.parseDouble(entries[pos]);
-                target.set(i, value);
+                for (int i = 0; i < entries.length; i++)
+                {
+                    double value = Double.parseDouble(entries[i]);
+                    target.set(i, value);
+                }
+
             }
-        } 
-        catch (NumberFormatException nfe)
+            else
+            {
+                // creation should be moved outside
+                int n = selectedColumns.length;
+
+                for (int i = 0; i < n; i++)
+                {
+                    int pos = selectedColumns[i];
+                    double value = Double.parseDouble(entries[pos]);
+                    target.set(i, value);
+                }
+            }
+        } catch (NumberFormatException nfe)
         {
             System.out.println("frameIndex : " + frameIndex);
             //System.out.println(dataStartLine + " " + dataEndLine);

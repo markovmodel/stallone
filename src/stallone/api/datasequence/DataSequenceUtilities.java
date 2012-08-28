@@ -147,9 +147,11 @@ public class DataSequenceUtilities
     public IDoubleArray readColumn(String inputFile, int columnIndex)
     {
         IDoubleArray res = null;
+
         try
         {
             IDataReader input = DataSequence.create.createASCIIDataReader(inputFile);
+            input.scan();
             res = Doubles.create.denseColumn(input.size());
             for (int i=0; i<res.size(); i++)
                 res.set(i, input.get(i).get(columnIndex));

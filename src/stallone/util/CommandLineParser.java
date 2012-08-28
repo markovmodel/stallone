@@ -739,7 +739,22 @@ abstract class ExpectedArgument
         mandatory = _mandatory;
     }
 
-    public abstract boolean parse(Arguments args);
+    public boolean parse(Arguments args)
+    {
+        // if the argument is not available, but expected, return false
+        if (args.getNArguments(command) <= position)
+        {
+            if (mandatory)
+                return false;
+            else
+                return true;
+        }
+        
+        return parseWhenAvailable(args);
+    }
+    
+    protected abstract boolean parseWhenAvailable(Arguments args);
+            
 }
 
 class StringArgument extends ExpectedArgument
@@ -756,8 +771,9 @@ class StringArgument extends ExpectedArgument
     }
 
     @Override
-    public boolean parse(Arguments args)
+    public boolean parseWhenAvailable(Arguments args)
     {
+        
         // check options
         if (options != null)
         {
@@ -798,7 +814,7 @@ class IntArgument extends ExpectedArgument
     }
 
     @Override
-    public boolean parse(Arguments args)
+    public boolean parseWhenAvailable(Arguments args)
     {
         String argFound = args.getArgument(command, position);
 
@@ -844,7 +860,7 @@ class DoubleArgument extends ExpectedArgument
     }
 
     @Override
-    public boolean parse(Arguments args)
+    public boolean parseWhenAvailable(Arguments args)
     {
         String argFound = args.getArgument(command, position);
 

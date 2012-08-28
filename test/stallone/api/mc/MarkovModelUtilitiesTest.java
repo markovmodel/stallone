@@ -17,6 +17,7 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
 import stallone.api.io.IO;
+import stallone.doubles.DoubleArrayTest;
 
 import static stallone.doubles.DoubleArrayTest.*;
 
@@ -408,13 +409,20 @@ public class MarkovModelUtilitiesTest
     public void testEstimateTrev_IDoubleArray()
     {
         System.out.println("estimateTrev");
-        IDoubleArray counts = null;
-        MarkovModelUtilities instance = new MarkovModelUtilities();
-        IDoubleArray expResult = null;
-        IDoubleArray result = instance.estimateTrev(counts);
-        assertEquals(expResult, result);
+        double[][] C = {
+            {10,5,1},
+            {1,7,4},
+            {5,7,25}};
+        double[][] Tref = {
+            {0.625,               0.23689343769530435, 0.13810656230469573},
+            {0.18414208307292756, 0.5833333333333334,  0.23252458359373912},
+            {0.10244040548986129, 0.22188391883446298, 0.6756756756756757}};
+        
+        IDoubleArray counts = Doubles.create.array(C);
+        IDoubleArray expResult = Doubles.create.array(Tref);
+        IDoubleArray result = MarkovModel.util.estimateTrev(counts);
+        DoubleArrayTest.assertEqual(result, expResult, 1e-4);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
