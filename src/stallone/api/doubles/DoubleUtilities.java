@@ -265,6 +265,14 @@ public class DoubleUtilities
         return (res);
     }
 
+    public boolean isSorted(IDoubleArray arr)
+    {
+        for (int i=0; i<arr.size()-1; i++)
+            if (arr.get(i) > arr.get(i+1))
+                return false;
+        return true;
+    }
+    
     public void sort(IDoubleArray arr)
     {
         QuickSortDouble qs = new QuickSortDouble();
@@ -503,6 +511,26 @@ public class DoubleUtilities
         return (true);
     }
 
+    /**
+     * Finds the element of arr that is closest to num. Only works if the array is sorted
+     * @param arr
+     * @param num
+     * @return 
+     */
+    public int findClosest(IDoubleArray arr, double num)
+    {
+        int i = locateSorted(arr, num);
+
+        if (i == 0)
+            return i;
+        if (i == arr.size())
+            return i-1;
+
+        if (Math.abs(arr.get(i-1)-num) < Math.abs(arr.get(i)-num))
+            return i-1;
+        else 
+            return i;
+    }
 
     /**
     Locates, by binary search the index of the first value that is >= the

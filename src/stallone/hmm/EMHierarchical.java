@@ -11,6 +11,7 @@ import stallone.api.function.IParametricFunction;
 import stallone.api.hmm.*;
 import stallone.api.ints.IntsPrimitive;
 import stallone.api.stat.IParameterEstimator;
+import static stallone.api.API.*;
 
 /**
  *
@@ -67,7 +68,7 @@ public class EMHierarchical implements IHMMOptimizer
         IExpectationMaximization emlast = null;
 
         int level = 1;
-        while(parameters.length > 1)
+        while(true)
         {
             int optsteps = nsteps;
             if (level > 1)
@@ -103,6 +104,10 @@ public class EMHierarchical implements IHMMOptimizer
                 Runtime.getRuntime().gc();
             }
 
+            // if we only have one parameter set left, we're done.
+            if (parameters.length == 1)
+                break;
+            
             // select the best
             int[] SI = IntsPrimitive.util.mirror(DoublesPrimitive.util.sortedIndexes(likelihoods));
             double[] newlikelihoods = new double[likelihoods.length / 2];
@@ -115,6 +120,7 @@ public class EMHierarchical implements IHMMOptimizer
 
             likelihoods = newlikelihoods;
             parameters = newparameters;
+            level++;
         }
 
         hmmBest = emlast.getHMM();

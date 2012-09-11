@@ -10,6 +10,7 @@ import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
 import stallone.api.mc.*;
+import static stallone.api.API.*;
 
 /**
  *
@@ -64,7 +65,6 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
         {
             i = itX.row();
             j = itX.column();
-//            System.out.println(i + " " + j + " " + X.get(i, j));
 
             Xrow[i] += X.get(i, j);            
             itX.advance();
@@ -150,11 +150,9 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
 
         updateXrow();
 
-        // correct elements if necessary.
-        if (Math.abs(Xsum-1.0) > 1e-6)
-        {
-            Algebra.util.scale(1.0/Xsum, X);
-        }
+        //System.out.println("X = \n"+X+"\n");
+        //System.out.println("Xrow = "+doubleArrays.toString(Xrow));
+        
         
         double ll = logL();
 
@@ -163,7 +161,6 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
             System.out.println((logliks.size() + 1) + "\t" + ll);
         }
 
-        //System.out.println("X = \n"+X+"\n");
         
         this.logliks.append(ll);
     }
@@ -228,6 +225,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
             int i = it.row();
             int j = it.column();
             T.set(i, j, X.get(i,j) / Xrow[i]);
+            //System.out.println(i+","+j+"\t"+X.get(i,j)+"\t"+Xrow[i]+"\t"+T.get(i,j));
             //if (i != j)
             //{
             //    T.set(j, i, X.get(j,i) / Xrow[j]);

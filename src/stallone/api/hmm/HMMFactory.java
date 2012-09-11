@@ -150,13 +150,13 @@ public class HMMFactory
     }        
 
     public IHMMOptimizer emHierarchical(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, 
-            IHMMParameters[] initialParameters, int nInitialSteps, double dectol)
+            IHMMParameters[] initialParameters, int nInitialSteps, double dectol, boolean saveMemory)
     {
         // check if the data is event-based
         boolean eventBased = true;
         
         // save memory?
-        boolean saveMemory = false;
+        //boolean saveMemory = false;
         
         EMHierarchical em = new EMHierarchical(_obs, outputModel, outputEstimator);
         em.setInitialParameters(initialParameters);

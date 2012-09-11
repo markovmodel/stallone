@@ -237,6 +237,16 @@ public class DoubleFactory
         return (array(res));
     }
     
+    public IDoubleArray arrayGrid(double min, double max, int ngridpoints)
+    {
+        IDoubleArray grid = Doubles.create.array(ngridpoints);
+        double dg = (max-min)/((double)ngridpoints-1);
+        grid.set(0, min);
+        for (int i=1; i<grid.size(); i++)
+            grid.set(i, grid.get(i-1)+dg);
+        return grid;
+    }
+    
     // ***********************************************************************
     //
     // Matrix convenience operations

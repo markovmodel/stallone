@@ -230,7 +230,7 @@ public class IntUtilities
     
     public IIntArray subToNew(IIntArray arr, int start, int end)
     {
-        IIntArray res = arr.create(end - start);
+        IIntArray res = Ints.create.array(end - start);
         for (int i = start; i < end; i++)
         {
             res.set(i - start, arr.get(i));
@@ -240,7 +240,7 @@ public class IntUtilities
 
     public IIntArray subToNew(IIntArray arr, IIntArray indexes)
     {
-        IIntArray res = arr.create(indexes.size());
+        IIntArray res = Ints.create.array(indexes.size());
         for (int i = 0; i < indexes.size(); i++)
         {
             res.set(i, arr.get(indexes.get(i)));

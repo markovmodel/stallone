@@ -94,7 +94,9 @@ public class ClusterUtilities
     {
         IIntArray res = Ints.create.array(data.size());
         for (int i=0; i<data.size(); i++)
+        {
             res.set(i, disc.assign(data.get(i)));
+        }
         return(res);
     }
     

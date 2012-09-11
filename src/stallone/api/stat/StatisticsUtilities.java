@@ -4,11 +4,14 @@
  */
 package stallone.api.stat;
 
+import static stallone.api.API.*;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.Algebra;
 import stallone.api.doubles.IDoubleList;
+import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
+import stallone.api.ints.Ints;
 import stallone.stat.modelselection.ExitTimeSplitter;
 
 /**
@@ -89,6 +92,27 @@ public class StatisticsUtilities
         return(res);
     }
 
+    /** 
+     * Bins the data
+     * @param data
+     * @param grid grid points. data is assigned to closest grid point
+     * @return the histogram counts related to the specified grid
+     */
+    public IIntArray histogram(IDoubleArray data, IDoubleArray grid)
+    {
+        if (!doubles.isSorted(grid))
+            throw new IllegalArgumentException("Grid passed to histogram must be sorted");
+        
+        int[] res = new int[grid.size()];
+        
+        for (int i=0; i<data.size(); i++)
+        {
+            res[doubles.findClosest(grid, data.get(i))]++;
+        }
+        
+        return intsNew.arrayFrom(res);
+    }
+    
     
     /**
      * Returns the gaussian density at x

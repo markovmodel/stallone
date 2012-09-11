@@ -9,6 +9,7 @@ import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
+import stallone.api.discretization.Discretization;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
@@ -59,7 +60,7 @@ public class KMeansClustering implements IClustering
     /** Only used internally during initialisation. */
     private IIntArray indices;
     
-    private VoronoiDiscretization voronoiDiscretization;
+    private IDiscretization voronoiDiscretization;
             
 
     public KMeansClustering()
@@ -181,6 +182,9 @@ public class KMeansClustering implements IClustering
             }
         }
         while (clustersChanged && doMoreIterations);
+        
+        // final cluster center assignment
+        this.voronoiDiscretization = Discretization.create.voronoiDiscretization(clusterCenters, metric);
     }
 
     private boolean assign()
