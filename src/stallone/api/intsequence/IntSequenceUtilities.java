@@ -139,7 +139,8 @@ public class IntSequenceUtilities
 
     /**
      * Returns a list of times each integer value was continuously seen in the given path
-     * @param path a sequence of integers
+     * @param paths a sequence of integers
+     * @param ignoreLastVisit true if the last visit in each path should be ignored.
      * @return a list of dwell times for each occurring integer value.
      */
     public IIntList[] lifetimesByState(List<IIntArray> paths)
@@ -159,7 +160,7 @@ public class IntSequenceUtilities
 
         return (res);
     }
-
+    
     /**
      * 
      * @param em

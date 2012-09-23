@@ -229,7 +229,7 @@ public class AdaptiveDiscretization1D
             ad.evBin();
             ad.printBinning();
         }
-
-
+        
+        
     }
 }

@@ -68,6 +68,7 @@ public class EMHierarchical implements IHMMOptimizer
         IExpectationMaximization emlast = null;
 
         int level = 1;
+        int totaloptsteps = 0;
         while(true)
         {
             int optsteps = nsteps;
@@ -76,11 +77,11 @@ public class EMHierarchical implements IHMMOptimizer
                 optsteps = (int) Math.pow(nsteps, (level - 1));
             }
 
-            System.out.println("level " + level);
+            System.out.println("#level " + level);
 
             for (int i = 0; i < likelihoods.length; i++)
             {
-                System.out.println(" replica " + (i + 1));
+                System.out.println("# replica " + (i + 1));
 
                 emlast = HMM.create.em(obs, outputModel, outputEstimator, parameters[i]);
 
@@ -94,16 +95,18 @@ public class EMHierarchical implements IHMMOptimizer
                     likelihoods[i] = likelihoodsRep[likelihoodsRep.length - 1];
                     parameters[i] = emlast.getHMM().getParameters().copy();
 
-                    DoublesPrimitive.util.print(likelihoodsRep, "\n");
-                    System.out.println();
+                    for (int k=0; k<likelihoodsRep.length; k++)
+                        System.out.println((totaloptsteps+k+1)+"\t"+likelihoodsRep[k]);
                 } catch (ParameterEstimationException e)
                 {
-                    System.out.println(" CAUGHT exception in EMmult (see below). Will continue with another try\n" + e);
+                    System.out.println(" CAUGHT exception in EMHierarchical (see below). Will continue with another try\n" + e);
                 }
 
                 Runtime.getRuntime().gc();
             }
 
+            totaloptsteps += optsteps;
+            
             // if we only have one parameter set left, we're done.
             if (parameters.length == 1)
                 break;
