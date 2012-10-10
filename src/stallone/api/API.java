@@ -23,6 +23,8 @@ import stallone.api.dynamics.DynamicsUtilities;
 import stallone.api.io.*;
 import stallone.api.function.*;
 import stallone.api.graph.*;
+import stallone.api.hmm.HMMFactory;
+import stallone.api.hmm.HMMUtilities;
 import stallone.api.intsequence.IntSequenceFactory;
 import stallone.api.intsequence.IntSequenceUtilities;
 import stallone.api.mc.*;
@@ -89,5 +91,8 @@ public class API
 
     public static DynamicsUtilities dyn = new DynamicsUtilities();
     public static DynamicsFactory dynNew = new DynamicsFactory();
+
+    public static HMMUtilities hmm = new HMMUtilities();
+    public static HMMFactory hmmNew = new HMMFactory();
     
 }

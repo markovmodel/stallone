@@ -173,6 +173,7 @@ public class MarkovModelFactory
         {
             IEigenvalueDecomposition evd = Algebra.util.evd(M,nstates);
             evec = evd.getRightEigenvectorMatrix();
+            evec = evec.viewBlock(0,0,M.rows(),nstates);
         }
         else
         {

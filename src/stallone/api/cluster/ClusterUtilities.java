@@ -4,6 +4,7 @@
  */
 package stallone.api.cluster;
 
+import static stallone.api.API.*;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.Ints;
@@ -98,6 +99,89 @@ public class ClusterUtilities
             res.set(i, disc.assign(data.get(i)));
         }
         return(res);
+    }
+
+    
+    public IDoubleArray clusterSizes(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    {
+        double[] res = new double[centers.size()];
+        double[] counts = new double[centers.size()];
+        int k=0;
+        for (IDoubleArray x : data)
+        {
+            int c = assignment.get(k);
+            counts[c] += 1;
+            double d = metric.distance(x, centers.get(c));
+            res[c] += d*d;
+            k++;
+        }
+        for (int i=0; i<res.length; i++)
+            res[i] = Math.sqrt(res[i]/counts[i]);
+        return doublesNew.array(res);
+    }
+
+    public double clusterIndexSizeImbalance(IIntArray assignment)
+    {
+        double[] sizes = new double[ints.max(assignment)+1];
+        for (int i=0; i<assignment.size(); i++)
+            sizes[assignment.get(i)] += 1;
+        double meansize = doubleArrays.mean(sizes);
+        for (int i=0; i<sizes.length; i++)
+            sizes[i] -= meansize;
+        return doubleArrays.norm(sizes);
+    }    
+    
+    /**
+     * Computes the noncompactness measure
+     * C = || D ||
+     * where D is the vector of cluster diameters
+     * @param clustering
+     * @return 
+     */
+    public double clusterNoncompactness(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    {
+        double res = 0;
+        int k=0;
+        for (IDoubleArray x : data)
+        {
+            int c = assignment.get(k);
+            double d = metric.distance(x, centers.get(c));
+            res += d*d;
+            //res += d;
+            k++;
+        }
+        //return res/(double)k;
+        return Math.sqrt(res/(double)k);
+    }
+    
+    /**
+     * Computes the Davies-Bouldin clustering index, defined by
+     * DB = (1/n) sum_i^n max{i!=j} (d_i + d_j)/(d_ij)
+     * where d_i, d_j are the sizes of the two clusters and d_ij is the distance between the clusters
+     * @param clustering
+     * @return 
+     */
+    public double clusterIndexDaviesBouldin(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    {
+        IDoubleArray D = clusterSizes(data, centers, metric, assignment);
+        double[][] DBdist = new double[centers.size()][centers.size()];
+        for (int i=0; i<centers.size()-1; i++)
+        {
+            for (int j=i+1; j<centers.size(); j++)
+            {
+                DBdist[i][j] = (D.get(i)+D.get(j))/(metric.distance(centers.get(i), centers.get(j)));
+                System.out.println("d_i = "+D.get(i));
+                System.out.println("d_j = "+D.get(j));
+                System.out.println("d_ij = "+metric.distance(centers.get(i), centers.get(j)));
+                System.out.println("DB = "+DBdist[i][j]);
+                System.out.println();
+            }
+        }
+        //System.exit(0);
+        double res = 0;
+        for (int i=0; i<DBdist.length; i++)
+            res += doubleArrays.max(DBdist[i]);
+        return (res/(double)centers.size());
     }
     
     public IDoubleArray membershipToState(IClustering crisp, int state)

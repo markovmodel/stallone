@@ -130,6 +130,12 @@ public class HMMForwardModel// implements IHMMFowardModel
         IDoubleArray x = obs.get(traj).get(timeindex);
         return fOut[state].f(x);
     }
+    
+    public IDoubleArray getObs(int traj, int timeindex)
+    {
+        IDoubleArray x = obs.get(traj).get(timeindex);
+        return x;
+    }
 
     //@Override
     public void setTransitionCounts(IDoubleArray C)

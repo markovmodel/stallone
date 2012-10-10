@@ -27,7 +27,7 @@ import stallone.io.NicelyCachedRandomAccessFile;
 public class DcdReader implements IDataReader
 {
     private String filename;
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private static boolean DEBUG_VERBOSE = false;
     private boolean format__dcd_is_xplor;
     private boolean format__dcd_is_charmm;
@@ -329,7 +329,7 @@ public class DcdReader implements IDataReader
                 descriptionHeaderRecord.get(line);
 
                 String s = new String(line);
-                System.out.println("  Header (text)                : " + s);
+                //System.out.println("  Header (text)                : " + s);
             }
 
             ByteBuffer noOfAtomsRecord = readNextRecord();

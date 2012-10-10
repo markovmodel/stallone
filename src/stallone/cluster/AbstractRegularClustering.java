@@ -1,11 +1,13 @@
 package stallone.cluster;
 
+import static stallone.api.API.*;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import java.util.Iterator;
 import stallone.api.cluster.*;
 import stallone.api.datasequence.IDataSequence;
+import stallone.doubles.EuclideanDistance;
 
 /**
  * Foundation for regular (either time or space) based clustering algorithms.
@@ -21,7 +23,7 @@ public abstract class AbstractRegularClustering implements IClustering
     protected Iterable<IDoubleArray> data;
     protected int datasize;
     /** The metric to use for clustering. */
-    protected IMetric<IDoubleArray> metric;
+    protected IMetric<IDoubleArray> metric = new EuclideanDistance();
     /** Whether clustering results are available. */
     protected boolean resultsAvailable;
     /**
@@ -59,7 +61,6 @@ public abstract class AbstractRegularClustering implements IClustering
 
     protected void requireResultsAvailable()
     {
-
         if (this.resultsAvailable == true)
         {
             return;
@@ -87,10 +88,10 @@ public abstract class AbstractRegularClustering implements IClustering
     }
     
     @Override
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric _metric)
     {
         this.resultsAvailable = false;
-        this.metric = metric;
+        this.metric = _metric;
     }
 
     @Override

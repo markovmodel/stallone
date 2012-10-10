@@ -122,9 +122,10 @@ public class AlgebraFactory
      */
     public IEigenvalueSolver eigenSolver(final IDoubleArray matrix, int nev)
     {
-        throw (new UnsupportedOperationException("EVD with fixed number of eigenvalues not yet implemented. "
+        return eigenSolver(matrix);
+        /*throw (new UnsupportedOperationException("EVD with fixed number of eigenvalues not yet implemented. "
                 + "We have to decide here whether to call dense or sparse solver, depending on size of the matrix and"
-                + "size of the eigenspace requested!"));
+                + "size of the eigenspace requested!"));*/
     }
 
     public IEigenvalueSolver eigenSolver(IDoubleArray matrix, String algoName)

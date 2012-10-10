@@ -71,9 +71,9 @@ public class ArrayDifference //implements IMatrixSum
         final int colsB = b.columns();
         final int rowsB = b.rows();
 
-        for (int j = 0; j < rowsA; j++)
+        for (int i = 0; i < rowsA; i++)
         {
-            for (int i = 0; i < colsA; i++)
+            for (int j = 0; j < colsA; j++)
             {
                 target.set(i, j, a.get(i, j) - b.get(i, j));
             }

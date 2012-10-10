@@ -33,12 +33,19 @@ public class ForwardBackward
             for (int j = 0; j < model.getNStates(); j++)
             {
                 hidden.setPout(t, j, model.getPout(itraj, t, j));
+                //System.out.println("  pout "+t+" "+j+": "+model.getPout(itraj, t, j));
             }
             if (!hidden.checkPout(t))
             {
-                throw(new ParameterEstimationException("HMM output model has yielded output probabilities for trajectory "+itraj+", timestep "+t+" of\n"
-                        + DoublesPrimitive.util.toString(hidden.getPout(t),"\t")+"\n"
-                        + "cannot normalize this probability vector. Check IHMMModel implementation."));
+                throw(new ParameterEstimationException(
+                        " \n\n======== Parameter Estimation Exception ========\n"
+                        + "At trajectory "+itraj+", timestep "+t+"\n"
+                        + "Observation = "+model.getObs(itraj, t)+"\n\n"
+                        + "HMM parameters: \n"+model.getParameters()+"\n"
+                        + "pout = "+DoublesPrimitive.util.toString(hidden.getPout(t),"\t")+"\n"
+                        + "cannot normalize pout. Check IHMMModel implementation.\n"
+                        + "================================================ \n"
+                        ));
             }
         }
 

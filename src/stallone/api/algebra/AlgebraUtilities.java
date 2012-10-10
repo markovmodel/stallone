@@ -31,6 +31,7 @@ import stallone.doubles.io.SparseDoubleArrayAsciiWriter;
 import stallone.doubles.io.DenseDoubleArrayAsciiWriter;
 import stallone.complex.ComplexNumber;
 import stallone.api.complex.*;
+import stallone.api.doubles.IDoubleElement;
 
 import static stallone.doubles.DoubleArrayTest.*;
 
@@ -285,7 +286,27 @@ public class AlgebraUtilities
         }
         return (res);
     }
+    
+    public IDoubleArray rowSums(IDoubleArray arr)
+    {
+        double[] rowsums = new double[arr.rows()];
+        for (IDoubleIterator it = arr.nonzeroIterator(); it.hasNext(); it.advance())
+        {
+            rowsums[it.row()] += it.get();
+        }
+        return Doubles.create.array(rowsums);
+    }
 
+    public IDoubleArray columnSums(IDoubleArray arr)
+    {
+        double[] colsums = new double[arr.columns()];
+        for (IDoubleIterator it = arr.nonzeroIterator(); it.hasNext(); it.advance())
+        {
+            colsums[it.column()] += it.get();
+        }
+        return Doubles.create.array(colsums);
+    }
+    
     public IComplexNumber sum(IComplexArray arr)
     {
         double re = 0, im = 0;
@@ -334,6 +355,18 @@ public class AlgebraUtilities
     public void scale(double s, IDoubleArray v)
     {
         vscale.scale(v, s);
+    }
+    
+    /**
+     * Scales the rows such that each of them sum up to 1
+     */
+    public void normalizeRows(final IDoubleArray M, int p)
+    {
+        double[] rownorms = new double[M.rows()];
+        for (int i=0; i<rownorms.length; i++)
+            rownorms[i] = norm(M.viewRow(i), p);
+        for (IDoubleIterator it = M.nonzeroIterator(); it.hasNext(); it.advance())
+            it.set(it.get() / rownorms[it.row()]);
     }
 
     public void normalize(final IDoubleArray v)
@@ -456,6 +489,14 @@ public class AlgebraUtilities
 
         // compute determinant and store it in a new IScalar object
         return decomposition.det();
+    }
+    
+    public double trace(final IDoubleArray M)
+    {
+        double tr = 0;
+        for (int i=0; i<M.rows(); i++)
+            tr += M.get(i,i);
+        return tr;
     }
 
     public IEigenvalueDecomposition evd(final IDoubleArray matrix)

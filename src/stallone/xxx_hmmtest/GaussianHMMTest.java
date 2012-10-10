@@ -40,7 +40,7 @@ public class GaussianHMMTest
         List<IDataSequence> obs = new ArrayList();
         obs.add(seq);
 
-        IExpectationMaximization em = HMM.create.createGaussianHmm(obs, 2);
+        IExpectationMaximization em = HMM.create.emGaussian(obs, 2);
         em.setMaximumNumberOfStep(100);
         em.setLikelihoodDecreaseTolerance(1);
         

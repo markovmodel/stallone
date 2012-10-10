@@ -163,7 +163,10 @@ public class MinimalRMSDistance3D implements IMetric<IDoubleArray>
 
         for (int i = 0; i < N; i++)
         {
-            System.arraycopy(p_orig_nk[i], 0, p_shifted_nk[i], 0, DIM);
+            for (int j = 0; j < DIM; j++)
+            {
+                p_shifted_nk[i][j] = p_orig_nk[i][j] - p_centroid_k[j];
+            }
         }
     }
 

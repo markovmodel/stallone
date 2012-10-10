@@ -87,7 +87,7 @@ public class DataSequenceFactory
      * @return 
      */
     public IDataWriter createDataWriter(String file, int size, int dimension)
-            throws FileNotFoundException
+            throws FileNotFoundException, IOException
     {
         return DataSequenceFileFormats.createWriter(file, size, dimension);
     }    

@@ -6,6 +6,7 @@ package stallone.api.intsequence;
 
 import java.io.IOException;
 import java.util.List;
+import stallone.api.ints.IIntArray;
 import stallone.api.io.IO;
 import stallone.api.strings.Strings;
 import stallone.intsequence.*;
@@ -49,5 +50,10 @@ public class IntSequenceFactory
             throws IOException
     {
         return new IntSequenceWriterAsciiDense(file);
+    }
+    
+    public IntArrayTokenizer intSequenceTokenizer(IIntArray arr)
+    {
+        return new IntArrayTokenizer(arr);
     }
 }

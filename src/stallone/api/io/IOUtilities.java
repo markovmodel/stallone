@@ -138,6 +138,14 @@ public class IOUtilities
         }
     }
     
+    public String getDirectory(String fullname)
+    {
+        if (!fullname.contains("/"))
+            return(".");
+        else
+            return fullname.substring(0,fullname.lastIndexOf("/"));
+    }
+    
     public boolean canCreateFile(String filename)
     {
         IO.util.error ("Implement me: IOUtilities.canCreateFile(String)");

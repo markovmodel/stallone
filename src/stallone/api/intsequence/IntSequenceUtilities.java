@@ -30,6 +30,14 @@ public class IntSequenceUtilities
         return IntSequence.create.intSequenceLoader(files).loadAll();
     }    
 
+    public IIntArray loadIntSequence(String file)
+            throws IOException
+    {
+        List<String> files = new ArrayList();
+        files.add(file);
+        return loadIntSequences(files).get(0);
+    }    
+    
     public void writeIntSequence(IIntArray data, String file)
             throws IOException
     {
@@ -137,6 +145,7 @@ public class IntSequenceUtilities
         return lists;
     }
 
+    
     /**
      * Returns a list of times each integer value was continuously seen in the given path
      * @param paths a sequence of integers

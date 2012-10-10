@@ -4,6 +4,7 @@ import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
+import stallone.api.ints.Ints;
 import stallone.ints.PrimitiveIntArray;
 
 /**
@@ -139,6 +140,7 @@ public final class PCCA
             double comp = 0;
             double entry = 0;
             int[] index = new int[noOfClusters];
+            int[] indexAll = Ints.create.arrayRange(0, eigenvectors.rows()).getArray();
             IDoubleArray orthoSys = eigenvectors.copy();
             IDoubleArray dummy;
 
@@ -202,7 +204,7 @@ public final class PCCA
             /* Use the index-array with the representatives to compute the
              * transformation matrix, i.e., the matrix that maps the
              * representative to the edges of the standard simplex.*/
-            transMatrix = Algebra.util.inverse(eigenvectors.view(index, null));
+            transMatrix = Algebra.util.inverse(eigenvectors.view(index, indexAll));
 
             // currently cannot compute condition number
             //condTrans = A.cond(transMatrix);

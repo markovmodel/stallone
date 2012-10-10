@@ -24,6 +24,7 @@ import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
 
 import static stallone.api.API.*;
+import stallone.stat.DiscreteDistribution;
 
 /**
  *
@@ -165,6 +166,47 @@ public class HMMFactory
         
         return em;
     }        
+
+    /**
+     * 
+     * @param _obs
+     * @param initialParameters
+     * @param prior prior counts for the output probabilities
+     * @return 
+     */
+    public IExpectationMaximization emDiscrete(List<IDataSequence> _obs, IHMMParameters initialParameters, double[] prior)
+    {
+        // check if the data is event-based
+        boolean eventBased = false;
+        
+        // save memory?
+        boolean saveMemory = false;
+        
+        // output model and parametrizer
+        DiscreteDistribution dd = new DiscreteDistribution(initialParameters.getOutputParameters(0));
+        dd.setPrior(prior);
+        EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), dd, dd, saveMemory);
+        em.setInitialParameters(initialParameters);
+
+        return em;
+    }    
+    
+    public IExpectationMaximization emDiscrete(List<IDataSequence> _obs, IHMMParameters initialParameters)
+    {
+        // check if the data is event-based
+        boolean eventBased = false;
+        
+        // save memory?
+        boolean saveMemory = false;
+        
+        // output model and parametrizer
+        DiscreteDistribution dd = new DiscreteDistribution(initialParameters.getOutputParameters(0));
+        EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), dd, dd, saveMemory);
+        em.setInitialParameters(initialParameters);
+        
+        return em;
+    }    
+    
     
     public IExpectationMaximization emGaussian(List<IDataSequence> _obs, IHMMParameters initialParameters)
     {
@@ -200,7 +242,7 @@ public class HMMFactory
         return em;
     }    
     
-    public IExpectationMaximization createGaussianHmm(List<IDataSequence> _obs, int nstates)
+    public IExpectationMaximization emGaussian(List<IDataSequence> _obs, int nstates)
     {
         // check if the data is event-based
         boolean eventBased = true;

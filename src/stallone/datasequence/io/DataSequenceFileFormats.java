@@ -72,9 +72,9 @@ public class DataSequenceFileFormats
     }
     
     public static IDataWriter createWriter(String file, int size, int dimension)
-            throws FileNotFoundException
+            throws FileNotFoundException, IOException
     {
-        if (!new File(file).exists())
+        if (!new File(IO.util.getDirectory(file)).exists())
             throw new FileNotFoundException("File "+file+" cannot be written. Check if path name is valid and file location is accessible.");
 
         String extension = IO.util.getExtension(file);
@@ -87,6 +87,11 @@ public class DataSequenceFileFormats
         {
             writer = new StreamDataWriter(file);
         }
-        return(writer);    }
+        else
+        {
+            writer = new AsciiDataSequenceWriter(file);
+        }
+        return(writer);    
+    }
 
 }
