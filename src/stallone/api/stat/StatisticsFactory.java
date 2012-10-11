@@ -4,6 +4,7 @@
  */
 package stallone.api.stat;
 
+import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.ints.IIntList;
 import stallone.stat.*;
@@ -33,4 +34,9 @@ public class StatisticsFactory
         
         return splitter;
     }    
+    
+    public IDiscreteDistribution discreteDistribution(IDoubleArray probabilities)
+    {
+        return new DiscreteDistribution(probabilities);
+    }
 }

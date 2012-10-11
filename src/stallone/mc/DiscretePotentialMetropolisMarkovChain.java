@@ -8,6 +8,7 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.function.*;
+import stallone.stat.DiscreteDistributions;
 
 /**
 Generates a time- and space-discrete trajectory
@@ -17,7 +18,7 @@ public class DiscretePotentialMetropolisMarkovChain extends MarkovChain
 {
     public DiscretePotentialMetropolisMarkovChain(IGriddedFunction f, double kT)
     {
-        IDoubleArray T = Doubles.create.array(f.size(), f.size());
+        IDoubleArray _T = Doubles.create.array(f.size(), f.size());
         
         for (int i=0; i<f.size(); i++)
         {
@@ -34,12 +35,13 @@ public class DiscretePotentialMetropolisMarkovChain extends MarkovChain
                 double Ej = f.f(xj);
                 double pjump = (1.0 / neighbors.size()) * Math.min(1, Math.exp(-(Ej-Ei) / kT));
                 psum += pjump;
-                T.set(i, n, pjump);
+                _T.set(i, n, pjump);
             }
-            T.set(i,i, 1.0-psum);
+            _T.set(i,i, 1.0-psum);
         }
         
-        super.init(T);
+        super.T = _T;
+        super.dd = new DiscreteDistributions(_T);
     }
     
 }

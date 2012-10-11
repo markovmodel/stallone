@@ -4,6 +4,7 @@
  */
 package stallone.mc;
 
+import static stallone.api.API.*;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
@@ -11,6 +12,7 @@ import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
 import stallone.ints.PrimitiveIntArray;
 import stallone.ints.PrimitiveIntTools;
+import stallone.stat.DiscreteDistribution;
 import stallone.stat.DiscreteDistributions;
 
 /**
@@ -20,28 +22,74 @@ import stallone.stat.DiscreteDistributions;
  */
 public class MarkovChain
 {
+    protected IDoubleArray p0; // starting distribution. If not specified, the starting distribution is the stationary distribution
+    protected IDoubleArray T;
+    protected DiscreteDistributions dd;
+    
+    // fixed starting state?
+    private boolean fixedStartingState = false;
+    private int s = 0;
+    // starting distribution
+    private DiscreteDistribution p0dist;
 
-    private IDoubleArray T;
-    private DiscreteDistributions dd;
-
+    //skip
+    private int nskip=1;
+    
     protected MarkovChain()
     {
     }
 
     public MarkovChain(IDoubleArray _T)
     {
-        init(_T);
+        this.T = _T;
+        dd = new DiscreteDistributions(_T);
     }
 
-    protected final void init(IDoubleArray _T)
+    public MarkovChain(IDoubleArray _startingDistribution, IDoubleArray _T)
     {
         this.T = _T;
         dd = new DiscreteDistributions(_T);
+        this.p0 = _startingDistribution;
+        p0dist = new DiscreteDistribution(p0);
+    }    
+    
+    public void setStartingState(int _s)
+    {
+        s = _s;
+    }
+    
+    public void setStartingDistribution(IDoubleArray _p0)
+    {
+        p0 = _p0;
+        p0dist = new DiscreteDistribution(p0);
     }
 
     public IDoubleArray getTransitionMatrix()
     {
         return (T);
+    }
+    
+    private int startingState()
+    {
+        if (fixedStartingState)
+            return s;
+        else
+        {
+            if (p0 == null)
+            {
+                p0 = msm.stationaryDistribution(T);
+                p0dist = new DiscreteDistribution(p0);
+            }
+            return p0dist.sample();
+        }
+    }
+    
+    /**
+     * Sets the number of steps to be skipped in the output
+     */
+    private void setNSkip(int _nskip)
+    {
+        this.nskip = _nskip;
     }
 
     /**
@@ -50,11 +98,10 @@ public class MarkovChain
      * @param nskip number of steps between saved transitions
      * @return random trajectory of length N/nskip + 1
      */
-    public IIntArray randomTrajectory(int s, int N, int nskip)
+    public IIntArray randomTrajectory(int N)
     {
-
         int[] res = new int[(N / nskip)];
-        int c = s;
+        int c = startingState();
         res[0] = c;
         int k = 1;
         for (int i = 1; i < N; i++)
@@ -69,21 +116,16 @@ public class MarkovChain
         return (new PrimitiveIntArray(res));
     }
 
-    public IIntArray randomTrajectory(int s, int N)
-    {
-        return (randomTrajectory(s, N, 1));
-    }
-
     /**
      * @param startingState
      * @param terminalState
      * @param nskip number of steps between saved transitions
      * @return random trajectory of length N/nskip + 1
      */
-    public IIntArray randomTrajectoryToState(int startingState, int[] endStates, int nskip)
+    public IIntArray randomTrajectoryToState(int[] endStates)
     {
         IIntList res = Ints.create.list(0);
-        int c = startingState;
+        int c = startingState();
         res.append(c);
 
         int i = 0;
@@ -105,19 +147,14 @@ public class MarkovChain
      * Generates a random Trajectory of length N starting from s using the
      * transfer operator
      */
-    public void printRandomTrajectory(int s, int N)
+    public void printRandomTrajectory(int N)
     {
-        int c = s;
+        int c = startingState();
         System.out.println(c);
         for (int i = 0; i < N; i++)
         {
             c = dd.sample(c);
             System.out.println(c);
         }
-    }
-
-    public IIntArray randomTrajectoryToState(int startingState, int[] endStates)
-    {
-        return randomTrajectoryToState(startingState, endStates, 1);
     }
 }

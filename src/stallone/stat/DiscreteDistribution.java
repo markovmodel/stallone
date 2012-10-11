@@ -8,6 +8,7 @@ import static stallone.api.API.*;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IParametricFunction;
+import stallone.api.stat.IDiscreteDistribution;
 import stallone.api.stat.IParameterEstimator;
 import stallone.xxx_hmmtest.BinnedFretEfficiencyOutputModel_tmp;
 
@@ -15,7 +16,7 @@ import stallone.xxx_hmmtest.BinnedFretEfficiencyOutputModel_tmp;
  *
  * @author noe
  */
-public class DiscreteDistribution implements IParametricFunction, IParameterEstimator
+public class DiscreteDistribution implements IParametricFunction, IParameterEstimator, IDiscreteDistribution
 {
     private double[] priorCount; // prior count to be used when estimating from counts
     private double[] p, pinc;

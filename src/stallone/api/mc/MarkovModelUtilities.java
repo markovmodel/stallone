@@ -490,7 +490,8 @@ public class MarkovModelUtilities
     public IIntArray trajectory(IDoubleArray T, int s, int length)
     {
         MarkovChain mc = new MarkovChain(T);
-        return mc.randomTrajectory(s, length);        
+        mc.setStartingState(s);
+        return mc.randomTrajectory(length);        
     }
 
     /**
@@ -499,6 +500,7 @@ public class MarkovModelUtilities
     public IIntArray trajectoryToState(IDoubleArray T, int s, int[] endStates)
     {
         MarkovChain mc = new MarkovChain(T);
-        return mc.randomTrajectoryToState(s, endStates);        
+        mc.setStartingState(s);
+        return mc.randomTrajectoryToState(endStates);        
     }    
 }

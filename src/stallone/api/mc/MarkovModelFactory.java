@@ -11,6 +11,7 @@ import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
 import stallone.api.mc.*;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
+import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;
 import stallone.mc.correlations.*;
 import stallone.mc.estimator.*;
@@ -237,6 +238,16 @@ public class MarkovModelFactory
         DynamicalExpectationsSpectral dexp = new DynamicalExpectationsSpectral(T);
         dexp.setStationaryDistribution(pi);
         return(dexp);
+    }
+    
+    public MarkovChain markovChain(IDoubleArray T)
+    {
+        return new MarkovChain(T);
+    }
+    
+    public MarkovChain markovChain(IDoubleArray startingDistribution, IDoubleArray T)
+    {
+        return new MarkovChain(startingDistribution, T);
     }
     
 }
