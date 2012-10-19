@@ -24,6 +24,7 @@ import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
 
 import static stallone.api.API.*;
+import stallone.stat.DiscreteDistribution_Old;
 import stallone.stat.DiscreteDistribution;
 
 /**
@@ -200,7 +201,7 @@ public class HMMFactory
         boolean saveMemory = false;
         
         // output model and parametrizer
-        DiscreteDistribution dd = new DiscreteDistribution(initialParameters.getOutputParameters(0));
+        DiscreteDistribution_Old dd = new DiscreteDistribution_Old(initialParameters.getOutputParameters(0));
         EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), dd, dd, saveMemory);
         em.setInitialParameters(initialParameters);
         

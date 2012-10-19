@@ -37,6 +37,6 @@ public class StatisticsFactory
     
     public IDiscreteDistribution discreteDistribution(IDoubleArray probabilities)
     {
-        return new DiscreteDistribution(probabilities);
+        return new DiscreteDistribution_Old(probabilities);
     }
 }

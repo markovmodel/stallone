@@ -96,7 +96,8 @@ public class EMMultiStart implements IHMMOptimizer
                     emBest = em;
                     //System.out.println(" updating best. Now best likelihood: "+emBest.getHidden(0).logLikelihood());                
                 }
-            } catch (ParameterEstimationException e)
+            } 
+            catch (ParameterEstimationException e)
             {
                 System.out.println(" CAUGHT exception in EMmult (see below). Will continue with another try\n" + e);
             }

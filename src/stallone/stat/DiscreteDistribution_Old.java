@@ -16,26 +16,22 @@ import stallone.xxx_hmmtest.BinnedFretEfficiencyOutputModel_tmp;
  *
  * @author noe
  */
-public class DiscreteDistribution implements IParametricFunction, IParameterEstimator, IDiscreteDistribution
+public class DiscreteDistribution_Old implements IParametricFunction, IParameterEstimator, IDiscreteDistribution
 {
     private double[] priorCount; // prior count to be used when estimating from counts
-    private double[] count; // actual count
-    //
     private double[] p, pinc;
-    //private double weight; // total weight in the present estimate p;
+    private double weight; // total weight in the present estimate p;
 
-    public DiscreteDistribution(double[] _p)
+    public DiscreteDistribution_Old(double[] _p)
     {
         p = _p;
         pinc = new double[_p.length];
-        //
         priorCount = new double[_p.length];
-        count = new double[_p.length];
-        //weight = 0;
+        weight = 0;
         updateInc();
     }
     
-    public DiscreteDistribution(IDoubleArray arr)
+    public DiscreteDistribution_Old(IDoubleArray arr)
     {
         this(arr.getArray());
     }
@@ -79,7 +75,7 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
         for (int i=0; i<p.length; i++)
             p[i] = par.get(i);
         updateInc();
-        //weight = 1;
+        weight = 1;
     }
 
     @Override
@@ -128,59 +124,26 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
     }
 
     @Override
-    public DiscreteDistribution copy()
+    public DiscreteDistribution_Old copy()
     {
-        DiscreteDistribution dd = new DiscreteDistribution(doubleArrays.copy(p));
+        DiscreteDistribution_Old dd = new DiscreteDistribution_Old(doubleArrays.copy(p));
         dd.setPrior(doubleArrays.copy(priorCount));
         return dd;
     }
-    
+
     @Override
     public IDoubleArray estimate(IDataSequence data)
     {
-        initialize();
-        addToEstimate(data);
-        return getEstimate();
-    }
-
-    @Override
-    public IDoubleArray estimate(IDataSequence data, IDoubleArray weights)
-    {
-        initialize();
-        addToEstimate(data, weights);
-        return getEstimate();
-    }
-
-    @Override
-    public void initialize()
-    {
-        java.util.Arrays.fill(count, 0);
-        updateInc();
-    }
-
-    @Override
-    public void initialize(IDoubleArray initPar)
-    {
-        p = initPar.getArray();
-        updateInc();
-    }
-    
-    private void count2p()
-    {
-        double[] totalcounts = doubleArrays.add(priorCount, count);
-        this.p = doubleArrays.multiply(1.0/doubleArrays.sum(totalcounts), totalcounts);  
-        updateInc();
-    }
-    
-
-    @Override
-    public void addToEstimate(IDataSequence data)
-    {
+        System.out.println("making an unweighted estimate");
+        p = doubleArrays.copy(priorCount);
+        weight = doubleArrays.sum(priorCount);
+        
         if (data.dimension() == p.length)
         {
             for (IDoubleArray arr : data)
             {
-                doubleArrays.increment(count, arr.getArray());
+                doubleArrays.increment(p, arr.getArray());
+                weight += doubleArrays.sum(p);
             }
         }
         else
@@ -189,28 +152,39 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
             {
                 for (IDoubleArray arr : data)
                 {
-                    count[(int)arr.get(0)] += 1.0;
+                    p[(int)arr.get(0)] += 1.0;
+                    weight += 1.0;
                 }
             }
             else
                 throw new IllegalArgumentException("incompatible dimension of observation");
         }
         
-        count2p();        
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
+        updateInc();
+        return doublesNew.arrayFrom(p);
     }
 
     @Override
-    public void addToEstimate(IDataSequence data, IDoubleArray weights)
+    public IDoubleArray estimate(IDataSequence data, IDoubleArray weights)
     {
-        if (data.dimension() == count.length)
+        /*
+        System.out.println("making a weighted estimate with weights "+weights.get(1000)+"....");
+        p = doubleArrays.copy(priorCount);
+        weight = doubleArrays.sum(priorCount);
+        System.out.println("initial p = "+doubleArrays.toString(p,", "));
+        System.out.println("weight = "+weight);
+       */
+        if (data.dimension() == p.length)
         {
             for (int i=0; i<data.size(); i++)
             {
                 IDoubleArray arr = data.get(i);
                 double w = weights.get(i);
-                for (int j=0; j<count.length; j++)
+                for (int j=0; j<p.length; j++)
                 {
-                    count[j] += w*arr.get(j);
+                    p[j] += w*arr.get(j);
+                    weight += w;
                 }
             }
         }
@@ -221,7 +195,8 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
                 for (int i=0; i<data.size(); i++)
                 {
                     IDoubleArray arr = data.get(i);
-                    count[(int)arr.get(0)] += weights.get(i);
+                    p[(int)arr.get(0)] += weights.get(i);
+                    weight += weights.get(i);
                 }
             }
             else
@@ -229,7 +204,65 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
         }
 
         
-        count2p();        
+        //System.out.println("estimate before normalization: "+doubleArrays.toString(p,", "));
+        
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
+        //System.out.println("estimate after normalization: "+doubleArrays.toString(p,", "));
+        updateInc();
+        //System.out.println("estimate after inc: "+doubleArrays.toString(p,", "));
+        return doublesNew.arrayFrom(p);
+    }
+
+    @Override
+    public void initialize()
+    {
+        p = doubleArrays.copy(priorCount);
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        updateInc();
+        weight = doubleArrays.sum(priorCount);
+    }
+
+    @Override
+    public void initialize(IDoubleArray initPar)
+    {
+        p = initPar.getArray();
+        updateInc();
+        weight = 1.0;
+    }
+
+    @Override
+    public void addToEstimate(IDataSequence data)
+    {
+        double[] oldEstimate = doubleArrays.copy(p);
+        double oldWeight = weight;
+
+        estimate(data);
+
+        // update p
+        p = doubleArrays.addWeighted(oldWeight, oldEstimate, weight, p);
+        // remove prior once to avoid double-counting
+        p = doubleArrays.subtract(p, priorCount);
+
+        // renormalize
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        weight += oldWeight;
+    }
+
+    @Override
+    public void addToEstimate(IDataSequence data, IDoubleArray weights)
+    {
+        double[] oldEstimate = doubleArrays.copy(p);
+        double oldWeight = weight;
+
+        estimate(data, weights);
+
+        p = doubleArrays.addWeighted(oldWeight, oldEstimate, weight, p);
+        // remove prior once to avoid double-counting
+        p = doubleArrays.subtract(p, priorCount);
+
+        // renormalize
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        weight += oldWeight;
     }
 
     @Override

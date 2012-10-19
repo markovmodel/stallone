@@ -12,7 +12,7 @@ import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
 import stallone.ints.PrimitiveIntArray;
 import stallone.ints.PrimitiveIntTools;
-import stallone.stat.DiscreteDistribution;
+import stallone.stat.DiscreteDistribution_Old;
 import stallone.stat.DiscreteDistributions;
 
 /**
@@ -30,7 +30,7 @@ public class MarkovChain
     private boolean fixedStartingState = false;
     private int s = 0;
     // starting distribution
-    private DiscreteDistribution p0dist;
+    private DiscreteDistribution_Old p0dist;
 
     //skip
     private int nskip=1;
@@ -50,7 +50,7 @@ public class MarkovChain
         this.T = _T;
         dd = new DiscreteDistributions(_T);
         this.p0 = _startingDistribution;
-        p0dist = new DiscreteDistribution(p0);
+        p0dist = new DiscreteDistribution_Old(p0);
     }    
     
     public void setStartingState(int _s)
@@ -61,7 +61,7 @@ public class MarkovChain
     public void setStartingDistribution(IDoubleArray _p0)
     {
         p0 = _p0;
-        p0dist = new DiscreteDistribution(p0);
+        p0dist = new DiscreteDistribution_Old(p0);
     }
 
     public IDoubleArray getTransitionMatrix()
@@ -78,7 +78,7 @@ public class MarkovChain
             if (p0 == null)
             {
                 p0 = msm.stationaryDistribution(T);
-                p0dist = new DiscreteDistribution(p0);
+                p0dist = new DiscreteDistribution_Old(p0);
             }
             return p0dist.sample();
         }

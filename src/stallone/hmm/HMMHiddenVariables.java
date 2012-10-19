@@ -208,7 +208,7 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
 
     public boolean checkPout(int t)
     {
-        if (DoublesPrimitive.util.sum(this.pout[t]) <= 0)
+        if (DoublesPrimitive.util.sum(this.pout[t]) <= 0 || Double.isNaN(DoublesPrimitive.util.sum(this.pout[t])))
         {
             return (false);
         }

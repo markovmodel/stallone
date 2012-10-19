@@ -15,7 +15,7 @@ import stallone.api.hmm.IHMM;
 import stallone.api.hmm.IHMMParameters;
 import stallone.api.hmm.ParameterEstimationException;
 import stallone.api.ints.IIntArray;
-import stallone.stat.DiscreteDistribution;
+import stallone.stat.DiscreteDistribution_Old;
 
 /**
  *
@@ -33,9 +33,9 @@ public class DiscreteHMMTest
         IIntArray hiddenTraj = msm.trajectory(T, 0, 10000);
 
         double[] poutArr1 = {0.0, 0.1, 0.2, 0.4, 0.2, 0.1, 0.0, 0.0, 0.0};
-        DiscreteDistribution pout1 = new DiscreteDistribution(poutArr1);        
+        DiscreteDistribution_Old pout1 = new DiscreteDistribution_Old(poutArr1);        
         double[] poutArr2 = {0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.2, 0.1, 0.0};
-        DiscreteDistribution pout2 = new DiscreteDistribution(poutArr2);
+        DiscreteDistribution_Old pout2 = new DiscreteDistribution_Old(poutArr2);
         int nSamplePerTimestep = 5;
 
         // create observation
