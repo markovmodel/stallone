@@ -218,8 +218,14 @@ public class BlockFileReader extends CachedAsciiFileReader
         checkLineArrayRequest(line, WORDTYPE_DOUBLE);
         return Strings.util.toDoubleArray(currentWords);
     }
+    
+    public int countColumnsIntRow(int line)
+    {
+        readLine(line);
+        return currentWords.length;
+    }
 
-    private int countElementsInColumn(int column, int expectedType)
+    public int countElementsInColumn(int column, int expectedType)
     {
         // count elements
         int size = 0;

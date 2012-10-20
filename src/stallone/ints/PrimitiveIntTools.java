@@ -1261,7 +1261,7 @@ public class PrimitiveIntTools
     {
         if (start > end)
             throw(new IllegalArgumentException("Invalid range: ["+start+", "+end+", "+step+"]"));
-        int[] res = new int[(int) Math.ceil((end - start) / step)];
+        int[] res = new int[(int) Math.ceil((double)(end - start) / (double)step)];
 
         if (res.length > 0)
         {
