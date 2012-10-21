@@ -40,7 +40,7 @@ public class DoubleIO
     public static String toString(IDoubleArray arr, String del)
     {
         StringBuilder strb = new StringBuilder();
-        print(arr, ", ", strb);
+        print(arr, "\t", strb);
         return(strb.toString());
     }
 
@@ -96,15 +96,16 @@ public class DoubleIO
     {
         try
         {
-        for (int i = 0; i < arr.rows(); i++)
-        {
-            for (int j = 0; j < arr.columns(); j++)
+            for (int i = 0; i < arr.rows(); i++)
             {
-                app.append(String.valueOf(arr.get(i,j)));
-                app.append(coldel);
+                for (int j = 0; j < arr.columns(); j++)
+                {
+                    app.append(String.valueOf(arr.get(i,j)));
+                    if (j < arr.columns()-1)
+                        app.append(coldel);
+                }
+                app.append(linedel);
             }
-            app.append(linedel);
-        }
         }
         catch (IOException e)
         {
@@ -118,15 +119,16 @@ public class DoubleIO
     {        
         try
         {
-        for (int i = 0; i < arr.rows(); i++)
-        {
-            for (int j = 0; j < arr.columns(); j++)
+            for (int i = 0; i < arr.rows(); i++)
             {
-                app.append(StringTools.toPrecision(arr.get(i,j), predig, postdig));
-                app.append(coldel);
+                for (int j = 0; j < arr.columns(); j++)
+                {
+                    app.append(StringTools.toPrecision(arr.get(i,j), predig, postdig));
+                    if (j < arr.columns()-1)
+                        app.append(coldel);
+                }
+                app.append(linedel);
             }
-            app.append(linedel);
-        }
         }
         catch (IOException e)
         {
@@ -137,20 +139,24 @@ public class DoubleIO
         
     public static String toString(IDoubleArray arr)
     {
-        if (arr.order() <= 1)
-            return(toString(arr, ", "));
+        if (arr.order() <= 1 && arr.columns() == 1)
+            return(toString(arr, "\n"));
+        else if (arr.order() <= 1 && arr.rows() == 1)
+            return(toString(arr, "\t"));
         else if (arr.order() == 2)
-            return (toString(arr, ", ", "\n"));
+            return (toString(arr, "\t", "\n"));
         else 
             throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
     }
     
     public static void print(IDoubleArray arr, Appendable out)
     {
-        if (arr.order() <= 1)
-            print(arr, ", ", out);
+        if (arr.order() <= 1 && arr.columns() == 1)
+            print(arr, "\n", out);
+        else if (arr.order() <= 1 && arr.rows() == 1)
+            print(arr, "\t", out);
         else if (arr.order() == 2)
-            print(arr, ", ", "\n", out);
+            print(arr, "\t", "\n", out);
         else
             throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
     }

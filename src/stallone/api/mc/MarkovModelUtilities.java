@@ -251,8 +251,11 @@ public class MarkovModelUtilities
             int j = it.column();
             double fij = pi.get(i)*it.get();
             double fji = pi.get(j)*T.get(j,i);
-            if(Math.abs((fij-fji)/(fij+fji)) > 1e-6)
-                return(false);
+            if ((fij+fji) > 1e-10)
+                if(Math.abs((fij-fji)/(fij+fji)) > 1e-6)
+                {
+                    return(false);
+                }
         }
         return(true);
     }
