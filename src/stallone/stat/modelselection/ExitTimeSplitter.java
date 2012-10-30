@@ -158,6 +158,17 @@ public class ExitTimeSplitter
     {
         return newStates;
     }
+    
+    /**
+     * Returns the split parameters for the requested state
+     * @param state
+     * @return if not split: (1, k, 0), where k is the exit rate
+     * if split: (a, k1, k2), where the exit time model is a*exp(-k1 t) + (1-a)*exp(-k2 t) 
+     */
+    public double[] getSplittingParameters(int state)
+    {
+        return splittingParameters[state];
+    }
 
     public void printResult()
     {

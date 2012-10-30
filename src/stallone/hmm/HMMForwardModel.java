@@ -20,7 +20,7 @@ import stallone.api.mc.MarkovModel;
  * distribution estimation.
  * @author noe
  */
-public class HMMForwardModel// implements IHMMFowardModel
+public class HMMForwardModel implements IHMMForwardModel
 {
     private List<IDataSequence> obs;
 
@@ -99,6 +99,18 @@ public class HMMForwardModel// implements IHMMFowardModel
     {
         return nstates;
     }
+    
+    //@Override
+    public int getNObs()
+    {
+        return obs.size();
+    }        
+    
+    //@Override
+    public int getNObs(int traj)
+    {
+        return obs.get(traj).size();
+    }    
     
     public boolean isEventBased()
     {

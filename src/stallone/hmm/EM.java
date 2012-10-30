@@ -312,6 +312,12 @@ public class EM implements IExpectationMaximization, IHMM
         return logLikelihood;
     }
     
+    public List<IIntArray> viterbi()
+    {
+        Viterbi v = new Viterbi(model);
+        return v.getPaths();
+    }
+    
     public IHMM getHMM()
     {
         return this;

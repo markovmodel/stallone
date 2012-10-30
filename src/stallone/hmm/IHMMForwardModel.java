@@ -12,7 +12,7 @@ import stallone.api.hmm.IHMMParameters;
  * transition and output probabilities for his specific model
  * @author noe
  */
-public interface IHMMFowardModel
+public interface IHMMForwardModel
 {
     /**
      * Returns the number of states
@@ -20,6 +20,18 @@ public interface IHMMFowardModel
      */
     public int getNStates();
 
+    /**
+     * Returns the number of observation trajectories
+     * @return the number of observation trajectories
+     */
+    public int getNObs();
+        
+    /**
+     * Returns the number of observations at trajectory traj
+     * @return the number of observations in this trajectory
+     */
+    public int getNObs(int traj);
+    
     /**
      * Returns initial state probability
      * @param traj trajectory index
