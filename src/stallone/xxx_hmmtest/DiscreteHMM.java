@@ -127,7 +127,7 @@ public class DiscreteHMM
         IHMM hmmEst = EM.getHMM();
         IHMMParameters parEst = hmmEst.getParameters();
         // output
-        io.writeString(cmd.outDir+"/likelihoods.out", doubleArrays.toString(EM.getLikelihoodHistory(),"\n"));
+        io.writeString(cmd.outDir+"/likelihoods.out", doubleArrays.toString(EM.getLogLikelihoodHistory(),"\n"));
         // transition matrix
         SparseDoubleArrayAsciiWriter writer = new SparseDoubleArrayAsciiWriter(parEst.getTransitionMatrix(), cmd.outDir+"/T.dat");
         writer.perform();

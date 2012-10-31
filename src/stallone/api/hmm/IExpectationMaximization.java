@@ -33,5 +33,5 @@ public interface IExpectationMaximization extends IHMMOptimizer
      * Returns the likelihood history of the optimization
      * @return 
      */
-    public double[] getLikelihoodHistory();
+    public double[] getLogLikelihoodHistory();
 }

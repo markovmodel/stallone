@@ -323,7 +323,7 @@ public class EM implements IExpectationMaximization, IHMM
         return this;
     }
     
-    public double[] getLikelihoodHistory()
+    public double[] getLogLikelihoodHistory()
     {
         return likelihoods;
     }

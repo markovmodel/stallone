@@ -20,4 +20,7 @@ public interface IHMM
     public List<IIntArray> viterbi();
     
     public double getLogLikelihood();    
+    
+    public double[] getLogLikelihoodHistory();    
+    
 }

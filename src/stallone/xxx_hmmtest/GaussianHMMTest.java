@@ -48,7 +48,7 @@ public class GaussianHMMTest
         System.out.println("Initial Parameters: "+em.getHMM().getParameters());
         
         em.run();
-        double[] L = em.getLikelihoodHistory();
+        double[] L = em.getLogLikelihoodHistory();
         
         DoublesPrimitive.util.print(L,"\n");
         

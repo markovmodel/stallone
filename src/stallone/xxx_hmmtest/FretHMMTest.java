@@ -72,7 +72,7 @@ public class FretHMMTest
             em.setMaximumNumberOfStep(100);
             em.setLikelihoodDecreaseTolerance(0.1);
             em.run();
-            double[] logHistory = em.getLikelihoodHistory();
+            double[] logHistory = em.getLogLikelihoodHistory();
             
             /*
             System.out.println("path: ");

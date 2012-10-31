@@ -84,7 +84,7 @@ public class DiscreteHMMTest
         EM.setLikelihoodDecreaseTolerance(0.1);
         EM.run();
         
-        double[] likelihoods = EM.getLikelihoodHistory();
+        double[] likelihoods = EM.getLogLikelihoodHistory();
         System.out.println("likelihoods:\n"+doubleArrays.toString(likelihoods,"\n"));
         System.out.println();
         IHMM hmmEst = EM.getHMM();
