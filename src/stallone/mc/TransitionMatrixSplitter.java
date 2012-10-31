@@ -26,15 +26,15 @@ public class TransitionMatrixSplitter
     public IDoubleArray splitForLifetimes(int state, double p1, double k1, double k2)
     {
         // test input!
-        System.out.println("Splitting state "+state);
-        
-        // useful stuff
-        int n = T_old.rows();
+        System.out.println("Splitting state "+state+"\t to probability "+p1+"\tk1 "+k1+"\tk2 "+k2);
         
         // compute correlation matrix
         IDoubleArray pi_old = msm.stationaryDistribution(T_old);
         IDoubleArray Pi_old = doublesNew.diag(pi_old);
         IDoubleArray C_old = alg.product(Pi_old, T_old);
+        // useful stuff
+        int n = T_old.rows();
+        double pi_state_old = pi_old.get(state);
         
         System.out.println("C_old = \n"+C_old);
         System.out.println();
@@ -63,31 +63,32 @@ public class TransitionMatrixSplitter
         // compute diagonal elements
         double d1 = pi_split_1 * Math.exp(-k1);
         double d2 = pi_split_2 * Math.exp(-k2);
-        double epsilon = 1e-4;
-        double diag_el_1 = Math.min(d1,d1*C_old.get(state,state)/(d1+d2) - epsilon);
-        double diag_el_2 = Math.min(d2,d2*C_old.get(state,state)/(d1+d2) - epsilon);
-        C_split.set(state,state,diag_el_1);
-        C_split.set(n,n,diag_el_2);
-
-        System.out.println("diag_el_1 = "+diag_el_1);
-        System.out.println("diag_el_2 = "+diag_el_2);
+        C_split.set(state,state,d1);
+        C_split.set(n,n,d2);
+        System.out.println("d1 = "+d1);
+        System.out.println("d2 = "+d2);
         
-        // compute transition elements in splitting block
-        double split_block_trans = 0.5*(C_old.get(state,state) - diag_el_1 - diag_el_2);
+        // set transition elements in the splitting block
+        double split_block_trans = Math.min(pi_split_1 - d1, pi_split_2 - d2) / (double)(n+1);
         C_split.set(state, n, split_block_trans);
         C_split.set(n, state, split_block_trans);
 
         System.out.println("trans_el = "+split_block_trans);
-        System.out.println("checking sums : "+(C_split.get(state,state)+C_split.get(n,n)+2*split_block_trans)+" = "+C_old.get(state,state));        
         
         // set remaining elements
+        double sum_old = pi_state_old - C_old.get(state,state);
+        double rest1 = pi_split_1 - d1 - split_block_trans;
+        double rest2 = pi_split_2 - d2 - split_block_trans;
+        System.out.println("sum_old = "+sum_old);
+        System.out.println("rest1 = "+rest1);
+        System.out.println("rest2 = "+rest2);
         for (int i=0; i<n; i++)
         {
             if (i != state)
             {
-                C_split.set(state, i, C_old.get(state,i) * pi_split.get(state)/pi_old.get(state));
+                C_split.set(state, i, rest1 * C_old.get(state,i)/sum_old);
                 C_split.set(i, state, C_split.get(state,i));
-                C_split.set(n, i, C_old.get(state,i) - C_split.get(state, i));
+                C_split.set(n, i, rest2 * C_old.get(state,i)/sum_old);
                 C_split.set(i, n, C_split.get(n,i));
             }
         }
@@ -100,8 +101,16 @@ public class TransitionMatrixSplitter
         
         System.out.println("T_split = \n"+T_split);
 
-        double err = alg.distance(msm.stationaryDistribution(T_split), pi_split);
+        IDoubleArray pi_res = msm.stationaryDistribution(T_split);
+        double err = alg.distance(pi_res, pi_split);
         System.out.println("pi error = "+err);
+        
+        double p1_res = pi_res.get(state) / (pi_res.get(state)+pi_res.get(n));
+        double k1_res = -Math.log(T_split.get(state,state));
+        double k2_res = -Math.log(T_split.get(n,n));
+        System.out.println("Have obtained parameters: p1 "+p1_res+"\tk1 "+k1_res+"\tk2 "+k2_res);
+        System.out.println("Compared to reference:    p1 "+p1+"\tk1 "+k1+"\tk2 "+k2);
+
         
         return T_split;
     }
