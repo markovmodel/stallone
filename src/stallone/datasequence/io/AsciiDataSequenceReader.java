@@ -75,7 +75,14 @@ public class AsciiDataSequenceReader
     {
         if (selectedColumns == null)
         {
-            return StringTools.isDoubleArray(textline);
+            try
+            {
+                double[] dline = StringTools.toDoubleArray(textline);
+                dimension = dline.length;
+                return true;
+            }
+            catch(Exception e)
+            {return false;}
         }
         else
         {
@@ -126,7 +133,10 @@ public class AsciiDataSequenceReader
     @Override
     public int dimension()
     {
-        return selectedColumns.length;
+        if (selectedColumns != null)
+            return selectedColumns.length;
+        else
+            return dimension;
     }
 
     @Override

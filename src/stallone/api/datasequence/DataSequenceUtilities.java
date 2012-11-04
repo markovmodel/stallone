@@ -114,6 +114,7 @@ public class DataSequenceUtilities
         try
         {
             IDataReader input = DataSequence.create.createASCIIDataReader(inputFile);
+            input.scan();
             res = new PrimitiveDoubleTable(input.size(), input.dimension());
             int line = 0;
             for (Iterator<IDoubleArray> it = input.iterator(); it.hasNext(); line++)
