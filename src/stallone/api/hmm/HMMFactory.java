@@ -133,7 +133,7 @@ public class HMMFactory
         return em;
     }    
     
-    public IHMMOptimizer emMultiStart(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters,
+    public IHMMOptimizer emMultiStart(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters[] initialParameters,
             int nscansteps, int nscans, int nconvsteps, double dectol)
     {
         // check if the data is event-based
@@ -144,7 +144,6 @@ public class HMMFactory
         
         EMMultiStart em = new EMMultiStart(_obs, outputModel, outputEstimator, initialParameters);
         em.setNumberOfScanningSteps(nscansteps);
-        em.setNumberOfScans(nscans);
         em.setNumberOfConvergenceSteps(nconvsteps);
         em.setLikelihoodDecreaseTolerance(dectol);
         

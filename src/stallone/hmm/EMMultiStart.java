@@ -21,19 +21,18 @@ public class EMMultiStart implements IHMMOptimizer
     private List<IDataSequence> obs;
     private IParametricFunction outputModel;
     private IParameterEstimator outputEstimator;
-    private IHMMParameters initialParameters;
+    private IHMMParameters[] initialParameters;
     private int nstates;
     
     // optimization parameters
     private int nscansteps;
-    private int nscans;
     private int nconvsteps;
     private double dectol;
     
     // result
     private IHMM hmmBest = null;
     
-    public EMMultiStart(List<IDataSequence> _obs, IParametricFunction _outputModel, IParameterEstimator _outputEstimator, IHMMParameters _initialParameters)
+    public EMMultiStart(List<IDataSequence> _obs, IParametricFunction _outputModel, IParameterEstimator _outputEstimator, IHMMParameters[] _initialParameters)
     {
         this.obs = _obs;
         this.outputModel = _outputModel;
@@ -44,11 +43,6 @@ public class EMMultiStart implements IHMMOptimizer
     public void setNumberOfScanningSteps(int steps)
     {
         this.nscansteps = steps;
-    }
-
-    public void setNumberOfScans(int n)
-    {
-        this.nscans = n;
     }
 
     public void setNumberOfConvergenceSteps(int steps)
@@ -68,12 +62,12 @@ public class EMMultiStart implements IHMMOptimizer
 
         IExpectationMaximization emBest = null;
 
-        for (int i = 0; i < nscans; i++)
+        for (int i = 0; i < initialParameters.length; i++)
         {
             System.out.println("SCAN " + i);
 
             // construct HMM
-            IExpectationMaximization em = HMM.create.em(obs, outputModel, outputEstimator, initialParameters);
+            IExpectationMaximization em = HMM.create.em(obs, outputModel, outputEstimator, initialParameters[i]);
 
             double[] likelihoods = null;
             try

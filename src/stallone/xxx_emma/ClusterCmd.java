@@ -10,6 +10,7 @@ import java.util.List;
 import stallone.api.cluster.Clustering;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.*;
+import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.io.IO;
@@ -18,6 +19,9 @@ import stallone.doubles.EuclideanDistance;
 import stallone.doubles.MinimalRMSDistance3D;
 import stallone.util.CommandLineParser;
 import stallone.util.MemUtil;
+
+import static stallone.api.API.*;
+import stallone.api.algebra.IEigenvalueDecomposition;
 
 /**
  *
