@@ -330,11 +330,11 @@ public class MarkovModelUtilities
             throw(new IllegalArgumentException("Trying to calculate timescales of a matrix that is not a transition matrix"));
         
         IEigenvalueDecomposition evd = Algebra.util.evd(T);
-        IDoubleArray ev = evd.getEval();
+        IDoubleArray ev = evd.getEvalNorm();
 
         IDoubleArray timescales = Doubles.create.array(ev.size()-1);
         for (int i=0; i<timescales.size(); i++)
-            timescales.set(i, -tau/Math.log(Math.abs(ev.get(i+1))));
+            timescales.set(i, -tau/Math.log(ev.get(i+1)));
         
         return(timescales);
     }

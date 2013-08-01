@@ -70,6 +70,7 @@ public class API
     public static GraphFactory graphNew = new GraphFactory();
     
     public static IOUtilities io = new IOUtilities();
+    public static IOFactory ioNew = new IOFactory();
     
     
     

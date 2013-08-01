@@ -55,11 +55,13 @@ public class MarkovChain
     
     public void setStartingState(int _s)
     {
+        fixedStartingState = true;
         s = _s;
     }
     
     public void setStartingDistribution(IDoubleArray _p0)
     {
+        fixedStartingState = false;
         p0 = _p0;
         p0dist = new DiscreteDistribution_Old(p0);
     }

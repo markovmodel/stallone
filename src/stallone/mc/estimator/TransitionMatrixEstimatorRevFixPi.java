@@ -21,8 +21,10 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
 {
     // convergence
 
-    private int nIterMax = 1000;
-    private int nIterPer1 = 10;
+    //private int nIterMax = 10000;
+    //private int nIterPer1 = 100;
+    private int nIterMax = 1000000;
+    private int nIterPer1 = 1000;
     private IDoubleList logliks = Doubles.create.list(nIterMax);
 
     private IDoubleArray C;    
@@ -105,12 +107,12 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         this.itX = X.nonzeroIterator();
         
         // TEST
-        /*double[][] T2 = DoubleArrays.copy(X);
-        for (int i = 0; i < T2.length; i++)
-        {
-            T2[i] = DoubleArrays.multiply(1.0 / DoubleArrays.sum(T2[i]), T2[i]);
-        }
-        double[] sd2 = StationaryDistribution.calculateReversible(T2);*/
+        /*System.out.println("Testing X: ");
+        IDoubleArray T2 = X.copy();
+        alg.normalizeRows(T2, 1);
+        IDoubleArray pitest = msm.stationaryDistribution(T2);
+        for (int i=0; i<pitest.size(); i++)
+            System.out.println(pi.get(i)+"\t"+pitest.get(i));*/
     }
     
     private double logL()

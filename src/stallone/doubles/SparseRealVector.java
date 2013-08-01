@@ -34,6 +34,7 @@ public class SparseRealVector extends AbstractDoubleArray
      */
     public SparseRealVector(final int size)
     {
+        sparseIndexMap = new MyIndexMap(size);
         data = new double[0];
     }
 

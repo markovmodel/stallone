@@ -4,6 +4,7 @@
  */
 package stallone.xxx_emma;
 
+import static stallone.api.API.*;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stallone.api.algebra.Algebra;
+import stallone.api.complex.IComplexArray;
 
 import stallone.api.discretization.*;
 import stallone.api.doubles.*;
