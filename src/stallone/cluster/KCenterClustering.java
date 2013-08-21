@@ -36,7 +36,7 @@ public class KCenterClustering implements IClustering, IDiscretization
      * Metric which is used as distance measure @see
      * biocomp.phaseprofiler.clustering.interfaces.IMetric
      */
-    private IMetric distanceMetric;
+    private IMetric<IDoubleArray> distanceMetric;
     /**
      * total number of clusters.
      */
@@ -170,7 +170,7 @@ public class KCenterClustering implements IClustering, IDiscretization
     }
 
     @Override
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric<IDoubleArray> metric)
     {
         this.distanceMetric = metric;
     }

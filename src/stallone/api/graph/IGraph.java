@@ -6,7 +6,7 @@ import java.util.Iterator;
  *
  * @author  Martin Senne
  */
-public interface IGraph<NodeType, EdgeType extends IEdge>
+public interface IGraph<NodeType, EdgeType extends IEdge<?>>
 {
     boolean contains(NodeType vertex);
 

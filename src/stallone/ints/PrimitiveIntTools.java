@@ -162,12 +162,12 @@ public class PrimitiveIntTools
         return (res);
     }
 
-    public static int[] List2Array(Collection al)
+    public static int[] List2Array(Collection<Integer> al)
     {
         int size = al.size();
         int[] res = new int[size];
         int k = 0;
-        Iterator i = al.iterator();
+        Iterator<Integer> i = al.iterator();
         while (i.hasNext())
         {
             res[k++] = ((Integer) i.next()).intValue();
@@ -175,12 +175,12 @@ public class PrimitiveIntTools
         return (res);
     }
 
-    public static int[][] List2Array2(Collection al)
+    public static int[][] List2Array2(Collection<?> al)
     {
         int size = al.size();
         int[][] res = new int[size][];
         int k = 0;
-        Iterator i = al.iterator();
+        Iterator<?> i = al.iterator();
         while (i.hasNext())
         {
             res[k++] = (int[]) i.next();
@@ -188,12 +188,12 @@ public class PrimitiveIntTools
         return (res);
     }
 
-    public static int[][][] List2Array3(Collection al)
+    public static int[][][] List2Array3(Collection<?> al)
     {
         int size = al.size();
         int[][][] res = new int[size][][];
         int k = 0;
-        Iterator i = al.iterator();
+        Iterator<?> i = al.iterator();
         while (i.hasNext())
         {
             res[k++] = (int[][]) i.next();
@@ -310,10 +310,10 @@ public class PrimitiveIntTools
         return (res);
     }
 
-    public static int[] fromLinkedList(LinkedList ll)
+    public static int[] fromLinkedList(LinkedList<?> ll)
     {
         int[] res = new int[ll.size()];
-        Iterator i = ll.iterator();
+        Iterator<?> i = ll.iterator();
         int k = 0;
         while (i.hasNext())
         {
@@ -1056,7 +1056,7 @@ public class PrimitiveIntTools
 
     public static int[] findAll(int[] arr, int val)
     {
-        LinkedList ll = new LinkedList();
+        LinkedList<Integer> ll = new LinkedList<Integer>();
         for (int i = 0; i < arr.length; i++)
         {
             if (arr[i] == val)
@@ -1069,7 +1069,7 @@ public class PrimitiveIntTools
 
     public static int[] findAll(int[] arr, int[] val)
     {
-        LinkedList ll = new LinkedList();
+        LinkedList<Integer> ll = new LinkedList<Integer>();
         for (int i = 0; i < arr.length; i++)
         {
             if (PrimitiveIntTools.contains(val, arr[i]))
@@ -1394,7 +1394,7 @@ public class PrimitiveIntTools
         LinkedList[] bins = new LinkedList[nbins];
         for (int i = 0; i < bins.length; i++)
         {
-            bins[i] = new LinkedList();
+            bins[i] = new LinkedList<Object>();
         }
 
         for (int i = 0; i < indexes.length; i++)
@@ -1405,7 +1405,7 @@ public class PrimitiveIntTools
         int[] result = new int[indexes.length];
         for (int i = 0, k = 0; i < bins.length; i++)
         {
-            Iterator it = bins[i].iterator();
+            Iterator<?> it = bins[i].iterator();
             while (it.hasNext())
             {
                 result[k++] = ((Integer) it.next()).intValue();

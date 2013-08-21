@@ -25,12 +25,12 @@ public class ClusterUtilities
         return clustering;
     }
     
-    public IClustering kmeans(IDataSequence data, IMetric metric, int k, int maxIter)
+    public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
     {
         return (perform(Clustering.create.createKmeans(data,metric,k,maxIter)));
     }
 
-    public IClustering kmeans(Iterable<IDoubleArray> data, int size, IMetric metric, int k, int maxIter)
+    public IClustering kmeans(Iterable<IDoubleArray> data, int size, IMetric<?> metric, int k, int maxIter)
     {
         return (perform(Clustering.create.createKmeans(data,size,metric,k,maxIter)));
     }
@@ -55,22 +55,23 @@ public class ClusterUtilities
         return (perform(Clustering.create.createKmeans(data,size,k)));
     }
     
-    public IClustering kcenter(IDataSequence data, IMetric metric, int k)
+    public IClustering kcenter(IDataSequence data, IMetric<?> metric, int k)
     {
         return (perform(Clustering.create.createKcenter(data,k)));
     }
 
-    public IClustering kcenter(Iterable<IDoubleArray> data, int size, IMetric metric, int k)
+    public IClustering kcenter(Iterable<IDoubleArray> data, int size, IMetric<?> metric, int k)
     {
         return (perform(Clustering.create.createKcenter(data,size,k)));
     }
     
-    public IClustering regularSpatial(IDataSequence data, IMetric metric, double dmin)
+    public IClustering regularSpatial(IDataSequence data, IMetric<IDoubleArray> metric, double dmin)
     {
-        return (perform(Clustering.create.createRegularSpatial(data,metric,dmin)));
+        return (perform(Clustering.create.createRegularSpatial(data, metric, dmin)));
     }
 
-    public IClustering regularSpatial(Iterable<IDoubleArray> data, int size, IMetric metric, double dmin)
+    public IClustering regularSpatial(Iterable<IDoubleArray> data, int size,
+    		IMetric<IDoubleArray> metric, double dmin)
     {
         return (perform(Clustering.create.createRegularSpatial(data,size,metric,dmin)));
     }
@@ -102,7 +103,7 @@ public class ClusterUtilities
     }
 
     
-    public IDoubleArray clusterSizes(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    public IDoubleArray clusterSizes(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
         double[] res = new double[centers.size()];
         double[] counts = new double[centers.size()];
@@ -138,7 +139,7 @@ public class ClusterUtilities
      * @param clustering
      * @return 
      */
-    public double clusterNoncompactness(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    public double clusterNoncompactness(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
         double res = 0;
         int k=0;
@@ -161,7 +162,7 @@ public class ClusterUtilities
      * @param clustering
      * @return 
      */
-    public double clusterIndexDaviesBouldin(Iterable<IDoubleArray> data, IDataSequence centers, IMetric metric, IIntArray assignment)
+    public double clusterIndexDaviesBouldin(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
         IDoubleArray D = clusterSizes(data, centers, metric, assignment);
         double[][] DBdist = new double[centers.size()][centers.size()];

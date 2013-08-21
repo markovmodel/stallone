@@ -32,7 +32,7 @@ public class DataSequenceUtilities
     public List<IDataSequence> loadSubset(IDataSequenceLoader loader, IIntArray indexes)
             throws IOException
     {
-        List<IDataSequence> res = new ArrayList();
+        List<IDataSequence> res = new ArrayList<IDataSequence>();
         DataList list = null;                
         int lastTraj = -1;
 

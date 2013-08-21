@@ -20,7 +20,8 @@ public class CoreDiscretization implements IDiscretization
     private double radius;
     private IMetric metric;
     
-    public CoreDiscretization(IDataSequence _centers, double _radius, IMetric _metric)
+    public CoreDiscretization(IDataSequence _centers, 
+    		double _radius, IMetric<IDoubleArray> _metric)
     {
         // make sure cores don't overlap
         for (int i=0; i<_centers.size()-1; i++)

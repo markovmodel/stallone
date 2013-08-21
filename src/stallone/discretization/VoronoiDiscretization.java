@@ -22,7 +22,7 @@ public class VoronoiDiscretization implements IDiscretization
     /** The definition of cluster centers which are used for partitioning. */
     private IDataSequence clusterCenters;
     /** The metric to use for partitioning. */
-    private IMetric metric;
+    private IMetric<IDoubleArray> metric;
 
     /**
      * Constructor.
@@ -30,7 +30,7 @@ public class VoronoiDiscretization implements IDiscretization
      * @param  clusterCenters  to use for Voronoi assignment
      * @param  metric          appropriate metric.
      */
-    public VoronoiDiscretization(IDataSequence _clusterCenters, IMetric _metric)
+    public VoronoiDiscretization(IDataSequence _clusterCenters, IMetric<IDoubleArray> _metric)
     {
         this.clusterCenters = _clusterCenters;
         this.metric = _metric;
@@ -118,7 +118,7 @@ public class VoronoiDiscretization implements IDiscretization
     /**
      * @param  metric  the metric to set
      */
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric<IDoubleArray> metric)
     {
         this.metric = metric;
     }

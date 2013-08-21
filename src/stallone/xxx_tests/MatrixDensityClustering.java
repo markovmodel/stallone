@@ -46,7 +46,7 @@ public class MatrixDensityClustering
         IDoubleArray distanceMatrix = Doubles.create.fromFile(matrixfile);
 
         // construct metric which measures matrix elements.
-        IMetric metric = new MatrixMetric(distanceMatrix);
+        IMetric<?> metric = new MatrixMetric(distanceMatrix);
 
         // construct fake data sequence
         IDataList dataSequence = DataSequence.create.createDatalist();

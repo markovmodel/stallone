@@ -36,7 +36,8 @@ public class DiscretizationFactory
 
 
 
-    public IDiscretization voronoiDiscretization(IDataSequence centers, IMetric metric)
+    public IDiscretization voronoiDiscretization(IDataSequence centers,
+    		IMetric<IDoubleArray> metric)
     {
         VoronoiDiscretization vd = new VoronoiDiscretization(centers, metric);
         return (vd);
@@ -48,7 +49,8 @@ public class DiscretizationFactory
         return (vd);
     }
 
-    public IDiscretization coreDiscretization(IDataSequence _centers, double _radius, IMetric _metric)
+    public IDiscretization coreDiscretization(IDataSequence _centers, 
+    		double _radius, IMetric<IDoubleArray> _metric)
     {
         CoreDiscretization disc = new CoreDiscretization(_centers, _radius, _metric);
         return (disc);
@@ -56,11 +58,13 @@ public class DiscretizationFactory
 
     public IDiscretization coreDiscretization(IDataSequence _centers, double _radius)
     {
-        CoreDiscretization disc = new CoreDiscretization(_centers, _radius, new EuclideanDistance());
+        CoreDiscretization disc = new CoreDiscretization(_centers, 
+        		_radius, new EuclideanDistance());
         return (disc);
     }
     
-    public IDiscretization regularSelectionDiscretization(IDataSequence data, IMetric metric, int k)
+    public IDiscretization regularSelectionDiscretization(IDataSequence data,
+    		IMetric<IDoubleArray> metric, int k)
     {
         DataList clusterCenters = new DataList(k);
         IIntArray indexes = Ints.create.arrayRange(0, data.size(), data.size() / k);
@@ -77,7 +81,8 @@ public class DiscretizationFactory
         return (regularSelectionDiscretization(data, new EuclideanDistance(), k));
     }
 
-    public IDiscretization randomSelectionDiscretization(IDataSequence data, IMetric metric, int k)
+    public IDiscretization randomSelectionDiscretization(IDataSequence data,
+    		IMetric<IDoubleArray> metric, int k)
     {
         DataList clusterCenters = new DataList(k);
         IIntArray indexes = Ints.create.arrayRandomIndexes(data.size(), k);

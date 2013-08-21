@@ -73,7 +73,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     }
 
     @Override
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric<IDoubleArray> metric)
     {
         super.setMetric(metric);
         neighborSearch.setMetric(metric);
@@ -107,7 +107,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
             done[p] = true;
             
             // consider the neighbors
-            TreeSet<Integer> colleagues = new TreeSet();
+            TreeSet<Integer> colleagues = new TreeSet<Integer>();
             int[] N = neighborSearch.neighbors(p, eps);
             for (int i : N)
             {

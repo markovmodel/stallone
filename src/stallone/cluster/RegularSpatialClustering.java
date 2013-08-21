@@ -41,7 +41,7 @@ public class RegularSpatialClustering
      * @param  data
      * @param  dmin
      */
-    public RegularSpatialClustering(IMetric metric, IDataSequence data, double dmin)
+    public RegularSpatialClustering(IMetric<IDoubleArray> metric, IDataSequence data, double dmin)
     {
         this.metric = metric;
         this.data = data;
@@ -121,7 +121,7 @@ public class RegularSpatialClustering
      *  }
      *  return target;
      *}*/
-    private static double[] calculateDistances(IDataSequence xs, IDoubleArray y, IMetric metric)
+    private static double[] calculateDistances(IDataSequence xs, IDoubleArray y, IMetric<IDoubleArray> metric)
     {
         int n = xs.size();
         double[] distances = new double[n];

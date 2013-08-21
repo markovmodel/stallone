@@ -17,7 +17,7 @@ public class StringUtilities
 {
     public List<String> toList(String[] arr)
     {
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (String s : arr)
             list.add(s);
         return list;

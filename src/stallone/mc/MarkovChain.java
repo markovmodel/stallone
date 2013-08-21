@@ -4,8 +4,10 @@
  */
 package stallone.mc;
 
-import static stallone.api.API.*;
-import stallone.api.doubles.Doubles;
+import static stallone.api.API.msm;
+
+import org.fusesource.hawtjni.runtime.JniClass;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
@@ -20,9 +22,14 @@ import stallone.stat.DiscreteDistributions;
  *
  * @author noe
  */
+@JniClass
 public class MarkovChain
 {
-    protected IDoubleArray p0; // starting distribution. If not specified, the starting distribution is the stationary distribution
+	/**
+	 *  starting distribution p0. If not specified, the starting distribution
+	 *  is the stationary distribution
+	 */
+	protected IDoubleArray p0;
     protected IDoubleArray T;
     protected DiscreteDistributions dd;
     
@@ -33,7 +40,7 @@ public class MarkovChain
     private DiscreteDistribution_Old p0dist;
 
     //skip
-    private int nskip=1;
+    private int nskip = 1;
     
     protected MarkovChain()
     {

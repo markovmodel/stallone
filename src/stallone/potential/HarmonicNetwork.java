@@ -19,7 +19,7 @@ public class HarmonicNetwork extends AbstractPotential
 {
 
     private IDoubleArray coordinates;
-    private IDifferentiableMetric metric;
+    private IDifferentiableMetric<IDoubleArray> metric;
     private int natoms = 0;
     private ArrayList<int[]> bonds = new ArrayList<int[]>();
     private DoubleArrayList d0 = new DoubleArrayList();
@@ -45,7 +45,7 @@ public class HarmonicNetwork extends AbstractPotential
         k.add(_k);
     }
 
-    public void setMetric(IDifferentiableMetric m)
+    public void setMetric(IDifferentiableMetric<IDoubleArray> m)
     {
         metric = m;
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import stallone.api.ints.IntsPrimitive;
 import stallone.api.strings.Strings;
+import stallone.io.BlockFileReader.Block;
 
 /**
  *
@@ -15,7 +16,7 @@ public class BlockFileReader extends CachedAsciiFileReader
 {
 
     private final int WORDTYPE_STRING = 0, WORDTYPE_DOUBLE = 1, WORDTYPE_INT = 2;
-    private List<Block> blocks = new ArrayList();
+    private List<Block> blocks = new ArrayList<Block>();
     private Block currentBlock = null;
     // current read
     private int currentLineNumber = -1;
@@ -323,7 +324,7 @@ public class BlockFileReader extends CachedAsciiFileReader
 
     private List<Block> mergeConsistentBlocks(int expectedType)
     {
-        List<Block> res = new ArrayList();
+        List<Block> res = new ArrayList<Block>();
         Block currentBlock = generalizeBlock(blocks.get(0), expectedType);
         
         res.add(currentBlock);

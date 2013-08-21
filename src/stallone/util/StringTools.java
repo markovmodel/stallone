@@ -17,12 +17,12 @@ public class StringTools
     /**
        converts a list of strings into a string array.
      */
-    public static String[] List2Array(List al)
+    public static String[] List2Array(List<?> al)
     {
 	int size = al.size();
 	String[] res = new String[size];
 	int k=0;
-	Iterator i = al.iterator();
+	Iterator<?> i = al.iterator();
 	while (i.hasNext())
 	    res[k++] = ((String)i.next());
 	return(res);
@@ -407,12 +407,12 @@ public class StringTools
 	/**
 	   Transforms a list of strings into a String-array
 	 */
-	public static String[] toStringArray(LinkedList list)
+	public static String[] toStringArray(LinkedList<?> list)
 	{
 		String[] res = new String[list.size()];
 
 		int k=0;
-		Iterator i=list.iterator();
+		Iterator<?> i=list.iterator();
 		while(i.hasNext())
 			res[k++] = (String)i.next();
 

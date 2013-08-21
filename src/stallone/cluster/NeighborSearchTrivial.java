@@ -38,7 +38,7 @@ public class NeighborSearchTrivial implements INeighborSearch
      * @param  clusterCenters  to use for Voronoi assignment
      * @param  metric          appropriate metric.
      */
-    public NeighborSearchTrivial(IDataSequence clusterCenters, IMetric metric)
+    public NeighborSearchTrivial(IDataSequence clusterCenters, IMetric<IDoubleArray> metric)
     {
         this.data = clusterCenters;
         this.metric = metric;

@@ -79,7 +79,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     }
 
     @Override
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric<IDoubleArray> metric)
     {
         super.setMetric(metric);
         neighborSearch.setMetric(metric);
@@ -154,7 +154,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
             orderedPoints[nprocessed] = i;
             nprocessed++;
 
-            PriorityQueue<Integer> seeds = new PriorityQueue();
+            PriorityQueue<Integer> seeds = new PriorityQueue<Integer>();
 
             double coredist_i = coreDistance(i);
             System.out.println(" core distance: "+coredist_i);

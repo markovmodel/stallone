@@ -49,7 +49,7 @@ public class DiscreteHMM
         
         
         String[] ifiles = parser.getStringArray("i");
-        inputFiles = new ArrayList();
+        inputFiles = new ArrayList<String>();
         for (int i=0; i<ifiles.length; i++)
             inputFiles.add(ifiles[i]);
         

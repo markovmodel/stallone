@@ -20,7 +20,7 @@ public class CoulombSystem  extends AbstractPotential
     private double epsilonr = 1;
 
     private IDoubleArray coordinates;
-    private IDifferentiableMetric metric;
+    private IDifferentiableMetric<IDoubleArray> metric;
     private int natoms = 0;
     private boolean[][] bonded;
     // particle radius
@@ -64,7 +64,7 @@ public class CoulombSystem  extends AbstractPotential
         this.gradient = Doubles.create.array(_charges.size(), 3);
     }
 
-    public void setMetric(IDifferentiableMetric m)
+    public void setMetric(IDifferentiableMetric<IDoubleArray> m)
     {
         metric = m;
     }

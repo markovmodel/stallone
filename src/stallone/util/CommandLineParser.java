@@ -14,11 +14,10 @@ import java.util.List;
  */
 public class CommandLineParser
 {
-
     private Arguments args;
-    private HashMap<String, Command> commands = new HashMap();
-    private ArrayList<String[]> atLeastOneOfCommands = new ArrayList();
-    private ArrayList<String[]> atMostOneOfCommands = new ArrayList();
+    private HashMap<String, Command> commands = new HashMap<String, Command>();
+    private ArrayList<String[]> atLeastOneOfCommands = new ArrayList<String[]>();
+    private ArrayList<String[]> atMostOneOfCommands = new ArrayList<String[]>();
 
     public void addStringArrayCommand(String command, boolean mandatory)
     {
@@ -497,7 +496,7 @@ class Command
 class HeterogeneousCommand extends Command
 {
 
-    List<ExpectedArgument> arguments = new ArrayList();
+    List<ExpectedArgument> arguments = new ArrayList<ExpectedArgument>();
 
     public HeterogeneousCommand(String cmd, boolean _mandatory)
     {

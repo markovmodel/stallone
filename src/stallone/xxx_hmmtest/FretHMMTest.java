@@ -54,7 +54,7 @@ public class FretHMMTest
             }
             obs1.add(x);
         }
-        List<IDataSequence> obs = new ArrayList();
+        List<IDataSequence> obs = new ArrayList<IDataSequence>();
         obs.add(obs1);
 
         // initial parameters

@@ -18,7 +18,7 @@ public class LennardJonesSystem  extends AbstractPotential
 {
 
     private IDoubleArray coordinates;
-    private IDifferentiableMetric metric;
+    private IDifferentiableMetric<IDoubleArray> metric;
     private int natoms = 0;
     private boolean[][] bonded;
     // particle radius
@@ -63,7 +63,7 @@ public class LennardJonesSystem  extends AbstractPotential
         this.gradient = Doubles.create.array(_natoms, 3);
     }
     
-    public void setMetric(IDifferentiableMetric m)
+    public void setMetric(IDifferentiableMetric<IDoubleArray> m)
     {
         metric = m;
     }

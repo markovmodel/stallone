@@ -66,7 +66,7 @@ public class MarkovModelUtilitiesTest
      {0,0,1},
      {1,0,0}}
             );
-    private static final Set<IIntArray> C1 = new HashSet();
+    private static final Set<IIntArray> C1 = new HashSet<IIntArray>();
     static
     {
         C1.add(Ints.create.arrayFrom(0,1,2));
@@ -79,7 +79,7 @@ public class MarkovModelUtilitiesTest
      {0,0,1,1},
      {0,0,1,1}}
             );
-    private static final Set<IIntArray> C2 = new HashSet();
+    private static final Set<IIntArray> C2 = new HashSet<IIntArray>();
     static
     {
         C2.add(Ints.create.arrayFrom(0,1));
@@ -93,7 +93,7 @@ public class MarkovModelUtilitiesTest
      {0,1,1,0},
      {0,0,1,0}}
             );
-    private static final Set<IIntArray> C3 = new HashSet();
+    private static final Set<IIntArray> C3 = new HashSet<IIntArray>();
     static
     {
         C3.add(Ints.create.arrayFrom(0));

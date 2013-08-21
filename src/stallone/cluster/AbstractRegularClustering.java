@@ -88,7 +88,7 @@ public abstract class AbstractRegularClustering implements IClustering
     }
     
     @Override
-    public void setMetric(IMetric _metric)
+    public void setMetric(IMetric<IDoubleArray> _metric)
     {
         this.resultsAvailable = false;
         this.metric = _metric;

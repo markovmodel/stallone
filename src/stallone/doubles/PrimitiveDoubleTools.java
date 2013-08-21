@@ -10,18 +10,19 @@ import java.util.List;
 
 public class PrimitiveDoubleTools
 {
-    public static double[] List2Array(List al)
+    public static double[] List2Array(List<?> al)
     {
         int size = al.size();
         double[] res = new double[size];
-        for (int i = 0; i < size; i++)
-        {
-            res[i] = ((Double) al.get(i)).intValue();
-        }
+//        for (int i = 0; i < size; i++)
+//        {
+//            res[i] = ((Double) al.get(i)).intValue();
+//        }
+        System.arraycopy(al, 0, res, 0, size);
         return (res);
     }
 
-    public static double[][] List2Array2(List al)
+    public static double[][] List2Array2(List<?> al)
     {
         int size = al.size();
         double[][] res = new double[size][];
@@ -32,7 +33,7 @@ public class PrimitiveDoubleTools
         return (res);
     }
 
-    public static double[][][] List2Array3(List al)
+    public static double[][][] List2Array3(List<?> al)
     {
         int size = al.size();
         double[][][] res = new double[size][][];

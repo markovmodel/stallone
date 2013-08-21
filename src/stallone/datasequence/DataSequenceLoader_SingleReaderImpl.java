@@ -14,6 +14,7 @@ import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IO;
+import stallone.datasequence.DataSequenceLoader_SingleReaderImpl.DataSequenceInfo;
 
 /**
  *
@@ -48,7 +49,7 @@ public class DataSequenceLoader_SingleReaderImpl
         protected int size;
         protected long memorySize;
     }
-    private ArrayList<DataSequenceInfo> info = new ArrayList();
+    private ArrayList<DataSequenceInfo> info = new ArrayList<DataSequenceInfo>();
     private int totalSize = 0;
     private long largestMemorySize = 0, totalMemorySize = 0;
     
@@ -307,7 +308,7 @@ public class DataSequenceLoader_SingleReaderImpl
     public List<IDataSequence> loadAll()
             throws IOException
     {
-        List<IDataSequence> res = new ArrayList();
+        List<IDataSequence> res = new ArrayList<IDataSequence>();
         for (int i = 0; i < sources.size(); i++)
         {
             makeAvailable(i);

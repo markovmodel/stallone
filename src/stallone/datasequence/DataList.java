@@ -16,16 +16,16 @@ import stallone.api.doubles.IDoubleArray;
 public class DataList
     implements IDataList
 {
-    private ArrayList<IDoubleArray> list = new ArrayList();
+    private ArrayList<IDoubleArray> list = new ArrayList<IDoubleArray>();
     
     public DataList()
     {
-        list = new ArrayList();
+        list = new ArrayList<IDoubleArray>();
     }
 
     public DataList(int size)
     {
-        list = new ArrayList(size);
+        list = new ArrayList<IDoubleArray>(size);
     }
     
     @Override

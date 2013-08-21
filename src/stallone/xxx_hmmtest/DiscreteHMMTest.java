@@ -54,7 +54,7 @@ public class DiscreteHMMTest
             }
             obs.add(oi);
         }
-        List<IDataSequence> obsList = new ArrayList();
+        List<IDataSequence> obsList = new ArrayList<IDataSequence>();
         obsList.add(obs);
         
         /*for (int i=0; i<obs.size(); i++)

@@ -203,7 +203,7 @@ public class IntSequencesFileLoader
     public List<IIntArray> loadAll()
             throws IOException
     {
-        List<IIntArray> res = new ArrayList();
+        List<IIntArray> res = new ArrayList<IIntArray>();
         for (String s : sources)
         {
             loader.setSource(s);

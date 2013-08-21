@@ -37,7 +37,7 @@ public class GaussianHMMTest
             seq.add(x);
         }
         
-        List<IDataSequence> obs = new ArrayList();
+        List<IDataSequence> obs = new ArrayList<IDataSequence>();
         obs.add(seq);
 
         IExpectationMaximization em = HMM.create.emGaussian(obs, 2);

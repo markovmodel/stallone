@@ -28,6 +28,7 @@ public class DiscreteDistributions
 
     public int sample(int s)
     {
+    	assert s < dd.length : "requested sample out of range";
         return(dd[s].sample());
     }
 }

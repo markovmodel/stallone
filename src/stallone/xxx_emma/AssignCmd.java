@@ -182,7 +182,7 @@ public class AssignCmd
 
     }    
 
-    private IMetric constructMetric()
+    private IMetric<?> constructMetric()
     {
         if (v_metric.equals("minrmsd"))
         {

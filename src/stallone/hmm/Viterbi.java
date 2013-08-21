@@ -17,7 +17,7 @@ import stallone.api.ints.IIntArray;
 public class Viterbi
 {
     private IHMMForwardModel forwardModel;
-    private ArrayList<IIntArray> paths = new ArrayList();
+    private ArrayList<IIntArray> paths = new ArrayList<IIntArray>();
     
     public Viterbi(IHMMForwardModel _forwardModel)
     {

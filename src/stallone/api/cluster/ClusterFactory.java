@@ -41,7 +41,9 @@ public class ClusterFactory
         }
     }    
     
-    private void constructKmeans(KMeansClustering clustering, Iterable<IDoubleArray> data, int size, IMetric metric, int k, int maxIter)
+    private void constructKmeans(KMeansClustering clustering, 
+    		Iterable<IDoubleArray> data, int size, IMetric<IDoubleArray> metric,
+    		int k, int maxIter)
     {
         clustering.setInitialClusterCentersByRandom(k);
         clustering.setMaxIterations(maxIter);
@@ -49,7 +51,8 @@ public class ClusterFactory
         clustering.setClusterInput(data, size);
     }
 
-    private void constructEmptyKmeans(KMeansClustering clustering, IMetric metric, int k, int maxIter)
+    private void constructEmptyKmeans(KMeansClustering clustering,
+    		IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         clustering.setInitialClusterCentersByRandom(k);
         clustering.setMaxIterations(maxIter);
@@ -77,7 +80,7 @@ public class ClusterFactory
         return (clustering);
     }
     
-    public IClustering createKmeans(IDataSequence data, IMetric metric, int k, int maxIter)
+    public IClustering createKmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
     {
         return createKmeans(data, data.size(), metric, k, maxIter);
     }
@@ -151,7 +154,8 @@ public class ClusterFactory
 
     
     
-    public IClustering createRegularSpatial(Iterable<IDoubleArray> data, int size, IMetric metric, double dmin)
+    public IClustering createRegularSpatial(Iterable<IDoubleArray> data, 
+    		int size, IMetric<IDoubleArray> metric, double dmin)
     {
         RegularSpatialClustering clustering = new RegularSpatialClustering();
         clustering.setDmin(dmin);
@@ -160,7 +164,8 @@ public class ClusterFactory
         return (clustering);
     }
     
-    public IClustering createRegularSpatial(IDataSequence data, IMetric metric, double dmin)
+    public IClustering createRegularSpatial(IDataSequence data, 
+    		IMetric<IDoubleArray> metric, double dmin)
     {
         return createRegularSpatial(data, data.size(), metric, dmin);
     }
@@ -175,7 +180,8 @@ public class ClusterFactory
         return (createRegularSpatial(data, new EuclideanDistance(), dmin));
     }
 
-    public IClustering createDensityBased(IDataSequence data, IMetric metric, double dmin, int minpts)
+    public IClustering createDensityBased(IDataSequence data, 
+    		IMetric<IDoubleArray> metric, double dmin, int minpts)
     {
         DensityBasedClusteringSimple clustering = new DensityBasedClusteringSimple(dmin, minpts);
         clustering.setMetric(metric);

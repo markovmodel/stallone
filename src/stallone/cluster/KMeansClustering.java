@@ -46,7 +46,7 @@ public class KMeansClustering implements IClustering
     1/n * sum_i=1^n (x_i)    with vectors  x_i
      *   </pre>
      */
-    private IMetric metric;
+    private IMetric<IDoubleArray> metric;
     /** Assignment from {@code numberOfClusters} data objects / points to cluster centers. */
     private IntArrayList assignments;
     /** Current list of cluster centers. */
@@ -131,7 +131,7 @@ public class KMeansClustering implements IClustering
     }
     
     @Override
-    public void setMetric(IMetric metric)
+    public void setMetric(IMetric<IDoubleArray> metric)
     {
         this.metric = metric;
 

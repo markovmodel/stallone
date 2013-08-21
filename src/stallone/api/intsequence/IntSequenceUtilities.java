@@ -33,7 +33,7 @@ public class IntSequenceUtilities
     public IIntArray loadIntSequence(String file)
             throws IOException
     {
-        List<String> files = new ArrayList();
+        List<String> files = new ArrayList<String>();
         files.add(file);
         return loadIntSequences(files).get(0);
     }    
@@ -97,7 +97,7 @@ public class IntSequenceUtilities
      */
     public List<int[]> lifetimesByEvent(IIntArray path)
     {
-        List<int[]> res = new ArrayList();
+        List<int[]> res = new ArrayList<int[]>();
 
         int begin = 0;
         for (int t = 1; t < path.size(); t++)
