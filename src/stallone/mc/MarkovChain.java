@@ -5,9 +5,6 @@
 package stallone.mc;
 
 import static stallone.api.API.msm;
-
-import org.fusesource.hawtjni.runtime.JniClass;
-
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
@@ -22,7 +19,6 @@ import stallone.stat.DiscreteDistributions;
  *
  * @author noe
  */
-@JniClass
 public class MarkovChain
 {
 	/**
