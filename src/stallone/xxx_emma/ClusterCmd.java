@@ -30,10 +30,17 @@ import stallone.api.algebra.IEigenvalueDecomposition;
 public class ClusterCmd //extends AbstractCmd 
 {
     // primary input
+	
+	/**
+	 * Enumerate available clustering algorithms
+	 */
+	public enum algorithm {
+		kcenters, kmeans, regularspatial, regulartemporal
+	}
 
     private String[] v_inputtraj;
     private String v_inputformat;
-    private String v_algorithm;
+    private algorithm v_algorithm;
     private String v_metric;
     private int v_clustercenters;
     private double v_dmin;
@@ -118,7 +125,7 @@ public class ClusterCmd //extends AbstractCmd
         // set algorithm and check if input is meaningful
         if (parser.hasCommand("kmeans"))
         {
-            v_algorithm = "kmeans";
+            v_algorithm = algorithm.kmeans;
             v_clustercenters = parser.getInt("kmeans",0);
             v_max_interations = parser.getInt("kmeans",1);
             // check if metric is meaningful
@@ -129,17 +136,17 @@ public class ClusterCmd //extends AbstractCmd
         }
         else if (parser.hasCommand("kcenters"))
         {
-            v_algorithm = "kcenters";
+            v_algorithm = algorithm.kcenters;
             v_clustercenters = parser.getInt("kcenters");
         }
         else if (parser.hasCommand("regularspatial"))
         {
-            v_algorithm = "regularspatial";
+            v_algorithm = algorithm.regularspatial;
             v_dmin = parser.getDouble("regularspatial");
         }
         else if (parser.hasCommand("regulartemporal"))
         {
-            v_algorithm = "regulartemporal";
+            v_algorithm = algorithm.regulartemporal;
             if (parser.hasCommand("subsample"))
             {
                 System.out.println("Warning: specifying '-subsample' with regular temporal clustering is ineffective. Will use spacing "+parser.getInt("regulartemporal")+" given as regulartemporal argument as time spacing");
@@ -237,7 +244,7 @@ public class ClusterCmd //extends AbstractCmd
         //Cluster
         //======================================================================
 
-        IMetric metric = constructMetric(loader.dimension());
+        IMetric<?> metric = constructMetric(loader.dimension());
         IDataSequence clusterCenters = cluster(frameIterable, nFramesUsed, dimension, metric);
 
         //=====================================================================
@@ -282,7 +289,7 @@ public class ClusterCmd //extends AbstractCmd
         return res;
     }
 
-    private IMetric constructMetric(int dim)
+    private IMetric<?> constructMetric(int dim)
     {
 
         if (v_metric.equals("minrmsd"))
@@ -303,40 +310,43 @@ public class ClusterCmd //extends AbstractCmd
     {
         IClustering clustering = null;
         IDataSequence res = null;
-        if (v_algorithm.equals("kcenters"))
-        {
-            System.out.println("Using Cluster method: k-Center.");
-            clustering = Clustering.util.kcenter(data, size, metric, v_clustercenters);
-            res = clustering.getClusterCenters();
+        switch(v_algorithm) {
+        case kcenters: {
+			System.out.println("Using Cluster method: k-Center.");
+			clustering = Clustering.util.kcenter(data, size, metric,
+					v_clustercenters);
+			res = clustering.getClusterCenters();
+			break;
+		}
+        case kmeans: {
+			System.out.println("Using Cluster method: k-Means.");
+			clustering = Clustering.util.kmeans(data, size, metric,
+					v_clustercenters, v_max_interations);
+			res = clustering.getClusterCenters();
+             break;
         }
-        else if (v_algorithm.equals("kmeans"))
-        {
-            System.out.println("Using Cluster method: k-Means.");
-            clustering = Clustering.util.kmeans(data, size, metric, v_clustercenters, v_max_interations);
-            res = clustering.getClusterCenters();
+        case regularspatial: {
+			System.out.println("Using Cluster method: regular spatial.");
+			clustering = Clustering.util.regularSpatial(data, size, metric,
+					v_dmin);
+			res = clustering.getClusterCenters();
+			break;
         }
-        else if (v_algorithm.equals("regularspatial"))
-        {
-            System.out.println("Using Cluster method: regular spatial.");
-            clustering = Clustering.util.regularSpatial(data, size, metric, v_dmin);
-            res = clustering.getClusterCenters();
-        }
-        else if (v_algorithm.equals("regulartemporal"))
-        {
+        case regulartemporal: {
             System.out.println("Using Cluster method: regular temporal.");
             // data is already readuced to cluster centers through subsampling. Just need to load the centers
             return load(data, dimension);
         }
-        else
-        {
+        default:
             throw new RuntimeException("No clustering algorithm.");
         }
         return res;
     }
 
 
-
+    // FIXME: why is this empty?
     public static void main(String[] args)
     {
+    	System.out.println("warning: not impled");
     }
 }
