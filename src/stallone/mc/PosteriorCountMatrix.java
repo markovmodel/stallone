@@ -7,7 +7,6 @@ package stallone.mc;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleElement;
-import java.util.Iterator;
 import stallone.api.algebra.*;
 import stallone.doubles.AbstractDoubleArray;
 
