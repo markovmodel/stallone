@@ -6,7 +6,7 @@
 	<groupId>compmolbio</groupId>
 	<artifactId>Stallone</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<name>Stallone</name>
 	<url>http://compmolbio.biocomputing-berlin.de/index.php</url>
@@ -20,10 +20,8 @@
 	</properties>
 
 	<build>
-		<!-- This is EVIL since it breaks the standard maven directory layout, 
-			but for now it is okay -->
-		<sourceDirectory>src/</sourceDirectory>
-		<testSourceDirectory>test/</testSourceDirectory>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -34,122 +32,14 @@
 						<target>1.7</target>
 					</configuration>
 				</plugin>
-
-				<plugin>
-					<groupId>com.googlecode.jace</groupId>
-					<artifactId>jace-maven-plugin</artifactId>
-					<version>1.2.16</version>
-					<executions>
-						<execution>
-							<id>enhance-classes</id>
-							<goals>
-								<goal>enhance-java</goal>
-							</goals>
-							<configuration>
-								<inputFile>
-									<!-- The path of the input class file -->
-									<!-- ${project.build.outputDirectory}/stallone/emma_xxx/ClusterCmd.class -->
-									/home/marscher/workspace/stallone/target/classes/stallone/xxx_emma/ClusterCmd.class
-								</inputFile>
-
-								<outputFile>
-									<!-- ${project.build.outputDirectory}/stallone/emma_xxx/ClusterCmd_e.class -->
-									/home/marscher/workspace/stallone/target/classes/stallone/xxx_emma/ClusterCmd_out.class
-								</outputFile>
-
-								<deallocationMethod>
-									<!-- The Java method used to deallocate the Java peer -->
-									dispose
-								</deallocationMethod>
-
-								<!-- Indicates if Java peers should output library names before loading 
-									them -->
-								<verbose>false</verbose>
-
-								<!-- The native libraries to load before initializing the Java peer -->
-								<libraries>
-									<library>first</library>
-									<library>second</library>
-								</libraries>
-							</configuration>
-						</execution>
-
-						<execution>
-							<id>generate-peer</id>
-							<goals>
-								<goal>generate-cpp-peer</goal>
-							</goals>
-							<configuration>
-								<!-- The Java class to generate a peer for -->
-								<classFile>
-									${project.build.outputDirectory}/stallone/emma_xxx/ClusterCmd.class
-								</classFile>
-								<!-- The directory of the output header files -->
-								<outputHeaders>${project.build.directory}/include</outputHeaders>
-
-								<!-- The directory of the output source files -->
-								<outputSources>${project.build.directory}/include</outputSources>
-
-								<!-- Indicates if {peer_class_name}_user.h should be generated in 
-									order for allow users to declare additional peer methods -->
-								<userDefinedMembers>false</userDefinedMembers>
-							</configuration>
-						</execution>
-
-						<execution>
-							<!-- generate c++ proxies for given java classes -->
-							<id>generate-proxies</id>
-							<goals>
-								<goal>generate-cpp-proxies</goal>
-							</goals>
-							<configuration>
-								<!-- Directories containing the input header files. When are they 
-									created?! -->
-								<inputHeaders>
-									<path>${project.build.sourceDirectory}/include</path>
-								</inputHeaders>
-
-								<!-- Directories containing the input source files -->
-								<inputSources>
-									<path>${project.build.sourceDirectory}/input_src/</path>
-									<!-- path>${project.build.sourceDirectory}</path -->
-								</inputSources>
-
-								<outputHeaders>
-									<!-- The directory of the output header files -->
-									<path>/tmp/</path>
-								</outputHeaders>
-
-								<outputSources>
-									<!-- The directory of the output source files -->
-									<path>/tmp/</path>
-								</outputSources>
-
-								<!-- The path to search for Java classes -->
-								<classpath>
-									<path>${java.home}/lib/rt.jar</path>
-								</classpath>
-
-								<!-- The method accessibility to expose. Acceptable values include: 
-									PUBLIC, PROTECTED, PACKAGE or PRIVATE. -->
-								<accessibility>
-									PUBLIC
-								</accessibility>
-
-								<!-- Indicates if the proxy symbols should be exported (for generating 
-									DLLs/SOs) -->
-								<exportSymbols>true</exportSymbols>
-
-								<!-- Indicates whether classes should be exported even if they are 
-									not referenced by the input files -->
-								<minimizeDependencies>true</minimizeDependencies>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<modules>
+<!-- 	  <module>stallone</module> -->
+ 	  <module>cpp-api-wrapper</module>
+	</modules>
 
 	<!-- profile -P buildDistribution to construct the final compressed jar 
 		containing all dependencies -->
@@ -250,10 +140,7 @@
 	</profiles>
 
 
-
-
 	<dependencies>
-
 		<!-- java netlib -->
 		<dependency>
 			<groupId>com.googlecode.netlib-java</groupId>
@@ -268,13 +155,11 @@
 			<version>0.9.14</version>
 		</dependency>
 
-		<!-- jep library, stored in project path -->
+		<!-- jep library, has to be installed manually to local repo... -->
 		<dependency>
 			<groupId>jep</groupId>
 			<artifactId>jep</artifactId>
 			<version>2.4.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/libraries/jep-2.4.1.jar</systemPath>
 		</dependency>
 
 		<!-- junit testing -->
