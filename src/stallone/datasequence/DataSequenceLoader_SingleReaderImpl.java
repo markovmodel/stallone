@@ -7,14 +7,12 @@ package stallone.datasequence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IO;
-import stallone.datasequence.DataSequenceLoader_SingleReaderImpl.DataSequenceInfo;
 
 /**
  *

@@ -4,21 +4,18 @@
  */
 package stallone.api.doubles;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import stallone.api.strings.Strings;
+import stallone.doubles.DoubleArrayList_FastUtilWrapper;
+import stallone.doubles.DoubleIO;
 import stallone.doubles.PrimitiveDoubleArray;
 import stallone.doubles.PrimitiveDoubleTable;
 import stallone.doubles.PrimitiveDoubleTools;
-import stallone.doubles.SparseRealVector;
 import stallone.doubles.SparseRealMatrix;
-import stallone.doubles.DoubleArrayList_FastUtilWrapper;
+import stallone.doubles.SparseRealVector;
 import stallone.doubles.SymmetricMatrix;
-import stallone.api.strings.Strings;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import stallone.doubles.*;
-import stallone.doubles.io.DenseDoubleArrayAsciiReader;
-import stallone.doubles.io.SparseDoubleArrayAsciiReader;
 
 /**
  *

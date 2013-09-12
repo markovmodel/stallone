@@ -8,10 +8,7 @@ import java.io.IOException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import stallone.api.algebra.IComplexNumber;
-import stallone.api.algebra.*;
 import stallone.api.complex.Complex;
-import stallone.api.doubles.IDoubleArray;
 
 
 /**

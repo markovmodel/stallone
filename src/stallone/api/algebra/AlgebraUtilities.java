@@ -31,8 +31,6 @@ import stallone.doubles.io.SparseDoubleArrayAsciiWriter;
 import stallone.doubles.io.DenseDoubleArrayAsciiWriter;
 import stallone.complex.ComplexNumber;
 import stallone.api.complex.*;
-import stallone.api.doubles.IDoubleElement;
-
 import static stallone.doubles.DoubleArrayTest.*;
 
 /**

@@ -2,7 +2,6 @@ package stallone.doubles;
 
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import java.util.Iterator;
 
 
 

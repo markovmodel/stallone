@@ -15,10 +15,8 @@ import stallone.api.hmm.IExpectationMaximization;
 import stallone.api.hmm.IHMM;
 import stallone.api.hmm.IHMMParameters;
 import stallone.api.hmm.ParameterEstimationException;
-import stallone.doubles.DoubleIO;
 import stallone.doubles.io.SparseDoubleArrayAsciiWriter;
 import stallone.util.CommandLineParser;
-import stallone.util.StringTools;
 
 /**
  *

@@ -11,7 +11,6 @@ import stallone.api.algebra.Algebra;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
-import stallone.api.ints.Ints;
 import stallone.stat.modelselection.ExitTimeSplitter;
 
 /**

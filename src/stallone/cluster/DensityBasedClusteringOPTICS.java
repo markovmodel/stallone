@@ -6,7 +6,6 @@ package stallone.cluster;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.SortedSet;
 import stallone.api.cluster.INeighborSearch;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
@@ -16,7 +15,6 @@ import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
-import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
 import stallone.doubles.EuclideanDistance;
 

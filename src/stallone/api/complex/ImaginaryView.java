@@ -5,10 +5,7 @@
 package stallone.api.complex;
 
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.doubles.IDoubleIterator;
 import stallone.doubles.AbstractDoubleArray;
-import stallone.doubles.DoubleTableIterator;
-import stallone.doubles.DoubleTableNonzeroIterator;
 
 /**
  *

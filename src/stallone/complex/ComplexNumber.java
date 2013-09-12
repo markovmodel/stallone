@@ -14,7 +14,6 @@
 package stallone.complex;
 
 import stallone.api.algebra.IComplexNumber;
-import stallone.algebra.*;
 
 
 /**

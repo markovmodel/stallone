@@ -10,7 +10,6 @@ import stallone.cluster.KCenterClustering;
 import stallone.doubles.EuclideanDistance;
 import stallone.api.doubles.IMetric;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.cluster.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.cluster.*;
 

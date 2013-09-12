@@ -16,7 +16,6 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
-import stallone.discretization.VoronoiDiscretization;
 import stallone.doubles.EuclideanDistance;
 import stallone.doubles.fastutils.IntArrayList;
 

@@ -4,7 +4,6 @@
  */
 package stallone.api.doubles;
 
-import stallone.api.complex.IComplexArray;
 
 /**
  *

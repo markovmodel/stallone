@@ -9,7 +9,6 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.complex.ComplexNumber;
 import stallone.api.complex.IComplexIterator;
 import stallone.api.complex.IComplexArray;
-import stallone.algebra.*;
 import stallone.api.algebra.*;
 
 /**

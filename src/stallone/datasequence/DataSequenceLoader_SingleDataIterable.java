@@ -4,7 +4,6 @@
  */
 package stallone.datasequence;
 
-import java.io.IOException;
 import java.util.Iterator;
 import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;

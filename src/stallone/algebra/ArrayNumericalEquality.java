@@ -13,9 +13,6 @@
  */
 package stallone.algebra;
 
-import stallone.api.algebra.INumericalEquality;
-import stallone.api.algebra.IComplexNumber;
-import stallone.algebra.*;
 import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.IDoubleArray;
 

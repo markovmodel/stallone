@@ -11,7 +11,6 @@ import stallone.api.function.IParametricFunction;
 import stallone.api.hmm.*;
 import stallone.api.ints.IntsPrimitive;
 import stallone.api.stat.IParameterEstimator;
-import static stallone.api.API.*;
 
 /**
  *

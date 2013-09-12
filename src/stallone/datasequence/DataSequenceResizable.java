@@ -5,10 +5,7 @@
 package stallone.datasequence;
 
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.datasequence.IDataSequence;
 import java.util.Iterator;
-import java.util.List;
-import stallone.api.doubles.IDoubleList;
 
 
 /**

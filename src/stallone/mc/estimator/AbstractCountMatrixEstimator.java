@@ -5,7 +5,6 @@
 package stallone.mc.estimator;
 
 import java.util.LinkedList;
-import java.util.List;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;

@@ -7,8 +7,6 @@ package stallone.datasequence;
 import stallone.api.doubles.IDoubleArray;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.Collection;
-import java.util.Iterator;
 import stallone.api.datasequence.IDataWriter;
 import stallone.doubles.DoubleIO;
 

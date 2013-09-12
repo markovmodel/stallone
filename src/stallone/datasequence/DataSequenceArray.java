@@ -6,7 +6,6 @@ package stallone.datasequence;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequence;
 import java.util.Iterator;
 import stallone.doubles.PrimitiveDoubleArray;
 

@@ -3,7 +3,6 @@ package stallone.ints;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntIterator;
-import java.util.Iterator;
 
 
 

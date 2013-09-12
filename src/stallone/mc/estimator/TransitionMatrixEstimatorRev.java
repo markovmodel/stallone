@@ -10,7 +10,6 @@ import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
 import stallone.api.mc.*;
-import static stallone.api.API.*;
 
 /**
  *

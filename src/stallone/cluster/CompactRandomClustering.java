@@ -5,14 +5,9 @@
 package stallone.cluster;
 
 import java.io.IOException;
-import java.util.Iterator;
 import static stallone.api.API.*;
-import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.discretization.IDiscretization;
-import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
-import stallone.api.ints.IIntList;
 import stallone.doubles.EuclideanDistance;
 
 /**

@@ -17,7 +17,6 @@ import stallone.api.complex.IComplexIterator;
 import stallone.api.complex.IComplexArray;
 import java.io.Serializable;
 
-import stallone.api.algebra.*;
 import stallone.api.complex.ImaginaryView;
 import stallone.api.doubles.IDoubleArray;
 import stallone.doubles.AbstractDoubleArray;

@@ -4,7 +4,6 @@
  */
 package stallone.api.datasequence;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;

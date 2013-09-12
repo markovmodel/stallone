@@ -6,12 +6,10 @@ package stallone.xxx_erc;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataWriter;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.dynamics.Dynamics;
-import stallone.api.potential.IEnergyModel;
 import stallone.datasequence.io.DcdWriter;
 import stallone.dynamics.IIntegratorThermostatted;
 import stallone.util.StringTools;

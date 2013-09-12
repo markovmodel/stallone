@@ -9,7 +9,6 @@ import stallone.api.ints.IIntArray;
 import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
-import stallone.api.mc.*;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
 import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;

@@ -4,8 +4,6 @@
  */
 package stallone.api.stat;
 
-import stallone.stat.*;
-
 /**
  *
  * @author noe

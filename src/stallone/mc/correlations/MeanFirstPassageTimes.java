@@ -6,13 +6,11 @@
 package stallone.mc.correlations;
 
 import stallone.api.algebra.Algebra;
-import stallone.api.algebra.ILinearSystem;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
-import stallone.doubles.fastutils.IntArrays;
 
 /**
  *

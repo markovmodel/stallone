@@ -6,7 +6,6 @@ package stallone.doubles;
 
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.doubles.IDoubleElement;
 import stallone.api.doubles.IDoubleIterator;
 
 /**

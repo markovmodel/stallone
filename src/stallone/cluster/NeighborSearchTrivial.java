@@ -4,10 +4,8 @@
  */
 package stallone.cluster;
 
-import java.util.TreeSet;
 import stallone.api.cluster.INeighborSearch;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.doubles.Doubles;
 import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;

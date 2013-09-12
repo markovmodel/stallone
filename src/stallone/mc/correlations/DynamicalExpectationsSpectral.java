@@ -6,7 +6,6 @@ package stallone.mc.correlations;
 
 import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.algebra.IEigenvalueSolver;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.mc.MarkovModel;

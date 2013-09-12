@@ -1,6 +1,5 @@
 package stallone.api.algebra;
 
-import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.IDoubleArray;
 
 

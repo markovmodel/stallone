@@ -5,9 +5,7 @@ import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
-import stallone.api.cluster.*;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.discretization.IDiscretization;
 
 /**
  * Performs a voronoi partitioning.

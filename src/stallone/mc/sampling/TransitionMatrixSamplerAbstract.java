@@ -4,7 +4,6 @@
  */
 package stallone.mc.sampling;
 
-import static stallone.api.API.*;
 import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;

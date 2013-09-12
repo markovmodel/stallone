@@ -4,8 +4,6 @@
  */
 package stallone.api.hmm;
 
-import stallone.api.graph.*;
-
 /**
  *
  * @author noe

@@ -7,7 +7,6 @@ package stallone.xxx_hmmtest;
 import java.util.Random;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
-import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.stat.GaussianUnivariate;

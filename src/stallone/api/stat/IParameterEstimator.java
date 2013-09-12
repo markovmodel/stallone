@@ -4,7 +4,6 @@
  */
 package stallone.api.stat;
 
-import stallone.api.ICopyable;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 

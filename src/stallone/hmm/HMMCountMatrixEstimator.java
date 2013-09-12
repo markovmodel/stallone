@@ -4,7 +4,6 @@
  */
 package stallone.hmm;
 
-import java.util.List;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.DoublesPrimitive;

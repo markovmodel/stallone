@@ -14,7 +14,6 @@
 package stallone.algebra;
 
 import stallone.api.algebra.*;
-import stallone.algebra.*;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 

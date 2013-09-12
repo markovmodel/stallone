@@ -5,11 +5,7 @@
 package stallone.complex;
 
 import stallone.api.complex.IComplexArray;
-import stallone.api.complex.IComplexIterator;
-import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.doubles.IDoubleIterator;
-import static stallone.doubles.DoubleArrayTest.*;
 
 /**
  *

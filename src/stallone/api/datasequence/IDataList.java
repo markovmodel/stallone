@@ -4,7 +4,6 @@
  */
 package stallone.api.datasequence;
 
-import java.util.List;
 import stallone.api.doubles.IDoubleArray;
 
 /**

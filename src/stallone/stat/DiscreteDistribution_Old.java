@@ -10,7 +10,6 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IParametricFunction;
 import stallone.api.stat.IDiscreteDistribution;
 import stallone.api.stat.IParameterEstimator;
-import stallone.xxx_hmmtest.BinnedFretEfficiencyOutputModel_tmp;
 
 /**
  *

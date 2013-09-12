@@ -5,13 +5,11 @@
 package stallone.discretization;
 
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.function.*;
 import java.util.Iterator;
 import stallone.doubles.PrimitiveDoubleArray;
-import stallone.datasequence.DataPairIterator;
 
 /**
  * A grid discretization which calculates functional values on demand and

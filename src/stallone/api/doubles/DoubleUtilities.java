@@ -10,7 +10,6 @@ import stallone.api.ints.IIntList;
 import java.io.PrintStream;
 import java.util.*;
 import stallone.doubles.DoubleIO;
-import stallone.doubles.PrimitiveDoubleTools;
 import stallone.doubles.QuickSortDouble;
 
 /**

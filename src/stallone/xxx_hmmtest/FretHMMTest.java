@@ -6,8 +6,6 @@ package stallone.xxx_hmmtest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;

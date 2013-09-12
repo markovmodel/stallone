@@ -4,11 +4,6 @@
  */
 package stallone.mc.sampling;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.mc.MarkovModel;

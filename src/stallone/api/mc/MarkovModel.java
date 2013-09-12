@@ -4,8 +4,6 @@
  */
 package stallone.api.mc;
 
-import stallone.mc.*;
-
 /**
  *
  * @author noe

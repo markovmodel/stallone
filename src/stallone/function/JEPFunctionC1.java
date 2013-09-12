@@ -6,7 +6,6 @@ package stallone.function;
 
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import java.util.ArrayList;
 import org.nfunk.jep.JEP;
 import stallone.api.function.*;
 

@@ -2,10 +2,8 @@ package stallone.graph.connectivity;
 
 import stallone.doubles.fastutils.IntSortedSet;
 import stallone.doubles.fastutils.IntAVLTreeSet;
-import stallone.graph.connectivity.IntStrongConnectivity.IntVertexInfo;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
-import stallone.api.ints.IIntList;
 import stallone.api.ints.IIntIterator;
 import java.util.*;
 import stallone.api.graph.*;

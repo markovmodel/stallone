@@ -4,17 +4,12 @@
  */
 package stallone.api.intsequence;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import stallone.api.hmm.IHMM;
-import stallone.api.hmm.IHMMHiddenVariables;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
-import stallone.api.ints.IntsPrimitive;
 import stallone.intsequence.IntSequenceWriterAsciiDense;
 import stallone.intsequence.IntSequenceWriterAsciiSparse;
 

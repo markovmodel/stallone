@@ -11,7 +11,6 @@ import stallone.ints.IntElement;
 import stallone.api.graph.IIntGraph;
 import stallone.api.graph.IIntEdge;
 import java.util.Iterator;
-import stallone.api.algebra.*;
 
 
 /**

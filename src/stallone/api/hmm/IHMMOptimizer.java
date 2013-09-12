@@ -4,9 +4,6 @@
  */
 package stallone.api.hmm;
 
-import java.util.List;
-import stallone.api.ints.IIntArray;
-
 
 /**
  *

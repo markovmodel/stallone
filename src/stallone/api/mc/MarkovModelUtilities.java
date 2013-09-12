@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.algebra.IEigenvalueSolver;
 import stallone.api.graph.IIntGraph;
 import stallone.cluster.MilestoningFilter;
 import stallone.graph.MatrixGraph;

@@ -4,8 +4,6 @@
  */
 package stallone.api.potential;
 
-import stallone.potential.*;
-
 /**
  *
  * @author noe

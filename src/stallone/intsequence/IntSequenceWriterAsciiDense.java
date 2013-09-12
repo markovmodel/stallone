@@ -7,7 +7,6 @@ package stallone.intsequence;
 import java.io.IOException;
 import java.io.PrintStream;
 import stallone.api.ints.IIntArray;
-import stallone.api.ints.Ints;
 import stallone.api.intsequence.IIntWriter;
 
 /**

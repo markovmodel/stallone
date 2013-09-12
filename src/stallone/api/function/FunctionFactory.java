@@ -4,9 +4,6 @@
  */
 package stallone.api.function;
 
-import stallone.api.doubles.IDoubleArray;
-import stallone.api.function.*;
-import stallone.discretization.GriddedFunctionOnDemand;
 import stallone.function.JEPFunction;
 import stallone.function.JEPFunctionC1;
 

@@ -7,14 +7,11 @@ package stallone.xxx_tests;
 import java.io.IOException;
 import static stallone.api.API.*;
 import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.cluster.*;
-import stallone.api.complex.IComplexArray;
 import stallone.api.datasequence.*;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.*;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
-import stallone.util.MathTools;
 
 /**
  *

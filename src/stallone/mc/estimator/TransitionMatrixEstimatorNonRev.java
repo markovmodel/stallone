@@ -5,7 +5,6 @@
 
 package stallone.mc.estimator;
 
-import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.mc.ITransitionMatrixEstimator;

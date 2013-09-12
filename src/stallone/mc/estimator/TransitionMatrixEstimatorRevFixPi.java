@@ -4,14 +4,12 @@
  */
 package stallone.mc.estimator;
 
-import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
 import stallone.api.mc.*;
-import stallone.util.MathTools;
 
 /**
  *

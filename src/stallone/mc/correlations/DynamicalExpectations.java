@@ -5,7 +5,6 @@
 package stallone.mc.correlations;
 
 import stallone.mc.*;
-import stallone.api.algebra.*;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.mc.IMarkovPropagator;

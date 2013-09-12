@@ -1,6 +1,5 @@
 package stallone.cluster;
 
-import static stallone.api.API.*;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;

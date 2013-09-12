@@ -10,13 +10,11 @@ import stallone.api.cluster.Clustering;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
-import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
-import stallone.api.strings.Strings;
 
 /**
  *

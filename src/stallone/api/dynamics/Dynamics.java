@@ -4,8 +4,6 @@
  */
 package stallone.api.dynamics;
 
-import stallone.dynamics.*;
-
 /**
  *
  * @author noe
