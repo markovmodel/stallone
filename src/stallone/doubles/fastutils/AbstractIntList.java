@@ -455,7 +455,7 @@ public abstract class AbstractIntList extends AbstractIntCollection implements I
  }
 
 
- public static class IntSubList extends AbstractIntList implements java.io.Serializable {
+ private static class IntSubList extends AbstractIntList implements java.io.Serializable {
      public static final long serialVersionUID = -7046029254386353129L;
   /** The list this sublist restricts. */
   protected final IntList l;
