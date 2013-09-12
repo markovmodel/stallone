@@ -4,11 +4,20 @@
  */
 package stallone.api.doubles;
 
-import java.io.IOException;
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import static stallone.doubles.DoubleArrayTest.*;
+import static stallone.doubles.DoubleArrayTest.assertEqual;
+
+import java.io.IOException;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -16,6 +25,17 @@ import static stallone.doubles.DoubleArrayTest.*;
  */
 public class DoubleFactoryTest
 {
+	/**
+	 * delta used to compare floats for equality
+	 */
+	static final double delta = 1e-10;
+	
+	DoubleFactory instance;
+	
+	
+	final static String inputMatrixDense = "test/stallone/api/doubles/inputfile-denseMatrix-2x2.dat";
+	final static String inputMatrixSparse = "test/stallone/api/doubles/inputfile-sparseMatrix-2x2.dat";
+	
     
     public DoubleFactoryTest()
     {
@@ -34,6 +54,8 @@ public class DoubleFactoryTest
     @Before
     public void setUp()
     {
+    	// every test case will use a new factory!
+    	instance = new DoubleFactory();
     }
     
     @After
@@ -47,14 +69,12 @@ public class DoubleFactoryTest
     @Test
     public void testDenseColumn()
     {
-        System.out.println("denseColumn");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int size = 100;
+        double delta = 1e-10;
+
+        IDoubleArray expected = instance.array(new double[size]);
         IDoubleArray result = instance.denseColumn(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expected.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -63,30 +83,33 @@ public class DoubleFactoryTest
     @Test
     public void testDenseRow()
     {
-        System.out.println("denseRow");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int size = 100;
+       
+        IDoubleArray expected = instance.array(new double[size]);
         IDoubleArray result = instance.denseRow(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expected.getArray(), result.getArray(), delta);
     }
 
     /**
      * Test of sparseColumn method, of class DoubleFactory.
+     * TODO do a multiplication and test for equality
      */
     @Test
     public void testSparseColumn()
     {
-        System.out.println("sparseColumn");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+    	int size = 10;
+        
+        IDoubleArray expResult = instance.column(size);
+        expResult.set(4, 1.0f);
+        expResult.set(9, 1.0f);
+        
         IDoubleArray result = instance.sparseColumn(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        // FIXME: leads to array out of bounds exception
+        result.set(4, 1.0f);
+        result.set(9, 1.0f);
+        
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -95,14 +118,19 @@ public class DoubleFactoryTest
     @Test
     public void testSparseRow()
     {
-        System.out.println("sparseRow");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+    	int size = 10;
+        
+        IDoubleArray expResult = instance.row(size);
+        expResult.set(4, 1.0f);
+        expResult.set(9, 1.0f);
+        
         IDoubleArray result = instance.sparseRow(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        // FIXME: leads to array out of bounds exception
+        result.set(4, 1.0f);
+        result.set(9, 1.0f);
+        
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -111,30 +139,21 @@ public class DoubleFactoryTest
     @Test
     public void testColumn()
     {
-        System.out.println("column");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int size = 10;
+        IDoubleArray expResult = instance.array(new double[size][size]);
         IDoubleArray result = instance.column(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getColumn(0), result.getArray(), delta);
     }
 
     /**
      * Test of row method, of class DoubleFactory.
      */
     @Test
-    public void testRow()
-    {
-        System.out.println("row");
-        int size = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
-        IDoubleArray result = instance.row(size);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testRow() {
+        int size = 10;
+        IDoubleArray expResult = instance.array(new double[size][size]);
+        IDoubleArray result = instance.column(size);
+        assertArrayEquals(expResult.getColumn(0), result.getArray(), delta);
     }
 
     /**
@@ -143,9 +162,7 @@ public class DoubleFactoryTest
     @Test
     public void testArray_int()
     {
-        System.out.println("array");
         int size = 0;
-        DoubleFactory instance = new DoubleFactory();
         IDoubleArray expResult = null;
         IDoubleArray result = instance.array(size);
         assertEquals(expResult, result);
@@ -159,9 +176,7 @@ public class DoubleFactoryTest
     @Test
     public void testArray_doubleArr()
     {
-        System.out.println("array");
         double[] init = null;
-        DoubleFactory instance = new DoubleFactory();
         IDoubleArray expResult = null;
         IDoubleArray result = instance.array(init);
         assertEquals(expResult, result);
@@ -175,15 +190,16 @@ public class DoubleFactoryTest
     @Test
     public void testDenseMatrix()
     {
-        System.out.println("denseMatrix");
-        int nrows = 0;
-        int ncols = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int nrows = 10;
+        int ncols = 10;
+        IDoubleArray expResult = instance.array(new double [ncols][nrows]);
         IDoubleArray result = instance.denseMatrix(nrows, ncols);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(expResult.columns(), result.columns());
+        assertEquals(expResult.rows(), result.rows());
+        
+        for(int i = 0; i < ncols; ++i)
+            assertArrayEquals(expResult.getColumn(i), result.getColumn(i), delta);
     }
 
     /**
@@ -192,15 +208,20 @@ public class DoubleFactoryTest
     @Test
     public void testSparseMatrix()
     {
-        System.out.println("sparseMatrix");
-        int nrows = 0;
-        int ncols = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int nrows = 10;
+        int ncols = 10;
+        IDoubleArray expResult = instance.array(new double [ncols][nrows]);
         IDoubleArray result = instance.sparseMatrix(nrows, ncols);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        expResult.set(3, 4, 1.f);
+        // FIXME: array out of bounds
+        result.set(3, 4, 1.f);
+        
+        assertEquals(expResult.columns(), result.columns());
+        assertEquals(expResult.rows(), result.rows());
+        
+        for(int i = 0; i < ncols; ++i)
+            assertArrayEquals(expResult.getColumn(i), result.getColumn(i), delta);
     }
 
     /**
@@ -209,9 +230,7 @@ public class DoubleFactoryTest
     @Test
     public void testArray_doubleArrArr()
     {
-        System.out.println("array");
         double[][] init = null;
-        DoubleFactory instance = new DoubleFactory();
         IDoubleArray expResult = null;
         IDoubleArray result = instance.array(init);
         assertEquals(expResult, result);
@@ -225,10 +244,8 @@ public class DoubleFactoryTest
     @Test
     public void testArray_int_int()
     {
-        System.out.println("array");
         int rows = 0;
         int cols = 0;
-        DoubleFactory instance = new DoubleFactory();
         IDoubleArray expResult = null;
         IDoubleArray result = instance.array(rows, cols);
         assertEquals(expResult, result);
@@ -236,17 +253,12 @@ public class DoubleFactoryTest
         fail("The test case is a prototype.");
     }
 
-    public final static String inputMatrixDense = "test/stallone/api/doubles/inputfile-denseMatrix-2x2.dat";
-    public final static String inputMatrixSparse = "test/stallone/api/doubles/inputfile-sparseMatrix-2x2.dat";
-    
     /**
      * Test of fromFile method, of class DoubleFactory.
      */
     @Test
     public void testFromFile()
     {
-        System.out.println("fromFile");
-
         try
         {
             IDoubleArray M1 = Doubles.create.fromFile(inputMatrixDense);
@@ -256,13 +268,8 @@ public class DoubleFactoryTest
         }
         catch(IOException e)
         {
-            System.out.println("IOException: ");
-            e.printStackTrace();
-            System.exit(0);
+            fail("failed to read from input files.");
         }
-        
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
@@ -271,10 +278,9 @@ public class DoubleFactoryTest
     @Test
     public void testArray_int_double()
     {
-        System.out.println("array");
         int size = 0;
         double value = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.array(size, value);
         assertEquals(expResult, result);
@@ -288,14 +294,11 @@ public class DoubleFactoryTest
     @Test
     public void testArray_String()
     {
-        System.out.println("array");
-        String from = "";
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        String from = "1,2,3";
+
+        IDoubleArray expResult = instance.array(new double[] {1,2,3});
         IDoubleArray result = instance.array(from);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -304,14 +307,11 @@ public class DoubleFactoryTest
     @Test
     public void testArrayFrom_double()
     {
-        System.out.println("arrayFrom");
         double d = 0.0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+
+        IDoubleArray expResult = instance.array(new double[1]);
         IDoubleArray result = instance.arrayFrom(d);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -320,31 +320,29 @@ public class DoubleFactoryTest
     @Test
     public void testArrayFrom_double_doubleArr()
     {
-        System.out.println("arrayFrom");
-        double d1 = 0.0;
-        double[] d2 = null;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        double d1 = 42;
+        double[] d2 = new double[0];
+
+        IDoubleArray expResult = instance.array(new double[] {d1});
         IDoubleArray result = instance.arrayFrom(d1, d2);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(expResult.size(), result.size());
+        
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
      * Test of arrayFrom method, of class DoubleFactory.
+     * TODO: this is trivial?
      */
     @Test
     public void testArrayFrom_doubleArr()
     {
-        System.out.println("arrayFrom");
-        double[] arr = null;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        double[] arr = {1,2,3};
+
+        IDoubleArray expResult = instance.array(arr);
         IDoubleArray result = instance.arrayFrom(arr);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -353,14 +351,17 @@ public class DoubleFactoryTest
     @Test
     public void testArrayFrom_intArr()
     {
-        System.out.println("arrayFrom");
-        int[] a = null;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int[] a = {1,2,3};
+        double[] b = new double[a.length];
+
+        // cast integer to double
+        for (int i = 0; i < b.length; i++) {
+            b[i] = a[i];
+        }
+        
+        IDoubleArray expResult = instance.arrayFrom(b);
         IDoubleArray result = instance.arrayFrom(a);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -369,14 +370,16 @@ public class DoubleFactoryTest
     @Test
     public void testArrayFrom_floatArr()
     {
-        System.out.println("arrayFrom");
-        float[] a = null;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        float[] a = {1f,2f,3f};
+        double[] b = new double[a.length];
+
+        for (int i = 0; i < b.length; i++) {
+            b[i] = a[i];
+        }
+
+        IDoubleArray expResult = instance.arrayFrom(b);
         IDoubleArray result = instance.arrayFrom(a);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -385,14 +388,16 @@ public class DoubleFactoryTest
     @Test
     public void testArrayRandom()
     {
-        System.out.println("arrayRandom");
-        int n = 0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        int n = 100;
+
         IDoubleArray result = instance.arrayRandom(n);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        // check random elements are in bounds of [0,1[
+        // TODO: is this check correct?!
+        for(int i = 0; i < result.size(); ++i) {
+            assertTrue( result.get(i) < 1);
+            assertTrue( result.get(i) >= 0);
+        }
     }
 
     /**
@@ -401,16 +406,32 @@ public class DoubleFactoryTest
     @Test
     public void testArrayRange()
     {
-        System.out.println("arrayRange");
         double start = 0.0;
-        double end = 0.0;
-        double step = 0.0;
-        DoubleFactory instance = new DoubleFactory();
-        IDoubleArray expResult = null;
+        double end = 10;
+        double step = 1.5;
+
+        IDoubleArray expResult = instance.array(new double[]{0.0, 1.5, 3.0, 4.5, 6.0, 7.5, 9});
         IDoubleArray result = instance.arrayRange(start, end, step);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
+    }
+    
+    /**
+     * Test of arrayRange method, of class DoubleFactory.
+     */
+    @Test
+    public void testArrayRangeNeg()
+    {
+        double start = 9.0;
+        double end = 0.0;
+        double step = -1.5;
+        
+        double[] arr = {9.0, 7.5, 6.0, 4.5, 3.0, 1.5};
+        
+        IDoubleArray expResult = instance.array(arr);
+        IDoubleArray result = instance.arrayRange(start, end, step);
+        
+        assertEquals(expResult.size(), result.size());
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
@@ -419,10 +440,10 @@ public class DoubleFactoryTest
     @Test
     public void testMatrix_int_int()
     {
-        System.out.println("matrix");
+        
         int nrows = 0;
         int ncols = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrix(nrows, ncols);
         assertEquals(expResult, result);
@@ -436,11 +457,10 @@ public class DoubleFactoryTest
     @Test
     public void testMatrix_3args()
     {
-        System.out.println("matrix");
         int nrows = 0;
         int ncols = 0;
         double value = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrix(nrows, ncols, value);
         assertEquals(expResult, result);
@@ -454,9 +474,8 @@ public class DoubleFactoryTest
     @Test
     public void testMatrix_doubleArrArr()
     {
-        System.out.println("matrix");
         double[][] res = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrix(res);
         assertEquals(expResult, result);
@@ -470,9 +489,8 @@ public class DoubleFactoryTest
     @Test
     public void testMatrix_String()
     {
-        System.out.println("matrix");
         String from = "";
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrix(from);
         assertEquals(expResult, result);
@@ -486,9 +504,8 @@ public class DoubleFactoryTest
     @Test
     public void testMatrixFrom_floatArrArr()
     {
-        System.out.println("matrixFrom");
         float[][] a = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrixFrom(a);
         assertEquals(expResult, result);
@@ -502,9 +519,8 @@ public class DoubleFactoryTest
     @Test
     public void testMatrixFrom_intArrArr()
     {
-        System.out.println("matrixFrom");
         int[][] a = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrixFrom(a);
         assertEquals(expResult, result);
@@ -518,11 +534,10 @@ public class DoubleFactoryTest
     @Test
     public void testMatrixReshape()
     {
-        System.out.println("matrixReshape");
         IDoubleArray arr = null;
         int d1 = 0;
         int d2 = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.matrixReshape(arr, d1, d2);
         assertEquals(expResult, result);
@@ -536,10 +551,9 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_int_double()
     {
-        System.out.println("diag");
         int size = 0;
         double value = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.diag(size, value);
         assertEquals(expResult, result);
@@ -553,9 +567,8 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_doubleArr()
     {
-        System.out.println("diag");
         double[] values = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.diag(values);
         assertEquals(expResult, result);
@@ -569,9 +582,8 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_IDoubleArray()
     {
-        System.out.println("diag");
         IDoubleArray values = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.diag(values);
         assertEquals(expResult, result);
@@ -585,9 +597,8 @@ public class DoubleFactoryTest
     @Test
     public void testSymmetric()
     {
-        System.out.println("symmetric");
         IDoubleArray matrix = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.symmetric(matrix);
         assertEquals(expResult, result);
@@ -601,9 +612,8 @@ public class DoubleFactoryTest
     @Test
     public void testSymmetricReal()
     {
-        System.out.println("symmetricReal");
         int size = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.symmetricReal(size);
         assertEquals(expResult, result);
@@ -617,9 +627,8 @@ public class DoubleFactoryTest
     @Test
     public void testIdentity()
     {
-        System.out.println("identity");
         int dim = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleArray expResult = null;
         IDoubleArray result = instance.identity(dim);
         assertEquals(expResult, result);
@@ -633,9 +642,8 @@ public class DoubleFactoryTest
     @Test
     public void testList_int()
     {
-        System.out.println("list");
         int size = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.list(size);
         assertEquals(expResult, result);
@@ -649,10 +657,9 @@ public class DoubleFactoryTest
     @Test
     public void testList_int_double()
     {
-        System.out.println("list");
         int size = 0;
         double value = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.list(size, value);
         assertEquals(expResult, result);
@@ -666,9 +673,8 @@ public class DoubleFactoryTest
     @Test
     public void testList_IDoubleArray()
     {
-        System.out.println("list");
         IDoubleArray arr = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.list(arr);
         assertEquals(expResult, result);
@@ -682,9 +688,8 @@ public class DoubleFactoryTest
     @Test
     public void testListFrom_double()
     {
-        System.out.println("listFrom");
         double d = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listFrom(d);
         assertEquals(expResult, result);
@@ -698,10 +703,9 @@ public class DoubleFactoryTest
     @Test
     public void testListFrom_double_doubleArr()
     {
-        System.out.println("listFrom");
         double d1 = 0.0;
         double[] d2 = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listFrom(d1, d2);
         assertEquals(expResult, result);
@@ -715,9 +719,8 @@ public class DoubleFactoryTest
     @Test
     public void testListFrom_doubleArr()
     {
-        System.out.println("listFrom");
         double[] arr = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listFrom(arr);
         assertEquals(expResult, result);
@@ -731,9 +734,8 @@ public class DoubleFactoryTest
     @Test
     public void testListFrom_intArr()
     {
-        System.out.println("listFrom");
         int[] a = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listFrom(a);
         assertEquals(expResult, result);
@@ -747,9 +749,8 @@ public class DoubleFactoryTest
     @Test
     public void testListFrom_floatArr()
     {
-        System.out.println("listFrom");
         float[] a = null;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listFrom(a);
         assertEquals(expResult, result);
@@ -763,9 +764,9 @@ public class DoubleFactoryTest
     @Test
     public void testListRandom()
     {
-        System.out.println("listRandom");
+        
         int n = 0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listRandom(n);
         assertEquals(expResult, result);
@@ -779,11 +780,11 @@ public class DoubleFactoryTest
     @Test
     public void testListRange()
     {
-        System.out.println("listRange");
+        
         double start = 0.0;
         double end = 0.0;
         double step = 0.0;
-        DoubleFactory instance = new DoubleFactory();
+
         IDoubleList expResult = null;
         IDoubleList result = instance.listRange(start, end, step);
         assertEquals(expResult, result);
