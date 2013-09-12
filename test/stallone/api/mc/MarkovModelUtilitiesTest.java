@@ -103,8 +103,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testIsConnected()
     {
-        System.out.println("isConnected");
-
         assertEquals(MarkovModel.util.isConnected(P1), true);
         assertEquals(MarkovModel.util.isConnected(P2), false);
         assertEquals(MarkovModel.util.isConnected(P3), false);
@@ -116,8 +114,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testConnectedComponents()
     {
-        System.out.println("connectedComponents");
-        
         Collection<IIntArray> cc1 = MarkovModel.util.connectedComponents(P1);
         assertTrue(cc1.containsAll(C1));
         assertEquals(cc1.size(), C1.size());
@@ -137,8 +133,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testGiantComponent()
     {
-        System.out.println("giantComponent");
-
         assertEquals(MarkovModel.util.giantComponent(P1), giant1);
         assertEquals(MarkovModel.util.giantComponent(P2), giant2);
         assertEquals(MarkovModel.util.giantComponent(P3), giant3);
@@ -150,7 +144,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateC_Iterable_int()
     {
-        System.out.println("estimateC");
         Iterable<IIntArray> trajs = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -167,7 +160,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCmilestoning_3args_1()
     {
-        System.out.println("estimateCmilestoning");
         Iterable<IIntArray> trajs = null;
         Iterable<IIntArray> cores = null;
         int lag = 0;
@@ -185,7 +177,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCmilestoning_Iterable_int()
     {
-        System.out.println("estimateCmilestoning");
         Iterable<IIntArray> trajs = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -202,7 +193,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateC_IIntArray_int()
     {
-        System.out.println("estimateC");
         IIntArray traj = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -219,7 +209,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCmilestoning_3args_2()
     {
-        System.out.println("estimateCmilestoning");
         IIntArray traj = null;
         Iterable<IIntArray> cores = null;
         int lag = 0;
@@ -237,7 +226,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCmilestoning_IIntArray_int()
     {
-        System.out.println("estimateCmilestoning");
         IIntArray traj = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -254,7 +242,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCstepping_Iterable_int()
     {
-        System.out.println("estimateCstepping");
         Iterable<IIntArray> trajs = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -271,7 +258,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateCstepping_IIntArray_int()
     {
-        System.out.println("estimateCstepping");
         IIntArray traj = null;
         int lag = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -288,7 +274,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testLogLikelihood()
     {
-        System.out.println("logLikelihood");
         IDoubleArray T = null;
         IDoubleArray C = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -305,7 +290,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testLogLikelihoodCorrelationMatrix()
     {
-        System.out.println("logLikelihoodCorrelationMatrix");
         IDoubleArray corr = null;
         IDoubleArray C = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -322,7 +306,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testIsTransitionMatrix()
     {
-        System.out.println("isTransitionMatrix");
         IDoubleArray T = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
         boolean expResult = false;
@@ -338,7 +321,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testIsRateMatrix()
     {
-        System.out.println("isRateMatrix");
         IDoubleArray K = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
         boolean expResult = false;
@@ -354,7 +336,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testIsReversible_IDoubleArray()
     {
-        System.out.println("isReversible");
         IDoubleArray T = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
         boolean expResult = false;
@@ -370,7 +351,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testIsReversible_IDoubleArray_IDoubleArray()
     {
-        System.out.println("isReversible");
         IDoubleArray T = null;
         IDoubleArray pi = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -387,7 +367,7 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateT()
     {
-        System.out.println("estimateT");
+        
         IDoubleArray counts = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
         IDoubleArray expResult = null;
@@ -403,7 +383,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateTrev_IDoubleArray()
     {
-        System.out.println("estimateTrev");
         double[][] C = {
             {10,5,1},
             {1,7,4},
@@ -426,7 +405,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testEstimateTrev_IDoubleArray_IDoubleArray()
     {
-        System.out.println("estimateTrev");
         IDoubleArray counts = null;
         IDoubleArray piFixed = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -443,8 +421,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testStationaryDistribution()
     {
-        System.out.println("stationaryDistribution");
-
         try
         {
             IDoubleArray T = Doubles.create.fromFile(inputT1);
@@ -454,7 +430,7 @@ public class MarkovModelUtilitiesTest
         }
         catch(IOException e)
         {
-            System.out.println("Exception: "+e);
+            
             e.printStackTrace();
         }
         // TODO review the generated test code and remove the default call to fail.
@@ -467,7 +443,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testStationaryDistributionRevQuick()
     {
-        System.out.println("stationaryDistributionRevQuick");
         IDoubleArray T = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
         IDoubleArray expResult = null;
@@ -483,7 +458,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testTimescales_IDoubleArray_double()
     {
-        System.out.println("timescales");
         IDoubleArray T = null;
         double tau = 0.0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -500,7 +474,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testTimescales_5args()
     {
-        System.out.println("timescales");
         Iterable<IIntArray> dtraj = null;
         ICountMatrixEstimator Cest = null;
         ITransitionMatrixEstimator Test = null;
@@ -520,7 +493,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testMetastableStates()
     {
-        System.out.println("metastableStates");
         IDoubleArray M = null;
         int nstates = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -537,7 +509,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testMetastableMemberships()
     {
-        System.out.println("metastableMemberships");
         IDoubleArray M = null;
         int nstates = 0;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -554,7 +525,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testForwardCommittor()
     {
-        System.out.println("forwardCommittor");
         IDoubleArray M = null;
         IIntArray A = null;
         IIntArray B = null;
@@ -572,7 +542,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testBackwardCommittor()
     {
-        System.out.println("backwardCommittor");
         IDoubleArray M = null;
         IIntArray A = null;
         IIntArray B = null;
@@ -590,7 +559,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testAutocorrelation()
     {
-        System.out.println("autocorrelation");
         IDoubleArray M = null;
         IDoubleArray observable = null;
         IDoubleArray timepoints = null;
@@ -608,7 +576,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testCorrelation()
     {
-        System.out.println("correlation");
         IDoubleArray M = null;
         IDoubleArray observable1 = null;
         IDoubleArray observable2 = null;
@@ -627,7 +594,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testPerturbationExpectation()
     {
-        System.out.println("perturbationExpectation");
         IDoubleArray M = null;
         IDoubleArray pi0 = null;
         IDoubleArray observable = null;
@@ -646,7 +612,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testFingerprintAutocorrelation()
     {
-        System.out.println("fingerprintAutocorrelation");
         IDoubleArray M = null;
         IDoubleArray observable = null;
         MarkovModelUtilities instance = new MarkovModelUtilities();
@@ -663,7 +628,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testFingerprintCorrelation()
     {
-        System.out.println("fingerprintCorrelation");
         IDoubleArray M = null;
         IDoubleArray observable1 = null;
         IDoubleArray observable2 = null;
@@ -681,7 +645,6 @@ public class MarkovModelUtilitiesTest
     @Test
     public void testFingerprintPerturbation()
     {
-        System.out.println("fingerprintPerturbation");
         IDoubleArray M = null;
         IDoubleArray p0 = null;
         IDoubleArray observable = null;

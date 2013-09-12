@@ -162,8 +162,6 @@ public class IDoubleArrayTest
     @Test
     public void testIterator()
     {
-        System.out.println("iterator");
-
         double sum = 0;
         int nelements = 0;
         for (IDoubleElement e : array)
