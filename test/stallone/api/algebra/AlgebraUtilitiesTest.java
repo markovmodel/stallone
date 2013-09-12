@@ -4,12 +4,16 @@
  */
 package stallone.api.algebra;
 
-import org.junit.*;
 import static org.junit.Assert.*;
-import stallone.api.complex.IComplexArray;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.mc.MarkovModelUtilities;
 
 /**
  *
@@ -510,9 +514,12 @@ public class AlgebraUtilitiesTest
         
         IEigenvalueDecomposition evd = Algebra.util.evd(T, true, true);
 
-        Algebra.util.numericallyEquals(evd.getEval(), Doubles.create.arrayFrom(1, 0.9, 0.7), 1e-7);
-        Algebra.util.numericallyEquals(evd.R(), Doubles.create.array(Rref), 1e-7);
-        Algebra.util.numericallyEquals(evd.L(), Doubles.create.array(Lref), 1e-7);
+        assertTrue(Algebra.util.numericallyEquals(evd.getEval(),
+                Doubles.create.arrayFrom(1, 0.9, 0.7), 1e-7));
+        assertTrue(Algebra.util.numericallyEquals(evd.R(),
+                Doubles.create.array(Rref), 1e-7));
+        assertTrue(Algebra.util.numericallyEquals(evd.L(),
+                Doubles.create.array(Lref), 1e-7));
     }
 
     /**
