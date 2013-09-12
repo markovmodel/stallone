@@ -7,7 +7,6 @@ package stallone.api.doubles;
 import org.junit.*;
 import static org.junit.Assert.*;
 import stallone.api.algebra.Algebra;
-import stallone.api.ints.IIntElement;
 
 /**
  *

@@ -5,8 +5,6 @@
 package stallone.api.doubles;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-
 import static stallone.api.API.*;
 
 /**

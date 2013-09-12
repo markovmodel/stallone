@@ -8,15 +8,10 @@ import java.io.IOException;
 import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
-import stallone.api.algebra.Algebra;
-import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.complex.Complex;
-import stallone.api.datasequence.DataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
-import stallone.api.io.IO;
 import stallone.doubles.DoubleArrayTest;
 
 import static stallone.doubles.DoubleArrayTest.*;
