@@ -217,6 +217,7 @@ public class MarkovModelFactory
     
     public DynamicalExpectations createDynamicalExpectations(IDoubleArray T)
     {
+        // FIXME: infinite recursion
         return(createDynamicalExpectations(T));
     }
 
