@@ -13,12 +13,11 @@
  */
 package stallone.algebra;
 
-import stallone.complex.ComplexNumber;
+import static stallone.doubles.DoubleArrayTest.assertColumns;
+import static stallone.doubles.DoubleArrayTest.assertRows;
+import static stallone.doubles.DoubleArrayTest.assertSquare;
 import stallone.api.complex.IComplexArray;
-import stallone.api.algebra.IComplexNumber;
 import stallone.api.doubles.IDoubleArray;
-
-import static stallone.doubles.DoubleArrayTest.*;
 
 /**
  * Compute transpose of a complex matrix.
@@ -98,9 +97,9 @@ public class ArrayTranspose //implements IMatrixTranspose
         assertRows(target, a.columns());
         assertColumns(target, a.rows());
 
-        final IComplexNumber t = ComplexNumber.createZero();
+//        final IComplexNumber t = ComplexNumber.createZero();
 
-        double re, im;
+//        double re, im;
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < cols; j++)
