@@ -114,7 +114,7 @@ public class DataSequenceArray implements IDataSequence
             return times[i];
     }
     
-    class ElementIterator implements Iterator<IDoubleArray>
+    private class ElementIterator implements Iterator<IDoubleArray>
     {
         private IDoubleArray[] data;
         private int i=0;
@@ -145,7 +145,7 @@ public class DataSequenceArray implements IDataSequence
         }
     }
 
-    class PairIterator implements Iterator<IDataSequence>
+    private class PairIterator implements Iterator<IDataSequence>
     {
         private IDoubleArray[] data;
         private int i=0, spacing;
