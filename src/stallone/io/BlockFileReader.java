@@ -516,7 +516,7 @@ public class BlockFileReader extends CachedAsciiFileReader
         return res;
     }
 
-    class Block
+    private class Block
     {
 
         int[] types;
