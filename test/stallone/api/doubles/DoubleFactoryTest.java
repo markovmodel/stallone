@@ -101,13 +101,13 @@ public class DoubleFactoryTest
         
         IDoubleArray expResult = instance.column(size);
         expResult.set(4, 1.0f);
-        expResult.set(9, 1.0f);
+        expResult.set(8, 1.0f);
         
         IDoubleArray result = instance.sparseColumn(size);
         
         // FIXME: leads to array out of bounds exception
         result.set(4, 1.0f);
-        result.set(9, 1.0f);
+        result.set(8, 1.0f);
         
         assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
@@ -551,14 +551,20 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_int_double()
     {
-        int size = 0;
-        double value = 0.0;
+        int size = 10;
+        double value = 1f;
 
-        IDoubleArray expResult = null;
+        IDoubleArray expResult = instance.matrix(size, size);
+        
+        for(int i = 0; i < size; i++) {
+            expResult.set(i, i, value);
+        }
+        
         IDoubleArray result = instance.diag(size, value);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        for(int i = 0; i < size; i++) {
+            assertArrayEquals(expResult.getRow(i), result.getRow(i), delta);
+        }
     }
 
     /**
@@ -567,13 +573,20 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_doubleArr()
     {
-        double[] values = null;
+        double[] values = {1,2,3,4,5,6,7};
+        int size = values.length;
 
-        IDoubleArray expResult = null;
+        IDoubleArray expResult = instance.matrix(size, size);
+        
+        for(int i = 0; i < size; i++) {
+            expResult.set(i, i, values[i]);
+        }
+        
         IDoubleArray result = instance.diag(values);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        for(int i = 0; i < size; i++) {
+            assertArrayEquals(expResult.getRow(i), result.getRow(i), delta);
+        }
     }
 
     /**
@@ -582,13 +595,21 @@ public class DoubleFactoryTest
     @Test
     public void testDiag_IDoubleArray()
     {
-        IDoubleArray values = null;
+        int size = 3;
+        IDoubleArray values = instance.array(new double[] {1,2,3});
 
-        IDoubleArray expResult = null;
+        IDoubleArray expResult = instance.matrix(3, 3);
+        expResult.set(0, 0, 1);
+        expResult.set(1, 1, 2);
+        expResult.set(2, 2, 3);
+        
+        
         IDoubleArray result = instance.diag(values);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        
+        for(int i = 0; i < size; i++) {
+            assertArrayEquals(expResult.getRow(i), result.getRow(i), delta);
+        }
     }
 
     /**

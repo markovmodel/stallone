@@ -6,6 +6,7 @@ package stallone.api.doubles;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import stallone.api.strings.Strings;
 import stallone.doubles.DoubleArrayList_FastUtilWrapper;
@@ -13,6 +14,7 @@ import stallone.doubles.DoubleIO;
 import stallone.doubles.PrimitiveDoubleArray;
 import stallone.doubles.PrimitiveDoubleTable;
 import stallone.doubles.PrimitiveDoubleTools;
+import stallone.doubles.SparseDiagonalMatrix;
 import stallone.doubles.SparseRealMatrix;
 import stallone.doubles.SparseRealVector;
 import stallone.doubles.SymmetricMatrix;
@@ -99,7 +101,8 @@ public class DoubleFactory
     }
     
     /**
-     * Generic array creator. Creates a dense vector or matrix when rows and cols are less than 5000, otherwise sparse
+     * Generic array creator. Creates a dense vector or matrix when rows and cols
+     * are less than 5000, otherwise sparse
      * @param rows
      * @param cols
      * @return 
@@ -332,32 +335,57 @@ public class DoubleFactory
     
     public IDoubleArray diag(int size, double value)
     {
-        IDoubleArray M = matrix(size, size);
-        for (int i = 0; i < size; i++)
-        {
-            M.set(i, i, value);
-        }
-        return (M);
+        double[] diag = new double[size];
+        Arrays.fill(diag, value);
+        return new SparseDiagonalMatrix(diag);
+//        IDoubleArray M = null;
+//        
+//        if(size > 100)
+//            M = sparseMatrix(size, size);
+//        else
+//            M = matrix(size, size);
+//        
+//        for (int i = 0; i < size; i++)
+//        {
+//            M.set(i, i, value);
+//        }
+//        return (M);
     }
 
     public IDoubleArray diag(double... values)
     {
-        IDoubleArray M = matrix(values.length, values.length);
-        for (int i = 0; i < values.length; i++)
-        {
-            M.set(i, i, values[i]);
-        }
-        return (M);
+//        int size = values.length;
+//        IDoubleArray M = null;
+//        
+//        if(size > 100)
+//            M = sparseMatrix(size, size);
+//        else
+//            M = matrix(size, size);
+//        
+//        for (int i = 0; i < size; i++)
+//        {
+//            M.set(i, i, values[i]);
+//        }
+//        return (M);
+        return new SparseDiagonalMatrix(values);
     }
     
     public IDoubleArray diag(IDoubleArray values)
     {
-        IDoubleArray M = matrix(values.size(), values.size());
-        for (int i = 0; i < values.size(); i++)
-        {
-            M.set(i, i, values.get(i));
-        }
-        return (M);
+//        int size = values.size();
+//        IDoubleArray M = null;
+//        
+//        if(size > 100)
+//            M = sparseMatrix(size, size);
+//        else
+//            M = matrix(size, size);
+//        
+//        for (int i = 0; i < size; i++)
+//        {
+//            M.set(i, i, values.get(i));
+//        }
+//        return (M);
+        return new SparseDiagonalMatrix(values);
     }
 
     public IDoubleArray symmetric(final IDoubleArray matrix)
