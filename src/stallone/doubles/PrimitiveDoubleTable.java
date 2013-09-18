@@ -13,8 +13,8 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
 {
     protected double[][] x;
     private int ndim = 3;
-    private DoubleArrayView rowview = null;
-    private DoubleArrayView colview = null;
+//    private DoubleArrayView rowview = null;
+//    private DoubleArrayView colview = null;
 
     public PrimitiveDoubleTable(double[][] _x)
     {
@@ -161,6 +161,12 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
             throw(new IllegalArgumentException("Inconsistent sizes. This array has size "+size()+" other array has size "+other.size()));
         
         Doubles.util.copyInto(this, 0, size(), other, 0);
+    }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
     }
     
 

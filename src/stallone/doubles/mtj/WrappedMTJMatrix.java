@@ -83,5 +83,11 @@ public class WrappedMTJMatrix extends AbstractDoubleArray
         res.copyFrom(this);
         return(res);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
     
 }

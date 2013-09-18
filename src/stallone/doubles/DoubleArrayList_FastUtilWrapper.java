@@ -210,5 +210,11 @@ public class DoubleArrayList_FastUtilWrapper
 
         return(this);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
     
 }

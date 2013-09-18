@@ -250,6 +250,12 @@ public class PrimitiveIntTable implements IIntArray
         
         Ints.util.copyInto(this, 0, size(), other, 0);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
     
 
 }

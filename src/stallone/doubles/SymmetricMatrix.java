@@ -76,4 +76,10 @@ public class SymmetricMatrix extends AbstractDoubleArray
         {
             return cols;
         }
+
+    @Override
+    public boolean isSparse()
+    {
+        return underlyingMatrix.isSparse();
+    }
 }

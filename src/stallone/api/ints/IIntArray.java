@@ -4,6 +4,7 @@
  */
 package stallone.api.ints;
 
+
 /**
  *
  * This is a joint interface for all primitive double containers with a fixed order
@@ -160,5 +161,8 @@ public interface IIntArray extends Iterable<IIntElement>
      * @return 
      */
     public IIntArray create(int rows, int columns);    
+    
+    
+    public boolean isSparse();
     
 }

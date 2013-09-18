@@ -96,5 +96,11 @@ public class WrappedMTJVector extends AbstractDoubleArray {
         return res;
     }
 
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
+
 
 }

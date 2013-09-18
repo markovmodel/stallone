@@ -132,4 +132,10 @@ public class SparseRealMatrix extends AbstractDoubleArray
         return rowVectors[r];
     }
 
+    @Override
+    public boolean isSparse()
+    {
+        return true;
+    }
+
 }

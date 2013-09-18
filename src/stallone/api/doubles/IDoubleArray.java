@@ -215,4 +215,9 @@ public interface IDoubleArray extends Iterable<IDoubleElement>
      */
     //public IDoubleElement viewElement(int ij);
     
+    /**
+     * is this instance sparse?
+     * @return whether the underlying data structure is sparse
+     */
+    public boolean isSparse();
 }

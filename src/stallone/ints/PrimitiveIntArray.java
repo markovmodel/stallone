@@ -195,5 +195,11 @@ public class PrimitiveIntArray implements IIntArray
 
         Ints.util.copyInto(other, 0, size(), this, 0);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
         
 }

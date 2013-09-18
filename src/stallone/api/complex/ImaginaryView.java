@@ -117,5 +117,11 @@ public class ImaginaryView extends AbstractDoubleArray
         return new ImaginaryView(arr.create(rows, columns));
     }
 
+    @Override
+    public boolean isSparse()
+    {
+        return arr.isSparse();
+    }
+
 
 }

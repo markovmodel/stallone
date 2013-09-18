@@ -228,5 +228,11 @@ public class IntArrayView implements IIntArray
     {
         return (data.create(rows,columns));
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return data.isSparse();
+    }
     
 }

@@ -131,6 +131,12 @@ public class PosteriorCountMatrix extends AbstractDoubleArray
             res[it.row()][it.column()] += it.get();
         return(res);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return prior.isSparse() && obs.isSparse();
+    }
 }
 
 class PosteriorCountMatrixIterator implements IDoubleIterator

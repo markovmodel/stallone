@@ -277,4 +277,10 @@ public class DenseComplexArray extends AbstractComplexArray
         return (new DenseComplexArray(size, 1));
     }
 
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
+
 }

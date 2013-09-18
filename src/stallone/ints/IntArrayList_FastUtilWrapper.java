@@ -243,5 +243,11 @@ public class IntArrayList_FastUtilWrapper implements IIntList
 
         return(this);
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
     
 }

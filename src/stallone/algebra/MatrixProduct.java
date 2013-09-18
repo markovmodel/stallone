@@ -75,12 +75,12 @@ public class MatrixProduct //implements IMatrixProduct
         assertRows(target, a.rows());
         assertRows(target, b.columns());
 
-        IDoubleArray ri,cj;
+//        IDoubleArray ri,cj;
         for (int i=0; i<rowsA; i++)
         for (int j=0; j<colsB; j++)
         {
-            ri = a.viewRow(i);
-            cj = b.viewColumn(j);
+//            ri = a.viewRow(i);
+//            cj = b.viewColumn(j);
             target.set(i, j, ip.innerProductSparse(a, b));
         }
     }

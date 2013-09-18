@@ -108,4 +108,10 @@ public class DoubleArrayView extends AbstractDoubleArray
     {
         return (data.create(rows, columns));
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return data.isSparse();
+    }
 }

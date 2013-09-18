@@ -526,6 +526,13 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         {
             return new ImaginaryView(this);
         }
+
+        @Override
+        public boolean isSparse()
+        {
+            // TODO Auto-generated method stub
+            return false;
+        }
     }
 
     /**
@@ -664,6 +671,13 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         public IDoubleArray viewImaginary()
         {
             return new ImaginaryView(this);
+        }
+
+        @Override
+        public boolean isSparse()
+        {
+            // TODO Auto-generated method stub
+            return false;
         }
     }
 }

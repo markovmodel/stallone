@@ -113,5 +113,11 @@ public class PrimitiveDoubleArray extends AbstractDoubleArray
     {
         return(new PrimitiveDoubleTable(rows, columns));
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return false;
+    }
         
 }

@@ -127,4 +127,10 @@ public class ComplexArrayView
     {
         return(carr.create(rows,cols));
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return carr.isSparse();
+    }
 }

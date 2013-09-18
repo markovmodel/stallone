@@ -204,6 +204,12 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
         return(new ComplexDoubleArrayView(darr.create(rows, cols)));
     }
 
+    @Override
+    public boolean isSparse()
+    {
+        return darr.isSparse();
+    }
+
 
     
 }
