@@ -19,6 +19,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import stallone.api.algebra.Algebra;
+import stallone.api.algebra.AlgebraUtilities;
+
 /**
  *
  * @author noe
@@ -610,6 +613,20 @@ public class DoubleFactoryTest
         for(int i = 0; i < size; i++) {
             assertArrayEquals(expResult.getRow(i), result.getRow(i), delta);
         }
+    }
+    
+    @Test
+    public void testDiagMultiplication() {
+        int size = 10;
+        
+        IDoubleArray D = instance.diag(10, 1);
+        IDoubleArray matrix = instance.matrix(size, size, 2);
+        AlgebraUtilities util = new AlgebraUtilities();
+        IDoubleArray result = util.multiplyElementsToNew(matrix, D);
+        
+        IDoubleArray expResult = instance.diag(size, 2);
+        
+        assertArrayEquals(expResult.getArray(), result.getArray(), delta);
     }
 
     /**
