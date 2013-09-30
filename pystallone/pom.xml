@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>compmolbio</groupId>
+	<version>1.0</version>
+	<artifactId>pystallone</artifactId>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>compmolbio</groupId>
+		<artifactId>setuptools</artifactId>
+		<version>1.0</version>
+		<relativePath>../setuptools/pom.xml</relativePath>
+	</parent>
+	
+	<profiles>
+	
+	<profile>
+		<id>python-wrapper</id>
+		<build>
+				<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<!-- includeParents>true</includeParents>
+							<addParentPoms>true</addParentPoms-->
+						<transitive>true</transitive>
+							<outputDirectory>lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			
+			<!--  invoke setup.py -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+			</plugin>
+		</plugins>
+		</build>
+	</profile>
+	
+	
+	</profiles>
+
+	<!-- dependencies>
+		<dependency>
+			<artifactId>Stallone</artifactId>
+			<groupId>compmolbio</groupId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies-->
+
+	<build>
+
+	</build>
+</project>
