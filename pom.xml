@@ -16,7 +16,6 @@
 
 	<profiles>
 		<profile>
-			<!-- jar containing only the public api -->
 			<id>python-wrapper</id>
 			<modules>
 				<module>pystallone</module>
