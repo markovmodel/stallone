@@ -5,7 +5,7 @@
 	<groupId>compmolbio</groupId>
 	<artifactId>stallone</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
 	<name>Stallone-lib</name>
 	<url>http://compmolbio.biocomputing-berlin.de/index.php</url>
@@ -19,8 +19,8 @@
 	</properties>
 
 	<build>
-		<sourceDirectory>../src</sourceDirectory>
-		<testSourceDirectory>../test</testSourceDirectory>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -35,29 +35,54 @@
 		</pluginManagement>
 	</build>
 
-	<!-- profile -P buildDistribution to construct the final compressed jar 
-		containing all dependencies -->
 	<profiles>
 		<profile>
 			<id>python-wrapper</id>
 			<build>
 				<plugins>
-					<!-- build api jar -->
 					<plugin>
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
-						<configuration>
-							<classifier>api</classifier>
-							<classesDirectory>../target/</classesDirectory>
-							<includes>
-								<include>stallone/api/**/*</include>
-							</includes>
-						</configuration>
+						<executions>
+							<!-- build api jar -->
+							<execution>
+								<id>api</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<classifier>api</classifier>
+									<includes>
+										<include>stallone/api/**/*</include>
+									</includes>
+								</configuration>
+							</execution>
+							
+							<!-- build impl jar -->
+<!-- 							TODO : is this needed? because  -->
+							<execution>
+								<id>impl</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<classifier>impl</classifier>
+									<excludes>
+										<exclude>stallone/api/**/*</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
+			<!-- profile -P buildDistribution to construct the final compressed jar 
+				containing all dependencies -->
 			<id>buildDistribution</id>
 			<build>
 				<plugins>
