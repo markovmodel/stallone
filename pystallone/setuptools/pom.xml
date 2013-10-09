@@ -68,9 +68,8 @@
 							<configuration>
 								<arguments>
 									<argument>setup.py</argument>
-									<argument>register</argument>
 									<argument>sdist</argument>
-									<argument>upload</argument>
+									<argument>install</argument>
 									<argument>--user</argument>
 								</arguments>
 							</configuration>
