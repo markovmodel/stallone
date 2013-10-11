@@ -1,68 +1,104 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
 
+	<modelVersion>4.0.0</modelVersion>
 	<groupId>compmolbio</groupId>
-	<version>1.0</version>
 	<artifactId>pystallone</artifactId>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
-	<parent>
-		<groupId>compmolbio</groupId>
-		<artifactId>setuptools</artifactId>
-		<version>1.0</version>
-		<relativePath>../setuptools/pom.xml</relativePath>
-	</parent>
-	
 	<profiles>
-	
-	<profile>
-		<id>python-wrapper</id>
-		<build>
+		<profile>
+			<id>python-wrapper</id>
+			<build>
 				<plugins>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.8</version>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<includeParents>true</includeParents>
+									<outputDirectory>lib</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
 						<configuration>
-							<!-- includeParents>true</includeParents>
-							<addParentPoms>true</addParentPoms-->
-						<transitive>true</transitive>
-							<outputDirectory>lib</outputDirectory>
+							<executable>python</executable>
+							<workingdirectory>${basedir}</workingdirectory>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			
-			<!--  invoke setup.py -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-			</plugin>
-		</plugins>
-		</build>
-	</profile>
-	
-	
+						<executions>
+							<execution>
+								<id>setuptools clean</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<argument>setup.py</argument>
+										<argument>clean</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>setuptools install</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<argument>setup.py</argument>
+										<argument>develop</argument>
+										<argument>--user</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>setuptools test</id>
+								<phase>test</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<skip>${maven.test.skip}</skip>
+									<arguments>
+										<argument>setup.py</argument>
+										<argument>test</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>setuptools deploy</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<argument>setup.py</argument>
+										<argument>sdist</argument>
+										<argument>install</argument>
+										<argument>--user</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
-	<!-- dependencies>
-		<dependency>
-			<artifactId>Stallone</artifactId>
-			<groupId>compmolbio</groupId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies-->
-
-	<build>
-
-	</build>
 </project>
