@@ -14,16 +14,19 @@
 		<module>stallone</module>
 	</modules>
 
-	<!-- To build the pythonic wrapper for stallone, invoke with:
-		 mvn -Ppython-wrapper package -->
-	<!-- profile -P buildDistribution to construct the final compressed jar 
-		containing all dependencies -->
 	<profiles>
 		<profile>
+			<!-- profile -Ppython-wrapper to build the pythonic wrapper for stallone -->
 			<id>python-wrapper</id>
 			<modules>
 				<module>pystallone</module>
 			</modules>
+		</profile>
+
+		<profile>
+			<!-- profile -P buildDistribution to construct the final compressed jar 
+				containing all dependencies -->
+			<id>buildDistribution</id>
 		</profile>
 	</profiles>
 </project>
