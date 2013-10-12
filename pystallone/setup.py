@@ -15,11 +15,13 @@ try:
     from setuptools.command.build import build
     from setuptools.command.install import install
     from setuptools.command.clean import clean
+    print "using setuptools"
 except ImportError:
     from distutils.core import setup
     from distutils.command.build import build
     from distutils.command.install import install
     from distutils.command.clean import clean
+    print "using distutils"
 
 stallone_api_jar = 'stallone-1.0-SNAPSHOT-api.jar'
 
@@ -30,8 +32,13 @@ lib_dir = 'libs/'
 
 def create_class_path():
     jars = [ f for f in listdir('libs/') if isfile(join('libs/', f)) ]
-    cp_string = ''.join(" --classpath " + lib_dir + "%s " \
+    cp_string = ''.join("--classpath " + lib_dir + "%s " \
                         % ''.join(map(str, x)) for x in jars)
+    return cp_string
+
+def create_packages(packages):
+    cp_string = ''.join("--package %s " \
+                        % ''.join(map(str, x)) for x in packages)
     return cp_string
 
 class mybuild(build):
@@ -41,15 +48,19 @@ class mybuild(build):
     def run(self):
         build.run(self)
         classpath = create_class_path()
-        includepath = classpath.replace('--classpath', '--include')
-        
-        call = sys.executable + " -m jcc --jar " + lib_dir + stallone_api_jar \
-             + classpath + includepath \
-             + " --python " + __name__ + \
-            " --version " + __version__ + " --build --reserved extern" + \
-            " --module util/ArrayWrapper --files 4 --bdist"
-        
-        subprocess.call(shlex.split(call))
+        include_run_time_jars = classpath.replace('--classpath', '--include')
+        reserved = 'extern,class,complex,new'
+        #packages = ['']#['stallone.api.*', 'java.lang', 'java.util', 'java.io' ]
+        call = sys.executable + ' -m jcc --jar ' + stallone_api_jar \
+             + ' ' + classpath + ' ' + include_run_time_jars \
+             + " --python " + __name__ + ' ' \
+             + " --version " + __version__ + " --build --reserved extern" \
+             + " --module util/ArrayWrapper --bdist" \
+             + ' --files 2 --use_full_names'
+            
+        """  + create_packages(packages) """ 
+        print 'invoking: ', call
+        return subprocess.call(shlex.split(call))
 
 class myinstall(install):
         def run(self):
@@ -62,11 +73,13 @@ class myinstall(install):
             
 class myclean(clean):
     def run(self):
-        shutil.rmtree('build')
+        shutil.rmtree('build', ignore_errors=True)
+        shutil.rmtree('dist', ignore_errors=True)
+        shutil.rmtree('libs', ignore_errors=True)
+        shutil.rmtree(__name__ + ".egg-info", ignore_errors=True)
     
 setup(name=__name__,
       version=__version__,
       cmdclass=dict(build=mybuild, install=myinstall, clean=myclean),
       # runtime dependencies
-      requires=['jcc (>=1.6)'],
-      )
+      requires=['jcc (>=1.6)'])
