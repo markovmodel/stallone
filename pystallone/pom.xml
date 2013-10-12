@@ -12,23 +12,7 @@
 			<id>python-wrapper</id>
 			<build>
 				<plugins>
-					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.8</version>
-						<executions>
-							<execution>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<includeParents>true</includeParents>
-									<outputDirectory>lib</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
+					<!-- this maps maven cycles to setup.py -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
@@ -52,7 +36,7 @@
 								</configuration>
 							</execution>
 							<execution>
-								<id>setuptools install</id>
+								<id>setuptools build</id>
 								<phase>compile</phase>
 								<goals>
 									<goal>exec</goal>
@@ -60,8 +44,7 @@
 								<configuration>
 									<arguments>
 										<argument>setup.py</argument>
-										<argument>develop</argument>
-										<argument>--user</argument>
+										<argument>build</argument>
 									</arguments>
 								</configuration>
 							</execution>
@@ -80,8 +63,8 @@
 								</configuration>
 							</execution>
 							<execution>
-								<id>setuptools deploy</id>
-								<phase>deploy</phase>
+								<id>setuptools install</id>
+								<phase>install</phase>
 								<goals>
 									<goal>exec</goal>
 								</goals>
@@ -91,6 +74,7 @@
 										<argument>sdist</argument>
 										<argument>install</argument>
 										<argument>--user</argument>
+										<argument>--force</argument>
 									</arguments>
 								</configuration>
 							</execution>

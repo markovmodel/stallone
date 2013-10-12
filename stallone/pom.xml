@@ -31,6 +31,8 @@
 						<source>1.6</source>
 						<target>1.6</target>
 						<optimize>true</optimize>
+						<showWarnings>true</showWarnings>
+						<showDeprecation>true</showDeprecation>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -42,12 +44,11 @@
 			<id>python-wrapper</id>
 			<build>
 				<plugins>
-
 					<plugin>
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<executions>
-							<!-- build api jar -->
+	<!-- build api jar -->
 							<execution>
 								<id>api</id>
 								<goals>
@@ -56,18 +57,20 @@
 								<phase>package</phase>
 								<configuration>
 									<classifier>api</classifier>
-									<!-- make sure all public api classes are included -->
+	<!-- make sure all public api classes are included -->
 									<includes>
 										<include>stallone/api/**/*</include>
 										<include>stallone/dynamics/I*</include>
-										<!-- <include>stallone/mc/sampling/I*</include> -->
+										<include>stallone/ints/**</include>
+										<include>stallone/doubles/**</include>
+										<include>stallone/mc/sampling/I*</include>
 									</includes>
 									<outputDirectory>${outputPystallone}/..</outputDirectory>
 								</configuration>
 							</execution>
 
-							<!-- build impl jar -->
-							<!-- TODO : is this needed? because -->
+	<!-- build impl jar -->
+	<!-- TODO : is this needed? because -->
 							<execution>
 								<id>impl</id>
 								<goals>
@@ -76,9 +79,9 @@
 								<phase>package</phase>
 								<configuration>
 									<classifier>impl</classifier>
-									<excludes>
-										<exclude>stallone/api/**/*</exclude>
-									</excludes>
+<!-- 									<excludes> -->
+<!-- 										<exclude>stallone/api/**/*</exclude> -->
+<!-- 									</excludes> -->
 									<outputDirectory>${outputPystallone}</outputDirectory>
 								</configuration>
 							</execution>
@@ -99,12 +102,32 @@
 								</goals>
 								<inherited>false</inherited>
 								<configuration>
-								<scope>runtime</scope>
 									<outputDirectory>${outputPystallone}</outputDirectory>
 								</configuration>
 							</execution>
+<!-- 							<execution> -->
+<!-- 								<id>copy-stallone-jar</id> -->
+<!-- 								<phase>compile</phase> -->
+<!-- 								<goals> -->
+<!-- 									<goal>copy</goal> -->
+<!-- 								</goals> -->
+<!-- 								<configuration> -->
+
+
+<!-- 									<artifactItems> -->
+<!-- 										<artifact> -->
+<!-- 											<groupId>${project.groupId}</groupId> -->
+<!-- 											<artifactId>${project.artifactId}</artifactId> -->
+<!-- 											<version>${project.version}</version> -->
+<!-- 										</artifact> -->
+<!-- 									</artifactItems> -->
+<!-- 									<outputDirectory>${outputPystallone}/../</outputDirectory> -->
+<!-- 								</configuration> -->
+
+<!-- 							</execution> -->
 						</executions>
 					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
