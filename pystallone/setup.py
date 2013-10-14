@@ -7,9 +7,8 @@ import subprocess
 import sys
 from tempfile import mkdtemp
 from zipfile import ZipFile
-import time
 
-__version__ = '1.0-' + time.strftime('%d-%m-%y--%H-%M')
+__version__ = '1.0'
 __name__ = 'pystallone'
 
 # prefer setuptools in favor of distutils
