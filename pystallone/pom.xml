@@ -49,20 +49,6 @@
 								</configuration>
 							</execution>
 							<execution>
-								<id>setuptools test</id>
-								<phase>test</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<skip>${maven.test.skip}</skip>
-									<arguments>
-										<argument>setup.py</argument>
-										<argument>test</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<execution>
 								<id>setuptools install</id>
 								<phase>install</phase>
 								<goals>
@@ -71,10 +57,7 @@
 								<configuration>
 									<arguments>
 										<argument>setup.py</argument>
-										<argument>sdist</argument>
 										<argument>install</argument>
-										<argument>--user</argument>
-										<argument>--force</argument>
 									</arguments>
 								</configuration>
 							</execution>
