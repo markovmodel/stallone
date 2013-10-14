@@ -48,7 +48,7 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<executions>
-	<!-- build api jar -->
+							<!-- build api jar -->
 							<execution>
 								<id>api</id>
 								<goals>
@@ -57,7 +57,7 @@
 								<phase>package</phase>
 								<configuration>
 									<classifier>api</classifier>
-	<!-- make sure all public api classes are included -->
+									<!-- make sure all public api classes are included -->
 									<includes>
 										<include>stallone/api/**/*</include>
 										<include>stallone/dynamics/I*</include>
@@ -69,8 +69,6 @@
 								</configuration>
 							</execution>
 
-	<!-- build impl jar -->
-	<!-- TODO : is this needed? because -->
 							<execution>
 								<id>impl</id>
 								<goals>
@@ -79,9 +77,9 @@
 								<phase>package</phase>
 								<configuration>
 									<classifier>impl</classifier>
-<!-- 									<excludes> -->
-<!-- 										<exclude>stallone/api/**/*</exclude> -->
-<!-- 									</excludes> -->
+									<excludes>
+										<exclude>stallone/api/**/*</exclude>
+									</excludes>
 									<outputDirectory>${outputPystallone}</outputDirectory>
 								</configuration>
 							</execution>
@@ -106,29 +104,8 @@
 									<outputDirectory>${outputPystallone}</outputDirectory>
 								</configuration>
 							</execution>
-<!-- 							<execution> -->
-<!-- 								<id>copy-stallone-jar</id> -->
-<!-- 								<phase>compile</phase> -->
-<!-- 								<goals> -->
-<!-- 									<goal>copy</goal> -->
-<!-- 								</goals> -->
-<!-- 								<configuration> -->
-
-
-<!-- 									<artifactItems> -->
-<!-- 										<artifact> -->
-<!-- 											<groupId>${project.groupId}</groupId> -->
-<!-- 											<artifactId>${project.artifactId}</artifactId> -->
-<!-- 											<version>${project.version}</version> -->
-<!-- 										</artifact> -->
-<!-- 									</artifactItems> -->
-<!-- 									<outputDirectory>${outputPystallone}/../</outputDirectory> -->
-<!-- 								</configuration> -->
-
-<!-- 							</execution> -->
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
