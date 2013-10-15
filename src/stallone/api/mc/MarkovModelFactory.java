@@ -12,6 +12,7 @@ import stallone.api.function.IGriddedFunction;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
 import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;
+import stallone.mc.StationaryDistribution;
 import stallone.mc.correlations.*;
 import stallone.mc.estimator.*;
 import stallone.mc.pcca.PCCA;
@@ -217,8 +218,10 @@ public class MarkovModelFactory
     
     public DynamicalExpectations createDynamicalExpectations(IDoubleArray T)
     {
-        // FIXME: infinite recursion
-        return(createDynamicalExpectations(T));
+        // FIXME: calculate and set pi
+        DynamicalExpectations dexp = new DynamicalExpectations(T);
+        //dexp.setStationaryDistribution(pi);
+        return dexp;
     }
 
     public DynamicalExpectations createDynamicalExpectations(IDoubleArray T, IDoubleArray pi)
