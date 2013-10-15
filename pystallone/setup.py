@@ -30,7 +30,7 @@ stallone_api_jar = 'stallone-1.0-SNAPSHOT-api.jar'
 lib_dir = 'libs/'
 
 def create_include_jar_list():
-    jars = [ f for f in listdir('libs/') if isfile(join('libs/', f)) ]
+    jars = [ f for f in listdir(lib_dir) if isfile(join(lib_dir, f)) ]
     cp_string = ''.join("--include " + lib_dir + "%s " \
                         % ''.join(map(str, x)) for x in jars)
     return cp_string
@@ -47,13 +47,24 @@ def jcc_run(extra_args):
             of stallone will be included in the distribution 
             (added to java classpath).
         """
+        
+        """
+            these are currently needed, since the markov model factory 
+            depends on them
+        """
+        additional_packages = ['stallone.mc', 
+                               'stallone.algebra',
+                               'stallone.cluster']
+        #additional_packages = '[]'
+        
         call = sys.executable + ' -m jcc --jar ' + stallone_api_jar \
              + ' ' + create_include_jar_list() \
+             + ' ' + create_packages(additional_packages) \
              + " --python " + __name__ + ' ' \
              + " --version " + __version__ + " --reserved extern" \
-             + " --module util/ArrayWrapper" \
+             + " --module util/ArrayWrapper.py" \
              + ' --files 2 '\
-             + ' ' + extra_args 
+             + ' ' + extra_args
         return call
     
 class mybuild(build):
