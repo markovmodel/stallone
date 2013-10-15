@@ -6,13 +6,14 @@ package stallone.api.mc;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
+import stallone.api.mc.tpt.ICommittor;
+import stallone.api.mc.tpt.ITPTFlux;
 import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
 import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;
-import stallone.mc.StationaryDistribution;
 import stallone.mc.correlations.*;
 import stallone.mc.estimator.*;
 import stallone.mc.pcca.PCCA;
@@ -189,24 +190,24 @@ public class MarkovModelFactory
         return(pcca);
     }
     
-    public Committor createCommittor(IDoubleArray T, IIntArray A, IIntArray B)
+    public ICommittor createCommittor(IDoubleArray T, IIntArray A, IIntArray B)
     {
         return(createCommittor(T, MarkovModel.util.stationaryDistribution(T), A, B));
     }
 
-    public Committor createCommittor(IDoubleArray T, IDoubleArray pi, IIntArray A, IIntArray B)
+    public ICommittor createCommittor(IDoubleArray T, IDoubleArray pi, IIntArray A, IIntArray B)
     {
-        Committor comm = new Committor(T,A,B);
+        ICommittor comm = new Committor(T,A,B);
         comm.setStationaryDistribution(pi);
         return(comm);
     }
     
-    public TPTFlux createTPT(IDoubleArray T, IIntArray A, IIntArray B)
+    public ITPTFlux createTPT(IDoubleArray T, IIntArray A, IIntArray B)
     {
         return(createTPT(T, MarkovModel.util.stationaryDistribution(T), A, B));
     }
 
-    public TPTFlux createTPT(IDoubleArray T, IDoubleArray initialDistribution, IIntArray A, IIntArray B)
+    public ITPTFlux createTPT(IDoubleArray T, IDoubleArray initialDistribution, IIntArray A, IIntArray B)
     {
         TPTFlux tpt = new TPTFlux(T,A,B);
 

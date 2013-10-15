@@ -9,6 +9,8 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
+import stallone.api.mc.tpt.ICommittor;
+
 import java.util.ArrayList;
 import java.util.List;
 import stallone.api.algebra.Algebra;
@@ -23,7 +25,6 @@ import stallone.mc.correlations.DynamicalExpectations;
 import stallone.mc.correlations.DynamicalExpectationsSpectral;
 import stallone.mc.estimator.TransitionMatrixLikelihood;
 import stallone.mc.pcca.PCCA;
-import stallone.mc.tpt.Committor;
 
 /**
  *
@@ -388,13 +389,13 @@ public class MarkovModelUtilities
 
     public IDoubleArray forwardCommittor(IDoubleArray M, IIntArray A, IIntArray B)
     {
-        Committor comm = MarkovModel.create.createCommittor(M, A, B);
+        ICommittor comm = MarkovModel.create.createCommittor(M, A, B);
         return(comm.forwardCommittor());
     }
 
     public IDoubleArray backwardCommittor(IDoubleArray M, IIntArray A, IIntArray B)
     {
-        Committor comm = MarkovModel.create.createCommittor(M, A, B);
+        ICommittor comm = MarkovModel.create.createCommittor(M, A, B);
         return(comm.backwardCommittor());
     }
     

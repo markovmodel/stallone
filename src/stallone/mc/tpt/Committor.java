@@ -10,13 +10,14 @@ import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.algebra.*;
 import stallone.api.mc.MarkovModel;
+import stallone.api.mc.tpt.ICommittor;
 import stallone.mc.StationaryDistribution;
 
 /**
  *
  * @author noe
  */
-public class Committor
+public class Committor implements ICommittor
 {
     private IDoubleArray T,K; // transition matrix and generator or pseudogenerator matrix
     private IDoubleArray pi; // stationary distribution

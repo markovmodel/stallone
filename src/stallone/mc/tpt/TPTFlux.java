@@ -11,6 +11,7 @@ import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.algebra.*;
 import stallone.api.mc.MarkovModel;
+import stallone.api.mc.tpt.ITPTFlux;
 import stallone.mc.StationaryDistribution;
 
 
@@ -18,7 +19,7 @@ import stallone.mc.StationaryDistribution;
  *
  * @author noe
  */
-public class TPTFlux
+public class TPTFlux implements ITPTFlux
 {
     private IIntArray A,B;
     private Committor committor;
