@@ -1,18 +1,17 @@
-import numpy as np
-import pystallone as st
+from numpy import ndarray
 
-from random import randint
-
-class ArrayWrapper(np.ndarray):
+class ArrayWrapper(ndarray):
     """
     This subclass of numpy multidimensional array class aims to wrap array types
     from the Stallone library for easy mathematical operations.
     
     Currently it copies the memory, because the Python Java wrapper for arrays
-    JArray<T> does not suggerate continous memory layout, which is needed for direct
-    wrapping.
+    JArray<T> does not suggerate continous memory layout, which is needed for
+    direct wrapping.
     """
     def __new__(cls, *args, **kwargs):
+        import pystallone as st
+        from numpy import float64, int32, int64, array as nparray
         # if first argument is of type IIntArray or IDoubleArray
         if isinstance(args[0], (st.IIntArray, st.IDoubleArray)):
             dtype = None
@@ -21,14 +20,14 @@ class ArrayWrapper(np.ndarray):
             from platform import architecture
             arch = architecture()[0]
             if type(args[0]) == st.IDoubleArray:
-                dtype = np.float64
+                dtype = float64
                 caster = st.JArray_double.cast_
             elif type(args[0]) == st.IIntArray:
                 caster = st.JArray_int.cast_
                 if arch == '64bit':  
-                    dtype = np.int64 # long int?
+                    dtype = int64 # long int?
                 else:
-                    dtype = np.int32
+                    dtype = int32
 
             d_arr = args[0]
             rows = d_arr.rows()
@@ -41,14 +40,14 @@ class ArrayWrapper(np.ndarray):
             if order < 2:
                 #arr =  np.fromiter(d_arr.getArray(), dtype=dtype)
                 # np.frombuffer(d_arr.getArray(), dtype=dtype, count=size )
-                arr = np.array(d_arr.getArray(), dtype=dtype)
+                arr = nparray(d_arr.getArray(), dtype=dtype)
             elif order == 2:
                 table = d_arr.getTable()
                 arr = np.empty((rows, cols))
                 # assign rows
                 for i in xrange(rows):
                     jarray = caster(table[i])
-                    row = np.array(jarray, dtype=dtype)
+                    row = nparray(jarray, dtype=dtype)
                     arr[i] = row
             elif order == 3:
                 raise NotImplemented
@@ -56,9 +55,11 @@ class ArrayWrapper(np.ndarray):
             arr.shape = (rows, cols)
             return arr
             
-        return np.ndarray.__new__(cls, *args, **kwargs)
+        return ndarray.__new__(cls, *args, **kwargs)
 
 if __name__ == '__main__':
+    import pystallone as st
+    import numpy as np
     st.initVM(initialheap='32m')
     """
     size = 10
