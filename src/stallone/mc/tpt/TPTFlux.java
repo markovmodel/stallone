@@ -47,7 +47,7 @@ public class TPTFlux implements ITPTFlux
         {
             setTransitionMatrix(M);
         }
-        else if (MarkovModel.util.isTransitionMatrix(M))
+        else if (MarkovModel.util.isRateMatrix(M))
         {
             setRateMatrix(M);
         }
