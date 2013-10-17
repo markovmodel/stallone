@@ -12,6 +12,7 @@ import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
+import stallone.api.mc.IMarkovChain;
 import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;
 import stallone.mc.correlations.*;
@@ -217,39 +218,39 @@ public class MarkovModelFactory
         return(tpt);
     }
     
-    public DynamicalExpectations createDynamicalExpectations(IDoubleArray T)
+    public IDynamicalExpectations createDynamicalExpectations(IDoubleArray T)
     {
         // FIXME: calculate and set pi
-        DynamicalExpectations dexp = new DynamicalExpectations(T);
+        IDynamicalExpectations dexp = new DynamicalExpectations(T);
         //dexp.setStationaryDistribution(pi);
         return dexp;
     }
 
-    public DynamicalExpectations createDynamicalExpectations(IDoubleArray T, IDoubleArray pi)
+    public IDynamicalExpectations createDynamicalExpectations(IDoubleArray T, IDoubleArray pi)
     {
-        DynamicalExpectations dexp = new DynamicalExpectations(T);
+        IDynamicalExpectations dexp = new DynamicalExpectations(T);
         dexp.setStationaryDistribution(pi);
         return(dexp);
     }
 
-    public DynamicalExpectationsSpectral createDynamicalFingerprint(IDoubleArray T)
+    public IDynamicalExpectationsSpectral createDynamicalFingerprint(IDoubleArray T)
     {
         return(createDynamicalFingerprint(T));
     }
 
-    public DynamicalExpectationsSpectral createDynamicalFingerprint(IDoubleArray T, IDoubleArray pi)
+    public IDynamicalExpectationsSpectral createDynamicalFingerprint(IDoubleArray T, IDoubleArray pi)
     {
-        DynamicalExpectationsSpectral dexp = new DynamicalExpectationsSpectral(T);
+        IDynamicalExpectationsSpectral dexp = new DynamicalExpectationsSpectral(T);
         dexp.setStationaryDistribution(pi);
         return(dexp);
     }
     
-    public MarkovChain markovChain(IDoubleArray T)
+    public IMarkovChain markovChain(IDoubleArray T)
     {
         return new MarkovChain(T);
     }
     
-    public MarkovChain markovChain(IDoubleArray startingDistribution, IDoubleArray T)
+    public IMarkovChain markovChain(IDoubleArray startingDistribution, IDoubleArray T)
     {
         return new MarkovChain(startingDistribution, T);
     }

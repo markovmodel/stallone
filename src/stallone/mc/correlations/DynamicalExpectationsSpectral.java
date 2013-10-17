@@ -8,6 +8,7 @@ import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.mc.IDynamicalExpectationsSpectral;
 import stallone.api.mc.MarkovModel;
 import stallone.mc.StationaryDistribution;
 
@@ -17,7 +18,7 @@ import stallone.mc.StationaryDistribution;
  * 
  * @author noe
  */
-public class DynamicalExpectationsSpectral
+public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpectral
 {
     // input
     private IDoubleArray T, K;
@@ -53,6 +54,9 @@ public class DynamicalExpectationsSpectral
     {
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setT(stallone.api.doubles.IDoubleArray)
+     */
     public final void setT(IDoubleArray _T)
     {
         this.K = null;
@@ -60,6 +64,9 @@ public class DynamicalExpectationsSpectral
         statdist.setT(_T);
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setK(stallone.api.doubles.IDoubleArray)
+     */
     public final void setK(IDoubleArray _K)
     {
         this.K = _K;
@@ -67,8 +74,8 @@ public class DynamicalExpectationsSpectral
         statdist.setK(_K);
     }
     
-    /**
-     * Optional. 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setStationaryDistribution(stallone.api.doubles.IDoubleArray)
      */
     public void setStationaryDistribution(IDoubleArray _pi)
     {
@@ -120,9 +127,8 @@ public class DynamicalExpectationsSpectral
         }
     }
     
-    /**
-     * Calculates the expectation value of a when the ensemble starts a p0 and relaxes towards the stationary distribution
-     * @param a
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#calculatePerturbationExpectation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray)
      */
     public void calculatePerturbationExpectation(IDoubleArray p0, IDoubleArray a)
     {
@@ -138,9 +144,8 @@ public class DynamicalExpectationsSpectral
         }
     }
     
-    /**
-     * Calculates the stationary autocorrelation of a
-     * @param a 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#calculateAutocorrelation(stallone.api.doubles.IDoubleArray)
      */
     public void calculateAutocorrelation(IDoubleArray a)
     {
@@ -155,11 +160,8 @@ public class DynamicalExpectationsSpectral
         }
     }
 
-    /**
-     * 
-     * Calculates the stationary cross-correlation of a and b
-     * @param a
-     * @param b 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#calculateCorrelation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray)
      */
     public void calculateCorrelation(IDoubleArray a, IDoubleArray b)
     {
@@ -175,16 +177,25 @@ public class DynamicalExpectationsSpectral
         }
     }
         
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#getAmplitudes()
+     */
     public IDoubleArray getAmplitudes()
     {
         return(amplitudes);
     }
 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#getTimescales()
+     */
     public IDoubleArray getTimescales()
     {
         return(timescales);
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#getValue(double)
+     */
     public double getValue(double t)
     {
         double res = 0;

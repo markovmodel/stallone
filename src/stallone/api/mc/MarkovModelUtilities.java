@@ -10,6 +10,9 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.mc.tpt.ICommittor;
+import stallone.api.mc.IMarkovChain;
+import stallone.api.mc.IDynamicalExpectations;
+import stallone.api.mc.IDynamicalExpectationsSpectral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,7 @@ import stallone.graph.MatrixGraph;
 import stallone.graph.connectivity.IntStrongConnectivity;
 import stallone.mc.MarkovChain;
 import stallone.mc.StationaryDistribution;
-import stallone.mc.correlations.DynamicalExpectations;
-import stallone.mc.correlations.DynamicalExpectationsSpectral;
+
 import stallone.mc.estimator.TransitionMatrixLikelihood;
 import stallone.mc.pcca.PCCA;
 
@@ -421,7 +423,7 @@ public class MarkovModelUtilities
      */
     public IDoubleArray correlation(IDoubleArray M, IDoubleArray observable1, IDoubleArray observable2, IDoubleArray timepoints)
     {
-        DynamicalExpectations dexp = MarkovModel.create.createDynamicalExpectations(M);
+        IDynamicalExpectations dexp = MarkovModel.create.createDynamicalExpectations(M);
         IDoubleArray res = Doubles.create.array(timepoints.size());
         for (int i=0; i<res.size(); i++)
             res.set(i, dexp.calculateCorrelation(observable1, observable2, timepoints.get(i)));
@@ -437,7 +439,7 @@ public class MarkovModelUtilities
      */
     public IDoubleArray perturbationExpectation(IDoubleArray M, IDoubleArray pi0, IDoubleArray observable, IDoubleArray timepoints)
     {
-        DynamicalExpectations dexp = MarkovModel.create.createDynamicalExpectations(M);
+        IDynamicalExpectations dexp = MarkovModel.create.createDynamicalExpectations(M);
         IDoubleArray res = Doubles.create.array(timepoints.size());
         for (int i=0; i<res.size(); i++)
             res.set(i, dexp.calculatePerturbationExpectation(pi0, observable, timepoints.get(i)));
@@ -465,7 +467,7 @@ public class MarkovModelUtilities
      */
     public IDoubleArray fingerprintCorrelation(IDoubleArray M, IDoubleArray observable1, IDoubleArray observable2)
     {
-        DynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
+        IDynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
         dexp.calculateCorrelation(observable1, observable2);
         IDoubleArray res = Doubles.util.mergeColumns(dexp.getTimescales(), dexp.getAmplitudes());
         return(res);        
@@ -480,7 +482,7 @@ public class MarkovModelUtilities
      */
     public IDoubleArray fingerprintPerturbation(IDoubleArray M, IDoubleArray p0, IDoubleArray observable)
     {
-        DynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
+        IDynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
         dexp.calculatePerturbationExpectation(p0, observable);
         IDoubleArray res = Doubles.util.mergeColumns(dexp.getTimescales(), dexp.getAmplitudes());
         return(res);        
@@ -492,7 +494,7 @@ public class MarkovModelUtilities
      */
     public IIntArray trajectory(IDoubleArray T, int s, int length)
     {
-        MarkovChain mc = new MarkovChain(T);
+        IMarkovChain mc = new MarkovChain(T);
         mc.setStartingState(s);
         return mc.randomTrajectory(length);        
     }
@@ -502,7 +504,7 @@ public class MarkovModelUtilities
      */
     public IIntArray trajectoryToState(IDoubleArray T, int s, int[] endStates)
     {
-        MarkovChain mc = new MarkovChain(T);
+        IMarkovChain mc = new MarkovChain(T);
         mc.setStartingState(s);
         return mc.randomTrajectoryToState(endStates);        
     }    

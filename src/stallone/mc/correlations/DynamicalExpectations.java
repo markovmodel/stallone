@@ -9,6 +9,7 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.mc.IMarkovPropagator;
 import stallone.api.mc.MarkovModel;
+import stallone.api.mc.IDynamicalExpectations;
 
 
 /**
@@ -16,7 +17,7 @@ import stallone.api.mc.MarkovModel;
  * 
  * @author noe
  */
-public class DynamicalExpectations
+public class DynamicalExpectations implements IDynamicalExpectations
 {
     // propagator
     private IMarkovPropagator prop;
@@ -47,20 +48,26 @@ public class DynamicalExpectations
     {
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#setT(stallone.api.doubles.IDoubleArray)
+     */
     public final void setT(IDoubleArray _T)
     {
         prop = new TransitionMatrixPropagator(_T);
         statdist.setT(_T);
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#setK(stallone.api.doubles.IDoubleArray)
+     */
     public final void setK(IDoubleArray _K)
     {
         prop = new RateMatrixPropagator(_K);
         statdist.setK(_K);
     }
     
-    /**
-     * Optional. 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#setStationaryDistribution(stallone.api.doubles.IDoubleArray)
      */
     public void setStationaryDistribution(IDoubleArray _pi)
     {
@@ -81,9 +88,8 @@ public class DynamicalExpectations
     }
 
     
-    /**
-     * Calculates the expectation value of a when the ensemble starts a p0 and relaxes towards the stationary distribution
-     * @param a
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#calculatePerturbationExpectation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray, double)
      */
     public double calculatePerturbationExpectation(IDoubleArray p0, IDoubleArray a, double t)
     {
@@ -104,20 +110,16 @@ public class DynamicalExpectations
         return(res);
     }
     
-    /**
-     * Calculates the stationary autocorrelation of a
-     * @param a 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#calculateAutocorrelation(stallone.api.doubles.IDoubleArray, double)
      */
     public double calculateAutocorrelation(IDoubleArray a, double t)
     {
         return(calculateCorrelation(a,a,t));
     }
 
-    /**
-     * 
-     * Calculates the stationary cross-correlation of a and b
-     * @param a
-     * @param b 
+    /* (non-Javadoc)
+     * @see stallone.mc.correlations.IDynamicalExpectations#calculateCorrelation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray, double)
      */
     public double calculateCorrelation(IDoubleArray a, IDoubleArray b, double t)
     {

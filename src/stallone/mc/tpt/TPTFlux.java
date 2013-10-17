@@ -92,7 +92,7 @@ public class TPTFlux implements ITPTFlux
         qforward = committor.forwardCommittor();
         
         // flux
-	this.flux = P.create(P.rows(), P.columns());
+        this.flux = P.create(P.rows(), P.columns());
         for (IDoubleIterator it = P.nonzeroIterator(); it.hasNext(); it.advance())
         {
             int i = it.row();
@@ -102,7 +102,7 @@ public class TPTFlux implements ITPTFlux
         }
 
         // net flux
-	this.netflux = P.create(P.rows(), P.columns());
+        this.netflux = P.create(P.rows(), P.columns());
         for (IDoubleIterator it = P.nonzeroIterator(); it.hasNext(); it.advance())
         {
             int i = it.row();

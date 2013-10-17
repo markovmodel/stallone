@@ -9,6 +9,7 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import stallone.api.ints.Ints;
+import stallone.api.mc.IMarkovChain;
 import stallone.ints.PrimitiveIntArray;
 import stallone.ints.PrimitiveIntTools;
 import stallone.stat.DiscreteDistribution_Old;
@@ -19,7 +20,7 @@ import stallone.stat.DiscreteDistributions;
  *
  * @author noe
  */
-public class MarkovChain
+public class MarkovChain implements IMarkovChain
 {
 	/**
 	 *  starting distribution p0. If not specified, the starting distribution
@@ -56,12 +57,18 @@ public class MarkovChain
         p0dist = new DiscreteDistribution_Old(p0);
     }    
     
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#setStartingState(int)
+     */
     public void setStartingState(int _s)
     {
         fixedStartingState = true;
         s = _s;
     }
     
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#setStartingDistribution(stallone.api.doubles.IDoubleArray)
+     */
     public void setStartingDistribution(IDoubleArray _p0)
     {
         fixedStartingState = false;
@@ -69,6 +76,9 @@ public class MarkovChain
         p0dist = new DiscreteDistribution_Old(p0);
     }
 
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#getTransitionMatrix()
+     */
     public IDoubleArray getTransitionMatrix()
     {
         return (T);
@@ -97,11 +107,8 @@ public class MarkovChain
         this.nskip = _nskip;
     }
 
-    /**
-     * @param s starting state
-     * @param N total trajectory length
-     * @param nskip number of steps between saved transitions
-     * @return random trajectory of length N/nskip + 1
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#randomTrajectory(int)
      */
     public IIntArray randomTrajectory(int N)
     {
@@ -121,11 +128,8 @@ public class MarkovChain
         return (new PrimitiveIntArray(res));
     }
 
-    /**
-     * @param startingState
-     * @param terminalState
-     * @param nskip number of steps between saved transitions
-     * @return random trajectory of length N/nskip + 1
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#randomTrajectoryToState(int[])
      */
     public IIntArray randomTrajectoryToState(int[] endStates)
     {
@@ -148,9 +152,8 @@ public class MarkovChain
         return (res);
     }
 
-    /**
-     * Generates a random Trajectory of length N starting from s using the
-     * transfer operator
+    /* (non-Javadoc)
+     * @see stallone.mc.IMarkovChain#printRandomTrajectory(int)
      */
     public void printRandomTrajectory(int N)
     {
