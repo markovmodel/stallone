@@ -265,7 +265,6 @@ public class MarkovModelUtilities
     /**
      * Maximum likelihood estimate of T (generally nonreversible)
      * @param counts
-     * @param piFixed
      * @return 
      */
     public IDoubleArray estimateT(IDoubleArray counts)
@@ -279,7 +278,6 @@ public class MarkovModelUtilities
     /**
      * Reversible maximum likelihood estimate of T 
      * @param counts
-     * @param piFixed
      * @return 
      */
     public IDoubleArray estimateTrev(IDoubleArray counts)
