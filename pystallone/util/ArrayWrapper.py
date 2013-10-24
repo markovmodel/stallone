@@ -1,4 +1,4 @@
-from numpy import ndarray
+from numpy import ndarray 
 
 class ArrayWrapper(ndarray):
     """
@@ -11,7 +11,7 @@ class ArrayWrapper(ndarray):
     """
     def __new__(cls, *args, **kwargs):
         import pystallone as st
-        from numpy import float64, int32, int64, array as nparray
+        from numpy import float64, int32, int64, array as nparray, empty
         # if first argument is of type IIntArray or IDoubleArray
         if isinstance(args[0], (st.IIntArray, st.IDoubleArray)):
             dtype = None
@@ -43,7 +43,7 @@ class ArrayWrapper(ndarray):
                 arr = nparray(d_arr.getArray(), dtype=dtype)
             elif order == 2:
                 table = d_arr.getTable()
-                arr = np.empty((rows, cols))
+                arr = empty((rows, cols))
                 # assign rows
                 for i in xrange(rows):
                     jarray = caster(table[i])
