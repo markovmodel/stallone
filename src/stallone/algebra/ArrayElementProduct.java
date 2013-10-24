@@ -61,9 +61,9 @@ public class ArrayElementProduct //implements IMatrixSum
         final int colsA = a.columns();
         final int rowsA = a.rows();
 
-        for (int j = 0; j < rowsA; j++)
+        for (int i = 0; i < rowsA; i++)
         {
-            for (int i = 0; i < colsA; i++)
+            for (int j = 0; j < colsA; j++)
             {
                 target.set(i, j, a.get(i, j) * b.get(i, j));
             }
