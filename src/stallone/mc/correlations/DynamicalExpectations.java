@@ -32,7 +32,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
         {
             setT(M);
         }
-        else if (MarkovModel.util.isTransitionMatrix(M))
+        else if (MarkovModel.util.isRateMatrix(M))
         {
             setK(M);
         }
