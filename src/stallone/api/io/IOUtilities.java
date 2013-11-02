@@ -138,6 +138,11 @@ public class IOUtilities
         }
     }
     
+    public String getFilename(String fullname)
+    {
+        return (new File(fullname)).getName();
+    }
+    
     public String getDirectory(String fullname)
     {
         if (!fullname.contains("/"))

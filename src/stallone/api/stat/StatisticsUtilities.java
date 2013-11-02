@@ -11,6 +11,7 @@ import stallone.api.algebra.Algebra;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
+import stallone.api.ints.Ints;
 import stallone.stat.modelselection.ExitTimeSplitter;
 
 /**
@@ -45,6 +46,28 @@ public class StatisticsUtilities
         }
         return (sum / (double)(arr.size() - 1));
     }
+    
+    /**
+        @return the variance from the mean. Returns 0 for single-value arrays
+     */
+    public double covariance(IDoubleArray X, IDoubleArray Y)
+    {
+        if (X.size() == 1)
+        {
+            return (0);
+        }
+        if (X.size() != Y.size())
+            throw new IllegalArgumentException("Cannot compute covariance between double arrays of different length: "+X.size()+","+Y.size());
+        
+        double meanX = mean(X);
+        double meanY = mean(Y);
+        double sum = 0;
+        for (int i = 0; i < X.size(); i++)
+        {
+            sum += (X.get(i)-meanX) * (Y.get(i)-meanY);
+        }
+        return (sum / (double)(X.size() - 1));
+    }    
 
     /**
     @return the std dev from the mean

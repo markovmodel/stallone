@@ -48,10 +48,10 @@ public class TransitionMatrixSamplerNonrev extends TransitionMatrixSamplerAbstra
 		T.set(i,i,T.get(i,i)-d);
 
 		// numerical corrections:
-		validateElement(i,j);
-		validateElement(i,i);
+		ensureValidElement(i,j);
+		ensureValidElement(i,i);
 		if (Math.random() < 0.0001) // do a row rescaling every 10000 steps
-		    validateRow(i);
+		    ensureValidRow(i);
                 return(true);
 	    }
         return(false);

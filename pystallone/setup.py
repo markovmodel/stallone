@@ -5,8 +5,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-from tempfile import mkdtemp
-from zipfile import ZipFile
 
 __version__ = '1.0'
 __name__ = 'pystallone'

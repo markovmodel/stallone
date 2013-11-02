@@ -13,24 +13,24 @@
  */
 package stallone.doubles;
 
-
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
 
 /**
  * Real dense matrix implementation based on a one dimensional array.
  *
- * @author  Martin Senne, Frank Noe
+ * @author Martin Senne, Frank Noe
  */
 public class SparseRealVector extends AbstractDoubleArray
 {
+
     private SparseVectorIndexMap sparseIndexMap;
     protected double[] data;
 
     /**
      * Create empty sparse real vector of given size.
      *
-     * @param  size  of the vector.
+     * @param size of the vector.
      */
     public SparseRealVector(final int size)
     {
@@ -41,7 +41,7 @@ public class SparseRealVector extends AbstractDoubleArray
     /**
      * Copy constructor.
      *
-     * @param  source  object to copy all data from (deep).
+     * @param source object to copy all data from (deep).
      */
     protected SparseRealVector(final SparseRealVector source)
     {
@@ -49,10 +49,10 @@ public class SparseRealVector extends AbstractDoubleArray
         this.data = new double[getNumberOfNonzero()];
         System.arraycopy(source.data, 0, this.data, 0, sparseIndexMap.usedNonZero);
     }
-    
+
     public final int getNumberOfNonzero()
     {
-        return(sparseIndexMap.usedNonZero);
+        return (sparseIndexMap.usedNonZero);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SparseRealVector extends AbstractDoubleArray
     /**
      * Print internal representation of data. Meant for debugging purposes.
      *
-     * @return  internal representation as string
+     * @return internal representation as string
      */
     public String toStringOfInternalData()
     {
@@ -98,16 +98,15 @@ public class SparseRealVector extends AbstractDoubleArray
     }
 
 
-    /*@Override
-    protected Iterator<IScalarOfVector> getNonZeroIterator() {
-    return new SparseNonZeroVectorIterator();
+    /*
+     * @Override protected Iterator<IScalarOfVector> getNonZeroIterator() {
+     * return new SparseNonZeroVectorIterator(); }
+     *
+     *
+     * @Override protected Iterator<IScalarOfVector> getFullIterator() { return
+     * new GenericFullVectorIterator(this);
     }
-    
-    
-    @Override
-    protected Iterator<IScalarOfVector> getFullIterator() {
-    return new GenericFullVectorIterator(this);
-    }*/
+     */
     @Override
     public IDoubleIterator nonzeroIterator()
     {
@@ -123,36 +122,44 @@ public class SparseRealVector extends AbstractDoubleArray
     @Override
     public int rows()
     {
-        return(sparseIndexMap.size);
+        return (sparseIndexMap.size);
     }
 
     @Override
     public int columns()
     {
-        return(1);
+        return (1);
     }
 
     @Override
     public double get(int i, int j)
     {
-        if (j!=0)
-            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: "+i+", "+j);
+        if (j != 0)
+        {
+            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+        }
         int pos = sparseIndexMap.getPosition(i);
         if (pos < 0)
-            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: "+i+", "+j);
-        
-        return(data[pos]);
+        {
+            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+        }
+
+        return (data[pos]);
     }
 
     @Override
     public void set(int i, int j, double x)
     {
-        if (j!=0)
-            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: "+i+", "+j);
+        if (j != 0)
+        {
+            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+        }
         int pos = sparseIndexMap.getPosition(i);
         if (pos < 0)
-            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: "+i+", "+j);
-        
+        {
+            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+        }
+
         data[pos] = x;
     }
 
@@ -161,55 +168,50 @@ public class SparseRealVector extends AbstractDoubleArray
     {
         return (new SparseRealVector(size));
     }
-    
+
     @Override
     public IDoubleArray create(int rows, int columns)
     {
-        if (columns!=1)
-            throw new ArrayIndexOutOfBoundsException("I'm a vector and cannot create a matrix with size: "+rows+", "+columns);
-        
+        if (columns != 1)
+        {
+            throw new ArrayIndexOutOfBoundsException("I'm a vector and cannot create a matrix with size: " + rows + ", " + columns);
+        }
+
         return (new SparseRealVector(rows));
     }
 
-    
     private class MyIndexMap extends SparseVectorIndexMap
     {
-            public MyIndexMap(final int _size)
-            {
-                super(_size);
-            }
 
-            public MyIndexMap(final SparseVectorIndexMap base)
-            {
-                super(base);
-            }
+        public MyIndexMap(final int _size)
+        {
+            super(_size);
+        }
 
-            @Override
-    protected void augmentData(final int newLength, final int firstBlockLength, final int secondBlockLength)
-    {
-        final double[] newNonZeroData = new double[newLength];
-        System.arraycopy(data, 0, newNonZeroData, 0, firstBlockLength);
-        System.arraycopy(data, firstBlockLength, newNonZeroData, firstBlockLength + 1, secondBlockLength);
-        data = newNonZeroData;
-    }
+        public MyIndexMap(final SparseVectorIndexMap base)
+        {
+            super(base);
+        }
 
-    @Override
-    protected void shiftDataRight(final int firstBlockLength, final int secondBlockLength)
-    {
-        System.arraycopy(data, firstBlockLength, data, firstBlockLength + 1, secondBlockLength);
-    }
+        @Override
+        protected void augmentData(final int newLength, final int firstBlockLength, final int secondBlockLength)
+        {
+            final double[] newNonZeroData = new double[newLength];
+            System.arraycopy(data, 0, newNonZeroData, 0, firstBlockLength);
+            System.arraycopy(data, firstBlockLength, newNonZeroData, firstBlockLength + 1, secondBlockLength);
+            data = newNonZeroData;
+        }
 
-    @Override
-    protected void shiftDataLeft(final int firstBlockLength, final int secondBlockLength)
-    {
-        System.arraycopy(data, firstBlockLength + 1, data, firstBlockLength, secondBlockLength);
-    }
-    }
+        @Override
+        protected void shiftDataRight(final int firstBlockLength, final int secondBlockLength)
+        {
+            System.arraycopy(data, firstBlockLength, data, firstBlockLength + 1, secondBlockLength);
+        }
 
-
-    @Override
-    public boolean isSparse()
-    {
-        return true;
+        @Override
+        protected void shiftDataLeft(final int firstBlockLength, final int secondBlockLength)
+        {
+            System.arraycopy(data, firstBlockLength + 1, data, firstBlockLength, secondBlockLength);
+        }
     }
 }

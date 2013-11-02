@@ -14,10 +14,11 @@ import java.util.List;
  */
 public class CommandLineParser
 {
+
     private Arguments args;
-    private HashMap<String, Command> commands = new HashMap<String, Command>();
-    private ArrayList<String[]> atLeastOneOfCommands = new ArrayList<String[]>();
-    private ArrayList<String[]> atMostOneOfCommands = new ArrayList<String[]>();
+    private HashMap<String, Command> commands = new HashMap();
+    private ArrayList<String[]> atLeastOneOfCommands = new ArrayList();
+    private ArrayList<String[]> atMostOneOfCommands = new ArrayList();
 
     public void addStringArrayCommand(String command, boolean mandatory)
     {
@@ -39,17 +40,13 @@ public class CommandLineParser
         commands.put(command, new IntArrayCommand(command, mandatory, defaultValue, minValue, maxValue));
     }
 
-    public void addDoubleArrayArgument(String command, boolean mandatory)
+    public void addDoubleArrayCommand(String command, boolean mandatory)
     {
         addDoubleArrayCommand(command, mandatory, null, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 
     public void addDoubleArrayCommand(String command, boolean mandatory, double[] defaultValue, double minValue, double maxValue)
     {
-        if (!commands.containsKey(command))
-        {
-            throw new IllegalArgumentException("Trying to add argument to command " + command + " which does not exist yet");
-        }
         commands.put(command, new DoubleArrayCommand(command, mandatory, defaultValue, minValue, maxValue));
     }
 
@@ -496,7 +493,7 @@ class Command
 class HeterogeneousCommand extends Command
 {
 
-    List<ExpectedArgument> arguments = new ArrayList<ExpectedArgument>();
+    List<ExpectedArgument> arguments = new ArrayList();
 
     public HeterogeneousCommand(String cmd, boolean _mandatory)
     {
