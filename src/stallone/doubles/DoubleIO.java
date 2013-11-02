@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import stallone.api.doubles.Doubles;
+import stallone.api.doubles.DoublesPrimitive;
 import stallone.api.doubles.IDoubleArray;
 import stallone.io.BlockFileReader;
 import stallone.util.StringTools;
@@ -209,7 +210,7 @@ public class DoubleIO
             int[] libd = reader.getLargestIntBlockDimensions();
             int[] lnbd = reader.getLargestNumberBlockDimensions();
             
-            if (libd[0] == lnbd[0] && libd[1] == 2 && lnbd[1] == 3) // guess this is sparse
+            if (libd[0] == lnbd[0] && (libd[1] == 2 || libd[1] == 3) && lnbd[1] == 3) // guess this is sparse
                 sparse = true;
         }
         

@@ -4,6 +4,7 @@
  */
 package stallone.mc.sampling;
 
+import static stallone.api.API.*;
 import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
@@ -76,7 +77,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     Checks whether the given element is still within [0,1] or else puts it back to that
     value.
      */
-    protected void validateElement(int i, int j)
+    protected void ensureValidElement(int i, int j)
     {
         if (T.get(i, j) < 0)
         {
@@ -88,10 +89,41 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
         }
     }
 
+    protected boolean isElementValid(int i, int j)
+    {
+        if (T.get(i, j) < 0)
+        {
+            return false;
+        }
+        if (T.get(i, j) > 1)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * @param mu invariant density
+     * @return 
+     */
+    protected double computeDetailedBalanceError(IDoubleArray mu)
+    {
+        double err = 0;
+        for (int i=0; i<T.rows(); i++)
+        {
+            for (int j=0; j<T.columns(); j++)
+            {
+                err += Math.abs(mu.get(i)*T.get(i,j) - mu.get(j)*T.get(j,i));
+            }
+        }
+        return err;
+    }
+    
     /**
     Makes sure that the row still sums up to 1.
      */
-    protected void validateRow(int i)
+    protected void ensureValidRow(int i)
     {
         IDoubleArray r = T.viewRow(i);
         Algebra.util.scale(1.0 / Doubles.util.sum(r), r);

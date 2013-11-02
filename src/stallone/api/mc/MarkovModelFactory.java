@@ -9,6 +9,7 @@ import stallone.api.ints.IIntArray;
 import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
+import stallone.api.mc.*;
 import stallone.mc.DiscretePotentialMetropolisMarkovChain;
 import stallone.mc.MarkovChain;
 import stallone.mc.PosteriorCountMatrix;
@@ -150,6 +151,29 @@ public class MarkovModelFactory
         return(sampler);
     }
 
+    /**
+     * Creates a reversible transition matrix sampler
+     * @param counts the posterior count matrix
+     * @return 
+     */
+    public ITransitionMatrixSampler createTransitionMatrixSamplerRevMCMC(IDoubleArray counts)
+    {
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(counts, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
+        return(sampler);
+    }
+
+    /**
+     * Creates a reversible transition matrix sampler
+     * @param counts the posterior count matrix
+     * @return 
+     */
+    public ITransitionMatrixSampler createTransitionMatrixSamplerRevGibbs(IDoubleArray counts)
+    {
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(counts, new Step_Rev_Row_Beta(), new Step_Rev_Quad_MC());
+        return(sampler);
+    }
+    
+    
         /**
      * Creates a reversible transition matrix sampler with a fixed stationary distribution
      * @param counts the posterior count matrix
@@ -217,7 +241,6 @@ public class MarkovModelFactory
     
     public DynamicalExpectations createDynamicalExpectations(IDoubleArray T)
     {
-        // FIXME: infinite recursion
         return(createDynamicalExpectations(T));
     }
 
