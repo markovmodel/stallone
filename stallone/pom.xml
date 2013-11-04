@@ -28,8 +28,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
+						<source>1.7</source>
+						<target>1.7</target>
 						<optimize>true</optimize>
 						<showWarnings>true</showWarnings>
 						<showDeprecation>true</showDeprecation>
@@ -61,8 +61,8 @@
 									<includes>
 										<include>stallone/api/**/*</include>
 										<include>stallone/dynamics/I*</include>
-										<include>stallone/ints/**</include>
-										<include>stallone/doubles/**</include>
+										<!-- <include>stallone/ints/**</include> -->
+										<!-- <include>stallone/doubles/**</include> -->
 										<include>stallone/mc/sampling/I*</include>
 									</includes>
 									<outputDirectory>${outputPystallone}/..</outputDirectory>
@@ -135,34 +135,30 @@
 								</configuration>
 							</execution>
 
-							<execution>
-								<id>build-final-zip</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
+<!-- 							<execution> -->
+<!-- 								<id>build-final-zip</id> -->
+<!-- 								<phase>package</phase> -->
+<!-- 								<goals> -->
+<!-- 									<goal>single</goal> -->
+<!-- 								</goals> -->
 
-								<configuration>
-									<!-- HERE, the configuration for zip creation is set -->
-									<descriptors>
-										<descriptor>zipAssembly.xml</descriptor>
-									</descriptors>
-									<outputDirectory>distribution</outputDirectory>
-									<finalName>${project.build.finalName}_${buildNumber}</finalName>
-									<appendAssemblyId>false</appendAssemblyId>
-								</configuration>
-							</execution>
+<!-- 								<configuration> -->
+<!-- 									HERE, the configuration for zip creation is set -->
+<!-- 									<descriptors> -->
+<!-- 									<descriptor>zipAssembly.xml</descriptor> -->
+<!-- 									</descriptors> -->
+<!-- 									<outputDirectory>distribution</outputDirectory> -->
+<!-- 									<finalName>${project.build.finalName}_${buildNumber}</finalName> -->
+<!-- 									<appendAssemblyId>false</appendAssemblyId> -->
+<!-- 								</configuration> -->
+<!-- 							</execution> -->
 						</executions>
 					</plugin>
 
 					<plugin>
-						<groupId>com.pyx4me</groupId>
 						<artifactId>proguard-maven-plugin</artifactId>
-						<version>2.0.4</version>
-
-						<!-- New version of proguard-maven-plugin from github -->
-						<!-- <groupId>com.github.wvengen</groupId> <artifactId>proguard-maven-plugin</artifactId> 
-							<version>2.0.5</version> -->
+						<groupId>com.github.wvengen</groupId>
+						<version>2.0.6</version>
 
 						<executions>
 							<!-- is executed second -->
@@ -173,6 +169,15 @@
 								</goals>
 							</execution>
 						</executions>
+
+						<dependencies>
+							<dependency>
+								<groupId>net.sf.proguard</groupId>
+								<artifactId>proguard-base</artifactId>
+								<version>4.10</version>
+								<scope>runtime</scope>
+							</dependency>
+						</dependencies>
 
 						<configuration>
 							<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
@@ -193,7 +198,8 @@
 
 							<options>
 								<option>-allowaccessmodification</option>
-								<option>-keep class * implements AbstractCmd</option>
+<!-- 								<option>-keep class * implements AbstractCmd</option> -->
+								<option>-keep class edu.cornell.lassp.houle.RngPack.RandomElement</option>
 								<option>-dontoptimize</option>
 								<option>-keepclasseswithmembers public class * { public static
 									void main(java.lang.String[]); }</option>
@@ -225,6 +231,13 @@
 			<groupId>jep</groupId>
 			<artifactId>jep</artifactId>
 			<version>2.4.1</version>
+		</dependency>
+
+		<!-- cern colt library used for Step_Rev_Quad_Trendelkamp -->
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 
 		<!-- junit testing -->
