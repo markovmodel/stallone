@@ -16,6 +16,7 @@ package stallone.api.algebra;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.algebra.INorm;
 import stallone.algebra.MatrixProduct;
 import stallone.algebra.InnerProduct;
 import stallone.algebra.ArrayNumericalEquality;
@@ -41,7 +42,7 @@ import static stallone.doubles.DoubleArrayTest.*;
 public class AlgebraUtilities
 {
 
-    private ArrayNorm norm = new ArrayNorm();
+    private INorm norm = new ArrayNorm();
     private ArraySum vsum = new ArraySum();
     private ArrayDifference vdiff = new ArrayDifference();
     private ArrayScale vscale = new ArrayScale();

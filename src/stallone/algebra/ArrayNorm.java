@@ -15,16 +15,24 @@ import stallone.api.algebra.*;
  *
  * @author noe
  */
-public class ArrayNorm //implements INorm
+public class ArrayNorm implements INorm
 {
 
     //@Override
+    /* (non-Javadoc)
+     * @see stallone.algebra.INorm#norm(stallone.api.doubles.IDoubleArray)
+     */
+    @Override
     public double norm(IDoubleArray v)
     {
         return (norm(v, 2));
     }
 
     //@Override
+    /* (non-Javadoc)
+     * @see stallone.algebra.INorm#norm(stallone.api.doubles.IDoubleArray, int)
+     */
+    @Override
     public double norm(IDoubleArray v, int p)
     {
         double sum = 0;
@@ -40,12 +48,20 @@ public class ArrayNorm //implements INorm
     }
 
     //@Override
+    /* (non-Javadoc)
+     * @see stallone.algebra.INorm#norm(stallone.api.complex.IComplexArray)
+     */
+    @Override
     public double norm(IComplexArray v)
     {
         return (norm(v, 2));
     }
 
     //@Override
+    /* (non-Javadoc)
+     * @see stallone.algebra.INorm#norm(stallone.api.complex.IComplexArray, int)
+     */
+    @Override
     public double norm(IComplexArray v, int p)
     {
         double sum = 0;
