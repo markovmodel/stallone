@@ -214,4 +214,10 @@ public class SparseRealVector extends AbstractDoubleArray
             System.arraycopy(data, firstBlockLength + 1, data, firstBlockLength, secondBlockLength);
         }
     }
+
+    @Override
+    public boolean isSparse()
+    {
+        return true;
+    }
 }
