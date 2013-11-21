@@ -117,7 +117,7 @@ public class DataSequenceFactory
     }
     
     /**
-     * Writes to file
+     * creates an ascii file reader
      * @param dimension
      * @return 
      */
