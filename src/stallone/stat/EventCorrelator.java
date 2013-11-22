@@ -19,8 +19,8 @@ public class EventCorrelator
 {
     private IDoubleArray lagtimes;
     private IDoubleArray averageWidths;
-    
-    
+
+
     private IDoubleArray correlation;
     private IDoubleArray weights;
     private double sum = 0;
@@ -47,7 +47,7 @@ public class EventCorrelator
                 + "\n"
                 + "-columns <time> <D> <A>" + "\n"
                 + "-maxtime <maxy>" + "\n"
-                + "-subtractmean" + "\n"                
+                + "-subtractmean" + "\n"
                 ;
 
         return res;
@@ -68,7 +68,7 @@ public class EventCorrelator
         parser.addIntCommand("maxtime", true);
 
         parser.addCommand("subtractmean", true);
-        
+
         // parse
         if (!parser.parse(args))
         {
@@ -94,7 +94,7 @@ public class EventCorrelator
         // as long as there is enough space:
         while (time.get(time.size() - 1) - time.get(i) >= tau - 0.5 * averageWidth)
         {
-            // move beginning of window 
+            // move beginning of window
             while (time.get(j1) - time.get(i) < tau - 0.5 * averageWidth)
             {
                 j1++;
@@ -103,7 +103,7 @@ public class EventCorrelator
                     return sum / count;
                 }
             }
-            // move end of window 
+            // move end of window
             j2 = j1;
             while (time.get(j2) - time.get(j1) < averageWidth && j2 < time.size())
             {
@@ -163,7 +163,7 @@ public class EventCorrelator
                 weights.set(i, weights.get(i) + data.size());
             }
         }
-        
+
         sum += doubles.sum(data);
         sumOfWeights += time.size();
     }
@@ -184,7 +184,7 @@ public class EventCorrelator
             res.set(i, (correlation.get(i)/weights.get(i)) - shift);
         return res;
     }
-    
+
     public void reset()
     {
         correlation.zero();
@@ -247,7 +247,7 @@ public class EventCorrelator
         else
             corr=correlator.getCorrelation();
 
-        
+
         //IDoubleArray corr = correlator.correlate(time, E);
 
         for (int i = 0; i < lagtimes.size(); i++)

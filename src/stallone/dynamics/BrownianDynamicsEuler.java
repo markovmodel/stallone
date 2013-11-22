@@ -19,18 +19,18 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
     private double kT = 1;
 
     private IDoubleArray x;
-    
+
     private IEnergyModel model;
     private IDoubleArray masses;
     private Random random = new Random();
-    
+
     public BrownianDynamicsEuler(double _dt, double _gamma, double _kT)
     {
         dt = _dt;
         gamma = _gamma;
         kT = _kT;
     }
-    
+
     @Override
     public IIntegrator copy()
     {
@@ -40,7 +40,7 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
         res.setMasses(masses.copy());
         return(res);
     }
-    
+
     @Override
     public void setX(IDoubleArray x0)
     {
@@ -77,9 +77,9 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
         model.setCoordinates(x);
         model.calculate();
         IDoubleArray grad = model.getGradient();
-        
+
         //System.out.println("step, d="+DoubleArrays.norm(x.getAll()));
-        
+
         for (int i=0; i<x.size(); i++)
         {
             double gm = (gamma*masses.get(i));
@@ -89,7 +89,7 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
             //System.out.println(" dx "+i+" "+dx);
             x.set(i, x.get(i) + dx);
         }
-        
+
         return(true);
     }
 
@@ -140,5 +140,5 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
     {
         this.kT = kT;
     }
-    
+
 }

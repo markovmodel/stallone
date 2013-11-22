@@ -20,7 +20,7 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
     // input T
     private IDoubleArray T;
     private boolean reversible;
-    
+
     private IDoubleArray R,L;
     private IDoubleArray evalReal;
 
@@ -28,7 +28,7 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
     {
         set(_T);
     }
-    
+
     /**
      * Sets the basic propagator
      * @param _P the propagator
@@ -37,7 +37,7 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
     public void set(IDoubleArray _P)
     {
         this.T = _P;
-        
+
         IEigenvalueDecomposition evd = Algebra.util.evd(_P);
         IComplexArray evComplex = evd.getEval();
         if (evComplex.isReal())
@@ -47,14 +47,14 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
             R = evd.getRightEigenvectorMatrix();
         }
         else
-            reversible = false;            
+            reversible = false;
     }
-    
+
     @Override
     public IDoubleArray propagate(double t)
     {
         IDoubleArray res = null;
-        
+
         if (reversible)
         {
             IDoubleArray evalPower = Doubles.create.array(evalReal.size());
@@ -68,10 +68,10 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
         {
             if (((int)t - t) != 0)
                 throw(new IllegalArgumentException("Can only use integer times for propagating transition matrices. Attempted t = "+t));
-            
+
             res =   Algebra.util.power(T, (int)t);
         }
-        
+
         return(res);
     }
 }

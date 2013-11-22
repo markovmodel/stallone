@@ -11,6 +11,6 @@ package stallone.api.ints;
 public interface IIndexMap
 {
     public int map(int i);
-    
+
     public int size();
 }

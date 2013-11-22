@@ -31,43 +31,43 @@ public class ArrayScale
      * WITHOUT making sure that the target is zero.
      * @param a
      * @param k
-     * @param target 
+     * @param target
      */
     public void scaleQuick(final IDoubleArray a, final double k, final IDoubleArray target)
     {
         for (IDoubleIterator it = a.nonzeroIterator(); it.hasNext(); it.advance())
             target.set(it.row(), it.column(), k*it.get());
     }
-    
+
     /**
      * Scales the real array by the factor k
      * @param a
-     * @param k 
+     * @param k
      */
     public void scale(final IDoubleArray a, double k)
     {
         for (IDoubleIterator it = a.nonzeroIterator(); it.hasNext(); it.advance())
             it.set(k*it.get());
     }
-    
+
     /**
      * Scales the real array by the factor k and writes the result to the target
      * @param a
      * @param k
      * @param target
-     * @param zeroTarget 
+     * @param zeroTarget
      */
     /**
      * Scales the array by the factor k
      * @param a
-     * @param k 
+     * @param k
      */
     public void scale(final IDoubleArray a, final double k, final IDoubleArray target)
     {
         target.zero();
         scaleQuick(a, k, target);
     }
-    
+
 
     /**
      * Scales the complex array a in place without making sure target is initialized
@@ -76,7 +76,7 @@ public class ArrayScale
     {
         if (a.isReal() && k.isPurelyReal())
             scale(a,k.getRe(),target);
-        else        
+        else
         {
             for (IComplexIterator it = a.nonzeroComplexIterator(); it.hasNext(); it.advance())
             {
@@ -89,13 +89,13 @@ public class ArrayScale
             }
         }
     }
-    
+
     public void scale(final IComplexArray a, final IComplexNumber k, final IComplexArray target)
     {
         target.zero();
         scaleQuick(a,k,target);
     }
-    
+
     /**
      * Scales the complex array a in place
      */
@@ -103,7 +103,7 @@ public class ArrayScale
     {
         if (a.isReal() && k.isPurelyReal())
             scale(a,k.getRe());
-        else        
+        else
         {
             for (IComplexIterator it = a.nonzeroComplexIterator(); it.hasNext(); it.advance())
             {
@@ -114,5 +114,5 @@ public class ArrayScale
             }
         }
     }
-    
+
 }

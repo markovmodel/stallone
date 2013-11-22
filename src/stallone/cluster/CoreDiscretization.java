@@ -19,8 +19,8 @@ public class CoreDiscretization implements IDiscretization
     private IDataSequence centers;
     private double radius;
     private IMetric metric;
-    
-    public CoreDiscretization(IDataSequence _centers, 
+
+    public CoreDiscretization(IDataSequence _centers,
     		double _radius, IMetric<IDoubleArray> _metric)
     {
         // make sure cores don't overlap
@@ -31,11 +31,11 @@ public class CoreDiscretization implements IDiscretization
                 if (d < 2*_radius)
                     throw(new IllegalArgumentException("Illegal Core Discretization. Cores Overlap"));
             }
-        
+
         this.centers = _centers;
         this.radius = _radius;
         this.metric = _metric;
-        
+
     }
 
     @Override
@@ -56,12 +56,12 @@ public class CoreDiscretization implements IDiscretization
             res.set(s, 1);
         return(res);
     }
-    
-    
+
+
     @Override
     public IDoubleArray getRepresentative(IDoubleArray p)
     {
         return centers.get(assign(p));
     }
-        
+
 }

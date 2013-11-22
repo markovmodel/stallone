@@ -99,10 +99,10 @@ public class AlgebraUtilities
     }
 
     /**
-     * The entry-wise 2-norm. If v is a vector this is the Euclidean norm, if v is a Matrix 
+     * The entry-wise 2-norm. If v is a vector this is the Euclidean norm, if v is a Matrix
      * this is the Frobenius norm
      * @param v
-     * @return 
+     * @return
      */
     public double norm(IDoubleArray v)
     {
@@ -110,16 +110,16 @@ public class AlgebraUtilities
     }
 
     /**
-     * The entry-wise p-norm. 
+     * The entry-wise p-norm.
      * @param v the vector or matrix
      * @param p the order of the norm.
-     * @return 
+     * @return
      */
     public double norm(IDoubleArray v, int p)
     {
         return (norm.norm(v, p));
     }
-    
+
     public double distance(IDoubleArray v1, IDoubleArray v2)
     {
         return(norm(subtract(v1,v2)));
@@ -285,7 +285,7 @@ public class AlgebraUtilities
         }
         return (res);
     }
-    
+
     public IDoubleArray rowSums(IDoubleArray arr)
     {
         double[] rowsums = new double[arr.rows()];
@@ -305,7 +305,7 @@ public class AlgebraUtilities
         }
         return Doubles.create.array(colsums);
     }
-    
+
     public IComplexNumber sum(IComplexArray arr)
     {
         double re = 0, im = 0;
@@ -355,7 +355,7 @@ public class AlgebraUtilities
     {
         vscale.scale(v, s);
     }
-    
+
     /**
      * Scales the rows such that each of them sum up to 1
      */
@@ -419,7 +419,7 @@ public class AlgebraUtilities
      * Calculates M^p explicitly
      * @param m
      * @param p
-     * @return 
+     * @return
      */
     public IDoubleArray power(final IDoubleArray M, final int p)
     {
@@ -489,7 +489,7 @@ public class AlgebraUtilities
         // compute determinant and store it in a new IScalar object
         return decomposition.det();
     }
-    
+
     public double trace(final IDoubleArray M)
     {
         double tr = 0;
@@ -511,7 +511,7 @@ public class AlgebraUtilities
         solver.perform();
         return (solver.getResult());
     }
-    
+
     public IEigenvalueDecomposition evd(final IDoubleArray matrix, int nev)
     {
         IEigenvalueSolver solver = Algebra.create.eigenSolver(matrix, nev);

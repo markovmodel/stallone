@@ -23,15 +23,15 @@ public class EMMultiStart implements IHMMOptimizer
     private IParameterEstimator outputEstimator;
     private IHMMParameters[] initialParameters;
     private int nstates;
-    
+
     // optimization parameters
     private int nscansteps;
     private int nconvsteps;
     private double dectol;
-    
+
     // result
     private IHMM hmmBest = null;
-    
+
     public EMMultiStart(List<IDataSequence> _obs, IParametricFunction _outputModel, IParameterEstimator _outputEstimator, IHMMParameters[] _initialParameters)
     {
         this.obs = _obs;
@@ -54,7 +54,7 @@ public class EMMultiStart implements IHMMOptimizer
     {
         this.dectol = tol;
     }
-    
+
     public void run()
             throws ParameterEstimationException
     {
@@ -88,9 +88,9 @@ public class EMMultiStart implements IHMMOptimizer
                 {
                     likelihoodBest = likelihoods[likelihoods.length - 1];
                     emBest = em;
-                    //System.out.println(" updating best. Now best likelihood: "+emBest.getHidden(0).logLikelihood());                
+                    //System.out.println(" updating best. Now best likelihood: "+emBest.getHidden(0).logLikelihood());
                 }
-            } 
+            }
             catch (ParameterEstimationException e)
             {
                 System.out.println(" CAUGHT exception in EMmult (see below). Will continue with another try\n" + e);
@@ -127,8 +127,8 @@ public class EMMultiStart implements IHMMOptimizer
 
         DoublesPrimitive.util.print(likelihoods, "\n");
         hmmBest = emBest.getHMM();
-    }    
-    
+    }
+
     public IHMM getHMM()
     {
         return (hmmBest);

@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 
@@ -74,7 +74,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
  {
   allocatePaths();
  }
- /** Creates a new empty tree set. 
+ /** Creates a new empty tree set.
 	 */
  public IntAVLTreeSet() {
   tree = null;
@@ -113,7 +113,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
  }
  /** Creates a new tree set copying a given set.
 	 *
-	 * @param c a collection to be copied into the new tree set. 
+	 * @param c a collection to be copied into the new tree set.
 	 */
 
  public IntAVLTreeSet( final Collection<? extends Integer> c ) {
@@ -123,7 +123,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 
  /** Creates a new tree set copying a given sorted set (and its {@link Comparator}).
 	 *
-	 * @param s a {@link SortedSet} to be copied into the new tree set. 
+	 * @param s a {@link SortedSet} to be copied into the new tree set.
 	 */
 
  public IntAVLTreeSet( final SortedSet <Integer> s ) {
@@ -133,7 +133,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 
  /** Creates a new tree set copying a given type-specific collection.
 	 *
-	 * @param c a type-specific collection to be copied into the new tree set. 
+	 * @param c a type-specific collection to be copied into the new tree set.
 	 */
 
  public IntAVLTreeSet( final IntCollection c ) {
@@ -143,7 +143,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 
  /** Creates a new tree set copying a given type-specific sorted set (and its {@link Comparator}).
 	 *
-	 * @param s a type-specific sorted set to be copied into the new tree set. 
+	 * @param s a type-specific sorted set to be copied into the new tree set.
 	 */
 
  public IntAVLTreeSet( final IntSortedSet s ) {
@@ -202,7 +202,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 
  /** Creates a new tree set copying the elements of an array.
 	 *
-	 * @param a an array to be copied into the new tree set. 
+	 * @param a an array to be copied into the new tree set.
 	 */
 
  public IntAVLTreeSet( final int[] a ) {
@@ -214,7 +214,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 
  /** Creates a new tree set copying the elements of an array using a given {@link Comparator}.
 	 *
-	 * @param a an array to be copied into the new tree set. 
+	 * @param a an array to be copied into the new tree set.
 	 * @param c a {@link Comparator} (even better, a type-specific comparator).
 	 */
 
@@ -234,11 +234,11 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 	 * The add()/remove() code is derived from Ben Pfaff's GNU libavl
 	 * (http://www.msu.edu/~pfaffben/avl/). If you want to understand what's
 	 * going on, you should have a look at the literate code contained therein
-	 * first.  
+	 * first.
 	 */
 
 
- /** Compares two keys in the right way. 
+ /** Compares two keys in the right way.
 	 *
 	 * <P>This method uses the {@link #actualComparator} if it is non-<code>null</code>.
 	 * Otherwise, it resorts to primitive type comparisons or to {@link Comparable#compareTo(Object) compareTo()}.
@@ -828,7 +828,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
    this.key = k;
    info = SUCC_MASK | PRED_MASK;
   }
-  /** Returns the left subtree. 
+  /** Returns the left subtree.
 		 *
 		 * @return the left subtree (<code>null</code> if the left
 		 * subtree is empty).
@@ -836,7 +836,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
   Entry left() {
    return ( info & PRED_MASK ) != 0 ? null : left;
   }
-  /** Returns the right subtree. 
+  /** Returns the right subtree.
 		 *
 		 * @return the right subtree (<code>null</code> if the right
 		 * subtree is empty).
@@ -1099,7 +1099,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
 	 * view on the set, at a given moment it could happen that the limits of
 	 * the range are not any longer in the main set. Thus, things such as
 	 * {@link java.util.SortedSet#first()} or {@link java.util.SortedSet#size()} must be always computed
-	 * on-the-fly.  
+	 * on-the-fly.
 	 */
  private final class Subset extends AbstractIntSortedSet implements java.io.Serializable, IntSortedSet {
      public static final long serialVersionUID = -7046029254386353129L;
@@ -1236,7 +1236,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
    return e.key;
   }
   /** An iterator for subranges.
-		 * 
+		 *
 		 * <P>This class inherits from {@link SetIterator}, but overrides the methods that
 		 * update the pointer after a {@link java.util.ListIterator#next()} or {@link java.util.ListIterator#previous()}. If we would
 		 * move out of the range of the subset we just overwrite the next or previous
@@ -1337,7 +1337,7 @@ public class IntAVLTreeSet extends AbstractIntSortedSet implements java.io.Seria
   s.defaultWriteObject();
   while( n-- != 0 ) s.writeInt( i.nextInt() );
  }
- /** Reads the given number of entries from the input stream, returning the corresponding tree. 
+ /** Reads the given number of entries from the input stream, returning the corresponding tree.
 	 *
 	 * @param s the input stream.
 	 * @param n the (positive) number of entries to read.

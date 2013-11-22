@@ -10,5 +10,5 @@ package stallone.api.hmm;
  */
 public class HMMUtilities
 {
-    
+
 }

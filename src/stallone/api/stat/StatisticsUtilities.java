@@ -19,7 +19,7 @@ import stallone.stat.modelselection.ExitTimeSplitter;
  * @author noe
  */
 public class StatisticsUtilities
-{    
+{
     /**
     @return the mean (or average) value of the array
      */
@@ -27,7 +27,7 @@ public class StatisticsUtilities
     {
         return (Doubles.util.sum(arr) / (double)arr.size());
     }
-    
+
     /**
         @return the variance from the mean. Returns 0 for single-value arrays
      */
@@ -46,7 +46,7 @@ public class StatisticsUtilities
         }
         return (sum / (double)(arr.size() - 1));
     }
-    
+
     /**
         @return the variance from the mean. Returns 0 for single-value arrays
      */
@@ -58,7 +58,7 @@ public class StatisticsUtilities
         }
         if (X.size() != Y.size())
             throw new IllegalArgumentException("Cannot compute covariance between double arrays of different length: "+X.size()+","+Y.size());
-        
+
         double meanX = mean(X);
         double meanY = mean(Y);
         double sum = 0;
@@ -67,7 +67,7 @@ public class StatisticsUtilities
             sum += (X.get(i)-meanX) * (Y.get(i)-meanY);
         }
         return (sum / (double)(X.size() - 1));
-    }    
+    }
 
     /**
     @return the std dev from the mean
@@ -76,7 +76,7 @@ public class StatisticsUtilities
     {
         return (Math.sqrt(variance(arr)));
     }
-    
+
 
     /**
     @return the arithmetic mean row
@@ -92,10 +92,10 @@ public class StatisticsUtilities
             Algebra.util.addTo(res, arr.viewRow(i));
         }
         Algebra.util.scale(1.0 / (double) nrows, res);
-        
+
         return(res);
     }
-    
+
     /**
     @return the arithmetic mean row
      */
@@ -110,11 +110,11 @@ public class StatisticsUtilities
             Algebra.util.addTo(res, arr.viewColumn(i));
         }
         Algebra.util.scale(1.0 / (double) ncols, res);
-        
+
         return(res);
     }
 
-    /** 
+    /**
      * Bins the data
      * @param data
      * @param grid grid points. data is assigned to closest grid point
@@ -124,24 +124,24 @@ public class StatisticsUtilities
     {
         if (!doubles.isSorted(grid))
             throw new IllegalArgumentException("Grid passed to histogram must be sorted");
-        
+
         int[] res = new int[grid.size()];
-        
+
         for (int i=0; i<data.size(); i++)
         {
             res[doubles.findClosest(grid, data.get(i))]++;
         }
-        
+
         return intsNew.arrayFrom(res);
     }
-    
-    
+
+
     /**
      * Returns the gaussian density at x
      * @param mean mean of the gaussian
      * @param stddev standard deviation of the gaussian
      * @param x
-     * @return 
+     * @return
      */
     public double gaussianDensity(double mean, double variance, double x)
     {
@@ -149,8 +149,8 @@ public class StatisticsUtilities
 	double f = 1/(Math.sqrt(2*Math.PI*variance)) *
 	    Math.exp(-(dev*dev) / (2*variance));
 	return(f);
-    }    
-    
+    }
+
 
     /**
      * Splits states with nonexponential lifetime distributions.

@@ -20,7 +20,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     // transition matrix, posterior, observed counts
     protected IDoubleArray T, C;
     protected double logLikelihood = 0;
-    
+
     public TransitionMatrixSamplerAbstract(IDoubleArray counts)
     {
         this.init(counts);
@@ -30,7 +30,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     {
         this.init(counts, Tinit);
     }
-    
+
     @Override
     public void init(IDoubleArray _C, IDoubleArray Tinit)
     {
@@ -47,7 +47,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     {
         init(_C, null);
     }
-    
+
     protected static IDoubleArray eraseNegatives(IDoubleArray cin)
     {
         IDoubleArray cout = cin.copy();
@@ -58,8 +58,8 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
         }
         return cout;
     }
-    
-    
+
+
     @Override
     public IDoubleArray sample(int steps)
     {
@@ -103,9 +103,9 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     }
 
     /**
-     * 
+     *
      * @param mu invariant density
-     * @return 
+     * @return
      */
     protected double computeDetailedBalanceError(IDoubleArray mu)
     {
@@ -119,7 +119,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
         }
         return err;
     }
-    
+
     /**
     Makes sure that the row still sums up to 1.
      */

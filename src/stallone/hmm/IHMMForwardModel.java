@@ -25,13 +25,13 @@ public interface IHMMForwardModel
      * @return the number of observation trajectories
      */
     public int getNObs();
-        
+
     /**
      * Returns the number of observations at trajectory traj
      * @return the number of observations in this trajectory
      */
     public int getNObs(int traj);
-    
+
     /**
      * Returns initial state probability
      * @param traj trajectory index
@@ -47,7 +47,7 @@ public interface IHMMForwardModel
      * @param state1 source state index 1
      * @param timeindex2 time index 2
      * @param state2 target state index 2
-     * @return the transition probability 
+     * @return the transition probability
      */
     public double getPtrans(int traj, int timeindex1, int state1, int state2);
 
@@ -66,14 +66,14 @@ public interface IHMMForwardModel
      * @param C a nxn count matrix where n is the number of states
      */
     public void setTransitionCounts(IDoubleArray C);
-    
+
     /**
      * Sets the parameters for the output model of the given state
      * @param state the state index
      * @param par the parameter list
      */
     public void setOutputParameters(int state, IDoubleArray par);
-    
+
     public IHMMParameters getParameters();
-    
+
 }

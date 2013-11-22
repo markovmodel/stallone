@@ -11,14 +11,14 @@ import stallone.api.doubles.IDoubleArray;
 /**
  *
  * Default implementation for a IDataSequence iterator
- * 
+ *
  * @author noe
  */
 public class DataSequenceIterator implements Iterator<IDoubleArray>
 {
     private IDataSequence seq ;
     int i=0;
-    
+
    public DataSequenceIterator(IDataSequence _seq)
    {
        seq = _seq;
@@ -43,6 +43,6 @@ public class DataSequenceIterator implements Iterator<IDoubleArray>
     {
         throw new UnsupportedOperationException("Not supported.");
     }
-   
-   
+
+
 }

@@ -15,20 +15,20 @@ public class IntTableElement implements IIntElement
 {
     public IIntArray table;
     public int row, col;
-    
+
     public IntTableElement(IIntArray _table, int _row, int _col)
     {
         this.table = _table;
         this.row = _row;
         this.col = _col;
     }
-    
+
     public void setIndex(int _row, int _col)
     {
         this.row = _row;
         this.col = _col;
     }
-    
+
     @Override
     public int row()
     {
@@ -40,7 +40,7 @@ public class IntTableElement implements IIntElement
     {
         return(col);
     }
-    
+
     @Override
     public int get()
     {

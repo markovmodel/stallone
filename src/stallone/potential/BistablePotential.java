@@ -77,6 +77,6 @@ public class BistablePotential  extends AbstractPotential
     {
         return(1);
     }
-    
-    
+
+
 }

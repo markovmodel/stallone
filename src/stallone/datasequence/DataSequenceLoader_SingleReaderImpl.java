@@ -50,17 +50,17 @@ public class DataSequenceLoader_SingleReaderImpl
     private ArrayList<DataSequenceInfo> info = new ArrayList<DataSequenceInfo>();
     private int totalSize = 0;
     private long largestMemorySize = 0, totalMemorySize = 0;
-    
+
     /**
      * Creates a loader object with the list of sources provided.
-     * @param _sources 
+     * @param _sources
      */
     public DataSequenceLoader_SingleReaderImpl(List<String> _sources, IDataReader _reader)
             throws IOException
     {
         this.sources = _sources;
         this.reader = _reader;
-        
+
         // basic checks: do files exist?
         // initialize file size info.
         if (sources == null)
@@ -72,12 +72,12 @@ public class DataSequenceLoader_SingleReaderImpl
             info.add(new DataSequenceInfo());
         }
     }
-        
+
     private void makeAvailable(int index)
             throws IOException
     {
         if ((currentSource != index) || !isOpen)
-        {            
+        {
             if (isOpen)
             {
                 reader.close();
@@ -86,7 +86,7 @@ public class DataSequenceLoader_SingleReaderImpl
             reader.open();
             isOpen = true;
             reader.scan();
-            
+
             currentSource = index;
         }
     }
@@ -101,11 +101,11 @@ public class DataSequenceLoader_SingleReaderImpl
     {
         info.clear();
         dimension = -1;
-        
+
         for (int i = 0; i < sources.size(); i++)
         {
             makeAvailable(i);
-            
+
             DataSequenceInfo ds = new DataSequenceInfo();
             if (this.dimension == -1)
             {
@@ -121,7 +121,7 @@ public class DataSequenceLoader_SingleReaderImpl
             ds.memorySize = reader.memorySize();
             ds.size = reader.size();
             info.add(ds);
-            
+
             totalSize += ds.size;
             if (ds.memorySize > largestMemorySize)
             {
@@ -129,7 +129,7 @@ public class DataSequenceLoader_SingleReaderImpl
             }
             totalMemorySize += ds.memorySize;
         }
-        
+
         scanned = true;
     }
 
@@ -157,7 +157,7 @@ public class DataSequenceLoader_SingleReaderImpl
             try
             {
                 makeAvailable(0);
-            } 
+            }
             catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
@@ -198,7 +198,7 @@ public class DataSequenceLoader_SingleReaderImpl
                 makeAvailable(trajIndex);
                 this.info.get(trajIndex).size = reader.size();
                 this.info.get(trajIndex).memorySize = reader.memorySize();
-            } 
+            }
             catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
@@ -221,7 +221,7 @@ public class DataSequenceLoader_SingleReaderImpl
                 makeAvailable(trajIndex);
                 this.info.get(trajIndex).size = reader.size();
                 this.info.get(trajIndex).memorySize = reader.memorySize();
-            } 
+            }
             catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
@@ -280,15 +280,15 @@ public class DataSequenceLoader_SingleReaderImpl
     {
         return (new DataSequenceLoader_SingleSequenceIterable(this));
     }
-    
+
     @Override
     public IDoubleArray load(int sequenceIndex, int frameIndex)
             throws IOException
     {
-        makeAvailable(sequenceIndex);        
+        makeAvailable(sequenceIndex);
         return reader.get(frameIndex);
     }
-    
+
     @Override
     public IDataSequence loadSequence(int sequenceIndex)
             throws IOException

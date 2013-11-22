@@ -19,8 +19,8 @@ public class DoubleTableIterator implements IDoubleIterator
     protected IDoubleArray X;
     protected int i=0,j=0;
     protected int rows,cols;
-    
-   
+
+
     public DoubleTableIterator(IDoubleArray _X)
     {
         this.X = _X;
@@ -28,7 +28,7 @@ public class DoubleTableIterator implements IDoubleIterator
         this.cols = X.columns();
         o = new DoubleTableElement(X,0,0);
     }
-        
+
     @Override
     public void reset()
     {
@@ -36,13 +36,13 @@ public class DoubleTableIterator implements IDoubleIterator
         j = 0;
     }
 
-    
+
     @Override
     public boolean hasNext()
     {
         return (i<rows && j < cols);
     }
-    
+
 
     @Override
     public int row()
@@ -75,7 +75,7 @@ public class DoubleTableIterator implements IDoubleIterator
     {
         return(X.get(i,j));
     }
-    
+
     @Override
     public void set(double newValue)
     {

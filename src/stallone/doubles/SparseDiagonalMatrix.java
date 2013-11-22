@@ -6,9 +6,9 @@ import stallone.api.doubles.IDoubleArray;
 
 /**
  * Sparse diagonal matrix
- * 
+ *
  * @author marscher
- * 
+ *
  */
 public class SparseDiagonalMatrix extends AbstractDoubleArray implements
         IDoubleArray
@@ -18,7 +18,7 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
     /**
      * directly creates a sparse diagonal matrix out of the given diagonal
      * vector
-     * 
+     *
      * @param diagonal
      */
     public SparseDiagonalMatrix(double[] diagonal)
@@ -28,7 +28,7 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
 
     /**
      * creates a sparse diagonal matrix out of the diagonal of the given matrix
-     * 
+     *
      * @param matrixOrVector
      */
     public SparseDiagonalMatrix(IDoubleArray matrixOrVector)
@@ -42,7 +42,7 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
         {
             if (matrixOrVector.rows() != matrixOrVector.columns())
                 throw new IllegalArgumentException("no symetric matrix given");
-            
+
             diagonal = new double[matrixOrVector.rows()];
 
             for (int i = 0; i < matrixOrVector.rows(); i++)

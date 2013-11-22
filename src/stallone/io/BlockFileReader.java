@@ -218,7 +218,7 @@ public class BlockFileReader extends CachedAsciiFileReader
         checkLineArrayRequest(line, WORDTYPE_DOUBLE);
         return Strings.util.toDoubleArray(currentWords);
     }
-    
+
     public int countColumnsIntRow(int line)
     {
         readLine(line);
@@ -325,7 +325,7 @@ public class BlockFileReader extends CachedAsciiFileReader
     {
         List<Block> res = new ArrayList<Block>();
         Block currentBlock = generalizeBlock(blocks.get(0), expectedType);
-        
+
         res.add(currentBlock);
         for (int i = 1; i < blocks.size(); i++)
         {

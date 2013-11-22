@@ -16,8 +16,8 @@ public class ComplexArrayIterator implements IComplexIterator
     protected IComplexArray X;
     protected int i=0,j=0;
     protected int rows,cols;
-    
-   
+
+
     public ComplexArrayIterator(IComplexArray _X)
     {
         this.X = _X;
@@ -25,7 +25,7 @@ public class ComplexArrayIterator implements IComplexIterator
         this.cols = X.columns();
         o = new ComplexArrayElement(X,0,0);
     }
-        
+
     @Override
     public void reset()
     {
@@ -33,13 +33,13 @@ public class ComplexArrayIterator implements IComplexIterator
         j = 0;
     }
 
-    
+
     @Override
     public boolean hasNext()
     {
         return (i<rows && j < cols);
     }
-    
+
 
     @Override
     public int row()
@@ -72,7 +72,7 @@ public class ComplexArrayIterator implements IComplexIterator
     {
         return(X.get(i,j));
     }
-    
+
     @Override
     public void set(double newValue)
     {

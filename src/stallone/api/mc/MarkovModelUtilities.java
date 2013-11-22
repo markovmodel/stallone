@@ -35,14 +35,14 @@ import stallone.mc.pcca.PCCA;
 public class MarkovModelUtilities
 {
     /**
-     * 
+     *
      * @param P A count, transition or rate matrix
      */
     public boolean isConnected(IDoubleArray P)
     {
         return (connectedComponents(P).size() == 1);
     }
-    
+
     public List<IIntArray> connectedComponents(IDoubleArray P)
     {
         IIntGraph g = new MatrixGraph(P);
@@ -68,14 +68,14 @@ public class MarkovModelUtilities
         }
         return largest;
     }
-    
+
     /**
-     * Standard count matrix estimation using a sliding window with given lag time. 
+     * Standard count matrix estimation using a sliding window with given lag time.
      * This is useful for the maximum likelihood estimate of T
      * @param traj
      * @param lag
-     * @return 
-     */    
+     * @return
+     */
     public IDoubleArray estimateC(Iterable<IIntArray> trajs, int lag)
     {
         ICountMatrixEstimator est = MarkovModel.create.createCountMatrixEstimatorSliding(trajs, lag);
@@ -96,7 +96,7 @@ public class MarkovModelUtilities
      * @param trajs
      * @param cores
      * @param lag
-     * @return 
+     * @return
      */
     public IDoubleArray estimateCmilestoning(Iterable<IIntArray> trajs, int lag)
     {
@@ -106,28 +106,28 @@ public class MarkovModelUtilities
         {
             max = Math.max(max, Ints.util.max(traj));
         }
-        
+
         // build cores
         ArrayList<IIntArray> cores = new ArrayList<IIntArray>();
         for (int i=0; i<max+1; i++)
             cores.add(Ints.create.arrayFrom(i));
-            
+
         return(estimateCmilestoning(trajs, cores, lag));
     }
-    
+
     /**
-     * Standard count matrix estimation using a sliding window with given lag time. 
+     * Standard count matrix estimation using a sliding window with given lag time.
      * This is useful for the maximum likelihood estimate of T
      * @param traj
      * @param lag
-     * @return 
-     */    
+     * @return
+     */
     public IDoubleArray estimateC(IIntArray traj, int lag)
     {
         ICountMatrixEstimator est = MarkovModel.create.createCountMatrixEstimatorSliding(traj, lag);
         return(est.estimate());
     }
-    
+
     public IDoubleArray estimateCmilestoning(IIntArray traj, Iterable<IIntArray> cores, int lag)
     {
         MilestoningFilter filter = new MilestoningFilter(cores);
@@ -139,22 +139,22 @@ public class MarkovModelUtilities
     {
         // find maximum
         int max = Ints.util.max(traj);
-        
+
         // build cores
         ArrayList<IIntArray> cores = new ArrayList<IIntArray>();
         for (int i=0; i<max+1; i++)
             cores.add(Ints.create.arrayFrom(i));
-            
+
         return(estimateCmilestoning(traj, cores, lag));
     }
-    
+
     /**
      * Count matrix estimation where the input trajectory is sampled every lag steps. This is
      * useful for estimating the uncertainties of the transition matrix
      * @param traj
      * @param lag
-     * @return 
-     */    
+     * @return
+     */
     public IDoubleArray estimateCstepping(Iterable<IIntArray> trajs, int lag)
     {
         ICountMatrixEstimator est = MarkovModel.create.createCountMatrixEstimatorStepping(trajs, lag);
@@ -166,14 +166,14 @@ public class MarkovModelUtilities
      * useful for estimating the uncertainties of the transition matrix
      * @param traj
      * @param lag
-     * @return 
-     */    
+     * @return
+     */
     public IDoubleArray estimateCstepping(IIntArray traj, int lag)
     {
         ICountMatrixEstimator est = MarkovModel.create.createCountMatrixEstimatorStepping(traj, lag);
         return(est.estimate());
     }
-    
+
     public double logLikelihood(IDoubleArray T, IDoubleArray C)
     {
         return(TransitionMatrixLikelihood.logLikelihood(T, C));
@@ -183,7 +183,7 @@ public class MarkovModelUtilities
     {
         return(TransitionMatrixLikelihood.logLikelihoodCorrelationMatrix(corr, C));
     }
-    
+
     public boolean isTransitionMatrix(IDoubleArray T)
     {
         // check elements
@@ -196,7 +196,7 @@ public class MarkovModelUtilities
                 return(false);
             }
         }
-        
+
         // check row sums
         for (int i=0; i<T.rows(); i++)
         {
@@ -209,7 +209,7 @@ public class MarkovModelUtilities
         }
         return(true);
     }
-    
+
     public boolean isRateMatrix(IDoubleArray K)
     {
         // check elements
@@ -222,8 +222,8 @@ public class MarkovModelUtilities
                 return(false);
             if (i != j && kij < 0)
                 return(false);
-        } 
-        
+        }
+
         // check row sums
         for (int i=0; i<K.rows(); i++)
         {
@@ -232,18 +232,18 @@ public class MarkovModelUtilities
         }
         return(true);
     }
-    
+
     public boolean isReversible(IDoubleArray T)
     {
         return(isReversible(T, this.stationaryDistribution(T)));
     }
-    
+
     /**
-     * Tests whether the given transition matrix T is reversible with respect to the provided 
+     * Tests whether the given transition matrix T is reversible with respect to the provided
      * stationary distribution pi
      * @param T
      * @param pi
-     * @return 
+     * @return
      */
     public boolean isReversible(IDoubleArray T, IDoubleArray pi)
     {
@@ -261,11 +261,11 @@ public class MarkovModelUtilities
         }
         return(true);
     }
-    
+
     /**
      * Maximum likelihood estimate of T (generally nonreversible)
      * @param counts
-     * @return 
+     * @return
      */
     public IDoubleArray estimateT(IDoubleArray counts)
     {
@@ -276,9 +276,9 @@ public class MarkovModelUtilities
     }
 
     /**
-     * Reversible maximum likelihood estimate of T 
+     * Reversible maximum likelihood estimate of T
      * @param counts
-     * @return 
+     * @return
      */
     public IDoubleArray estimateTrev(IDoubleArray counts)
     {
@@ -292,7 +292,7 @@ public class MarkovModelUtilities
      * Reversible maximum likelihood estimate of T given a fixed stationary distribution
      * @param counts
      * @param piFixed
-     * @return 
+     * @return
      */
     public IDoubleArray estimateTrev(IDoubleArray counts, IDoubleArray piFixed)
     {
@@ -301,7 +301,7 @@ public class MarkovModelUtilities
         est.estimate();
         return(est.getTransitionMatrix());
     }
-    
+
     public IDoubleArray stationaryDistribution(IDoubleArray T)
     {
         return(StationaryDistribution.calculate(T));
@@ -311,7 +311,7 @@ public class MarkovModelUtilities
      * Quick and dirty calculation of the stationary distribution when T is a strictly reversible matrix.
      * Warning: when T is not reversible, the result will be non sense.
      * @param T
-     * @return 
+     * @return
      */
     public IDoubleArray stationaryDistributionRevQuick(IDoubleArray T)
     {
@@ -322,23 +322,23 @@ public class MarkovModelUtilities
      * Calculates the relaxation timescale of a single transition matrix
      * @param T
      * @param tau
-     * @return 
+     * @return
      */
     public IDoubleArray timescales(IDoubleArray T, double tau)
     {
         if (!this.isTransitionMatrix(T))
             throw(new IllegalArgumentException("Trying to calculate timescales of a matrix that is not a transition matrix"));
-        
+
         IEigenvalueDecomposition evd = Algebra.util.evd(T);
         IDoubleArray ev = evd.getEvalNorm();
 
         IDoubleArray timescales = Doubles.create.array(ev.size()-1);
         for (int i=0; i<timescales.size(); i++)
             timescales.set(i, -tau/Math.log(ev.get(i+1)));
-        
+
         return(timescales);
     }
-    
+
     /**
      * Calculates the relaxation timescales of a single estimation
      * @return a double matrix with implied timescales in the columns and lag times in the rows.
@@ -346,9 +346,9 @@ public class MarkovModelUtilities
     public IDoubleArray timescales(Iterable<IIntArray> dtraj, ICountMatrixEstimator Cest, ITransitionMatrixEstimator Test, int ntimescales, IIntArray lagtimes)
     {
         double[][] res = new double[lagtimes.size()][];
-        
+
         Cest.addInput(dtraj);
-        
+
         for (int i=0; i<lagtimes.size(); i++)
         {
             int tau = lagtimes.get(i);
@@ -360,14 +360,14 @@ public class MarkovModelUtilities
             res[i] = timescales(T, tau).getArray();
         }
 
-        return(Doubles.create.matrix(res));        
+        return(Doubles.create.matrix(res));
     }
-    
+
     /**
      * Finds the metastable states of a Markov Model given the transition matrix or its eigenvectors
      * @param M
      * @param nstates
-     * @return 
+     * @return
      */
     public IIntArray metastableStates(IDoubleArray M, int nstates)
     {
@@ -379,7 +379,7 @@ public class MarkovModelUtilities
      * Finds the memberships to metastable states of a Markov Model given the transition matrix or its eigenvectors
      * @param M
      * @param nstates
-     * @return 
+     * @return
      */
     public IDoubleArray metastableMemberships(IDoubleArray M, int nstates)
     {
@@ -398,26 +398,26 @@ public class MarkovModelUtilities
         ICommittor comm = MarkovModel.create.createCommittor(M, A, B);
         return(comm.backwardCommittor());
     }
-    
-    
+
+
     /**
      * Calculates the autocorrelation function of the given observable under the dynamical action of M at the given timepoints
      * @param M a rate or transition matrix
      * @param observable
      * @param timepoints
-     * @return 
+     * @return
      */
     public IDoubleArray autocorrelation(IDoubleArray M, IDoubleArray observable, IDoubleArray timepoints)
     {
         return(correlation(M,observable,observable,timepoints));
     }
-    
+
     /**
      * Calculates the crosscorrelation function of the given observables under the dynamical action of M at the given timepoints
      * @param M a rate or transition matrix
      * @param observable
      * @param timepoints
-     * @return 
+     * @return
      */
     public IDoubleArray correlation(IDoubleArray M, IDoubleArray observable1, IDoubleArray observable2, IDoubleArray timepoints)
     {
@@ -427,13 +427,13 @@ public class MarkovModelUtilities
             res.set(i, dexp.calculateCorrelation(observable1, observable2, timepoints.get(i)));
         return(res);
     }
-    
+
     /**
      * Calculates the crosscorrelation function of the given observables under the dynamical action of M at the given timepoints
      * @param M a rate or transition matrix
      * @param observable
      * @param timepoints
-     * @return 
+     * @return
      */
     public IDoubleArray perturbationExpectation(IDoubleArray M, IDoubleArray pi0, IDoubleArray observable, IDoubleArray timepoints)
     {
@@ -442,14 +442,14 @@ public class MarkovModelUtilities
         for (int i=0; i<res.size(); i++)
             res.set(i, dexp.calculatePerturbationExpectation(pi0, observable, timepoints.get(i)));
         return(res);
-    }    
+    }
 
     /**
      * Calculates the dynamical fingerprint (timescale amplitude spectrum) of the autocorrelation of the given observable
      * under the action of the dynamics M
      * @param M a rate or transition matrix
      * @param observable
-     * @return 
+     * @return
      */
     public IDoubleArray fingerprintAutocorrelation(IDoubleArray M, IDoubleArray observable)
     {
@@ -461,14 +461,14 @@ public class MarkovModelUtilities
      * under the action of the dynamics M
      * @param M a rate or transition matrix
      * @param observable
-     * @return 
+     * @return
      */
     public IDoubleArray fingerprintCorrelation(IDoubleArray M, IDoubleArray observable1, IDoubleArray observable2)
     {
         IDynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
         dexp.calculateCorrelation(observable1, observable2);
         IDoubleArray res = Doubles.util.mergeColumns(dexp.getTimescales(), dexp.getAmplitudes());
-        return(res);        
+        return(res);
     }
 
     /**
@@ -476,17 +476,17 @@ public class MarkovModelUtilities
      * under the action of the dynamics M
      * @param M a rate or transition matrix
      * @param observable
-     * @return 
+     * @return
      */
     public IDoubleArray fingerprintPerturbation(IDoubleArray M, IDoubleArray p0, IDoubleArray observable)
     {
         IDynamicalExpectationsSpectral dexp = MarkovModel.create.createDynamicalFingerprint(M);
         dexp.calculatePerturbationExpectation(p0, observable);
         IDoubleArray res = Doubles.util.mergeColumns(dexp.getTimescales(), dexp.getAmplitudes());
-        return(res);        
+        return(res);
     }
-    
-    
+
+
     /**
      * Creates a stochastic realization of the chain
      */
@@ -494,7 +494,7 @@ public class MarkovModelUtilities
     {
         IMarkovChain mc = new MarkovChain(T);
         mc.setStartingState(s);
-        return mc.randomTrajectory(length);        
+        return mc.randomTrajectory(length);
     }
 
     /**
@@ -504,6 +504,6 @@ public class MarkovModelUtilities
     {
         IMarkovChain mc = new MarkovChain(T);
         mc.setStartingState(s);
-        return mc.randomTrajectoryToState(endStates);        
-    }    
+        return mc.randomTrajectoryToState(endStates);
+    }
 }

@@ -31,16 +31,16 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
 
     // the beta distributions for sampling the rows
     private Beta[] rowDistribution;
-    
+
     // pre-instantiated data holders
     private double[] backupRow;
 
     // success rate
     private int nsample, naccept;
-    
+
     public Step_Rev_Row_MC()
     {}
-    
+
     @Override
     public void init(IDoubleArray _C, IDoubleArray _T, IDoubleArray _mu)
     {
@@ -51,7 +51,7 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
 
         // data holders
         this.backupRow = new double[n];
-        
+
         // free energies
         u = doublesNew.array(n);
         for (int i=0; i<u.size(); i++)
@@ -71,7 +71,7 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
                 Csum[i] += C.get(i, j);
             }
         }
-        
+
         // check counts.
         if (!checkCounts())
         {
@@ -82,7 +82,7 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
 
     /**
      * Checks whether there is at least one row that can be sampled from
-     * @return 
+     * @return
      */
     protected final boolean checkCounts()
     {
@@ -96,32 +96,32 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
         }
 
         return (valid);
-    }    
+    }
 
-    
+
     /**
      * backs up row i
-     * @param row 
+     * @param row
      */
     private void backupRow(int row)
     {
         for (int k=0; k<n; k++)
             backupRow[k] = T.get(row, k);
     }
-    
+
     private void restoreRow(int row)
     {
         for (int k=0; k<n; k++)
             T.set(row, k, backupRow[k]);
     }
-    
+
     /**
      * Samples from one row shift distribution via a beta distribution
      */
     public boolean sampleRow(int i)
     {
         nsample++;
-        
+
         double maxTij = 0;
         for (int j = 0; j < n; j++)
         {
@@ -181,12 +181,12 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
             {
                 restoreRow(i);
                 accept = false;
-            }        
+            }
         }
-        
+
         return accept;
     }
-    
+
     @Override
     public boolean step()
     {
@@ -195,8 +195,8 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
         {
             i = MathTools.randomInt(0, n);
         }
-        
+
         return sampleRow(i);
     }
-        
+
 }

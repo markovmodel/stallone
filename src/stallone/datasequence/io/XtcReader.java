@@ -35,12 +35,12 @@ public class XtcReader implements IDataReader
         trajectory = new XtcFile(trajFilename);
         preconstructedArray = Doubles.create.array(trajectory.nrAtoms, 3);
     }
-    
+
     @Override
     public void setSource(String name)
     {
         trajectory.setSource(name);
-    }    
+    }
 
     @Override
     public void scan()
@@ -48,7 +48,7 @@ public class XtcReader implements IDataReader
     {
         trajectory.scan();
     }
-    
+
 
     @Override
     public int dimension()
@@ -65,7 +65,7 @@ public class XtcReader implements IDataReader
     //@Override
     public IDoubleArray get(int frameIndex, IDoubleArray target)
     {
-        
+
         try
         {
             float[][] positions = trajectory.getPositionsAt(frameIndex);
@@ -114,7 +114,7 @@ public class XtcReader implements IDataReader
             return frameIndex;
         }
     }
-    
+
     @Override
     public IDoubleArray get(int frameIndex)
     {
@@ -126,7 +126,7 @@ public class XtcReader implements IDataReader
     {
         return(get(index));
     }
-    
+
     @Override
     public Iterator<IDoubleArray> iterator()
     {
@@ -140,17 +140,17 @@ public class XtcReader implements IDataReader
         for (int i=0; i<this.size(); i++)
             res.add(get(i).copy());
         return res;
-    }    
+    }
 
     //@Override
     public String getFileName()
     {
         return(trajectory.getFileName());
     }
-    
+
     @Override
     public long memorySize()
     {
         return(this.size()*this.dimension()*8);
-    }    
+    }
 }

@@ -23,7 +23,7 @@ public class VelocityVerlet implements IIntegrator
     {
         this.dt = _dt;
     }
-    
+
     @Override
     public IIntegrator copy()
     {

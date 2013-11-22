@@ -28,25 +28,25 @@ public class IOUtilities
         System.out.println("ERROR: "+msg);
         System.exit(-1);
     }
-    
+
     public List<File> listFilesRecursive(String startingDirectory, String filter)
             throws FileNotFoundException
     {
         return (new RecursiveFileList(startingDirectory, filter)).getFiles();
     }
-    
+
     public List<File> listFilesRecursive(File startingDirectory, String filter)
             throws FileNotFoundException
     {
         return (new RecursiveFileList(startingDirectory, filter)).getFiles();
     }
-    
+
     public List<File> listFilesRecursive(String startingDirectory)
             throws FileNotFoundException
     {
         return (new RecursiveFileList(startingDirectory)).getFiles();
     }
-    
+
     /**
      * Recursively walk a directory tree and return a List of all
      * Files found; the List is sorted using File.compareTo().
@@ -99,7 +99,7 @@ public class IOUtilities
     {
         return toStrings(listFiles(wildcardFilename));
     }
-    
+
     /**
      * Determine file extension.
      *
@@ -137,12 +137,12 @@ public class IOUtilities
             return filename.substring(0, index);
         }
     }
-    
+
     public String getFilename(String fullname)
     {
         return (new File(fullname)).getName();
     }
-    
+
     public String getDirectory(String fullname)
     {
         if (!fullname.contains("/"))
@@ -150,7 +150,7 @@ public class IOUtilities
         else
             return fullname.substring(0,fullname.lastIndexOf("/"));
     }
-    
+
     public boolean canCreateFile(String filename)
     {
         IO.util.error ("Implement me: IOUtilities.canCreateFile(String)");
@@ -172,7 +172,7 @@ public class IOUtilities
             res.add(new File(f));
         return(res);
     }
-    
+
     public void writeString(String fileName, String content)
     {
 	try
@@ -187,5 +187,5 @@ public class IOUtilities
 		System.exit(-1);
 	    }
     }
-    
+
 }

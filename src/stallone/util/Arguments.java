@@ -91,7 +91,7 @@ public class Arguments
     {
 	return(StringTools.contains(commands, cmd));
     }
-    
+
     public String[] getCommands()
     {
         return commands;

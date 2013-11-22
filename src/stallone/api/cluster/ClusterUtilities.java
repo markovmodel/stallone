@@ -24,7 +24,7 @@ public class ClusterUtilities
         clustering.perform();
         return clustering;
     }
-    
+
     public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
     {
         return (perform(Clustering.create.createKmeans(data,metric,k,maxIter)));
@@ -34,27 +34,27 @@ public class ClusterUtilities
     {
         return (perform(Clustering.create.createKmeans(data,size,metric,k,maxIter)));
     }
-    
+
     public IClustering kmeans(IDataSequence data, int k, int maxIter)
     {
         return (perform(Clustering.create.createKmeans(data,k,maxIter)));
     }
-    
+
     public IClustering kmeans(Iterable<IDoubleArray> data, int size, int k, int maxIter)
     {
         return (perform(Clustering.create.createKmeans(data,size,k,maxIter)));
     }
-    
+
     public IClustering kmeans(IDataSequence data, int k)
     {
         return (perform(Clustering.create.createKmeans(data,k)));
     }
-    
+
     public IClustering kmeans(Iterable<IDoubleArray> data, int size, int k)
     {
         return (perform(Clustering.create.createKmeans(data,size,k)));
     }
-    
+
     public IClustering kcenter(IDataSequence data, IMetric<?> metric, int k)
     {
         return (perform(Clustering.create.createKcenter(data,k)));
@@ -64,7 +64,7 @@ public class ClusterUtilities
     {
         return (perform(Clustering.create.createKcenter(data,size,k)));
     }
-    
+
     public IClustering regularSpatial(IDataSequence data, IMetric<IDoubleArray> metric, double dmin)
     {
         return (perform(Clustering.create.createRegularSpatial(data, metric, dmin)));
@@ -81,7 +81,7 @@ public class ClusterUtilities
         return (perform(Clustering.create.createDensityBased(data,metric,dmin,minpts)));
     }
 
-        
+
     public IClustering densityBased(IDataSequence data, double dmin, int minpts)
     {
         return (perform(Clustering.create.createDensityBased(data,dmin,minpts)));
@@ -91,7 +91,7 @@ public class ClusterUtilities
     {
         return (perform(Clustering.create.createDensityBased(data,N)));
     }
-    
+
     public IIntArray discretize(IDataSequence data, IDiscretization disc)
     {
         IIntArray res = Ints.create.array(data.size());
@@ -102,7 +102,7 @@ public class ClusterUtilities
         return(res);
     }
 
-    
+
     public IDoubleArray clusterSizes(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
         double[] res = new double[centers.size()];
@@ -130,14 +130,14 @@ public class ClusterUtilities
         for (int i=0; i<sizes.length; i++)
             sizes[i] -= meansize;
         return doubleArrays.norm(sizes);
-    }    
-    
+    }
+
     /**
      * Computes the noncompactness measure
      * C = || D ||
      * where D is the vector of cluster diameters
      * @param clustering
-     * @return 
+     * @return
      */
     public double clusterNoncompactness(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
@@ -154,13 +154,13 @@ public class ClusterUtilities
         //return res/(double)k;
         return Math.sqrt(res/(double)k);
     }
-    
+
     /**
      * Computes the Davies-Bouldin clustering index, defined by
      * DB = (1/n) sum_i^n max{i!=j} (d_i + d_j)/(d_ij)
      * where d_i, d_j are the sizes of the two clusters and d_ij is the distance between the clusters
      * @param clustering
-     * @return 
+     * @return
      */
     public double clusterIndexDaviesBouldin(Iterable<IDoubleArray> data, IDataSequence centers, IMetric<IDoubleArray> metric, IIntArray assignment)
     {
@@ -184,7 +184,7 @@ public class ClusterUtilities
             res += doubleArrays.max(DBdist[i]);
         return (res/(double)centers.size());
     }
-    
+
     public IDoubleArray membershipToState(IClustering crisp, int state)
     {
         IIntArray clusterIndexes = crisp.getClusterIndexes();
@@ -196,7 +196,7 @@ public class ClusterUtilities
             else
                 res.set(i, 0);
         }
-        
+
         return res;
     }
 }

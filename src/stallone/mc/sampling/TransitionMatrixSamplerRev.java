@@ -16,7 +16,7 @@ import stallone.api.mc.MarkovModel;
  * By default uses MCMC sampling for element quadruples and a row Gibbs sampling step:
  * 1) MCMC sampling of element quadruples accordint to Noe JCP 2008
  * 2) Reversible row shift by beta distribution sampling (Trendelkamp-Schroer, Wu, Noe - preprint)
- * 
+ *
  * @author noe, trendelkamp
  */
 public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
@@ -24,11 +24,11 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
     protected IDoubleArray mu;
 
     private double p_step_row;
-    
+
     private IReversibleSamplingStep step_row;
     private IReversibleSamplingStep step_quad;
-    
-    
+
+
     public TransitionMatrixSamplerRev(IDoubleArray counts)
     {
         super(counts);
@@ -53,7 +53,7 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
             this.T = Tinit;
         }
         this.logLikelihood = MarkovModel.util.logLikelihood(T, C);
-                
+
         // stationary distribution
         mu = msm.stationaryDistribution(T);
 
@@ -61,8 +61,8 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         this.step_row = new Step_Rev_Row_Beta();
         this.step_row.init(C, T, mu);
         this.step_quad = new Step_Rev_Quad_MC();
-        this.step_quad.init(C, T, mu);        
-        
+        this.step_quad.init(C, T, mu);
+
         // weights
         int dofQuad=0, dofRow=0;
         for (int i=0; i<C.rows(); i++)
@@ -77,7 +77,7 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         }
         this.p_step_row = (double)dofRow / (double)(dofQuad + dofRow);
     }
-    
+
     public static TransitionMatrixSamplerRev create(IDoubleArray _C, IDoubleArray Tinit, IReversibleSamplingStep _step_row, IReversibleSamplingStep _step_quad)
     {
         TransitionMatrixSamplerRev res = new TransitionMatrixSamplerRev(_C, Tinit);
@@ -87,7 +87,7 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
 
         res.step_quad = _step_quad;
         res.step_quad.init(_C, res.T, res.mu);
-        
+
         return res;
     }
 
@@ -95,17 +95,17 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
     {
         return create(counts, null, _step_row, _step_quad);
     }
-    
+
     public IDoubleArray getInvariantDensity()
     {
         return mu;
     }
-    
+
     public double detailedBalanceError()
     {
         return super.computeDetailedBalanceError(mu);
     }
-    
+
     @Override
     protected boolean step()
     {
@@ -117,5 +117,5 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         {
             return step_quad.step();
         }
-    }    
+    }
 }

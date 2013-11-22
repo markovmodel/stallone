@@ -66,7 +66,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
     // Methods for full analysis
     // Mainly done by wrappers to existing double arrays.
     // ==================================================
-    
+
     private IEigenvalueDecomposition result;
     /** full system matrix of left eigenvectors. */
     //private IComplexArray leftEigenvectorMatrix;
@@ -95,10 +95,10 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
     {
         setPerformLeftComputation(left);
         setPerformRightComputation(right);
-        
+
         workSpace = null;
     }
-    
+
     @Override
     public final void setPerformLeftComputation(final boolean left)
     {
@@ -129,7 +129,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         assertSquare(m);
         this.matrix = m;
         this.size = m.rows();
-        
+
             // Allocate space for the decomposition
             wRealValues = new double[size];
             wImagValues = new double[size];
@@ -159,7 +159,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
     public void setNumberOfRequestedEigenvalues (int nev)
     {
     }
-    
+
     /**
      * Computes the eigenvalue decomposition of the given matrix.
      */
@@ -216,7 +216,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         {
             throw new IllegalArgumentException();
         }
-        
+
         // copy result
         IComplexArray L = null;
         if (jobLeft)
@@ -286,7 +286,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
      */
     private class MatrixOfEigenvectors extends AbstractComplexArray
     {
-        private final int rows,cols;        
+        private final int rows,cols;
         private final double[] data;
         private final int[] firstOfPair;
         private final boolean[] isComplex;
@@ -541,7 +541,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
     private class VectorOfEigenvalues extends AbstractComplexArray
     {
         private int size;
-        
+
         /**
          * Vector of eigenvalues delivers performant access for eigenvalues.
          */
@@ -555,7 +555,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         {
             return size;
         }
-        
+
         @Override
         public int columns()
         {
@@ -578,8 +578,8 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
                 throw(new ArrayIndexOutOfBoundsException("Trying to access column "+j+" of a column vector"));
 
             return wImagValues[i];
-        }        
-        
+        }
+
         @Override
         public double getRe(final int i)
         {
@@ -636,7 +636,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         {
             return(new DenseComplexArray(this));
         }
-        
+
         @Override
         public void copyFrom(final IComplexArray other)
         {
@@ -660,7 +660,7 @@ public class LapackEigenvalueDecomposition implements IEigenvalueSolver
         {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-        
+
         @Override
         public IDoubleArray viewReal()
         {

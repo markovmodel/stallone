@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 import java.util.AbstractCollection;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 /** An abstract class providing basic methods for collections implementing a type-specific interface.
  *
  * <P>In particular, this class provide {@link #iterator()}, <code>add()</code>, {@link #remove(Object)} and
- * {@link #contains(Object)} methods that just call the type-specific counterpart. 
+ * {@link #contains(Object)} methods that just call the type-specific counterpart.
  */
 public abstract class AbstractIntCollection extends AbstractCollection<Integer> implements IntCollection {
  protected AbstractIntCollection() {}

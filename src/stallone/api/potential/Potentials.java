@@ -19,5 +19,5 @@ public class Potentials
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final PotentialFactory create = new PotentialFactory();    
+    public static final PotentialFactory create = new PotentialFactory();
 }

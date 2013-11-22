@@ -28,12 +28,12 @@ import static stallone.doubles.DoubleArrayTest.*;
 public class InnerProduct //implements IVectorInnerProduct
 {
     boolean complexConjugate;
-    
+
     public InnerProduct(boolean _complexConjugate)
     {
         this.complexConjugate = _complexConjugate;
-    }    
-    
+    }
+
     public double innerProduct(final IDoubleArray a, final IDoubleArray b)
     {
         assertOrder(a,1);
@@ -49,7 +49,7 @@ public class InnerProduct //implements IVectorInnerProduct
 
         return result;
     }
-    
+
     public double innerProductSparse(final IDoubleArray a, final IDoubleArray b)
     {
         assertOrder(a,1);
@@ -57,7 +57,7 @@ public class InnerProduct //implements IVectorInnerProduct
 
         // Holds to current sum
         double result = 0.0d;
-        
+
         for (SynchronousPairIterator it = new SynchronousPairIterator(a,b); it.hasNext(); it.advance())
         {
             result += it.get1() * it.get2();
@@ -71,7 +71,7 @@ public class InnerProduct //implements IVectorInnerProduct
         assertOrder(a,1);
         assertOrder(b,1);
         assertOrder(w,1);
-        
+
         double result = 0.0d;
 
         for (int i = 0; i < a.size(); i++)
@@ -81,13 +81,13 @@ public class InnerProduct //implements IVectorInnerProduct
 
         return result;
     }
-    
+
     public double innerProductSpasre(final IDoubleArray a, final IDoubleArray b, final IDoubleArray w)
     {
         assertOrder(a,1);
         assertOrder(b,1);
         assertOrder(w,1);
-        
+
         double result = 0.0d;
 
         for (SynchronousPairIterator it = new SynchronousPairIterator(a,b); it.hasNext(); it.advance())
@@ -96,7 +96,7 @@ public class InnerProduct //implements IVectorInnerProduct
         }
 
         return result;
-    }    
+    }
 
     //@Override
     public IComplexNumber innerProduct(final IComplexArray a, final IComplexArray b, final IDoubleArray w, final IComplexNumber target)
@@ -119,7 +119,7 @@ public class InnerProduct //implements IVectorInnerProduct
                 aRe *= wRe;
                 aIm *= wRe;
             }
-            
+
             sumRe += aRe*bRe - aIm*bIm;
             sumIm += aRe*bIm + aIm*bRe;
         }
@@ -138,28 +138,28 @@ public class InnerProduct //implements IVectorInnerProduct
     {
         return (innerProduct(a, b, null, target));
     }
-    
-    class SynchronousPairIterator 
+
+    class SynchronousPairIterator
     {
         private IDoubleIterator itA, itB;
         private int i;
         private double va, vb;
-        
+
         private boolean hasNext = true;
-        
+
         public SynchronousPairIterator(IDoubleArray _a, IDoubleArray _b)
         {
             itA = _a.nonzeroIterator();
             itB = _b.nonzeroIterator();
-            
+
             advance();
         }
-        
+
         public final void advance()
         {
             int i1 = itA.getIndex();
             int i2 = itB.getIndex();
-            
+
             while (i1 != i2)
             {
                 if (i1 < i2)
@@ -189,22 +189,22 @@ public class InnerProduct //implements IVectorInnerProduct
                     }
                 }
             }
-            
+
             i = i1;
             va = itA.get();
             vb = itB.get();
         }
-        
+
         public boolean hasNext()
         {
             return hasNext;
         }
-        
+
         public int getIndex()
         {
             return i;
         }
-        
+
         public double get1()
         {
             return va;
@@ -214,8 +214,8 @@ public class InnerProduct //implements IVectorInnerProduct
         {
             return vb;
         }
-    }    
-    
-    
+    }
+
+
 }
 

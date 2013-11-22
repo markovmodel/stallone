@@ -544,7 +544,7 @@ public class StringTools
 	    res[k++] = arr[indexes[i]];
 	return(res);
     }
-    
+
     public static String[] subarray(String[] arr, IIntArray indexes)
     {
         return subarray(arr, indexes.getArray());

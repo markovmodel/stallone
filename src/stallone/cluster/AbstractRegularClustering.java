@@ -85,7 +85,7 @@ public abstract class AbstractRegularClustering implements IClustering
         this.data = data;
         this.datasize = size;
     }
-    
+
     @Override
     public void setMetric(IMetric<IDoubleArray> _metric)
     {
@@ -98,36 +98,36 @@ public abstract class AbstractRegularClustering implements IClustering
     {
         return clusterCenters.iterator();
     }
-    
+
     //@Override
     public IDoubleArray getClusterCenter(int i)
     {
         return clusterCenters.get(i);
     }
-    
+
     @Override
     public IDataSequence getClusterCenters()
     {
         return clusterCenters;
     }
-    
+
     @Override
     public int assign(IDoubleArray data)
     {
         return(voronoiPartitioning.assign(data));
     }
-    
+
     @Override
     public IDoubleArray getRepresentative(IDoubleArray p)
     {
         return clusterCenters.get(assign(p));
     }
-    
+
     @Override
     public IDoubleArray assignFuzzy(IDoubleArray data)
     {
         return(voronoiPartitioning.assignFuzzy(data));
     }
-    
-    
+
+
 }

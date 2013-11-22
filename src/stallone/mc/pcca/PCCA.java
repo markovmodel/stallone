@@ -120,7 +120,7 @@ public final class PCCA
             for (int i=0; i<fuzzyAllocation.rows(); i++)
                 fuzzyAllocation.set(i,i,1);
             transMatrix = Algebra.util.inverse(eigenvectors);
-            
+
             // currently, we do not calculate the condition number because we lack the method
             //condTrans = A.cond(transMatrix);
 
@@ -131,7 +131,7 @@ public final class PCCA
                 clusterAllocation[i] = i;
                 counter[i + 1] = 1;
             }
-        } 
+        }
         /* Start of the Isa-algorithm. */
         else
         {

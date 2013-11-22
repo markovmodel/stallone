@@ -17,13 +17,13 @@ public class DataSequenceSubset implements IDataSequence
 {
     private IDataSequence fullSequence;
     private IIntArray selection;
-        
+
     public DataSequenceSubset(IDataSequence _fullSequence, IIntArray _selection)
     {
         this.fullSequence = _fullSequence;
         this.selection = _selection;
     }
-    
+
     @Override
     public int size()
     {
@@ -62,5 +62,5 @@ public class DataSequenceSubset implements IDataSequence
     {
         return new DataSequenceIterator(this);
     }
-    
+
 }

@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,12 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 import java.util.Comparator;
 /** A type-specific {@link Comparator}; provides methods to compare two primitive types both as objects
- * and as primitive types. 
+ * and as primitive types.
  *
  * <P>Note that <code>fastutil</code> provides a corresponding abstract class that
  * can be used to implement this interface just by specifying the type-specific

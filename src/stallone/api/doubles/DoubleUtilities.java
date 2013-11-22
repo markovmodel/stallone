@@ -29,7 +29,7 @@ public class DoubleUtilities
             arr.set(i, d);
         }
     }
-    
+
     public void copyInto(IDoubleArray source, int start1, int end1, IDoubleArray target, int start2)
     {
         if (start1 < 0 || end1 >= source.size() || start1>=end1 || start2 < 0 || start2+(end1-start1) >= target.size())
@@ -40,7 +40,7 @@ public class DoubleUtilities
 
     /**
      * Turns this array into its mirror image, i.e. puts the last indexes first and vice versa.
-     * @param arr 
+     * @param arr
      */
     public void mirror(IDoubleArray arr)
     {
@@ -115,7 +115,7 @@ public class DoubleUtilities
      * Tests for exactly equal arrays
      * @param arr1
      * @param arr2
-     * @return 
+     * @return
      */
     public boolean equal(IDoubleArray arr1, IDoubleArray arr2)
     {
@@ -271,7 +271,7 @@ public class DoubleUtilities
                 return false;
         return true;
     }
-    
+
     public void sort(IDoubleArray arr)
     {
         QuickSortDouble qs = new QuickSortDouble();
@@ -473,7 +473,7 @@ public class DoubleUtilities
         }
         return (res);
     }
-    
+
     public boolean contains(IDoubleArray arr, double val)
     {
         for (int i = 0; i < arr.size(); i++)
@@ -514,7 +514,7 @@ public class DoubleUtilities
      * Finds the element of arr that is closest to num. Only works if the array is sorted
      * @param arr
      * @param num
-     * @return 
+     * @return
      */
     public int findClosest(IDoubleArray arr, double num)
     {
@@ -527,7 +527,7 @@ public class DoubleUtilities
 
         if (Math.abs(arr.get(i-1)-num) < Math.abs(arr.get(i)-num))
             return i-1;
-        else 
+        else
             return i;
     }
 
@@ -594,7 +594,7 @@ public class DoubleUtilities
     /**
      * Inserts the given number into the sorted array arr. If arr is not
      * sorted, arr will be inserted somewhere.
-     * WARNING: If the underlying array is primitive or an arraylist, this will be 
+     * WARNING: If the underlying array is primitive or an arraylist, this will be
      * very slow, because a whole new array copy must be built!
      */
     public void insertSorted(IDoubleList arr, double num)
@@ -763,7 +763,7 @@ public class DoubleUtilities
     //
     // ********************************************************************************
 
-    
+
     public double sumRow(IDoubleArray arr, int row)
     {
         double res = 0;
@@ -783,10 +783,10 @@ public class DoubleUtilities
         }
         return (res);
     }
-    
+
     /**
      * Transpose in place. Only possible if nrows = ncolumns
-     * @param tab 
+     * @param tab
      */
     public void transpose(IDoubleArray tab)
     {
@@ -858,7 +858,7 @@ public class DoubleUtilities
 
         return (res);
     }
-        
+
     public <T extends IDoubleArray> T   insertRowToNew(T a, int rowIndex, IDoubleArray r)
     {
         if (a.columns() != r.size())
@@ -899,8 +899,8 @@ public class DoubleUtilities
     }
 
     /**
-    
-    
+
+
     /**
     Returns the index with the next occurance of the given number, starting
     from index "from".
@@ -962,7 +962,7 @@ public class DoubleUtilities
      * Counts the rows equal to val
      * @param tab
      * @param val
-     * @return 
+     * @return
      */
     public int countRows(IDoubleArray tab, IDoubleArray val)
     {
@@ -1022,13 +1022,13 @@ public class DoubleUtilities
     {
         io.print(arr, coldel, linedel, predig, postdig);
     }
-    
+
     // ********************************************************************************
     //
     // List of Arrays operations
     //
     // ********************************************************************************
-    
+
     public <T extends IDoubleArray> List<T> merge(List<T> l1, List<T> l2)
     {
         ArrayList<T> res = new ArrayList<T>();
@@ -1038,7 +1038,7 @@ public class DoubleUtilities
             res.add(o);
         return(res);
     }
-    
+
     public <T extends IDoubleArray> List<T> subset(List<T> l1, IIntArray indexes)
     {
         ArrayList<T> res = new ArrayList<T>();
@@ -1046,5 +1046,5 @@ public class DoubleUtilities
             res.add(l1.get(indexes.get(i)));
         return(res);
     }
-    
+
 }

@@ -17,26 +17,26 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
 {
     private int n;
     private IDoubleArray C;
-    
+
     private IDoubleArray T;
     private IDoubleArray mu;
-    
+
     private double Tii_backup, Tij_backup, Tji_backup, Tjj_backup;
-    
+
     public Step_Rev_Quad_MC()
     {
     }
-    
+
     @Override
     public void init(IDoubleArray _C, IDoubleArray _T, IDoubleArray _mu)
     {
         this.n = _C.rows();
         this.C = _C;
-        
+
         this.T = _T;
         this.mu = _mu;
     }
-    
+
     /**
      * Conducts a single reversible edge shift MC step @returns true if the step
      * has been accepted.
@@ -86,16 +86,16 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
             Tij_backup = T.get(i,j);
             Tji_backup = T.get(j,i);
             Tjj_backup = T.get(j,j);
-            
+
             T.set(i, j, T.get(i, j) + -d1);
             T.set(i, i, T.get(i, i) + (1.0 - doubles.sumRow(T, i)));
             T.set(j, i, T.get(i, j) / q);
             T.set(j, j, T.get(j, j) + (1.0 - doubles.sumRow(T, j)));
 
             // revert step if illegal
-            if (!TransitionMatrixSamplingTools.isElementIn01(T,i,i) 
-                    || !TransitionMatrixSamplingTools.isElementIn01(T,i,j) 
-                    || !TransitionMatrixSamplingTools.isElementIn01(T,j,i) 
+            if (!TransitionMatrixSamplingTools.isElementIn01(T,i,i)
+                    || !TransitionMatrixSamplingTools.isElementIn01(T,i,j)
+                    || !TransitionMatrixSamplingTools.isElementIn01(T,j,i)
                     || !TransitionMatrixSamplingTools.isElementIn01(T,j,j))
             {
                 T.set(i,i, Tii_backup);
@@ -107,8 +107,8 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
         }
 
         return (accept);
-    }    
-    
+    }
+
     @Override
     public boolean step()
     {
@@ -119,8 +119,8 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
             j = MathTools.randomInt(0, n);
         }
         while (i == j);
-        
+
         return sampleQuad(i,j);
     }
-        
+
 }

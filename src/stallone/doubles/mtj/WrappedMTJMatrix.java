@@ -23,12 +23,12 @@ import stallone.doubles.PrimitiveDoubleTable;
  *
  * @author  Martin Senne
  */
-public class WrappedMTJMatrix extends AbstractDoubleArray 
+public class WrappedMTJMatrix extends AbstractDoubleArray
 {
     private no.uib.cipr.matrix.Matrix mtjMatrix;
     private int rows,cols;
 
-    public WrappedMTJMatrix(no.uib.cipr.matrix.Matrix mtjMatrix) 
+    public WrappedMTJMatrix(no.uib.cipr.matrix.Matrix mtjMatrix)
     {
         rows = mtjMatrix.numRows();
         cols = mtjMatrix.numColumns();
@@ -36,13 +36,13 @@ public class WrappedMTJMatrix extends AbstractDoubleArray
     }
 
     @Override
-    public double get(int i, int j) 
+    public double get(int i, int j)
     {
         return mtjMatrix.get(i, j);
     }
 
         @Override
-    public void set(int i, int j, double x) 
+    public void set(int i, int j, double x)
     {
         mtjMatrix.set(i, j, x);
     }
@@ -51,7 +51,7 @@ public class WrappedMTJMatrix extends AbstractDoubleArray
     public void zero() {
         mtjMatrix.zero();
     }
-    
+
     @Override
     public IDoubleArray create(int rows, int cols)
     {
@@ -89,5 +89,5 @@ public class WrappedMTJMatrix extends AbstractDoubleArray
     {
         return false;
     }
-    
+
 }

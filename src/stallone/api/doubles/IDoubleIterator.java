@@ -13,23 +13,23 @@ import java.util.Iterator;
 public interface IDoubleIterator extends Iterator<IDoubleElement>
 {
     public void reset();
-    
+
     public void advance();
-    
-    
+
+
     public int getIndex();
-    
+
     public int row();
-    
+
     public int column();
-    
+
     public double get();
-    
+
     public void set(double x);
-    
+
     @Override
     public boolean hasNext();
-    
+
     @Override
     public IDoubleElement next();
 }

@@ -36,7 +36,7 @@ public class StreamDataWriter implements IDataWriter
         this.dataDelimiter = _dataDelimiter;
         this.datasetDelimiter = _datasetDelimiter;
     }
-    
+
     @Override
     public void add(IDoubleArray data)
     {

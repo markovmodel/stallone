@@ -203,8 +203,8 @@ public class CommandLineParser
         requireAtMostOneOf(cmds);
         requireAtLeastOneOf(cmds);
     }
-    
-    
+
+
     private boolean checkIfAllCommandsAreExpected()
     {
         // check if unexpected commands are available
@@ -745,12 +745,12 @@ abstract class ExpectedArgument
             else
                 return true;
         }
-        
+
         return parseWhenAvailable(args);
     }
-    
+
     protected abstract boolean parseWhenAvailable(Arguments args);
-            
+
 }
 
 class StringArgument extends ExpectedArgument
@@ -769,7 +769,7 @@ class StringArgument extends ExpectedArgument
     @Override
     public boolean parseWhenAvailable(Arguments args)
     {
-        
+
         // check options
         if (options != null)
         {

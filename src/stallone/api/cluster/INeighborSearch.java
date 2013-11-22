@@ -17,27 +17,27 @@ public interface INeighborSearch
     public void setData(IDataSequence data);
 
     public void setMetric(IMetric<IDoubleArray> m);
-    
+
     /**
-     * 
+     *
      * @param index Data point index
-     * @return 
+     * @return
      */
     public int nearestNeighbor(int index);
-    
+
     /**
      * Nearest neighbor to arbitrary point x
      * @param x
-     * @return 
+     * @return
      */
     public int nearestNeighbor(IDoubleArray x);
-    
+
     public int[] nearestNeighbors(int index, int N);
 
     public int[] nearestNeighbors(IDoubleArray x, int N);
-    
+
     public int[] neighbors(int index, double distance);
 
     public int[] neighbors(IDoubleArray x, double distance);
-    
+
 }

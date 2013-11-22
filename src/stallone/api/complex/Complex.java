@@ -5,9 +5,9 @@
 package stallone.api.complex;
 
 /**
- * The API Object for Algebra usage. Has default objects for vector/matrix operations, 
+ * The API Object for Algebra usage. Has default objects for vector/matrix operations,
  * and factories for datatypes and algorithms
- * 
+ *
  * @author noe
  */
 public class Complex

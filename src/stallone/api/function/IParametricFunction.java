@@ -15,6 +15,6 @@ import stallone.api.doubles.IDoubleArray;
 public interface IParametricFunction extends IFunction, ICopyable<IParametricFunction>
 {
     public IDoubleArray getParameters();
-    
+
     public void setParameters(IDoubleArray par);
 }

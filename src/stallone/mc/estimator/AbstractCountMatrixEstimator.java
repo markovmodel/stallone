@@ -28,19 +28,19 @@ public abstract class AbstractCountMatrixEstimator implements ICountMatrixEstima
     {
         input.add(traj);
     }
-    
+
     public AbstractCountMatrixEstimator(Iterable<IIntArray> trajs)
     {
         for (IIntArray traj:trajs)
             input.add(traj);
     }
-        
+
     @Override
     public void setLag(int _lag)
     {
         this.lag = _lag;
     }
-    
+
     @Override
     public void addInput(IIntArray traj)
     {
@@ -53,7 +53,7 @@ public abstract class AbstractCountMatrixEstimator implements ICountMatrixEstima
         for (IIntArray traj:trajs)
             input.add(traj);
     }
-    
+
     @Override
     public IDoubleArray estimate()
     {
@@ -63,12 +63,12 @@ public abstract class AbstractCountMatrixEstimator implements ICountMatrixEstima
         {
             n = Math.max(Ints.util.max(traj)+1,n);
         }
-        
+
         // initialize C
         C = Doubles.create.array(n, n);
 
         this.count();
-        
+
         return(C);
     }
 
@@ -76,11 +76,11 @@ public abstract class AbstractCountMatrixEstimator implements ICountMatrixEstima
      * constructs counts from input. Count matrix must be available
      */
     protected abstract void count();
-    
+
     @Override
     public IDoubleArray getCountMatrix()
     {
         return(C);
     }
-    
+
 }

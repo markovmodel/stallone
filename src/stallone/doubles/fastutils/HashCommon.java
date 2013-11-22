@@ -5,8 +5,8 @@
 package stallone.doubles.fastutils;
 
 
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 
 
@@ -30,18 +30,18 @@ public class HashCommon {
 
 	/** This reference is used to fill keys and values of removed entries (if
 		they are objects). <code>null</code> cannot be used as it would confuse the
-		search algorithm in the presence of an actual <code>null</code> key. */ 
+		search algorithm in the presence of an actual <code>null</code> key. */
 	public static final Object REMOVED = new Object();
 
 	/** Avalanches the bits of an integer by applying the finalisation step of MurmurHash3.
-	 * 
+	 *
 	 * <p>This function implements the finalisation step of Austin Appleby's <a href="http://sites.google.com/site/murmurhash/">MurmurHash3</a>.
 	 * Its purpose is to avalanche the bits of the argument to within 0.25% bias. It is used, among other things, to scramble quickly (but deeply) the hash
 	 * values returned by {@link Object#hashCode()}.
-	 * 
+	 *
 	 * @param x an integer.
 	 * @return a hash value with good avalanching properties.
-	 */	
+	 */
 	public final static int murmurHash3( int x ) {
 		x ^= x >>> 16;
 		x *= 0x85ebca6b;
@@ -52,14 +52,14 @@ public class HashCommon {
 	}
 
 	/** Avalanches the bits of a long integer by applying the finalisation step of MurmurHash3.
-	 * 
+	 *
 	 * <p>This function implements the finalisation step of Austin Appleby's <a href="http://sites.google.com/site/murmurhash/">MurmurHash3</a>.
 	 * Its purpose is to avalanche the bits of the argument to within 0.25% bias. It is used, among other things, to scramble quickly (but deeply) the hash
 	 * values returned by {@link Object#hashCode()}.
-	 * 
+	 *
 	 * @param x a long integer.
 	 * @return a hash value with good avalanching properties.
-	 */	
+	 */
 	public final static long murmurHash3( long x ) {
 		x ^= x >>> 33;
 		x *= 0xff51afd7ed558ccdL;
@@ -90,17 +90,17 @@ public class HashCommon {
 	}
 
 	/** Returns the hash code that would be returned by {@link Long#hashCode()}.
-	 * 
+	 *
 	 * @return the same code as {@link Long#hashCode() new Long(f).hashCode()}.
 	 */
 	final public static int long2int( final long l ) {
 		return (int)( l ^ ( l >>> 32 ) );
 	}
-	
+
 	/** Return the least power of two greater than or equal to the specified value.
-	 * 
+	 *
 	 * <p>Note that this function will return 1 when the argument is 0.
-	 * 
+	 *
 	 * @param x an integer smaller than or equal to 2<sup>30</sup>.
 	 * @return the least power of two greater than or equal to the specified value.
 	 */
@@ -115,9 +115,9 @@ public class HashCommon {
 	}
 
 	/** Return the least power of two greater than or equal to the specified value.
-	 * 
+	 *
 	 * <p>Note that this function will return 1 when the argument is 0.
-	 * 
+	 *
 	 * @param x a long integer smaller than or equal to 2<sup>62</sup>.
 	 * @return the least power of two greater than or equal to the specified value.
 	 */
@@ -133,28 +133,28 @@ public class HashCommon {
 	}
 
 
-	/** Returns the maximum number of entries that can be filled before rehashing. 
+	/** Returns the maximum number of entries that can be filled before rehashing.
 	 *
 	 * @param n the size of the backing array.
 	 * @param f the load factor.
-	 * @return the maximum number of entries before rehashing. 
+	 * @return the maximum number of entries before rehashing.
 	 */
 	public static int maxFill( final int n, final float f ) {
 		return (int)Math.ceil( n * f );
 	}
 
-	/** Returns the maximum number of entries that can be filled before rehashing. 
-	 * 
+	/** Returns the maximum number of entries that can be filled before rehashing.
+	 *
 	 * @param n the size of the backing array.
 	 * @param f the load factor.
-	 * @return the maximum number of entries before rehashing. 
+	 * @return the maximum number of entries before rehashing.
 	 */
 	public static long maxFill( final long n, final float f ) {
 		return (long)Math.ceil( n * f );
 	}
 
-	/** Returns the least power of two smaller than or equal to 2<sup>30</sup> and larger than or equal to <code>Math.ceil( expected / f )</code>. 
-	 * 
+	/** Returns the least power of two smaller than or equal to 2<sup>30</sup> and larger than or equal to <code>Math.ceil( expected / f )</code>.
+	 *
 	 * @param expected the expected number of elements in a hash table.
 	 * @param f the load factor.
 	 * @return the minimum possible size for a backing array.
@@ -166,8 +166,8 @@ public class HashCommon {
 		return (int)s;
 	}
 
-	/** Returns the least power of two larger than or equal to <code>Math.ceil( expected / f )</code>. 
-	 * 
+	/** Returns the least power of two larger than or equal to <code>Math.ceil( expected / f )</code>.
+	 *
 	 * @param expected the expected number of elements in a hash table.
 	 * @param f the load factor.
 	 * @return the minimum possible size for a backing big array.

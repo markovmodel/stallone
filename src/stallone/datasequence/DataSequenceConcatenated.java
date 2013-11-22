@@ -18,21 +18,21 @@ public class DataSequenceConcatenated implements IDataSequence
     protected List<IDataSequence> seqs;
     protected int totalsize;
     protected int dimension = -1;
-    
+
     protected int[] microindex2trajindex;
     protected int[] microindex2localindex;
-    
+
     protected DataSequenceConcatenated()
     {
     }
     public DataSequenceConcatenated(List<IDataSequence> _seqs)
     {
         this.seqs = _seqs;
-        
+
         for (int i=0; i<_seqs.size(); i++)
         {
             totalsize += _seqs.get(i).size();
-            
+
             // dimension
             if (dimension == -1)
                 dimension = _seqs.get(i).dimension();
@@ -40,7 +40,7 @@ public class DataSequenceConcatenated implements IDataSequence
                 if (dimension != _seqs.get(i).dimension())
                     throw new IllegalArgumentException("Data Sequence List has inconsistent dimensionality");
         }
-        
+
         microindex2trajindex = new int[totalsize];
         microindex2localindex = new int[totalsize];
         int k=0;
@@ -66,7 +66,7 @@ public class DataSequenceConcatenated implements IDataSequence
     {
         return dimension;
     }
-    
+
     @Override
     public double getTime(int i)
     {
@@ -94,7 +94,7 @@ public class DataSequenceConcatenated implements IDataSequence
     class DSCIterator implements Iterator<IDoubleArray>
     {
         int i = 0;
-        
+
         @Override
         public boolean hasNext()
         {

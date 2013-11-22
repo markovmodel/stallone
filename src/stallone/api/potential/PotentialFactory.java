@@ -38,7 +38,7 @@ public class PotentialFactory
      * @param _k2
      * @param _k4
      * @param _d0
-     * @return 
+     * @return
      */
     public IEnergyModel createBistablePotential(double k2, double k4, double d0)
     {
@@ -51,24 +51,24 @@ public class PotentialFactory
      * @param k2
      * @param k4
      * @param d0
-     * @return 
+     * @return
      */
     public IEnergyModel createBistablePotential(double k1, double k2, double k4, double d0)
     {
         return(new AssymetricBistablePotential(k1, k2, k4, d0));
     }
-    
 
-    /** Folding model with 
+
+    /** Folding model with
      * d < df:  U = -kf/2 (d-df)^2
      * d > du:  U = ku/2 (d-du)^2
      * else     U = 0
      */
     public IEnergyModel createFoldingModel(double df, double kf, double du, double ku, int ndim)
-    {            
+    {
         return(new FoldingModelSimple(df, kf, du, ku, ndim));
     }
-    
+
     public IEnergyModel createCoulombPotential(IDoubleArray charges, double epsilonr)
     {
         return(new CoulombSystem(charges, epsilonr));
@@ -83,12 +83,12 @@ public class PotentialFactory
     {
         return(new HarmonicNetwork(natoms));
     }
-    
+
     public IEnergyModel createHarmonicOscillator(double k)
     {
         return(new HarmonicOscillator(k));
     }
-    
+
     public IEnergyModel createLennardJonesModel(int natoms, IDoubleArray radii, IDoubleArray epsilons)
     {
         return(new LennardJonesSystem(natoms, radii, epsilons));

@@ -326,18 +326,18 @@ public class XtcFile implements IReleasableFile
         this.filename = _filename;
         this.init();
     }
-    
+
     public void setSource(String _filename)
     {
         this.filename = _filename;
     }
-    
+
     public void scan()
             throws IOException
     {
         this.init();
     }
-    
+
     /**
      * Constructor, open and read input file trajectory.
      *

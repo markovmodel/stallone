@@ -31,7 +31,7 @@ public interface IClustering extends IDiscretization
      * @param size number of data points.
      */
     public void setClusterInput(Iterable<IDoubleArray> datapoints, int size);
-    
+
     /**
      * Set the metric which is used for clustering.
      *
@@ -62,7 +62,7 @@ public interface IClustering extends IDiscretization
     //public IDoubleArray getClusterCenter(int i);
 
     public IDataSequence getClusterCenters();
-    
+
     /**
      * Obtain the crisp cluster the datapoint with index i belongs to. For fuzzy clustering, see {@link getMembership}.
      *
@@ -73,7 +73,7 @@ public interface IClustering extends IDiscretization
     //public int getClusterIndex(int i);
 
     public IIntArray getClusterIndexes();
-    
+
     /**
      * Obtain the fuzzy clustering assignment for datapoint with index i. For crisp clustering, see {@link getCluster}.
      *
@@ -84,7 +84,7 @@ public interface IClustering extends IDiscretization
     //public IDoubleArray getMembership(int i);
 
     //public IDoubleArray getMembershipsBystate(int state);
-    
+
     /**
      * Obtain an interface which can be used to query yet unassigned datapoints. (thus not within datapoints passed via
      * setClusterInput).

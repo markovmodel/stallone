@@ -31,15 +31,15 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
 {
     private IDataSequence datasequence;
     private INeighborSearch neighborSearch;
-    
+
     // working data
     private boolean[] processed;
     private int[] numberOfNeighbors; // number of neighbors to point i within distance epsilon
     private double[] reachability_distance;
     private int[] orderedPoints;
     private int[] clusterIndexes;
-    
-    
+
+
     // parameters
     private double eps; // distance
     private int minpts; // minpoints
@@ -50,7 +50,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         this.eps = _epsilon;
         this.minpts = _minpoints;
         this.nclusters = _nclusters;
-        
+
         neighborSearch = new NeighborSearchTrivial(null,new EuclideanDistance());
     }
 
@@ -90,11 +90,11 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         super.clusterCenters = DataSequence.create.createDatalist();
 
         optics();
-        
+
         for (int p : orderedPoints)
             System.out.println(p+"\t"+reachability_distance[p]);
         System.exit(0);
-        
+
         selectClusters();
     }
 
@@ -137,7 +137,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         for (int i = 0; i < processed.length; i++)
         {
             System.out.println("Processing "+i);
-            
+
             // skip if done
             if (processed[i])
             {
@@ -209,7 +209,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
             }
         }
     }
-    
+
     /**
      * Finds the right number of clusters.
      */
@@ -236,10 +236,10 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
             }
             else
             {
-                
+
             }
         }
-        
+
     }
 
     class OrderedPointComparator implements Comparator<Integer>
@@ -265,7 +265,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     public static void main(String[] args)
     {
         IDataList data = DataSequence.create.createDatalist();
@@ -279,7 +279,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         data.add(Doubles.create.arrayFrom(-1.1));
         data.add(Doubles.create.arrayFrom(1.3));
         data.add(Doubles.create.arrayFrom(1.4));
-        
+
         DensityBasedClusteringOPTICS clustering = new DensityBasedClusteringOPTICS(0.5, 2, 2);
         clustering.setClusterInput(data);
         clustering.setMetric(new EuclideanDistance());

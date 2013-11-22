@@ -14,8 +14,8 @@ import stallone.api.doubles.IDoubleArray;
 public interface IFunction
 {
     public int getNumberOfVariables();
-    
+
     public double f(double... x);
-    
+
     public double f(IDoubleArray x);
 }

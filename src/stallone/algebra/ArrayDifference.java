@@ -25,7 +25,7 @@ import static stallone.doubles.DoubleArrayTest.*;
  *
  * @author  Frank Noe
  */
-public class ArrayDifference //implements IMatrixSum 
+public class ArrayDifference //implements IMatrixSum
 {
 
     public IDoubleArray subtractToNewDense(final IDoubleArray a, final IDoubleArray b)

@@ -17,6 +17,6 @@ public interface IComplexElement extends IDoubleElement
     public double im();
 
     public void setRe(double x);
-    
+
     public void setIm(double x);
 }

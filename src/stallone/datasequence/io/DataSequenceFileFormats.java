@@ -47,8 +47,8 @@ public class DataSequenceFileFormats
         }
 
         return (internalFormat);
-    }    
-    
+    }
+
     public static IDataReader createLoader(String file)
             throws IOException
     {
@@ -70,7 +70,7 @@ public class DataSequenceFileFormats
 
                 return reader;
     }
-    
+
     public static IDataWriter createWriter(String file, int size, int dimension)
             throws FileNotFoundException, IOException
     {
@@ -91,7 +91,7 @@ public class DataSequenceFileFormats
         {
             writer = new AsciiDataSequenceWriter(file);
         }
-        return(writer);    
+        return(writer);
     }
 
 }

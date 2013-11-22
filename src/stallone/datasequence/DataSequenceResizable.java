@@ -15,47 +15,47 @@ import java.util.Iterator;
 public class DataSequenceResizable extends DataSequenceArray
 {
     private int currentSize;
-    
+
     public DataSequenceResizable(int maxSize, int dimension)
     {
         super(new double[maxSize][dimension]);
     }
-    
+
     public void set(int i, IDoubleArray x)
     {
         data[i] = x;
     }
-    
+
     @Override
     public int size()
     {
         return(currentSize);
     }
-    
+
     public void setSize(int s)
     {
         currentSize = s;
     }
-    
+
     @Override
     public Iterator<IDoubleArray> iterator()
     {
         return(new DataSetInputResizableIterator(data,currentSize));
     }
-    
+
 }
 class DataSetInputResizableIterator implements Iterator<IDoubleArray>
 {
     Object[] data;
     int size;
     int i;
-    
+
     public DataSetInputResizableIterator(Object[] _data, int _size)
     {
         this.data = _data;
         this.size = _size;
     }
-    
+
     @Override
     public boolean hasNext()
     {

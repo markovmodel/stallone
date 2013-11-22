@@ -25,7 +25,7 @@ public class DynamicsFactory
         res.setMasses(masses);
         return(res);
     }
-    
+
     public IIntegratorThermostatted langevinLeapFrog(IEnergyModel model, IDoubleArray masses, double dt, double gamma, double kT)
     {
         IIntegratorThermostatted res = new LangevinLeapFrog(dt, gamma, kT);
@@ -33,12 +33,12 @@ public class DynamicsFactory
         res.setMasses(masses);
         return(res);
     }
-    
+
     public IIntegrator velocityVerlet(IEnergyModel model, IDoubleArray masses, double dt)
     {
         IIntegrator res = new VelocityVerlet(dt);
         res.setEnergyModel(model);
         res.setMasses(masses);
         return(res);
-    }       
+    }
 }

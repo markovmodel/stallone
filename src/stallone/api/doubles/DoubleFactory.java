@@ -30,8 +30,8 @@ public class DoubleFactory
     // Generic array creation. Initializes to 0
     //
     // ***********************************************************************
-    
-    
+
+
     public IDoubleArray denseColumn(int size)
     {
         return (new PrimitiveDoubleArray(new double[size]));
@@ -42,7 +42,7 @@ public class DoubleFactory
     {
         return (new PrimitiveDoubleTable(1,size));
     }
-        
+
     public IDoubleArray sparseColumn(int size)
     {
         return (new SparseRealVector(size));
@@ -52,22 +52,22 @@ public class DoubleFactory
     {
         return (new SparseRealMatrix(1,size));
     }
-    
+
     public IDoubleArray column(int size)
     {
         if (size < 25000000)
             return denseColumn(size);
         else
             return sparseColumn(size);
-    }    
-    
+    }
+
     public IDoubleArray row(int size)
     {
         if (size < 25000000)
             return denseRow(size);
         else
             return sparseRow(size);
-    }    
+    }
 
     public IDoubleArray array(int size)
     {
@@ -77,9 +77,9 @@ public class DoubleFactory
     public IDoubleArray array(double[] init)
     {
         return (new PrimitiveDoubleArray(init));
-    }    
-    
-    // TODO: 
+    }
+
+    // TODO:
     // create from lists
     // create primitive types from IDoubleArray, IDoubleMatrix
     public IDoubleArray denseMatrix(int nrows, int ncols)
@@ -87,25 +87,25 @@ public class DoubleFactory
         return (new PrimitiveDoubleTable(new double[nrows][ncols]));
     }
 
-    // TODO: 
+    // TODO:
     // create from lists
     // create primitive types from IDoubleArray, IDoubleMatrix
     public IDoubleArray sparseMatrix(int nrows, int ncols)
     {
         return (new SparseRealMatrix(nrows, ncols));
     }
-    
+
     public IDoubleArray array(double[][] init)
     {
         return (new PrimitiveDoubleTable(init));
     }
-    
+
     /**
      * Generic array creator. Creates a dense vector or matrix when rows and cols
      * are less than 5000, otherwise sparse
      * @param rows
      * @param cols
-     * @return 
+     * @return
      */
     public IDoubleArray array(int rows, int cols)
     {
@@ -139,8 +139,8 @@ public class DoubleFactory
                 return sparseMatrix(rows, cols);
             }
         }
-    }    
-    
+    }
+
     /**
      * Read matrix from ascii file.
      *
@@ -152,8 +152,8 @@ public class DoubleFactory
             throws FileNotFoundException, IOException
     {
         return DoubleIO.readDoubleMatrix(filename);
-    }    
-    
+    }
+
     // ***********************************************************************
     //
     // Convenience vector factories
@@ -170,7 +170,7 @@ public class DoubleFactory
     /**
      * Creates an array from a string representation
      * @param from Array delimited by whitespaces or ,
-     * @return 
+     * @return
      */
     public IDoubleArray array(String from)
     {
@@ -236,7 +236,7 @@ public class DoubleFactory
         double[] res = PrimitiveDoubleTools.range(start, end, step);
         return (array(res));
     }
-    
+
     public IDoubleArray arrayGrid(double min, double max, int ngridpoints)
     {
         IDoubleArray grid = Doubles.create.array(ngridpoints);
@@ -246,7 +246,7 @@ public class DoubleFactory
             grid.set(i, grid.get(i-1)+dg);
         return grid;
     }
-    
+
     // ***********************************************************************
     //
     // Matrix convenience operations
@@ -277,7 +277,7 @@ public class DoubleFactory
     /**
      * Creates an array from a string representation
      * @param from Array delimited by whitespaces or ,
-     * @return 
+     * @return
      */
     public IDoubleArray matrix(String from)
     {
@@ -331,20 +331,20 @@ public class DoubleFactory
             }
         }
         return (res);
-    }    
-    
+    }
+
     public IDoubleArray diag(int size, double value)
     {
         double[] diag = new double[size];
         Arrays.fill(diag, value);
         return new SparseDiagonalMatrix(diag);
 //        IDoubleArray M = null;
-//        
+//
 //        if(size > 100)
 //            M = sparseMatrix(size, size);
 //        else
 //            M = matrix(size, size);
-//        
+//
 //        for (int i = 0; i < size; i++)
 //        {
 //            M.set(i, i, value);
@@ -356,12 +356,12 @@ public class DoubleFactory
     {
 //        int size = values.length;
 //        IDoubleArray M = null;
-//        
+//
 //        if(size > 100)
 //            M = sparseMatrix(size, size);
 //        else
 //            M = matrix(size, size);
-//        
+//
 //        for (int i = 0; i < size; i++)
 //        {
 //            M.set(i, i, values[i]);
@@ -369,17 +369,17 @@ public class DoubleFactory
 //        return (M);
         return new SparseDiagonalMatrix(values);
     }
-    
+
     public IDoubleArray diag(IDoubleArray values)
     {
 //        int size = values.size();
 //        IDoubleArray M = null;
-//        
+//
 //        if(size > 100)
 //            M = sparseMatrix(size, size);
 //        else
 //            M = matrix(size, size);
-//        
+//
 //        for (int i = 0; i < size; i++)
 //        {
 //            M.set(i, i, values.get(i));
@@ -392,7 +392,7 @@ public class DoubleFactory
     {
         return new SymmetricMatrix(matrix);
     }
-    
+
     public IDoubleArray symmetricReal(final int size)
     {
         return new SymmetricMatrix(array(size,size));
@@ -402,8 +402,8 @@ public class DoubleFactory
     {
         return(diag(dim,1));
     }
-    
-   
+
+
     // ***********************************************************************
     //
     // List factories

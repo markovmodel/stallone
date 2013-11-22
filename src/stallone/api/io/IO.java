@@ -18,6 +18,6 @@ public class IO
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final IOFactory create = new IOFactory();    
+    public static final IOFactory create = new IOFactory();
 
 }

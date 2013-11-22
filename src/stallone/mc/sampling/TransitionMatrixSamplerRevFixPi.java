@@ -13,7 +13,7 @@ import stallone.api.mc.MarkovModel;
  * By default uses MCMC sampling for element quadruples and a row Gibbs sampling step:
  * 1) MCMC sampling of element quadruples accordint to Noe JCP 2008
  * 2) Reversible row shift by beta distribution sampling (Trendelkamp-Schroer, Wu, Noe - preprint)
- * 
+ *
  * @author noe, trendelkamp
  */
 public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbstract
@@ -21,8 +21,8 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbst
     protected IDoubleArray piFixed;
 
     private IReversibleSamplingStep step_quad;
-    
-    
+
+
     public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray piFixed)
     {
         super(counts);
@@ -47,12 +47,12 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbst
             this.T = Tinit;
         }
         this.logLikelihood = MarkovModel.util.logLikelihood(T, C);
-                
+
         // initialize steps
         this.step_quad = new Step_Rev_Quad_Trendelkamp();
-        this.step_quad.init(C, T, piFixed);        
+        this.step_quad.init(C, T, piFixed);
     }
-    
+
     public static TransitionMatrixSamplerRevFixPi create(IDoubleArray _C, IDoubleArray Tinit, IDoubleArray piFixed, IReversibleSamplingStep _step_quad)
     {
         TransitionMatrixSamplerRevFixPi res = new TransitionMatrixSamplerRevFixPi(_C, Tinit, piFixed);
@@ -66,10 +66,10 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbst
     {
         return create(counts, null, piFixed, _step_quad);
     }
-    
+
     @Override
     protected boolean step()
     {
         return step_quad.step();
-    }    
+    }
 }

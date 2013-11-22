@@ -70,7 +70,7 @@ public class QuickSortInt implements ISortInt
         this.sorted = target;
         this.indexes = Ints.create.arrayRange(data.size());
     }
-    
+
     @Override
     public IIntArray sort()
     {
@@ -79,7 +79,7 @@ public class QuickSortInt implements ISortInt
             return(sorted);
         }
         quicksort(0, sorted.size() - 1);
-        
+
         return(sorted);
     }
 

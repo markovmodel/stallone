@@ -30,13 +30,13 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
 {
     protected IDataSequence datasequence;
     protected INeighborSearch neighborSearch = new NeighborSearchTrivial(null,new EuclideanDistance());
-    
+
     // working data
     private int[] nneighbors;
     private int[] cluster;
     private int nClusters;
     private boolean[] done;
-    
+
     // parameters
     protected double eps; // distance
     protected int minpts; // minpoints
@@ -60,7 +60,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         this.nneighbors = new int[data.size()];
 
         this.cluster = new int[data.size()];
-        
+
         done = new boolean[data.size()];
     }
 
@@ -98,12 +98,12 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         {
             if (done[p])
                 continue;
-            
+
             // set cluster index
             currentCluster++;
             cluster[p] = currentCluster;
             done[p] = true;
-            
+
             // consider the neighbors
             TreeSet<Integer> colleagues = new TreeSet<Integer>();
             int[] N = neighborSearch.neighbors(p, eps);
@@ -111,12 +111,12 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
             {
                 colleagues.add(i);
             }
-            
+
             while(!colleagues.isEmpty())
             {
                 // pull first candidate
                 int q = colleagues.pollFirst();
-                
+
                 if (nneighbors[q] > minpts)
                 {
                     cluster[q] = currentCluster;
@@ -132,12 +132,12 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
                 }
             }
         }
-        
+
         nClusters = currentCluster+1;
         super.resultsAvailable = true;
     }
 
-    
+
 
 
     @Override
@@ -145,13 +145,13 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     {
         return Ints.create.arrayFrom(cluster);
     }
-    
+
     @Override
     public int getNumberOfClusters()
     {
         return nClusters;
     }
-    
+
     public static void main(String[] args)
     {
         IDataList data = DataSequence.create.createDatalist();
@@ -167,7 +167,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         data.add(Doubles.create.arrayFrom(1.3));
         data.add(Doubles.create.arrayFrom(1.4));
 
-        
+
         /*DensityBasedClusteringSimple clustering = new DensityBasedClusteringSimple(0.5, 3);
         clustering.setClusterInput(data);
         clustering.setMetric(new EuclideanDistance());

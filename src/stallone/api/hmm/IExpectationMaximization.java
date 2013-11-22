@@ -14,24 +14,24 @@ import stallone.api.ints.IIntArray;
 public interface IExpectationMaximization extends IHMMOptimizer
 {
     public void setInitialParameters(IHMMParameters par);
-            
+
     public void setInitialPaths(List<IIntArray> paths);
-    
+
     /**
      * Sets the number of EM steps after which the algorithm terminates
-     * @param nsteps 
+     * @param nsteps
      */
     public void setMaximumNumberOfStep(int nsteps);
 
     /**
      * Sets the maximum admissible decrease of the likelihood over the previous maximum after which the optimization still continues.
-     * @param _dectol 
+     * @param _dectol
      */
     public void setLikelihoodDecreaseTolerance(double _dectol);
- 
+
     /**
      * Returns the likelihood history of the optimization
-     * @return 
+     * @return
      */
     public double[] getLogLikelihoodHistory();
 }

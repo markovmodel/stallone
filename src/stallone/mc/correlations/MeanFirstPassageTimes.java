@@ -64,7 +64,7 @@ public final class MeanFirstPassageTimes
                     }
                 A.set(target.get(i), target.get(i), 1);
             }
-        
+
         // identify 0-columns
         IIntList zeros = Ints.create.list(0);
         for (int j=0; j<A.columns(); j++)
@@ -76,7 +76,7 @@ public final class MeanFirstPassageTimes
                 if (colzero)
                     zeros.append(j);
             }
-        
+
         for (int j=0; j<A.columns(); j++)
             {
                 if (!Ints.util.contains(target, j) && A.get(j,j) == 0)
@@ -96,7 +96,7 @@ public final class MeanFirstPassageTimes
             b.set(target.get(i), 0);
 
         // clean vector
-        IDoubleArray bclean = Doubles.util.subToNew(b, nonzeros);        
+        IDoubleArray bclean = Doubles.util.subToNew(b, nonzeros);
         // Attention: we had done the following here... does this make sense??
         // int[] tmp = {0};
         // DoubleMatrix2D Bclean = B.viewSelection(nonzeros, tmp);

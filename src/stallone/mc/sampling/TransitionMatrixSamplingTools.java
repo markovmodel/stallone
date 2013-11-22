@@ -58,11 +58,11 @@ public class TransitionMatrixSamplingTools
         }
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @param mu invariant density
-     * @return 
+     * @return
      */
     public static double computeDetailedBalanceError(IDoubleArray T, IDoubleArray mu)
     {
@@ -76,7 +76,7 @@ public class TransitionMatrixSamplingTools
         }
         return err;
     }
-    
+
     /**
     Makes sure that the row still sums up to 1.
      */
@@ -85,5 +85,5 @@ public class TransitionMatrixSamplingTools
         IDoubleArray r = T.viewRow(i);
         Algebra.util.scale(1.0 / Doubles.util.sum(r), r);
     }
-    
+
 }

@@ -32,8 +32,8 @@ package stallone.doubles.fastutils;
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  *
  *
  *
@@ -59,7 +59,7 @@ package stallone.doubles.fastutils;
  *   both that copyright notice and this permission notice appear in
  *   supporting documentation. CERN makes no representations about the
  *   suitability of this software for any purpose. It is provided "as is"
- *   without expressed or implied warranty. 
+ *   without expressed or implied warranty.
  */
 import java.util.Random;
 /** A class providing static methods and objects that do useful things with type-specific arrays.
@@ -185,7 +185,7 @@ public class LongArrays {
 	 * entries or less; otherwise, an array with
 	 * <code>length</code> entries whose entries are the same as
 	 * the first <code>length</code> entries of <code>array</code>.
-	 * 
+	 *
 	 */
  public static long[] trim( final long[] array, final int length ) {
   if ( length >= array.length ) return array;
@@ -205,7 +205,7 @@ public class LongArrays {
 	 * <code>array</code>; otherwise, an array with <code>length</code> entries
 	 * whose first <code>array.length</code> entries are the same as those of
 	 * <code>array</code>.
-	 * 
+	 *
 	 */
  public static long[] setLength( final long[] array, final int length ) {
   if ( length == array.length ) return array;
@@ -374,17 +374,17 @@ public class LongArrays {
   }
  }
  /** Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static void quickSort( final long[] x, final int from, final int to, final LongComparator comp ) {
   final int len = to - from;
@@ -433,15 +433,15 @@ public class LongArrays {
   if ( ( s = d - c ) > 1 ) quickSort( x, n - s, n, comp );
  }
  /** Sorts an array according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static void quickSort( final long[] x, final LongComparator comp ) {
   quickSort( x, 0, x.length, comp );
@@ -456,15 +456,15 @@ public class LongArrays {
    ( bc > 0 ? b : ac > 0 ? c : a ) );
  }
  /** Sorts the specified range of elements according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
-	 * 
+	 *
 	 */
  @SuppressWarnings("unchecked")
  public static void quickSort( final long[] x, final int from, final int to ) {
@@ -514,22 +514,22 @@ public class LongArrays {
   if ( ( s = d - c ) > 1 ) quickSort( x, n - s, n );
  }
  /** Sorts an array according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
-	 * 
+	 *
 	 */
  public static void quickSort( final long[] x ) {
   quickSort( x, 0, x.length );
  }
  /** Sorts the specified range of elements according to the natural ascending order using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. Moreover, no support arrays will be allocated. 
-	 
+	 * of the sort. Moreover, no support arrays will be allocated.
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -560,10 +560,10 @@ public class LongArrays {
   }
  }
  /** Sorts the specified range of elements according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -572,10 +572,10 @@ public class LongArrays {
   mergeSort( a, from, to, a.clone() );
  }
  /**	Sorts an array according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 */
  public static void mergeSort( final long a[] ) {
@@ -583,10 +583,10 @@ public class LongArrays {
  }
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. Moreover, no support arrays will be allocated.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -619,7 +619,7 @@ public class LongArrays {
  }
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
 	 *
@@ -633,10 +633,10 @@ public class LongArrays {
  }
  /** Sorts an array according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort.  An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
 	 */
@@ -644,9 +644,9 @@ public class LongArrays {
   mergeSort( a, 0, a.length, comp );
  }
  /**
-	 * Searches a range of the specified array for the specified value using 
-	 * the binary search algorithm. The range must be sorted prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches a range of the specified array for the specified value using
+	 * the binary search algorithm. The range must be sorted prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -677,9 +677,9 @@ public class LongArrays {
   return -( from + 1 );
  }
  /**
-	 * Searches an array for the specified value using 
-	 * the binary search algorithm. The range must be sorted prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches an array for the specified value using
+	 * the binary search algorithm. The range must be sorted prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -698,9 +698,9 @@ public class LongArrays {
   return binarySearch( a, 0, a.length, key );
  }
  /**
-	 * Searches a range of the specified array for the specified value using 
-	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches a range of the specified array for the specified value using
+	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -732,9 +732,9 @@ public class LongArrays {
   return -( from + 1 );
  }
  /**
-	 * Searches an array for the specified value using 
-	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches an array for the specified value using
+	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -761,7 +761,7 @@ public class LongArrays {
  private static final int DIGITS_PER_ELEMENT = Long.SIZE / DIGIT_BITS;
  /** This method fixes negative numbers so that the combination exponent/significand is lexicographically sorted. */
  /** Sorts the specified array using radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -769,18 +769,18 @@ public class LongArrays {
 	 * <i>String Processing and Information Retrieval, 15th International Symposium</i>, volume 5280 of
 	 * Lecture Notes in Computer Science, pages 3&minus;14, Springer (2008).
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted.
-	 * 
+	 *
 	 * @param a the array to be sorted.
 	 */
  public static void radixSort( final long[] a ) {
   radixSort( a, 0, a.length );
  }
  /** Sorts the specified array using radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -788,11 +788,11 @@ public class LongArrays {
 	 * <i>String Processing and Information Retrieval, 15th International Symposium</i>, volume 5280 of
 	 * Lecture Notes in Computer Science, pages 3&minus;14, Springer (2008).
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted.
-	 * 
+	 *
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -873,7 +873,7 @@ public class LongArrays {
   }
  }
  /** Sorts the specified array using indirect radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -887,11 +887,11 @@ public class LongArrays {
 	 *
 	 * <p>This implementation is significantly faster than quicksort (unstable) or mergesort (stable)
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted,
 	 * and, in the stable case, a further support array as large as <code>perm</code> (note that the stable
 	 * version is slightly faster).
-	 * 
+	 *
 	 * @param perm a permutation array indexing <code>a</code>.
 	 * @param a the array to be sorted.
 	 * @param stable whether the sorting algorithm should be stable.
@@ -900,7 +900,7 @@ public class LongArrays {
   radixSortIndirect( perm, a, 0, perm.length, stable );
  }
  /** Sorts the specified array using indirect radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -914,11 +914,11 @@ public class LongArrays {
 	 *
 	 * <p>This implementation is significantly faster than quicksort (unstable) or mergesort (stable)
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted,
 	 * and, in the stable case, a further support array as large as <code>perm</code> (note that the stable
 	 * version is slightly faster).
-	 * 
+	 *
 	 * @param perm a permutation array indexing <code>a</code>.
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element of <code>perm</code> (inclusive) to be permuted.
@@ -1021,10 +1021,10 @@ public class LongArrays {
 	 * in the same position in the two provided arrays will be considered a single key, and permuted
 	 * accordingly. In the end, either <code>a[ i ] < a[ i + 1 ]</code> or <code>a[ i ] == a[ i + 1 ]</code> and <code>b[ i ] <= b[ i + 1 ]</code>.
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
 	 * sort in ascending order. It will allocate a support array of bytes with the same number of elements as the arrays to be sorted.
-	 * 
+	 *
 	 * @param a the first array to be sorted.
 	 * @param b the second array to be sorted.
 	 */
@@ -1032,7 +1032,7 @@ public class LongArrays {
   radixSort( a, b, 0, a.length );
  }
  /** Sorts the specified pair of arrays lexicographically using radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -1044,10 +1044,10 @@ public class LongArrays {
 	 * in the same position in the two provided arrays will be considered a single key, and permuted
 	 * accordingly. In the end, either <code>a[ i ] < a[ i + 1 ]</code> or <code>a[ i ] == a[ i + 1 ]</code> and <code>b[ i ] <= b[ i + 1 ]</code>.
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
 	 * sort in ascending order. It will allocate a support array of bytes with the same number of elements as the arrays to be sorted.
-	 * 
+	 *
 	 * @param a the first array to be sorted.
 	 * @param b the second array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
@@ -1136,7 +1136,7 @@ public class LongArrays {
   }
  }
  /** Sorts the specified pair of arrays lexicographically using indirect radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -1150,11 +1150,11 @@ public class LongArrays {
 	 *
 	 * <p>This implementation is significantly faster than quicksort (unstable) or mergesort (stable)
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted,
 	 * and, in the stable case, a further support array as large as <code>perm</code> (note that the stable
 	 * version is slightly faster).
-	 * 
+	 *
 	 * @param perm a permutation array indexing <code>a</code>.
 	 * @param a the array to be sorted.
 	 * @param b the second array to be sorted.
@@ -1164,7 +1164,7 @@ public class LongArrays {
   radixSortIndirect( perm, a, b, 0, perm.length, stable );
  }
  /** Sorts the specified pair of arrays lexicographically using indirect radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -1178,11 +1178,11 @@ public class LongArrays {
 	 *
 	 * <p>This implementation is significantly faster than quicksort (unstable) or mergesort (stable)
 	 * already at small sizes (say, more than 10000 elements), but it can only
-	 * sort in ascending order. 
+	 * sort in ascending order.
 	 * It will allocate a support array of bytes with the same number of elements as the array to be sorted,
 	 * and, in the stable case, a further support array as large as <code>perm</code> (note that the stable
 	 * version is slightly faster).
-	 * 
+	 *
 	 * @param perm a permutation array indexing <code>a</code>.
 	 * @param a the array to be sorted.
 	 * @param b the second array to be sorted.
@@ -1286,7 +1286,7 @@ public class LongArrays {
   }
  }
  /** Sorts the specified array of arrays lexicographically using radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -1298,17 +1298,17 @@ public class LongArrays {
 	 * in the same position will be considered a single key, and permuted
 	 * accordingly.
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
 	 * sort in ascending order. It will allocate a support array of bytes with the same number of elements as the arrays to be sorted.
-	 * 
+	 *
 	 * @param a an array containing arrays of equal length to be sorted lexicographically in parallel.
 	 */
  public static void radixSort( final long[][] a ) {
   radixSort( a, 0, a[ 0 ].length );
  }
  /** Sorts the specified array of arrays lexicographically using radix sort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M. Douglas
 	 * McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages 5&minus;27 (1993),
 	 * and further improved using the digit-oracle idea described by
@@ -1320,10 +1320,10 @@ public class LongArrays {
 	 * in the same position will be considered a single key, and permuted
 	 * accordingly.
 	 *
-	 * <p>This implementation is significantly faster than quicksort 
+	 * <p>This implementation is significantly faster than quicksort
 	 * already at small sizes (say, more than 10000 elements), but it can only
 	 * sort in ascending order. It will allocate a support array of bytes with the same number of elements as the arrays to be sorted.
-	 * 
+	 *
 	 * @param a an array containing arrays of equal length to be sorted lexicographically in parallel.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -1395,7 +1395,7 @@ public class LongArrays {
   }
  }
  /** Shuffles the specified array fragment using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param from the index of the first element (inclusive) to be shuffled.
 	 * @param to the index of the last element (exclusive) to be shuffled.
@@ -1412,7 +1412,7 @@ public class LongArrays {
   return a;
  }
  /** Shuffles the specified array using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param random a pseudorandom number generator (please use a <a href="http://dsiutils.dsi.unimi.it/docs/it/unimi/dsi/util/XorShiftStarRandom.html">XorShift*</a> generator).
 	 * @return <code>a</code>.
@@ -1427,7 +1427,7 @@ public class LongArrays {
   return a;
  }
  /** Reverses the order of the elements in the specified array.
-	 * 
+	 *
 	 * @param a the array to be reversed.
 	 * @return <code>a</code>.
 	 */

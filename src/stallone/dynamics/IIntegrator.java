@@ -15,7 +15,7 @@ import stallone.api.potential.IEnergyModel;
 public interface IIntegrator
 {
     public IIntegrator copy();
-            
+
     public void setX(IDoubleArray x0);
 
     public void setV(IDoubleArray v0);

@@ -26,7 +26,7 @@ public class ForwardBackward
      */
     public void computePath(int itraj, HMMHiddenVariables hidden)
             throws ParameterEstimationException
-    {        
+    {
         // output probabilities
         for (int t = 0; t < hidden.size(); t++)
         {
@@ -54,7 +54,7 @@ public class ForwardBackward
         {
             hidden.setAlpha(0, j, model.getP0(itraj, j) * hidden.getPout(0, j));
         }
-        
+
         try
         {
             hidden.normalizeAlpha(0);
@@ -119,7 +119,7 @@ public class ForwardBackward
 //                    if (t % 100 == 0)
 //                        System.out.println(t+"\t"+i+"\t"+hidden.getPout(t,i)+"\t"+hidden.getAlpha(t, i)+"\t"+hidden.getBeta(t, i)+"\t"+hidden.getGamma(t, i));
 //            }
-//        }        
+//        }
     }
 
 }

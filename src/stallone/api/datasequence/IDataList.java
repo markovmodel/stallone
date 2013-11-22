@@ -12,12 +12,12 @@ import stallone.api.doubles.IDoubleArray;
  */
 public interface IDataList
     extends IDataSequence
-{    
-    public boolean add(IDoubleArray x);    
-    
+{
+    public boolean add(IDoubleArray x);
+
     public boolean remove(IDoubleArray x);
-    
+
     public IDoubleArray remove(int i);
-    
+
     public void set(int i, IDoubleArray x);
 }

@@ -4,8 +4,8 @@
  */
 package stallone.doubles.fastutils;
 
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 
 
 /** Basic data for all hash-based classes.
  *
  * <h2>Historical note</h2>
- * 
+ *
  * <p><strong>Warning:</strong> the following comments are here for historical reasons,
  * and apply just to the <em>double hash</em> classes that can be optionally generated.
  * The standard <code>fastutil</code> distribution since 6.1.0 uses linear-probing hash
- * tables, and tables are always sized as powers of two. 
+ * tables, and tables are always sized as powers of two.
  *
  * <p>The classes in <code>fastutil</code> are built around open-addressing hashing
  * implemented <em>via</em> double hashing. Following Knuth's suggestions in the third volume of <em>The Art of Computer
@@ -46,7 +46,7 @@ package stallone.doubles.fastutils;
  * If there is a {@link #OCCUPIED} entry with key <var>k</var>, its index in the sequence above comes <em>before</em>
  * the indices of any {@link #REMOVED} entries with key <var>k</var>.
  * </blockquote>
- * 
+ *
  * <p>When we search for the key <var>k</var> we scan the entries in the
  * sequence <var>i</var><sub>0</sub>, <var>i</var><sub>1</sub>, &hellip,
  * <var>i</var><sub><var>p</var>-1</sub> and stop when <var>k</var> is found,
@@ -59,8 +59,8 @@ package stallone.doubles.fastutils;
  * objects as keys or values deleted entries are set to a special fixed value to
  * optimize garbage collection).
  *
- * <p>Moreover, during the probe we keep the index of the first {@link #REMOVED} entry we meet. 
- * If we actually have to insert a new element, we use that 
+ * <p>Moreover, during the probe we keep the index of the first {@link #REMOVED} entry we meet.
+ * If we actually have to insert a new element, we use that
  * entry if we can, thus avoiding to pollute another {@link #FREE} entry. Since this position comes
  * <i>a fortiori</i> before any {@link #REMOVED} entries with the same key, we are also keeping the invariant true.
  */
@@ -119,9 +119,9 @@ public interface Hash {
 	final public byte OCCUPIED = -1;
 	/** The state of a hash table entry freed by a deletion. */
 	final public byte REMOVED = 1;
-	 
-	/** A list of primes to be used as table sizes. The <var>i</var>-th element is 
-	 *  the largest prime <var>p</var> smaller than 2<sup>(<var>i</var>+28)/16</sup> 
+
+	/** A list of primes to be used as table sizes. The <var>i</var>-th element is
+	 *  the largest prime <var>p</var> smaller than 2<sup>(<var>i</var>+28)/16</sup>
 	 * and such that <var>p</var>-2 is also prime (or 1, for the first few entries). */
 
 	final public int PRIMES[] = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 7, 7, 7,

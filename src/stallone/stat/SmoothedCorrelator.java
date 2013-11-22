@@ -19,8 +19,8 @@ public class SmoothedCorrelator
 {
     private IDoubleArray lagtimes;
     private IDoubleArray averageWidths;
-    
-    
+
+
     private IDoubleArray correlation;
     private IDoubleArray weights;
     private double sum = 0;
@@ -47,7 +47,7 @@ public class SmoothedCorrelator
                 + "\n"
                 + "-columns <time> <D> <A>" + "\n"
                 + "-maxtime <maxy>" + "\n"
-                + "-subtractmean" + "\n"                
+                + "-subtractmean" + "\n"
                 ;
 
         return res;
@@ -68,7 +68,7 @@ public class SmoothedCorrelator
         parser.addIntCommand("maxtime", true);
 
         parser.addCommand("subtractmean", true);
-        
+
         // parse
         if (!parser.parse(args))
         {
@@ -86,7 +86,7 @@ public class SmoothedCorrelator
             res.set(i, res.get(i-1)+data.get(i-1));
         return res;
     }
-    
+
     public static double correlate(IDoubleArray time, IDoubleArray data, double tau, double averageWidth)
     {
         if (time.size() != data.size())
@@ -100,7 +100,7 @@ public class SmoothedCorrelator
         double count = 0; // number of products
 
         IDoubleArray cumdata = cumulate(data);
-        
+
         double maxtime = time.get(time.size() - 1);
         // as long as there is enough space:
         while (maxtime - time.get(i1) >= tau)
@@ -115,9 +115,9 @@ public class SmoothedCorrelator
                     break;
                 }
             }
-            
-            // move beginning of right window 
-            while (time.get(j1) - time.get(i1) < tau 
+
+            // move beginning of right window
+            while (time.get(j1) - time.get(i1) < tau
                     && maxtime - time.get(j1) >= tau)
             {
                 j1++;
@@ -126,8 +126,8 @@ public class SmoothedCorrelator
                     break;
                 }
             }
-            
-            // move end of right window 
+
+            // move end of right window
             j2 = j1;
             if (j2 < time.size())
             {
@@ -147,19 +147,19 @@ public class SmoothedCorrelator
                 System.out.println("("+i1+","+i2+")\t("+j1+","+j2+")");
             }
             */
-            
+
             // update autocorrelation
             double x1 = (cumdata.get(i2)-cumdata.get(i1))/(i2-i1);
             double x2 = (cumdata.get(j2)-cumdata.get(j1))/(j2-j1);
             sum += x1*x2;
             count += 1;
-            
+
             // shift left window
             i1++;
             if (i1 >= time.size())
                 break;
         }
-        
+
         return sum / count;
     }
 
@@ -199,7 +199,7 @@ public class SmoothedCorrelator
                 weights.set(i, weights.get(i) + data.size());
             }
         }
-        
+
         sum += doubles.sum(data);
         sumOfWeights += time.size();
     }
@@ -220,7 +220,7 @@ public class SmoothedCorrelator
             res.set(i, (correlation.get(i)/weights.get(i)) - shift);
         return res;
     }
-    
+
     public void reset()
     {
         correlation.zero();
@@ -286,7 +286,7 @@ public class SmoothedCorrelator
         else
             corr=correlator.getCorrelation();
 
-        
+
         //IDoubleArray corr = correlator.correlate(time, E);
 
         for (int i = 0; i < lagtimes.size(); i++)

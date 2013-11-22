@@ -11,12 +11,12 @@ package stallone.api.doubles;
 public interface IDoubleElement
 {
     public int index();
-    
+
     public int row();
-    
+
     public int column();
-    
+
     public double get();
-    
+
     public void set(double x);
 }

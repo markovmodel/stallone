@@ -38,7 +38,7 @@ public class ComplexFactory
         IComplexArray res = new DenseComplexArray(size, 1);
         return (res);
     }
-    
+
     /**
      * General constructor. Creates currently only dense complex arrays
      */
@@ -71,7 +71,7 @@ public class ComplexFactory
     /**
      * Creates a complex row vector
      * @param dimension
-     * @return 
+     * @return
      */
     public IComplexArray row(final int dimension)
     {
@@ -81,7 +81,7 @@ public class ComplexFactory
     /**
      * Creates a complex row vector
      * @param dimension
-     * @return 
+     * @return
      */
     public IComplexArray row(double[] re, double[] im)
     {
@@ -96,7 +96,7 @@ public class ComplexFactory
     /**
      * Creates a complex column vector
      * @param dimension
-     * @return 
+     * @return
      */
     public IComplexArray column(final int dimension)
     {
@@ -106,7 +106,7 @@ public class ComplexFactory
     /**
      * Creates a complex row vector
      * @param dimension
-     * @return 
+     * @return
      */
     public IComplexArray column(double[] re, double[] im)
     {

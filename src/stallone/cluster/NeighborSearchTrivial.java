@@ -15,7 +15,7 @@ import stallone.discretization.VoronoiDiscretization;
 /**
  *
  * Direct nxn nearest neighbor search
- * 
+ *
  * @author noe
  */
 public class NeighborSearchTrivial implements INeighborSearch
@@ -25,8 +25,8 @@ public class NeighborSearchTrivial implements INeighborSearch
     private IDataSequence data;
     /** The metric to use for partitioning. */
     private IMetric<IDoubleArray> metric;
-    
-    
+
+
     // for nearest points:
     private VoronoiDiscretization voronoi;
 
@@ -40,10 +40,10 @@ public class NeighborSearchTrivial implements INeighborSearch
     {
         this.data = clusterCenters;
         this.metric = metric;
-        
+
         this.voronoi = new VoronoiDiscretization(clusterCenters, metric);
     }
-    
+
     @Override
     public void setData(IDataSequence _data)
     {
@@ -83,7 +83,7 @@ public class NeighborSearchTrivial implements INeighborSearch
         for (int i=0; i<data.size(); i++)
         {
             distances[i] = metric.distance(x, data.get(i));
-        }        
+        }
         int[] res = DoublesPrimitive.util.smallestIndexes(distances, N);
         return res;
     }
@@ -101,7 +101,7 @@ public class NeighborSearchTrivial implements INeighborSearch
         for (int i=0; i<data.size(); i++)
         {
             distances[i] = metric.distance(x, data.get(i));
-        }        
+        }
         int[] res = DoublesPrimitive.util.smallValueIndexes(distances, distance);
         return res;
     }

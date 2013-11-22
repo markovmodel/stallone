@@ -29,7 +29,7 @@ public class MarkovChain implements IMarkovChain
 	protected IDoubleArray p0;
     protected IDoubleArray T;
     protected DiscreteDistributions dd;
-    
+
     // fixed starting state?
     private boolean fixedStartingState = false;
     private int s = 0;
@@ -38,7 +38,7 @@ public class MarkovChain implements IMarkovChain
 
     //skip
     private int nskip = 1;
-    
+
     protected MarkovChain()
     {
     }
@@ -55,8 +55,8 @@ public class MarkovChain implements IMarkovChain
         dd = new DiscreteDistributions(_T);
         this.p0 = _startingDistribution;
         p0dist = new DiscreteDistribution_Old(p0);
-    }    
-    
+    }
+
     /* (non-Javadoc)
      * @see stallone.mc.IMarkovChain#setStartingState(int)
      */
@@ -65,7 +65,7 @@ public class MarkovChain implements IMarkovChain
         fixedStartingState = true;
         s = _s;
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.IMarkovChain#setStartingDistribution(stallone.api.doubles.IDoubleArray)
      */
@@ -83,7 +83,7 @@ public class MarkovChain implements IMarkovChain
     {
         return (T);
     }
-    
+
     private int startingState()
     {
         if (fixedStartingState)
@@ -98,7 +98,7 @@ public class MarkovChain implements IMarkovChain
             return p0dist.sample();
         }
     }
-    
+
     /**
      * Sets the number of steps to be skipped in the output
      */

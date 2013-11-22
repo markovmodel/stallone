@@ -12,18 +12,18 @@ import stallone.api.datasequence.IDataSequence;
  * @author noe
  */
 public class DataSequenceConcatenatedInterleaved extends DataSequenceConcatenated
-{    
+{
     private int step;
-    
+
     public DataSequenceConcatenatedInterleaved(List<IDataSequence> _seqs, int _step)
     {
         this.seqs = _seqs;
         this.step = _step;
-        
+
         for (int i=0; i<_seqs.size(); i++)
         {
             totalsize += _seqs.get(i).size() / step;
-            
+
             // dimension
             if (dimension == -1)
                 dimension = _seqs.get(i).dimension();
@@ -31,7 +31,7 @@ public class DataSequenceConcatenatedInterleaved extends DataSequenceConcatenate
                 if (dimension != _seqs.get(i).dimension())
                     throw new IllegalArgumentException("Data Sequence List has inconsistent dimensionality");
         }
-        
+
         microindex2trajindex = new int[totalsize];
         microindex2localindex = new int[totalsize];
         int k=0,l=0;

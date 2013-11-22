@@ -35,13 +35,13 @@ public class RecursiveFileList
     {
         this(new File(startingDirectory),_filter);
     }
-    
+
     public RecursiveFileList(File _startingDirectory)
             throws FileNotFoundException
     {
         this(_startingDirectory,null);
     }
-    
+
     public RecursiveFileList(File _startingDirectory, String _filter)
             throws FileNotFoundException
     {
@@ -53,7 +53,7 @@ public class RecursiveFileList
         this.filter = _filter;
         employFilter(_filter);
     }
-    
+
     // PRIVATE //
     private List<File> listFilesRecursiveUnsorted(File startingDirectory)
             throws FileNotFoundException
@@ -73,8 +73,8 @@ public class RecursiveFileList
             }
         }
         return result;
-    }    
-        
+    }
+
     private void employFilter(String filter)
     {
         if (filter == null)
@@ -91,7 +91,7 @@ public class RecursiveFileList
                     selectedFiles.add(f);
             }
         }
-        
+
     }
 
 
@@ -123,12 +123,12 @@ public class RecursiveFileList
     {
         return(selectedFiles.size());
     }
-    
+
     public List<File> getFiles()
     {
         return(selectedFiles);
     }
-    
+
     public List<String> getAbsolutePaths()
     {
         return(IO.util.toStrings(selectedFiles));
@@ -137,7 +137,7 @@ public class RecursiveFileList
     public List<String> getLocalPaths()
     {
         List<String> localpaths = new ArrayList<String>();
-        
+
         String startingDirectoryPath = startingDirectory.getAbsolutePath();
         for (File f : selectedFiles)
         {
@@ -154,14 +154,14 @@ public class RecursiveFileList
             }
             localpaths.add(lp);
         }
-        
+
         return(localpaths);
     }
-    
+
     public List<String> getLocalSubDirectoryPaths()
     {
         HashSet<String> subdirs  = new HashSet<String>();
-        
+
         List<String> localpaths = getLocalPaths();
         for (String s:localpaths)
         {
@@ -170,10 +170,10 @@ public class RecursiveFileList
                 subdirs.add(s.substring(0,s.lastIndexOf("/")));
             }
         }
-        
+
         List<String> res = new ArrayList<String>();
         res.addAll(subdirs);
         return(res);
     }
-    
+
 }

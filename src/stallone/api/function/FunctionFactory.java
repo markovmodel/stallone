@@ -32,7 +32,7 @@ public class FunctionFactory
     {
         return(new JEPFunctionC1(expression, derivatives));
     }
-        
+
     public static void main(String[] args)
     {
         String[] var = {"x"};

@@ -114,7 +114,7 @@ public class HMMCountMatrixEstimator
         double norm = DoublesPrimitive.util.sum(Ct);
 
         Ct = DoublesPrimitive.util.multiply(1.0 / norm, Ct);
-        
+
         // if event-based counting then add times stayed in each state
         if (countEvents)
         {
@@ -127,7 +127,7 @@ public class HMMCountMatrixEstimator
                         Ct[i][i] += ka*hidden.getAlpha(time1,i) + kb*hidden.getBeta(time1+1,i);
                 }
         }
-                
+
         return (Ct);
     }
 

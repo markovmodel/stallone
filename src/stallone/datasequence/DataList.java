@@ -17,7 +17,7 @@ public class DataList
     implements IDataList
 {
     private ArrayList<IDoubleArray> list = new ArrayList<IDoubleArray>();
-    
+
     public DataList()
     {
         list = new ArrayList<IDoubleArray>();
@@ -27,19 +27,19 @@ public class DataList
     {
         list = new ArrayList<IDoubleArray>(size);
     }
-    
+
     @Override
     public int dimension()
     {
         return(get(0).size());
     }
-    
+
     @Override
     public IDoubleArray get(int i)
     {
         return(list.get(i));
     }
-    
+
     @Override
     public IDoubleArray getView(int i)
     {
@@ -69,7 +69,7 @@ public class DataList
     {
         return list.iterator();
     }
-    
+
     @Override
     public boolean add(IDoubleArray x)
     {
@@ -81,7 +81,7 @@ public class DataList
     {
         return list.remove(x);
     }
-    
+
     @Override
     public IDoubleArray remove (int i)
     {

@@ -28,7 +28,7 @@ public class DataSequenceLoader_SingleDataIterable implements Iterable<IDoubleAr
         this.loader = _loader;
         this.stepsize = _stepsize;
     }
-    
+
     @Override
     public Iterator<IDoubleArray> iterator()
     {

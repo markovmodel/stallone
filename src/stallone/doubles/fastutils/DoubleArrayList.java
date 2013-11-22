@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,14 +39,14 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.RandomAccess;
 import java.util.NoSuchElementException;
-/** A type-specific array-based list; provides some additional methods that use polymorphism to avoid (un)boxing. 
+/** A type-specific array-based list; provides some additional methods that use polymorphism to avoid (un)boxing.
  *
  * <P>This class implements a lightweight, fast, open, optimized,
  * reuse-oriented version of array-based lists. Instances of this class
@@ -268,7 +268,7 @@ public class DoubleArrayList extends AbstractDoubleList implements RandomAccess,
  public boolean isEmpty() {
   return size == 0;
  }
- /** Trims this array list so that the capacity is equal to the size. 
+ /** Trims this array list so that the capacity is equal to the size.
 	 *
 	 * @see java.util.ArrayList#trimToSize()
 	 */
@@ -276,7 +276,7 @@ public class DoubleArrayList extends AbstractDoubleList implements RandomAccess,
   trim( 0 );
  }
  /** Trims the backing array if it is too large.
-	 * 
+	 *
 	 * If the current array length is smaller than or equal to
 	 * <code>n</code>, this method does nothing. Otherwise, it trims the
 	 * array length to the maximum between <code>n</code> and {@link #size()}.

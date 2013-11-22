@@ -13,17 +13,17 @@ import stallone.doubles.PrimitiveDoubleArray;
 
 /**
  * A grid discretization which calculates functional values on demand and
- * does not store anything. 
+ * does not store anything.
  * @author noe
  */
 public class GriddedFunctionOnDemand
     implements IGriddedFunction
 {
-    private IFunction F;    
+    private IFunction F;
     private IGrid grid;
 
     /**
-     * 
+     *
      * @param _F an n-variate function to be discretized
      * @param bounds A n x 2 table containing lower and upper bounds for the discretization range
      * @param boxsize The size of a single discretization box in each dimension
@@ -34,25 +34,25 @@ public class GriddedFunctionOnDemand
         // check bounds
         if (bounds.rows() != _F.getNumberOfVariables())
             throw(new IllegalArgumentException("Number of variables in function is different from number of discretization bounds provided"));
-        
+
         this.grid = new Grid(bounds, boxsize);
     }
-    
+
     public GriddedFunctionOnDemand(IFunction _F, IDoubleArray griddef)
     {
         this.F = _F;
 
         int dof = _F.getNumberOfVariables();
 
-        this.grid = new Grid(griddef);        
+        this.grid = new Grid(griddef);
     }
-    
+
     @Override
     public double f(int... indexes)
     {
         if (indexes.length != F.getNumberOfVariables())
             throw new IllegalArgumentException("Wrong number of variables.");
-        
+
         IDoubleArray x = grid.getPoint(indexes);
         return(F.f(x));
     }
@@ -92,7 +92,7 @@ public class GriddedFunctionOnDemand
     {
         return(grid.assign(x));
     }
-    
+
     @Override
     public IDoubleArray assignFuzzy(IDoubleArray x)
     {
@@ -104,7 +104,7 @@ public class GriddedFunctionOnDemand
     {
         return(grid.getRepresentative(x));
     }
-    
+
     @Override
     public int getIndex(IIntArray indexes)
     {
@@ -134,7 +134,7 @@ public class GriddedFunctionOnDemand
     {
         return(grid.size());
     }
-    
+
     @Override
     public int dimension()
     {
@@ -159,7 +159,7 @@ public class GriddedFunctionOnDemand
         IDoubleArray y = grid.getRepresentative(x);
         return(F.f(y));
     }
-    
+
     @Override
     public double f(double... x)
     {
@@ -195,5 +195,5 @@ public class GriddedFunctionOnDemand
     {
         return i;
     }
-    
+
 }

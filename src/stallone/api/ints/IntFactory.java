@@ -20,25 +20,25 @@ public class IntFactory
     // General Vector operations
     //
     // ***********************************************************************
-    
+
     /**
      * Creates an empty double sequence of the same type and size as arr
      * Currently just copies the array, but this should be replaced by a pure
      * data allocation.
      * @param arr the template array
-     * @return 
+     * @return
      */
     public IIntArray like(IIntArray arr, int size)
     {
         return(arr.create(size));
-    }    
+    }
 
     // ***********************************************************************
     //
     // Array factories
     //
     // ***********************************************************************
-    
+
     public IIntArray array(int size)
     {
         return (new PrimitiveIntArray(new int[size]));
@@ -48,11 +48,11 @@ public class IntFactory
     {
         return (new PrimitiveIntArray(PrimitiveIntTools.createInitialized(size, value)));
     }
-    
+
     public IIntArray array(IIntArray arr)
     {
         return (new PrimitiveIntArray(arr.getArray()));
-    }    
+    }
 
     /**
      * Convenience constructor for primitive arrays
@@ -87,15 +87,15 @@ public class IntFactory
         int[] res = PrimitiveIntTools.from(a);
         return (new PrimitiveIntArray(res));
     }
-    
-    
+
+
     public IIntArray arrayFrom(float[] a)
     {
         int[] res = PrimitiveIntTools.from(a);
         return (new PrimitiveIntArray(res));
     }
 
-    
+
     /**
        @return a list of distinct random numbers in the range 0...N-1. If n >= N, [0,...N-1]
        is returned.
@@ -104,9 +104,9 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.randomIndexes(N,n);
         return (new PrimitiveIntArray(res));
-    }            
-    
-    
+    }
+
+
     /**
     @return an array of doubles, starting with the value start, ending
     with a value < end. All values are obtained by incrementing the
@@ -139,14 +139,14 @@ public class IntFactory
         int[] res = PrimitiveIntTools.range(end);
         return (new PrimitiveIntArray(res));
     }
-    
-    
+
+
     // ***********************************************************************
     //
     // List factories
     //
     // ***********************************************************************
-    
+
     public IIntList list(int size)
     {
         return (new IntArrayList_FastUtilWrapper(new int[size]));
@@ -156,11 +156,11 @@ public class IntFactory
     {
         return (new IntArrayList_FastUtilWrapper(PrimitiveIntTools.createInitialized(size, value)));
     }
-    
+
     public IIntList list(IIntArray arr)
     {
         return (new IntArrayList_FastUtilWrapper(arr.getArray()));
-    }    
+    }
 
     /**
      * Convenience constructor for primitive arrays
@@ -195,8 +195,8 @@ public class IntFactory
         int[] res = PrimitiveIntTools.from(a);
         return (new IntArrayList_FastUtilWrapper(res));
     }
-    
-    
+
+
     public IIntList listFrom(float[] a)
     {
         int[] res = PrimitiveIntTools.from(a);
@@ -211,8 +211,8 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.randomIndexes(N,n);
         return (new IntArrayList_FastUtilWrapper(res));
-    }            
-    
+    }
+
 
     /**
     @return an array of doubles, starting with the value start, ending
@@ -223,7 +223,7 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.range(start, end, step);
         return (new IntArrayList_FastUtilWrapper(res));
-    }    
+    }
 
     /**
     @return an array of doubles, starting with the value start, ending
@@ -234,8 +234,8 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.range(start, end);
         return (new IntArrayList_FastUtilWrapper(res));
-    }    
-    
+    }
+
     /**
     @return an array of doubles, starting with the value start, ending
     with a value < end. All values are obtained by incrementing the
@@ -245,16 +245,16 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.range(end);
         return (new IntArrayList_FastUtilWrapper(res));
-    }        
-    
-    
-    
+    }
+
+
+
     // *****************************************************************************
     //
     // Table constructors
     //
     // *****************************************************************************
-    
+
         public IIntArray table(int nrows, int ncols)
     {
         return (new PrimitiveIntTable(new int[nrows][ncols]));
@@ -297,7 +297,7 @@ public class IntFactory
         }
         return (new PrimitiveIntTable(res));
     }
-    
+
         /**
     reshapes the given 1-dimensional double array into a two-dimensional
     double array of size d1*d2
@@ -317,6 +317,6 @@ public class IntFactory
             }
         }
         return (res);
-    }    
+    }
 
 }

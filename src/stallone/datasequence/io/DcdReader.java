@@ -52,7 +52,7 @@ public class DcdReader implements IDataReader
     private long framesizeRegular;
     private long framesizeWithFixed;
     private int nextFrameIndex;
-    
+
     private IDoubleArray preconstructedArray;
 
     public DcdReader(String _filename) throws IOException
@@ -61,12 +61,12 @@ public class DcdReader implements IDataReader
         niceRandomAccessFile = new NicelyCachedRandomAccessFile(_filename);
         this.initialize();
     }
-    
+
     @Override
     public void setSource(String name)
     {
         this.filename = name;
-    }    
+    }
 
     @Override
     public void scan()
@@ -75,7 +75,7 @@ public class DcdReader implements IDataReader
         niceRandomAccessFile = new NicelyCachedRandomAccessFile(this.filename);
         this.initialize();
     }
-    
+
     private void initialize() throws IOException
     {
         byteOrder = detectEndianess();
@@ -555,7 +555,7 @@ public class DcdReader implements IDataReader
     {
         return delta*frameIndex;
     }
-    
+
     @Override
     public IDoubleArray get(int frameIndex)
     {
@@ -582,7 +582,7 @@ public class DcdReader implements IDataReader
             res.add(get(i).copy());
         return res;
     }
-    
+
     //@Override
     public String getFileName()
     {
@@ -594,7 +594,7 @@ public class DcdReader implements IDataReader
     {
         return(this.size()*this.dimension()*8);
     }
-    
+
     class DcdFrameDataIterator implements Iterator<IDoubleArray>
     {
         int index = 0;
@@ -619,8 +619,8 @@ public class DcdReader implements IDataReader
             throw new UnsupportedOperationException("Remove not supported.");
         }
     }
-    
-    
+
+
     /**
      * Main.
      *

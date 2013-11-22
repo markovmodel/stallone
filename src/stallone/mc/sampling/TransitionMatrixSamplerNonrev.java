@@ -12,7 +12,7 @@ import stallone.util.MathTools;
  * @author noe
  */
 public class TransitionMatrixSamplerNonrev extends TransitionMatrixSamplerAbstract
-{    
+{
         public TransitionMatrixSamplerNonrev(IDoubleArray counts)
     {
         super(counts);
@@ -22,7 +22,7 @@ public class TransitionMatrixSamplerNonrev extends TransitionMatrixSamplerAbstra
     {
         super(counts,Tinit);
     }
-    
+
     @Override
     protected boolean step()
     {
@@ -38,8 +38,8 @@ public class TransitionMatrixSamplerNonrev extends TransitionMatrixSamplerAbstra
 	    return(false);
 
 	double d = MathTools.randomDouble(-T.get(i,j),T.get(i,i));
-	double pacc = 
-	    Math.pow((T.get(i,j)+d)/T.get(i,j), C.get(i,j)) * 
+	double pacc =
+	    Math.pow((T.get(i,j)+d)/T.get(i,j), C.get(i,j)) *
 	    Math.pow((T.get(i,i)-d)/T.get(i,i), C.get(i,i));
 
 	if (Math.random() <= pacc)

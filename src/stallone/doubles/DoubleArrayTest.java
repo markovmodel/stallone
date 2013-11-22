@@ -32,8 +32,8 @@ public class DoubleArrayTest
                     a1.rows()+"x"+a1.columns()+") has size"+a1.size()+"\n"+
                     a2.rows()+"x"+a2.columns()+") has size"+a2.size()));
     }
-    
-    
+
+
     public static void assertEqualOrder(IDoubleArray a1, IDoubleArray a2)
     {
         if (a1.order() != a2.order())
@@ -41,15 +41,15 @@ public class DoubleArrayTest
                     a1.rows()+"x"+a1.columns()+") has order"+a1.order()+"\n"+
                     a2.rows()+"x"+a2.columns()+") has order"+a2.order()));
     }
-    
+
     public static void assertEqualDimensions(IDoubleArray a1, IDoubleArray a2)
     {
         if (a1.rows() != a2.rows() || a1.columns() != a2.columns())
             throw(new IllegalArgumentException("Arrays have different dimensions: \n"+
                     a1.rows()+"x"+a1.columns()+") vs\n"+
-                    a2.rows()+"x"+a2.columns()+")"));            
+                    a2.rows()+"x"+a2.columns()+")"));
     }
-    
+
     public static void assertCanMultiply(IDoubleArray a1, IDoubleArray a2)
     {
         if (a1.columns() != a2.rows())
@@ -57,7 +57,7 @@ public class DoubleArrayTest
                     a1.rows()+"x"+a1.columns()+") vs\n"+
                     a2.rows()+"x"+a2.columns()+")"));
     }
-    
+
     public static void assertRows(IDoubleArray a1, int nrows)
     {
         if (nrows != a1.rows())
@@ -75,7 +75,7 @@ public class DoubleArrayTest
         if (a1.rows() != a1.columns())
             throw(new IllegalArgumentException("Array of dimension "+a1.rows()+" x "+a1.columns()+" found but expected square matrix"));
     }
-    
+
     public static void assertOrder(IDoubleArray a1, int order)
     {
         if (order != a1.order())
@@ -87,23 +87,23 @@ public class DoubleArrayTest
         if (size != a1.size())
             throw(new IllegalArgumentException("Array of dimension "+a1.rows()+" x "+a1.columns()+" found but expected and size-"+size+" array"));
     }
-    
+
     public static void assertRowExists(IDoubleArray a1, int row)
     {
         if (row < 0 && row >= a1.rows())
             throw(new IllegalArgumentException("Trying to access row: "+row+" in array that has "+a1.rows()+" rows."));
     }
-    
+
     public static void assertColumnExists(IDoubleArray a1, int col)
     {
         if (col < 0 && col >= a1.columns())
             throw(new IllegalArgumentException("Trying to access row: "+col+" in array that has "+a1.columns()+" rows."));
     }
-    
+
     public static void assertIndexExists(IDoubleArray a1, int row, int col)
     {
         assertRowExists(a1, row);
         assertColumnExists(a1, row);
     }
-    
+
 }

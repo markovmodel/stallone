@@ -28,5 +28,5 @@ public class IOFactory
         reader.scan();
         return reader;
     }
-    
+
 }

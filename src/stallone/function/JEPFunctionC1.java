@@ -18,11 +18,11 @@ public class JEPFunctionC1 extends JEPFunction implements IFunctionC1
 {
     protected JEP[] gjep;
     private IDoubleArray grad;
-    
+
     /**
      * Initilializes a real-valued function that is parsed with JEP. Variables are explicitly specified
      * @param _variables
-     * @param _expression 
+     * @param _expression
      */
     public JEPFunctionC1(String[] _variables, String _expression, String... _derivatives)
     {
@@ -32,7 +32,7 @@ public class JEPFunctionC1 extends JEPFunction implements IFunctionC1
         {
             throw(new IllegalArgumentException("Number of derivatives must be identical to number of variables"));
         }
-        
+
         // set gradient
         gjep = new JEP[super.variables.length];
         for (int i=0; i<super.variables.length; i++)
@@ -44,7 +44,7 @@ public class JEPFunctionC1 extends JEPFunction implements IFunctionC1
                 gjep[i].addVariable(var, 0);
             gjep[i].parseExpression(_derivatives[i]);
         }
-        
+
         grad = Doubles.create.array(super.variables.length);
     }
 
@@ -52,8 +52,8 @@ public class JEPFunctionC1 extends JEPFunction implements IFunctionC1
     {
         this(null, _expression, _derivatives);
     }
-    
-    
+
+
     @Override
     public IDoubleArray grad(double... x)
     {
@@ -64,17 +64,17 @@ public class JEPFunctionC1 extends JEPFunction implements IFunctionC1
         {
             for (int j=0; j<variables.length; j++)
                 gjep[i].addVariable(variables[j], x[j]);
-        
+
             grad.set(i, gjep[i].getValue());
         }
-        
-        return(grad);        
+
+        return(grad);
     }
-    
+
     @Override
     public IDoubleArray grad(IDoubleArray x)
     {
         return(grad(x.getArray()));
-    }    
+    }
 
 }

@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  *
  *
  *
@@ -53,7 +53,7 @@
  *   both that copyright notice and this permission notice appear in
  *   supporting documentation. CERN makes no representations about the
  *   suitability of this software for any purpose. It is provided "as is"
- *   without expressed or implied warranty. 
+ *   without expressed or implied warranty.
  */
 package stallone.doubles.fastutils;
 import java.util.Random;
@@ -180,7 +180,7 @@ public class BooleanArrays {
 	 * entries or less; otherwise, an array with
 	 * <code>length</code> entries whose entries are the same as
 	 * the first <code>length</code> entries of <code>array</code>.
-	 * 
+	 *
 	 */
  public static boolean[] trim( final boolean[] array, final int length ) {
   if ( length >= array.length ) return array;
@@ -200,7 +200,7 @@ public class BooleanArrays {
 	 * <code>array</code>; otherwise, an array with <code>length</code> entries
 	 * whose first <code>array.length</code> entries are the same as those of
 	 * <code>array</code>.
-	 * 
+	 *
 	 */
  public static boolean[] setLength( final boolean[] array, final int length ) {
   if ( length == array.length ) return array;
@@ -369,17 +369,17 @@ public class BooleanArrays {
   }
  }
  /** Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static void quickSort( final boolean[] x, final int from, final int to, final BooleanComparator comp ) {
   final int len = to - from;
@@ -428,15 +428,15 @@ public class BooleanArrays {
   if ( ( s = d - c ) > 1 ) quickSort( x, n - s, n, comp );
  }
  /** Sorts an array according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static void quickSort( final boolean[] x, final BooleanComparator comp ) {
   quickSort( x, 0, x.length, comp );
@@ -451,15 +451,15 @@ public class BooleanArrays {
    ( bc > 0 ? b : ac > 0 ? c : a ) );
  }
  /** Sorts the specified range of elements according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
-	 * 
+	 *
 	 */
  @SuppressWarnings("unchecked")
  public static void quickSort( final boolean[] x, final int from, final int to ) {
@@ -509,22 +509,22 @@ public class BooleanArrays {
   if ( ( s = d - c ) > 1 ) quickSort( x, n - s, n );
  }
  /** Sorts an array according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
-	 * 
+	 *
 	 */
  public static void quickSort( final boolean[] x ) {
   quickSort( x, 0, x.length );
  }
  /** Sorts the specified range of elements according to the natural ascending order using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. Moreover, no support arrays will be allocated. 
-	 
+	 * of the sort. Moreover, no support arrays will be allocated.
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -555,10 +555,10 @@ public class BooleanArrays {
   }
  }
  /** Sorts the specified range of elements according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -567,10 +567,10 @@ public class BooleanArrays {
   mergeSort( a, from, to, a.clone() );
  }
  /**	Sorts an array according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 */
  public static void mergeSort( final boolean a[] ) {
@@ -578,10 +578,10 @@ public class BooleanArrays {
  }
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. Moreover, no support arrays will be allocated.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -614,7 +614,7 @@ public class BooleanArrays {
  }
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
 	 *
@@ -628,10 +628,10 @@ public class BooleanArrays {
  }
  /** Sorts an array according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort.  An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
 	 */
@@ -639,7 +639,7 @@ public class BooleanArrays {
   mergeSort( a, 0, a.length, comp );
  }
  /** Shuffles the specified array fragment using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param from the index of the first element (inclusive) to be shuffled.
 	 * @param to the index of the last element (exclusive) to be shuffled.
@@ -656,7 +656,7 @@ public class BooleanArrays {
   return a;
  }
  /** Shuffles the specified array using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param random a pseudorandom number generator (please use a <a href="http://dsiutils.dsi.unimi.it/docs/it/unimi/dsi/util/XorShiftStarRandom.html">XorShift*</a> generator).
 	 * @return <code>a</code>.
@@ -671,7 +671,7 @@ public class BooleanArrays {
   return a;
  }
  /** Reverses the order of the elements in the specified array.
-	 * 
+	 *
 	 * @param a the array to be reversed.
 	 * @return <code>a</code>.
 	 */

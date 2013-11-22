@@ -13,10 +13,10 @@ public interface IArrayIndexMap
     public int getRow(int row);
 
     public int getColumn(int column);
-    
+
     public int rows();
-    
+
     public int columns();
-            
+
             public int size();
 }

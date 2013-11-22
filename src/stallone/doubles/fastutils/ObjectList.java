@@ -31,8 +31,8 @@ package stallone.doubles.fastutils;
 /* Equality */
 /* Object/Reference-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,10 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 import java.util.List;
-/** A type-specific {@link List}; provides some additional methods that use polymorphism to avoid (un)boxing. 
+/** A type-specific {@link List}; provides some additional methods that use polymorphism to avoid (un)boxing.
  *
  * <P>Note that this type-specific interface extends {@link Comparable}: it is expected that implementing
  * classes perform a lexicographical comparison using the standard operator "less then" for primitive types,

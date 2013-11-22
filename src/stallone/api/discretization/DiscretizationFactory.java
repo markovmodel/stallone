@@ -27,7 +27,7 @@ public class DiscretizationFactory
         IGriddedFunction g = new GriddedFunctionOnDemand(_F, bounds, boxsize);
         return(g);
     }
-    
+
     public IGriddedFunction createGridDiscretization(IFunction _F, IDoubleArray griddef)
     {
         IGriddedFunction g = new GriddedFunctionOnDemand(_F, griddef);
@@ -49,7 +49,7 @@ public class DiscretizationFactory
         return (vd);
     }
 
-    public IDiscretization coreDiscretization(IDataSequence _centers, 
+    public IDiscretization coreDiscretization(IDataSequence _centers,
     		double _radius, IMetric<IDoubleArray> _metric)
     {
         CoreDiscretization disc = new CoreDiscretization(_centers, _radius, _metric);
@@ -58,11 +58,11 @@ public class DiscretizationFactory
 
     public IDiscretization coreDiscretization(IDataSequence _centers, double _radius)
     {
-        CoreDiscretization disc = new CoreDiscretization(_centers, 
+        CoreDiscretization disc = new CoreDiscretization(_centers,
         		_radius, new EuclideanDistance());
         return (disc);
     }
-    
+
     public IDiscretization regularSelectionDiscretization(IDataSequence data,
     		IMetric<IDoubleArray> metric, int k)
     {
@@ -98,6 +98,6 @@ public class DiscretizationFactory
     public IDiscretization randomSelectionDiscretization(IDataSequence data, int k)
     {
         return (randomSelectionDiscretization(data, new EuclideanDistance(), k));
-    }    
-    
+    }
+
 }

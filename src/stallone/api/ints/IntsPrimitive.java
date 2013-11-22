@@ -21,5 +21,5 @@ public class IntsPrimitive
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
     //public static final IntFactory create = new IntFactory();
-    
+
 }

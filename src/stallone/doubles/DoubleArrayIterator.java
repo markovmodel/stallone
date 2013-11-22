@@ -33,7 +33,7 @@ public class DoubleArrayIterator implements IDoubleIterator
     {
         i=0;
     }
-    
+
     public boolean hasNext()
     {
         System.out.println("has next: "+(i<size));
@@ -43,7 +43,7 @@ public class DoubleArrayIterator implements IDoubleIterator
     /**
      * Goes to the next value. Does not return anything. You have to get the content with get().
      * Usage Example:
-     * 
+     *
      * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
      * {
      *      System.out.println("current element: " + it.get());
@@ -58,7 +58,7 @@ public class DoubleArrayIterator implements IDoubleIterator
 
     /**
      * Returns the current index. Good to know if this is a sparse vector iterator!
-     * @return 
+     * @return
      */
     @Override
     public int getIndex()
@@ -68,7 +68,7 @@ public class DoubleArrayIterator implements IDoubleIterator
 
     /**
      * Returns the current value
-     * @return 
+     * @return
      */
     @Override
     public double get()
@@ -76,7 +76,7 @@ public class DoubleArrayIterator implements IDoubleIterator
         System.out.println("getting ");
         return(x.get(i));
     }
-    
+
     /**
      * Sets the current value
      */

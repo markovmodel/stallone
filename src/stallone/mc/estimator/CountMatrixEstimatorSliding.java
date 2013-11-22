@@ -16,7 +16,7 @@ public class CountMatrixEstimatorSliding extends AbstractCountMatrixEstimator
     {
         super(traj);
     }
-    
+
     public CountMatrixEstimatorSliding(Iterable<IIntArray> trajs)
     {
         super(trajs);
@@ -37,5 +37,5 @@ public class CountMatrixEstimatorSliding extends AbstractCountMatrixEstimator
                 super.C.set(k, l, super.C.get(k,l)+1);
             }
         }
-    }    
+    }
 }

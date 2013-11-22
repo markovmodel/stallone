@@ -14,5 +14,5 @@ public class ParameterEstimationException extends Exception
     {
         super (msg);
     }
-    
+
 }

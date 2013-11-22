@@ -31,8 +31,8 @@ package stallone.doubles.fastutils;
 /* Equality */
 /* Object/Reference-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  *
  *
  *
@@ -58,7 +58,7 @@ package stallone.doubles.fastutils;
  *   both that copyright notice and this permission notice appear in
  *   supporting documentation. CERN makes no representations about the
  *   suitability of this software for any purpose. It is provided "as is"
- *   without expressed or implied warranty. 
+ *   without expressed or implied warranty.
  */
 import java.util.Random;
 import java.util.Comparator;
@@ -69,7 +69,7 @@ import java.util.Comparator;
  * arrays much like array lists. This can be very useful when efficiency (or
  * syntactic simplicity) reasons make array lists unsuitable.
  *
- * <P><strong>Warning:</strong> creating arrays 
+ * <P><strong>Warning:</strong> creating arrays
  * using {@linkplain java.lang.reflect.Array#newInstance(Class,int) reflection}, as it
  * happens in {@link #ensureCapacity(Object[],int,int)} and {@link #grow(Object[],int,int)},
  * is <em>significantly slower</em> than using <code>new</code>. This phenomenon is particularly
@@ -91,7 +91,7 @@ public class ObjectArrays {
 
 
 
- /** Creates a new array using a the given one as prototype. 
+ /** Creates a new array using a the given one as prototype.
 	 *
 	 * <P>This method returns a new array of the given length whose element
 	 * are of the same class as of those of <code>prototype</code>. In case
@@ -233,7 +233,7 @@ public class ObjectArrays {
 	 * entries or less; otherwise, an array with
 	 * <code>length</code> entries whose entries are the same as
 	 * the first <code>length</code> entries of <code>array</code>.
-	 * 
+	 *
 	 */
 
  public static <K> K[] trim( final K[] array, final int length ) {
@@ -259,7 +259,7 @@ public class ObjectArrays {
 	 * <code>array</code>; otherwise, an array with <code>length</code> entries
 	 * whose first <code>array.length</code> entries are the same as those of
 	 * <code>array</code>.
-	 * 
+	 *
 	 */
 
  public static <K> K[] setLength( final K[] array, final int length ) {
@@ -462,17 +462,17 @@ public class ObjectArrays {
 
 
  /** Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static <K> void quickSort( final K[] x, final int from, final int to, final Comparator <K> comp ) {
   final int len = to - from;
@@ -529,15 +529,15 @@ public class ObjectArrays {
  }
 
  /** Sorts an array according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
-	 * 
+	 *
 	 */
  public static <K> void quickSort( final K[] x, final Comparator <K> comp ) {
   quickSort( x, 0, x.length, comp );
@@ -556,15 +556,15 @@ public class ObjectArrays {
 
 
  /** Sorts the specified range of elements according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
-	 * 
+	 *
 	 */
 
  @SuppressWarnings("unchecked")
@@ -623,23 +623,23 @@ public class ObjectArrays {
  }
 
  /** Sorts an array according to the natural ascending order using quicksort.
-	 * 
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param x the array to be sorted.
-	 * 
+	 *
 	 */
  public static <K> void quickSort( final K[] x ) {
   quickSort( x, 0, x.length );
  }
 
  /** Sorts the specified range of elements according to the natural ascending order using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. Moreover, no support arrays will be allocated. 
-	 
+	 * of the sort. Moreover, no support arrays will be allocated.
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -676,10 +676,10 @@ public class ObjectArrays {
  }
 
  /** Sorts the specified range of elements according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -689,10 +689,10 @@ public class ObjectArrays {
  }
 
  /**	Sorts an array according to the natural ascending order using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 */
  public static <K> void mergeSort( final K a[] ) {
@@ -701,10 +701,10 @@ public class ObjectArrays {
 
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort, using a given support array.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. Moreover, no support arrays will be allocated.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
@@ -742,7 +742,7 @@ public class ObjectArrays {
 
  /** Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. An array as large as <code>a</code> will be allocated by this method.
 	 *
@@ -757,10 +757,10 @@ public class ObjectArrays {
 
  /** Sorts an array according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort.  An array as large as <code>a</code> will be allocated by this method.
-	 
+
 	 * @param a the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
 	 */
@@ -771,9 +771,9 @@ public class ObjectArrays {
 
 
  /**
-	 * Searches a range of the specified array for the specified value using 
-	 * the binary search algorithm. The range must be sorted prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches a range of the specified array for the specified value using
+	 * the binary search algorithm. The range must be sorted prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -812,9 +812,9 @@ public class ObjectArrays {
  }
 
  /**
-	 * Searches an array for the specified value using 
-	 * the binary search algorithm. The range must be sorted prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches an array for the specified value using
+	 * the binary search algorithm. The range must be sorted prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -834,9 +834,9 @@ public class ObjectArrays {
  }
 
  /**
-	 * Searches a range of the specified array for the specified value using 
-	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches a range of the specified array for the specified value using
+	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -869,9 +869,9 @@ public class ObjectArrays {
  }
 
  /**
-	 * Searches an array for the specified value using 
-	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call. 
-	 * If it is not sorted, the results are undefined. If the range contains multiple elements with 
+	 * Searches an array for the specified value using
+	 * the binary search algorithm and a specified comparator. The range must be sorted following the comparator prior to making this call.
+	 * If it is not sorted, the results are undefined. If the range contains multiple elements with
 	 * the specified value, there is no guarantee which one will be found.
 	 *
 	 * @param a the array to be searched.
@@ -891,7 +891,7 @@ public class ObjectArrays {
   return binarySearch( a, 0, a.length, key, c );
  }
  /** Shuffles the specified array fragment using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param from the index of the first element (inclusive) to be shuffled.
 	 * @param to the index of the last element (exclusive) to be shuffled.
@@ -908,7 +908,7 @@ public class ObjectArrays {
   return a;
  }
  /** Shuffles the specified array using the specified pseudorandom number generator.
-	 * 
+	 *
 	 * @param a the array to be shuffled.
 	 * @param random a pseudorandom number generator (please use a <a href="http://dsiutils.dsi.unimi.it/docs/it/unimi/dsi/util/XorShiftStarRandom.html">XorShift*</a> generator).
 	 * @return <code>a</code>.
@@ -923,7 +923,7 @@ public class ObjectArrays {
   return a;
  }
  /** Reverses the order of the elements in the specified array.
-	 * 
+	 *
 	 * @param a the array to be reversed.
 	 * @return <code>a</code>.
 	 */

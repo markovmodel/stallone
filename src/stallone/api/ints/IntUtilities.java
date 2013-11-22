@@ -16,18 +16,18 @@ import stallone.ints.IntIO;
  * @author noe
  */
 public class IntUtilities
-{ 
+{
     private static IntIO io;
-    
+
     public void fill(IIntArray arr, int d)
     {
         for (int i=0; i<arr.size(); i++)
             arr.set(i,d);
     }
-        
+
     /**
      * Turns this array into its mirror image, i.e. puts the last indexes first and vice versa.
-     * @param arr 
+     * @param arr
      */
     public void mirror(IIntArray arr)
     {
@@ -80,7 +80,7 @@ public class IntUtilities
             res.set(i, w1 * arr1.get(i) + w2 * arr2.get(i));
         }
         return (res);
-    }    
+    }
 
     public void increment(IIntArray arr, int d)
     {
@@ -99,7 +99,7 @@ public class IntUtilities
         for (int i=0; i<arr.size(); i++)
             arr.set(i, a*arr.get(i));
     }
-    
+
     public IIntArray multiplyElementsToNew(IIntArray arr1, IIntArray arr2)
     {
         IIntArray res = arr1.create(arr1.size());
@@ -115,7 +115,7 @@ public class IntUtilities
             res.set(i, arr1.get(i)/arr2.get(i));
         return(res);
     }
-    
+
     public void negate(IIntArray arr)
     {
         scale(-1, arr);
@@ -128,7 +128,7 @@ public class IntUtilities
             arr.set(i, arr.get(i)*arr.get(i));
         }
     }
-    
+
     public double sum(IIntArray arr)
     {
         double res = 0;
@@ -147,8 +147,8 @@ public class IntUtilities
         }
         return (Math.sqrt(d));
     }
-    
-    
+
+
     public int count(IIntArray arr, int val)
     {
         int c = 0;
@@ -161,7 +161,7 @@ public class IntUtilities
         }
         return (c);
     }
-    
+
     /**
     Returns true if and only if the arrays are of equal size and
     all elements are equal up to the given tolerance
@@ -176,7 +176,7 @@ public class IntUtilities
         {
             double v1 = arr1.get(i);
             double v2 = arr2.get(i);
-            
+
             if (v1 != v2)
             {
                 return (false);
@@ -185,7 +185,7 @@ public class IntUtilities
         return (true);
     }
 
-    
+
     public int maxIndex(IIntArray arr)
     {
         double m = Double.NEGATIVE_INFINITY;
@@ -226,8 +226,8 @@ public class IntUtilities
     {
         return (arr.get(minIndex(arr)));
     }
-    
-    
+
+
     public IIntArray subToNew(IIntArray arr, int start, int end)
     {
         IIntArray res = Ints.create.array(end - start);
@@ -246,8 +246,8 @@ public class IntUtilities
             res.set(i, arr.get(indexes.get(i)));
         }
         return (res);
-    }    
-    
+    }
+
     public IIntArray insertToNew(IIntArray arr, int index, int v)
     {
         IIntArray res = arr.create(arr.size() + 1);
@@ -266,7 +266,7 @@ public class IntUtilities
         }
         return (res);
     }
-     
+
     public IIntArray mergeToNew(Collection<IIntArray> a)
     {
         int size = 0;
@@ -293,7 +293,7 @@ public class IntUtilities
 
         return(res);
     }
-    
+
     public IIntArray mergeToNew(IIntArray a1, IIntArray a2)
     {
         IIntArray res = a1.create(a1.size()+a2.size());
@@ -320,15 +320,15 @@ public class IntUtilities
         }
         res.set(res.size()-1, a2);
         return (res);
-    }    
-    
+    }
+
     public void sort(IIntArray arr)
     {
         QuickSortInt qs = new QuickSortInt();
         qs.setData(arr, arr);
         qs.sort();
     }
-    
+
     public IIntArray sortedIndexes(IIntArray arr)
     {
         QuickSortInt qs = new QuickSortInt();
@@ -344,7 +344,7 @@ public class IntUtilities
         {
             return (uncleaned);
         }
-        
+
         // sort
         sort(uncleaned);
 
@@ -361,7 +361,7 @@ public class IntUtilities
 
         return (subToNew(uncleaned, Iclean));
     }
-    
+
     /**
     @return the indexes of the n smalles values in arr.
      */
@@ -391,7 +391,7 @@ public class IntUtilities
     {
         return (subToNew(arr, largestIndexes(arr, n)));
     }
-    
+
     public IIntArray smallValues(IIntArray arr, int maxValue)
     {
         return(subToNew(arr, smallValueIndexes(arr, maxValue)));
@@ -450,8 +450,8 @@ public class IntUtilities
             }
         }
         return (res);
-    }    
-    
+    }
+
     /**
     Returns the index with the next occurance of the given number, starting
     from index "from".
@@ -507,14 +507,14 @@ public class IntUtilities
             }
         }
     }
-    
+
     public IIntList findAll(IIntArray arr, int val)
     {
         IIntList res = Ints.create.list(0);
         findAll(arr, val, res);
         return (res);
-    }    
-    
+    }
+
     public IIntList findAll(IIntArray arr, IIntArray vals)
     {
         IIntList res = Ints.create.list(0);
@@ -522,7 +522,7 @@ public class IntUtilities
             findAll(arr, vals.get(i), res);
         return(res);
     }
-    
+
     public boolean contains(IIntArray arr, int val)
     {
         for (int i = 0; i < arr.size(); i++)
@@ -560,7 +560,7 @@ public class IntUtilities
     }
 
 
-    
+
     /**
     Locates, by binary search the index of the first value that is >= the
     given number.
@@ -620,11 +620,11 @@ public class IntUtilities
 
         return (m);
     }
-    
+
     /**
      * Inserts the given number into the sorted array arr. If arr is not
      * sorted, arr will be inserted somewhere.
-     * WARNING: If the underlying array is primitive or an arraylist, this will be 
+     * WARNING: If the underlying array is primitive or an arraylist, this will be
      * very slow, because a whole new array copy must be built!
      */
     public void insertSorted(IIntList arr, int num)
@@ -632,7 +632,7 @@ public class IntUtilities
         int i = locateSorted(arr, num);
         arr.insert(i, num);
     }
-    
+
 
 
     /**
@@ -662,8 +662,8 @@ public class IntUtilities
         arr.set(i, num);
         return (i);
     }
-    
-    
+
+
 
     /**
      *   Finds the first occurrence of num in the sorted array arr.
@@ -681,8 +681,8 @@ public class IntUtilities
         {
             return (-1);
         }
-    }    
-    
+    }
+
     /**
     Returns the intersection of the two given arrays
      */
@@ -704,12 +704,12 @@ public class IntUtilities
         }
         return (res);
     }
-    
+
     public IIntArray unionToNew(IIntArray arr1, IIntArray arr2)
     {
         return(cleanToNew(mergeToNew(arr1,arr2)));
     }
-        
+
     public IIntArray removeIndexToNew(IIntArray arr, int index)
     {
         IIntArray res = arr.create(arr.size() - 1);
@@ -733,7 +733,7 @@ public class IntUtilities
         {
             return (arr);
         }
-        
+
         boolean[] exclude = new boolean[arr.size()];
         int nex = 0;
         for (int i = 0; i < indexes.size(); i++)
@@ -754,7 +754,7 @@ public class IntUtilities
                 j++;
             }
         }
-        return (res);        
+        return (res);
     }
 
     /**
@@ -772,7 +772,7 @@ public class IntUtilities
     {
         return (removeValueToNew(arr1, Ints.create.arrayFrom(a2)));
     }
-    
+
 
     public String toString(IIntArray arr, String coldel, String linedel)
     {
@@ -794,11 +794,11 @@ public class IntUtilities
     {
         io.print(arr, coldel, linedel, predig, postdig);
     }
-    
 
-    
-    
-    
+
+
+
+
     // ********************************************************************************
     //
     // Table operations
@@ -823,20 +823,20 @@ public class IntUtilities
             res += arr.get(i,col);
         }
         return (res);
-    }        
-    
+    }
+
     /**
      * Transpose in place. Only possible if nrows = ncolumns
-     * @param tab 
+     * @param tab
      */
     public void transpose(IIntArray tab)
     {
         int nrows = tab.rows();
         int ncols = tab.columns();
-        
+
         if (nrows != ncols)
             throw(new IllegalArgumentException("Cannot transpose in place if nrows differs from ncolumns. Use createTranspose in the factory"));
-        
+
         for (int i=0; i<nrows; i++)
         {
             for (int j=i+1; j<ncols; j++)
@@ -847,26 +847,26 @@ public class IntUtilities
             }
         }
     }
-    
+
     public void copyInto(IIntArray source, int from, int to, IIntArray target, int bFrom)
     {
         if (from < 0 || to > source.size() || to < from || bFrom < 0 || bFrom > target.size())
         {
             throw(new IllegalArgumentException("Trying to copy array over boundaries of target"));
         }
-        
+
         for (int i=from; i<to; i++)
             target.set(i+bFrom, source.get(i));
     }
 
-    public void copyInto(IIntArray aFrom, int rowA0, int colA0, int rowA1, int colA1, 
+    public void copyInto(IIntArray aFrom, int rowA0, int colA0, int rowA1, int colA1,
                          IIntArray bTo, int rowB0, int colB0)
     {
         if (rowA0 < 0 || colA0 < 0 || bTo.rows() < rowB0+(rowA1-rowA0) || bTo.columns() < colB0+(colA1-colA0))
         {
             throw(new IllegalArgumentException("Trying to copy array over boundaries of target"));
         }
-        
+
         for (int i=rowA0; i<rowA1; i++)
         {
             for (int j=colA0; j<colA1; j++)
@@ -880,21 +880,21 @@ public class IntUtilities
     {
         copyInto(aFrom, 0, 0, aFrom.rows(), aFrom.columns(), bTo, rowB0, colB0);
     }
-    
+
     public IIntArray mergeRowsToNew(IIntArray a1, IIntArray a2)
     {
         if (a1.columns() != a2.columns())
         {
             throw(new IllegalArgumentException("Trying to merge incompatible tables"));
         }
-        
+
         IIntArray res = Ints.create.table(a1.rows()+a2.rows(), a1.columns());
         copyRowsInto(a1, res, 0, 0);
         copyRowsInto(a2, res, a1.rows(), 0);
-        
+
         return(res);
     }
-        
+
     public IIntArray insertRowToNew(IIntArray a, int rowIndex, IIntArray r)
     {
         if (a.columns() != r.size())
@@ -903,15 +903,15 @@ public class IntUtilities
         }
 
         IIntArray res = Ints.create.table(a.rows()+1, a.columns());
-        
+
         copyInto(a, 0, 0, rowIndex, a.columns(), res, 0, 0);
         copyRowsInto(Ints.create.tableReshape(r, 1, r.size()), res, rowIndex, 0);
         copyInto(a, rowIndex, 0, a.rows(), a.columns(), res, rowIndex+1, 0);
-       
+
         return(res);
     }
 
-    
+
     public IIntArray subToNew(IIntArray a1, IIntArray rowIndexes, IIntArray colIndexes)
     {
         IIntArray res = Ints.create.table(rowIndexes.size(), colIndexes.size());
@@ -924,7 +924,7 @@ public class IntUtilities
         }
         return(res);
     }
-            
+
     public IIntArray subRowsToNew(IIntArray a1, IIntArray rowIndexes)
     {
         return subToNew(a1, rowIndexes, Ints.create.arrayRange(a1.columns()));
@@ -934,7 +934,7 @@ public class IntUtilities
     {
         return subToNew(a1, Ints.create.arrayRange(a1.rows()), colIndexes);
     }
-    
+
     /**
     Returns the index with the next occurance of the given number, starting
     from index "from".
@@ -991,13 +991,13 @@ public class IntUtilities
             }
         }
         return (res);
-    }    
-    
+    }
+
     /**
      * Counts the rows equal to val
      * @param tab
      * @param val
-     * @return 
+     * @return
      */
     public int countRows(IIntArray tab, IIntArray val)
     {
@@ -1010,7 +1010,7 @@ public class IntUtilities
             }
         }
         return (c);
-    }            
+    }
 
     public double maxInLine(IIntArray arr, int i)
     {
@@ -1021,7 +1021,7 @@ public class IntUtilities
     {
         return (max(arr.viewColumn(i)));
     }
-    
+
     public IIntArray removeRow(IIntArray arr, int index)
     {
         return(removeIndex(arr, Ints.create.arrayFrom(index)));
@@ -1035,7 +1035,7 @@ public class IntUtilities
         }
         IIntArray keep = Ints.util.removeValueToNew(Ints.create.arrayRange(arr.size()), index);
         return (subRowsToNew(arr, keep));
-    }    
+    }
 
     public String toString(IIntArray arr)
     {
@@ -1048,13 +1048,13 @@ public class IntUtilities
     }
 
 
-    
+
     // ********************************************************************************
     //
     // List of Arrays operations
     //
     // ********************************************************************************
-    
+
     public <T extends IIntArray> List<T> merge(List<T> l1, List<T> l2)
     {
         ArrayList<T> res = new ArrayList<T>();
@@ -1064,12 +1064,12 @@ public class IntUtilities
             res.add(o);
         return(res);
     }
-    
+
     public <T extends IIntArray> List<T> subset(List<T> l1, IIntArray indexes)
     {
         ArrayList<T> res = new ArrayList<T>();
         for (int i = 0; i<indexes.size(); i++)
             res.add(l1.get(indexes.get(i)));
         return(res);
-    }    
+    }
 }

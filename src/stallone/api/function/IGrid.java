@@ -17,51 +17,51 @@ public interface IGrid
     extends IDiscretization, IDataSequence
 {
     public int getNumberOfGridPoints();
-    
+
     public int getNumberOfGridPoints(int dimension);
-    
+
     /**
      * Yields the index of the nearest data point
      * @param x
-     * @return 
+     * @return
      */
     public IIntArray nearestMultiIndex(IDoubleArray x);
-    
-    public IIntArray getNeighborIndexes(int index);
-    
-    public IDataSequence getNeighbors(int index);    
 
-    public IIntArray getNeighborMultiIndexes(int... indexes);    
-    
+    public IIntArray getNeighborIndexes(int index);
+
+    public IDataSequence getNeighbors(int index);
+
+    public IIntArray getNeighborMultiIndexes(int... indexes);
+
     /**
      * Yields the index of the given multi index
      * @param x
-     * @return 
+     * @return
      */
     public int getIndex(IIntArray indexes);
 
     /**
      * Yields the nearest data point
      * @param x
-     * @return 
+     * @return
      */
     public IDoubleArray getPoint(IIntArray indexes);
-    
+
     /**
      * Yields the index of the nearest data point
      * @param x
-     * @return 
+     * @return
      */
     public int getIndex(int... indexes);
 
     /**
      * Yields the nearest data point
      * @param x
-     * @return 
+     * @return
      */
     public IDoubleArray getPoint(int... indexes);
-    
-    
-    
-    
+
+
+
+
 }

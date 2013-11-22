@@ -33,17 +33,17 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
         //weight = 0;
         updateInc();
     }
-    
+
     public DiscreteDistribution(IDoubleArray arr)
     {
         this(arr.getArray());
     }
-    
+
     public void setPrior(double[] _prior)
     {
         priorCount = _prior;
     }
-    
+
     private final void updateInc()
     {
         pinc[0] = p[0];
@@ -88,9 +88,9 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
     }
 
     /**
-     * 
+     *
      * @param x observed histogram
-     * @return 
+     * @return
      */
     @Override
     public double f(double... x)
@@ -133,7 +133,7 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
         dd.setPrior(doubleArrays.copy(priorCount));
         return dd;
     }
-    
+
     @Override
     public IDoubleArray estimate(IDataSequence data)
     {
@@ -163,14 +163,14 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
         p = initPar.getArray();
         updateInc();
     }
-    
+
     private void count2p()
     {
         double[] totalcounts = doubleArrays.add(priorCount, count);
-        this.p = doubleArrays.multiply(1.0/doubleArrays.sum(totalcounts), totalcounts);  
+        this.p = doubleArrays.multiply(1.0/doubleArrays.sum(totalcounts), totalcounts);
         updateInc();
     }
-    
+
 
     @Override
     public void addToEstimate(IDataSequence data)
@@ -194,8 +194,8 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
             else
                 throw new IllegalArgumentException("incompatible dimension of observation");
         }
-        
-        count2p();        
+
+        count2p();
     }
 
     @Override
@@ -227,8 +227,8 @@ public class DiscreteDistribution implements IParametricFunction, IParameterEsti
                 throw new IllegalArgumentException("incompatible dimension of observation");
         }
 
-        
-        count2p();        
+
+        count2p();
     }
 
     @Override

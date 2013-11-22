@@ -112,5 +112,5 @@ public class CompositeEnergyModel extends AbstractPotential
     {
         return(models.get(0).getNDimensions());
     }
-    
+
 }

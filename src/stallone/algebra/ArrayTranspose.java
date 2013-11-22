@@ -24,7 +24,7 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author  Tomaso Frigato, Martin Senne
  */
-public class ArrayTranspose //implements IMatrixTranspose 
+public class ArrayTranspose //implements IMatrixTranspose
 {
     public IDoubleArray transposeToNew(final IDoubleArray a)
     {
@@ -33,7 +33,7 @@ public class ArrayTranspose //implements IMatrixTranspose
         return res;
     }
 
-    
+
     //@Override
     public void transpose(final IDoubleArray a, final IDoubleArray target)
     {
@@ -52,7 +52,7 @@ public class ArrayTranspose //implements IMatrixTranspose
             }
         }
     }
-    
+
     //@Override
     public void transpose(final IDoubleArray a)
     {
@@ -74,14 +74,14 @@ public class ArrayTranspose //implements IMatrixTranspose
         }
     }
 
-    
+
     public IComplexArray conjugateTransposeToNew(final IComplexArray a)
     {
         IComplexArray res = a.create(a.columns(),a.rows());
         transpose(a,res);
         return res;
     }
-    
+
     /**
      * (non-Javadoc).
      *
@@ -109,7 +109,7 @@ public class ArrayTranspose //implements IMatrixTranspose
             }
         }
     }
-    
+
     //@Override
     public void conjugateTranspose(final IComplexArray a)
     {
@@ -131,5 +131,5 @@ public class ArrayTranspose //implements IMatrixTranspose
             }
         }
     }
-    
+
 }

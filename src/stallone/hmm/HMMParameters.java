@@ -37,7 +37,7 @@ public class HMMParameters implements IHMMParameters
         this.isStationary = _isStationary;
         this.parOut = new IDoubleArray[_nstates];
     }
-    
+
     public HMMParameters(IDoubleArray _T, IDoubleArray _p0, IDoubleArray[] _parOut, boolean _isReversible, boolean _isStationary)
     {
         this.T = _T;
@@ -45,9 +45,9 @@ public class HMMParameters implements IHMMParameters
         this.p0 = _p0;
         this.isReversible = _isReversible;
         this.isStationary = _isStationary;
-        
+
         this.parOut = _parOut;
-        
+
         // test input
         assertSquare(_T);
         assertOrder(_p0,1);
@@ -74,7 +74,7 @@ public class HMMParameters implements IHMMParameters
         return(new HMMParameters(T.copy(), p0.copy(), newOut, isReversible, isStationary));
     }
 
-    
+
     @Override
     public String toString()
     {
@@ -84,7 +84,7 @@ public class HMMParameters implements IHMMParameters
         strb.append("pi = "+Doubles.util.toString(p0,", ")+"\n");
         for (IDoubleArray d: parOut)
             strb.append("par = "+Doubles.util.toString(d,", ")+"\n");
-        
+
         return(strb.toString());
     }
 

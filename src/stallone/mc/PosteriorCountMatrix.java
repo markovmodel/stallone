@@ -20,7 +20,7 @@ import stallone.doubles.AbstractDoubleArray;
 public class PosteriorCountMatrix extends AbstractDoubleArray
 {
     private IDoubleArray prior, obs;
-    
+
     public PosteriorCountMatrix(IDoubleArray _prior, IDoubleArray _obs)
     {
         this.prior = _prior;
@@ -57,16 +57,16 @@ public class PosteriorCountMatrix extends AbstractDoubleArray
         int _size = other.size();
         if (_size != size())
             throw(new IllegalArgumentException("Trying to copy from array with different size"));
-              
+
         for (int i=0; i<_size; i++)
             set(i,other.get(i));
     }
-    
+
     public void setPrior(IDoubleArray _prior)
     {
         prior = _prior;
     }
-    
+
     public void setObservation(IDoubleArray _obs)
     {
         obs = _obs;
@@ -99,7 +99,7 @@ public class PosteriorCountMatrix extends AbstractDoubleArray
     {
         return(new PosteriorCountMatrix(prior.create(rows,cols), obs.create(rows,cols)));
     }
-    
+
     @Override
     public IDoubleArray create(int size)
     {

@@ -14,7 +14,7 @@ public class IntEdge implements IIntEdge
 {
     private int v1,v2;
     private double w;
-    
+
     public IntEdge(int node1, int node2)
     {
         this.v1 = node1;
@@ -27,7 +27,7 @@ public class IntEdge implements IIntEdge
         this.v2 = node2;
         this.w = weight;
     }
-    
+
     @Override
     public int getV1()
     {
@@ -51,7 +51,7 @@ public class IntEdge implements IIntEdge
     {
         v2 = node2;
     }
-    
+
     @Override
     public Integer getNode1()
     {
@@ -75,5 +75,5 @@ public class IntEdge implements IIntEdge
     {
         this.w = weight;
     }
-    
+
 }

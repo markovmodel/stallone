@@ -23,7 +23,7 @@ public class ArrayIndexMap
     {
         return new ArrayBlockIndexMap(data, _from, _to);
     }
-    
+
     public static IArrayIndexMap createMap(IDoubleArray data, IIntArray _Irows, IIntArray _Icols)
     {
         return new ArraySelectedIndexMap(data, _Irows, _Icols);
@@ -33,7 +33,7 @@ public class ArrayIndexMap
     {
         return new ArraySelectedIndexMap(data, _Iindexes);
     }
-    
+
 }
 
 class ArrayBlockIndexMap implements IArrayIndexMap
@@ -95,17 +95,17 @@ class ArrayBlockIndexMap implements IArrayIndexMap
     {
         return (column + left);
     }
-    
+
     public int rows()
     {
         return(nrows);
     }
-    
+
     public int columns()
     {
         return(ncols);
     }
-    
+
     public int size()
     {
         return(size);
@@ -153,13 +153,13 @@ class ArraySelectedIndexMap implements IArrayIndexMap
 
         size = nrows*ncols;
     }
-    
+
     @Override
     public int getRow(int row)
     {
         return(Irows.get(row));
     }
-    
+
     @Override
     public int getColumn(int column)
     {
@@ -169,14 +169,14 @@ class ArraySelectedIndexMap implements IArrayIndexMap
     {
         return(nrows);
     }
-    
+
     public int columns()
     {
         return(ncols);
     }
-    
+
     public int size()
     {
         return(size);
-    }            
+    }
 }

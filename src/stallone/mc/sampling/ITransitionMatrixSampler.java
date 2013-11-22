@@ -23,17 +23,17 @@ public interface ITransitionMatrixSampler
      * @param counts
      */
     public void init(IDoubleArray counts, IDoubleArray Tinit);
-    
+
     /**
      * Generates a new sample
      * @param steps the number of sampling steps taken before the next sample is returned
-     * @return 
+     * @return
      */
     public IDoubleArray sample(int steps);
-    
+
     /**
      * Returns the log-likelihood of the current sample
-     * @return 
+     * @return
      */
     public double logLikelihood();
 }

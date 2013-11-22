@@ -19,5 +19,5 @@ public class Discretization
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final DiscretizationFactory create = new DiscretizationFactory();    
+    public static final DiscretizationFactory create = new DiscretizationFactory();
 }

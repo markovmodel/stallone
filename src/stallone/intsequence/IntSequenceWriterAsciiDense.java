@@ -16,7 +16,7 @@ import stallone.api.intsequence.IIntWriter;
 public class IntSequenceWriterAsciiDense implements IIntWriter
 {
     PrintStream ps;
-    
+
     public IntSequenceWriterAsciiDense(String file)
             throws IOException
     {

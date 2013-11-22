@@ -34,7 +34,7 @@ public interface IEigenvalueSolver
     public void setPerformRightComputation(boolean right);
 
     public void setNumberOfRequestedEigenvalues(int nev);
-    
+
     /**
      * Execute eigenvalue decomposition.
      */

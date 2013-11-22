@@ -10,5 +10,5 @@ package stallone.api.strings;
  */
 public class StringFactory
 {
-    
+
 }

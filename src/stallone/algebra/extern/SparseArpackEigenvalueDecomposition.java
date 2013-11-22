@@ -32,7 +32,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
     private IComplexArray eigenvalues;
     private IComplexArray rightEigenvectors;
     private boolean bRightComputation = true;
-    
+
     private IEigenvalueDecomposition result;
 
     public SparseArpackEigenvalueDecomposition(final IDoubleArray matrix)
@@ -220,7 +220,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
                 } // end for
             } // end if-else
         } // end if-else
-        
+
         result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
     }
 
@@ -228,7 +228,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
     {
         return result;
     }
-    
+
     @Override
     public void setMatrix(final IDoubleArray m)
     {

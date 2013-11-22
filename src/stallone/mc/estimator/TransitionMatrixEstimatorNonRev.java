@@ -40,17 +40,17 @@ public class TransitionMatrixEstimatorNonRev implements ITransitionMatrixEstimat
 
         // row counts
         double[] rowsums = new double[T.rows()];
-        
+
         for (IDoubleIterator it = C.nonzeroIterator(); it.hasNext(); it.advance())
         {
             rowsums[it.row()] += it.get();
         }
-        
+
         // divide
         for (IDoubleIterator it = C.nonzeroIterator(); it.hasNext(); it.advance())
         {
             T.set(it.row(), it.column(), it.get()/rowsums[it.row()]);
-        }        
+        }
     }
 
     @Override

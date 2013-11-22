@@ -93,7 +93,7 @@ public class DenseComplexArray extends AbstractComplexArray
             }
         }
     }
-    
+
     @Override
     public int rows()
     {
@@ -105,7 +105,7 @@ public class DenseComplexArray extends AbstractComplexArray
     {
         return(cols);
     }
-    
+
     @Override
     public double getRe(final int i, final int j)
     {
@@ -260,7 +260,7 @@ public class DenseComplexArray extends AbstractComplexArray
     protected Iterator<IScalarOfMatrix> getFullIterator() {
     return new DenseComplexFullMatrixIterator(this);
     }
-    
+
     @Override
     protected Iterator<IScalarOfMatrix> getNonZeroIterator() {
     return new DenseComplexNonZeroMatrixIterator(this);

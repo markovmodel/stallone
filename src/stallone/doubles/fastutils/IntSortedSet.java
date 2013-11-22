@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 
@@ -48,7 +48,7 @@ import java.util.SortedSet;
 /** A type-specific {@link SortedSet}; provides some additional methods that use polymorphism to avoid (un)boxing.
  *
  * <P>Additionally, this interface strengthens {@link #iterator()},
- * {@link #comparator()} (for primitive types), {@link SortedSet#subSet(Object,Object)}, 
+ * {@link #comparator()} (for primitive types), {@link SortedSet#subSet(Object,Object)},
  * {@link SortedSet#headSet(Object)} and {@link SortedSet#tailSet(Object)}.
  *
  * @see SortedSet
@@ -69,7 +69,7 @@ public interface IntSortedSet extends IntSet , SortedSet<Integer> {
 	 * starting point (if there are no elements smaller than or equal to the
 	 * starting point, {@link it.unimi.dsi.fastutil.BidirectionalIterator#hasPrevious()
 	 * hasPrevious()} will return <code>false</code>).
-	 *  
+	 *
 	 * <P>Note that passing the last element of the set as starting point and
 	 * calling {@link it.unimi.dsi.fastutil.BidirectionalIterator#previous() previous()} you can traverse the
 	 * entire set in reverse order.
@@ -101,7 +101,7 @@ public interface IntSortedSet extends IntSet , SortedSet<Integer> {
 	 * Note that this specification strengthens the one given in the corresponding type-specific
 	 * {@link Collection}.
 	 *
-	 * @return a bidirectional iterator on the element in this set. 
+	 * @return a bidirectional iterator on the element in this set.
 	 */
     @Override
  IntBidirectionalIterator iterator();

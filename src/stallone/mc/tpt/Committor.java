@@ -23,7 +23,7 @@ public class Committor implements ICommittor
     private IDoubleArray pi; // stationary distribution
     private IIntArray A,B,AB,notAB; // A and B states
     private IDoubleArray qforward=null, qbackward=null;
-    
+
     public Committor(IDoubleArray M, IIntArray _A, IIntArray _B)
     {
         if (MarkovModel.util.isTransitionMatrix(M))
@@ -44,7 +44,7 @@ public class Committor implements ICommittor
         this.AB = Ints.util.mergeToNew(A,B);
         this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(M.rows()), AB);
     }
-    
+
     public Committor(int nstates, IIntArray _A, IIntArray _B)
     {
         this.A = _A;
@@ -52,26 +52,26 @@ public class Committor implements ICommittor
         this.AB = Ints.util.mergeToNew(A,B);
         this.notAB = Ints.util.removeValueToNew(Ints.create.arrayRange(nstates), AB);
     }
-    
+
     public final void setTransitionMatrix(IDoubleArray _T)
     {
         qforward = null;
         qbackward = null;
-        
+
         this.T = _T;
-        
+
         this.K = _T.copy();
         for (int i=0; i<T.rows(); i++)
-            K.set(i,i,K.get(i,i)-1);        
+            K.set(i,i,K.get(i,i)-1);
     }
-    
+
     public final void setRateMatrix(IDoubleArray _K)
     {
         qforward = null;
         qbackward = null;
 
         this.K = _K;
-        
+
         this.T = _K.copy();
         for (int i=0; i<T.rows(); i++)
             this.T.set(i,i,this.T.get(i,i)+1);
@@ -79,19 +79,19 @@ public class Committor implements ICommittor
 
     /**
      * Needed for the backward committor. If not given, it will be calculated from the transition or rate matrix.
-     * @param pi 
+     * @param pi
      */
     public void setStationaryDistribution(IDoubleArray _pi)
     {
         qbackward = null;
         this.pi = _pi;
     }
-    
+
     public IDoubleArray forwardCommittor()
     {
         if (qforward != null)
             return(qforward);
-        
+
         IDoubleArray U = K.view(notAB.getArray(), notAB.getArray());
 
         IDoubleArray v = Doubles.create.array(notAB.size());
@@ -119,7 +119,7 @@ public class Committor implements ICommittor
 
         if (pi == null)
             pi = StationaryDistribution.calculate(T);
-        
+
         IDoubleArray U = Doubles.create.array(notAB.size(),notAB.size());
 	for (int i=0; i<U.rows(); i++)
 	    for (int j=0; j<U.columns(); j++)
@@ -143,5 +143,5 @@ public class Committor implements ICommittor
         return(qbackward);
     }
 
-    
+
 }

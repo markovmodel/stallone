@@ -16,12 +16,12 @@ import stallone.api.ints.IIntIterator;
 public class IntArrayList_FastUtilWrapper implements IIntList
 {
     private stallone.doubles.fastutils.IntArrayList list;
-    
+
     private IntArrayList_FastUtilWrapper(stallone.doubles.fastutils.IntArrayList _list)
     {
         this.list = _list;
     }
-    
+
     public IntArrayList_FastUtilWrapper()
     {
         list = new stallone.doubles.fastutils.IntArrayList();
@@ -36,7 +36,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         list = new stallone.doubles.fastutils.IntArrayList(a);
     }
-    
+
 
     @Override
     public void append(int value)
@@ -82,7 +82,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         list.rem(value);
     }
-    
+
     @Override
     public void clear()
     {
@@ -100,7 +100,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         list.set(i, v);
     }
-    
+
     @Override
     public void copyFrom(IIntArray other)
     {
@@ -138,7 +138,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         return(new IntArrayIterator(this));
     }
-    
+
     @Override
     public String toString()
     {
@@ -216,7 +216,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         if (other.size() != size())
             throw (new IllegalArgumentException("Incompatible sizes. This array has size "+size()+", the other array has size "+other.size()));
-        
+
         Ints.util.copyInto(this, 0, size(), other, 0);
     }
 
@@ -225,7 +225,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         if (columns > 1)
             throw(new IllegalArgumentException("Cannot create a list with more than one column"));
-        
+
         return(new IntArrayList_FastUtilWrapper(rows));
     }
 
@@ -249,5 +249,5 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     {
         return false;
     }
-    
+
 }

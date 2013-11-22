@@ -4,8 +4,8 @@
  */
 package stallone.doubles.fastutils;
 
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 
 /** A class providing static methods and objects that do useful things with arrays.
@@ -32,7 +32,7 @@ package stallone.doubles.fastutils;
  */
 
 public class Arrays {
-	
+
 	private Arrays() {}
 
 	/** Ensures that a range given by its first (inclusive) and last (exclusive) elements fits an array of given length.
@@ -122,7 +122,7 @@ public class Arrays {
 	 * Performs a binary search on an already-sorted range: finds the first position where an
 	 * element can be inserted without violating the ordering. Sorting is by a user-supplied
 	 * comparison function.
-	 * 
+	 *
 	 * @param from the index of the first element (inclusive) to be included in the binary search.
 	 * @param to the index of the last element (exclusive) to be included in the binary search.
 	 * @param pos the position of the element to be searched for.
@@ -152,7 +152,7 @@ public class Arrays {
 	 * Performs a binary search on an already sorted range: finds the last position where an element
 	 * can be inserted without violating the ordering. Sorting is by a user-supplied comparison
 	 * function.
-	 * 
+	 *
 	 * @param from the index of the first element (inclusive) to be included in the binary search.
 	 * @param to the index of the last element (exclusive) to be included in the binary search.
 	 * @param pos the position of the element to be searched for.
@@ -191,12 +191,12 @@ public class Arrays {
 
 	/** Sorts the specified range of elements using the specified swapper and according to the order induced by the specified
 	 * comparator using mergesort.
-	 * 
+	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a 
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
 	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
 	 * used as a generic sorting algorithm.
-	 * 
+	 *
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param c the comparator to determine the order of the generic data (arguments are positions).
@@ -236,17 +236,17 @@ public class Arrays {
 	}
 
 	/** Sorts the specified range of elements using the specified swapper and according to the order induced by the specified
-	 * comparator using quicksort. 
-	 * 
+	 * comparator using quicksort.
+	 *
 	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
 	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
 	 * 1249&minus;1265, 1993.
-	 * 
+	 *
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param comp the comparator to determine the order of the generic data.
 	 * @param swapper an object that knows how to swap the elements at any two positions.
-	 * 
+	 *
 	 */
 	public static void quickSort( final int from, final int to, final IntComparator comp, final Swapper swapper ) {
 		final int len = to - from;

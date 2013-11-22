@@ -10,7 +10,7 @@ public interface IDynamicalExpectations
     public void setK(IDoubleArray _K);
 
     /**
-     * Optional. 
+     * Optional.
      */
     public void setStationaryDistribution(IDoubleArray _pi);
 
@@ -23,15 +23,15 @@ public interface IDynamicalExpectations
 
     /**
      * Calculates the stationary autocorrelation of a
-     * @param a 
+     * @param a
      */
     public double calculateAutocorrelation(IDoubleArray a, double t);
 
     /**
-     * 
+     *
      * Calculates the stationary cross-correlation of a and b
      * @param a
-     * @param b 
+     * @param b
      */
     public double calculateCorrelation(IDoubleArray a, IDoubleArray b,
             double t);

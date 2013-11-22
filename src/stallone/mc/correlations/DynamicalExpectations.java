@@ -14,7 +14,7 @@ import stallone.api.mc.IDynamicalExpectations;
 
 /**
  * Calculates expectations and correlations of functions of states
- * 
+ *
  * @author noe
  */
 public class DynamicalExpectations implements IDynamicalExpectations
@@ -25,7 +25,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
     // stationary distribution
     private StationaryDistribution statdist = new StationaryDistribution();
     private IDoubleArray pi;
-    
+
     public DynamicalExpectations(IDoubleArray M)
     {
         if (MarkovModel.util.isTransitionMatrix(M))
@@ -43,11 +43,11 @@ public class DynamicalExpectations implements IDynamicalExpectations
 
         pi = Doubles.create.array(M.rows());
     }
-    
+
     public DynamicalExpectations()
     {
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectations#setT(stallone.api.doubles.IDoubleArray)
      */
@@ -56,7 +56,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
         prop = new TransitionMatrixPropagator(_T);
         statdist.setT(_T);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectations#setK(stallone.api.doubles.IDoubleArray)
      */
@@ -65,7 +65,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
         prop = new RateMatrixPropagator(_K);
         statdist.setK(_K);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectations#setStationaryDistribution(stallone.api.doubles.IDoubleArray)
      */
@@ -79,7 +79,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
     {
         if (prop==null)
             throw(new RuntimeException("Trying to calculate dynamical expectations before setting T or K."));
-        
+
         // calculates the stationary distribution if not given
         if (pi == null)
         {
@@ -87,7 +87,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
         }
     }
 
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectations#calculatePerturbationExpectation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray, double)
      */
@@ -97,7 +97,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
             calculateAlgebra();
 
         IDoubleArray P = prop.propagate(t);
-        
+
         double res = 0;
         for (int i=0; i<P.rows(); i++)
         {
@@ -106,10 +106,10 @@ public class DynamicalExpectations implements IDynamicalExpectations
                 res += p0.get(i) * P.get(i,j) * a.get(j);
             }
         }
-        
+
         return(res);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectations#calculateAutocorrelation(stallone.api.doubles.IDoubleArray, double)
      */
@@ -127,7 +127,7 @@ public class DynamicalExpectations implements IDynamicalExpectations
             calculateAlgebra();
 
         IDoubleArray P = prop.propagate(t);
-        
+
         double res = 0;
         for (int i=0; i<P.rows(); i++)
         {
@@ -136,8 +136,8 @@ public class DynamicalExpectations implements IDynamicalExpectations
                 res += a.get(i) * pi.get(i) * P.get(i,j) * b.get(j);
             }
         }
-        
+
         return(res);
     }
-            
+
 }

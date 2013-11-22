@@ -15,7 +15,7 @@ import stallone.dynamics.IIntegrator;
 public class DynamicsUtilities
 {
     /**
-     * 
+     *
      * @param x0 the initial coordinate set
      * @param masses the masses
      * @param integrator a readily-usable integrator having a reference to the dynamical model
@@ -26,11 +26,11 @@ public class DynamicsUtilities
     public void run(IDoubleArray x0, IIntegrator integrator, IDataWriter crdOutput, int nsteps, int nsave)
     {
         integrator.setX(x0);
-        
+
         for (int i=0; i<nsteps; i++)
         {
             integrator.step();
-            
+
             if (i % nsave == 0)
                 crdOutput.add(integrator.getX());
         }

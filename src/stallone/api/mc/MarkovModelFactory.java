@@ -38,7 +38,7 @@ public class MarkovModelFactory
      * Adds a constant prior count to all elements where c_ij + c_ji > 0.
      * @param observedCounts
      * @param prior
-     * @return 
+     * @return
      */
     public IDoubleArray createPosteriorCountsNeighbor(IDoubleArray observedCounts, double prior)
     {
@@ -67,15 +67,15 @@ public class MarkovModelFactory
      * Jumps with equal probability to a neighbor and accepts with min(1,exp(-dE/kT)), where dE = E_target - E_current.
      * @param f
      * @param kT the thermal energy used to calculate jump probabilities
-     * @return 
+     * @return
      */
     public IDoubleArray metropolisMC(IGriddedFunction f, double kT)
     {
         DiscretePotentialMetropolisMarkovChain mc = new DiscretePotentialMetropolisMarkovChain(f, kT);
         return(mc.getTransitionMatrix());
-    }    
-    
-    
+    }
+
+
     // ************************************************************************
     //
     // COUNT MATRIX ESTIMATORS
@@ -109,13 +109,13 @@ public class MarkovModelFactory
         cme.setLag(lag);
         return(cme);
     }
-    
+
     // ************************************************************************
     //
     // TRANSITION MATRIX ESTIMATORS
     //
     // ************************************************************************
-    
+
     public ITransitionMatrixEstimator createTransitionMatrixEstimatorNonrev()
     {
         return(new TransitionMatrixEstimatorNonRev());
@@ -125,27 +125,27 @@ public class MarkovModelFactory
     {
         return(new TransitionMatrixEstimatorRev());
     }
-    
+
     public ITransitionMatrixEstimator createTransitionMatrixEstimatorRev(IDoubleArray pifix)
     {
         return(new TransitionMatrixEstimatorRevFixPi(pifix));
     }
-    
+
     /**
      * Creates a nonreversible transition matrix sampler
      * @param counts the posterior count matrix
-     * @return 
+     * @return
      */
     public ITransitionMatrixSampler createTransitionMatrixSamplerNonrev(IDoubleArray counts)
     {
         ITransitionMatrixSampler sampler = new TransitionMatrixSamplerNonrev(counts);
         return(sampler);
     }
-    
+
     /**
      * Creates a reversible transition matrix sampler
      * @param counts the posterior count matrix
-     * @return 
+     * @return
      */
     public ITransitionMatrixSampler createTransitionMatrixSamplerRev(IDoubleArray counts)
     {
@@ -157,21 +157,21 @@ public class MarkovModelFactory
      * Creates a reversible transition matrix sampler with a fixed stationary distribution
      * @param counts the posterior count matrix
      * @param piFix the fixed stationary distribution
-     * @return 
+     * @return
      */
     public ITransitionMatrixSampler createTransitionMatrixSamplerRev(IDoubleArray counts, IDoubleArray piFix)
     {
         ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevFixPi(counts, piFix);
-        
+
         return(sampler);
     }
 
     public PCCA createPCCA(IDoubleArray M, int nstates)
     {
         PCCA pcca = new PCCA();
-        
+
         IDoubleArray evec = M;
-        
+
         if (MarkovModel.util.isTransitionMatrix(M))
         {
             IEigenvalueDecomposition evd = Algebra.util.evd(M,nstates);
@@ -184,13 +184,13 @@ public class MarkovModelFactory
                 throw(new IllegalArgumentException("Attempting to create PCCA decomposition into "+nstates+" states."+
                                                     "but only "+evec.columns()+" eigenvectors were provided"));
         }
-        
+
         pcca.setEigenvectors(evec);
         pcca.perform();
-        
+
         return(pcca);
     }
-    
+
     public ICommittor createCommittor(IDoubleArray T, IIntArray A, IIntArray B)
     {
         return(createCommittor(T, MarkovModel.util.stationaryDistribution(T), A, B));
@@ -202,7 +202,7 @@ public class MarkovModelFactory
         comm.setStationaryDistribution(pi);
         return(comm);
     }
-    
+
     public ITPTFlux createTPT(IDoubleArray T, IIntArray A, IIntArray B)
     {
         return(createTPT(T, MarkovModel.util.stationaryDistribution(T), A, B));
@@ -217,7 +217,7 @@ public class MarkovModelFactory
 
         return(tpt);
     }
-    
+
     public IDynamicalExpectations createDynamicalExpectations(IDoubleArray T)
     {
         // FIXME: calculate and set pi
@@ -244,15 +244,15 @@ public class MarkovModelFactory
         dexp.setStationaryDistribution(pi);
         return(dexp);
     }
-    
+
     public IMarkovChain markovChain(IDoubleArray T)
     {
         return new MarkovChain(T);
     }
-    
+
     public IMarkovChain markovChain(IDoubleArray startingDistribution, IDoubleArray T)
     {
         return new MarkovChain(startingDistribution, T);
     }
-    
+
 }

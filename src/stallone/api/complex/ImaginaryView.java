@@ -14,7 +14,7 @@ import stallone.doubles.AbstractDoubleArray;
 public class ImaginaryView extends AbstractDoubleArray
 {
     IComplexArray arr;
-    
+
     public ImaginaryView(IComplexArray _arr)
     {
         this.arr = _arr;

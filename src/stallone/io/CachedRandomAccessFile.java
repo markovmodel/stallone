@@ -167,13 +167,13 @@ public class CachedRandomAccessFile implements IReleasableFile
     {
         randomAccessFile.close();
     }
-    
+
     @Override
     public void open() throws IOException
     {
         this.randomAccessFile = new RandomAccessFile(filename, "r");
     }
-    
+
     public void readFully(byte[] b) throws IOException
     {
 

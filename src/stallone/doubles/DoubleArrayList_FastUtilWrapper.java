@@ -16,12 +16,12 @@ public class DoubleArrayList_FastUtilWrapper
     implements IDoubleList
 {
     private stallone.doubles.fastutils.DoubleArrayList list;
-    
+
     private DoubleArrayList_FastUtilWrapper(stallone.doubles.fastutils.DoubleArrayList _list)
     {
         this.list = _list;
     }
-    
+
     public DoubleArrayList_FastUtilWrapper()
     {
         list = new stallone.doubles.fastutils.DoubleArrayList();
@@ -36,7 +36,7 @@ public class DoubleArrayList_FastUtilWrapper
     {
         list = new stallone.doubles.fastutils.DoubleArrayList(a);
     }
-    
+
 
     @Override
     public void append(double value)
@@ -94,7 +94,7 @@ public class DoubleArrayList_FastUtilWrapper
     {
         list.set(i, v);
     }
-    
+
     @Override
     public void copyFrom(IDoubleArray other)
     {
@@ -192,7 +192,7 @@ public class DoubleArrayList_FastUtilWrapper
     {
         if (columns > 1)
             throw(new IllegalArgumentException("Cannot create a list with more than one column"));
-        
+
         return(new DoubleArrayList_FastUtilWrapper(rows));
     }
 
@@ -216,5 +216,5 @@ public class DoubleArrayList_FastUtilWrapper
     {
         return false;
     }
-    
+
 }

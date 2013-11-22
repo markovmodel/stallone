@@ -133,7 +133,7 @@ public class DcdWriter implements IDataWriter
             else
             {
 
-                // format: 
+                // format:
                 //         size_of_block x1      x2      size_of_block
                 //         <int>         <float> <float> <int>
                 //         size_of_block y1      y2      size_of_block
@@ -182,7 +182,7 @@ public class DcdWriter implements IDataWriter
     {
         for (IDoubleArray d : data)
             add(d);
-    }    
+    }
     /**
      * Close the writer.
      *

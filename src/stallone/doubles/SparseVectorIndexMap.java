@@ -23,9 +23,9 @@ public abstract class SparseVectorIndexMap
     // minimal cache:
     protected int lastRequestedIndex = -1;
     protected int lastRequestedPosition = -1;
-    
+
     protected int size;
-    
+
     /** default growth factor when augmenting internal array. */
     private static double GROWTH_FACTOR = 2.0d;
     /** Indices of the non-zero elements. */
@@ -195,7 +195,7 @@ public abstract class SparseVectorIndexMap
         {
             lastRequestedIndex = index;
         }
-        
+
         // System.out.println("getPosition ( " + index + ", 0, " + usedNonZero +")");
         return getPosWhereValueEqualKey(index, 0, usedNonZero);
     }

@@ -18,5 +18,5 @@ public class HMM
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final HMMFactory create = new HMMFactory();    
+    public static final HMMFactory create = new HMMFactory();
 }

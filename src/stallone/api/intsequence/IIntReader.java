@@ -15,45 +15,45 @@ import stallone.api.ints.IIntArray;
 public interface IIntReader
 {
     public void setSource(String name);
-    
+
     /**
      * Opens or re-opens the file.
      */
     public void open()
             throws IOException;
-        
+
     /**
      * Checks the entire file for size, dimension, consistency and health
      */
     public void scan()
             throws IOException;
-    
+
     /**
      * Gets the number of data objects in the sequence
-     * @return 
+     * @return
      */
     public int size();
-    
+
     /**
      * Returns an estimate of the memory requirements of the full data sequence when loaded
-     * @return 
+     * @return
      */
     public long memorySize();
-    
+
     /**
      * Gets single data object
      * @param index
-     * @return 
+     * @return
      */
     public int get(int index);
-    
+
     /**
-     * Loads the data sequence completely into memory. 
+     * Loads the data sequence completely into memory.
      * Attention - this may crash due to insufficient memory, so be sure to test beforehand.
-     * @return 
+     * @return
      */
     public IIntArray load();
-    
+
     /**
      * Closes the file, but keeps file information as long as this object is alive
      */

@@ -42,14 +42,14 @@ public abstract class AbstractDoubleArray implements IDoubleArray
         for (IDoubleIterator it = iterator(); it.hasNext(); it.advance())
             it.set(0);
     }
-    
+
     @Override
     public double get(int ij)
     {
         int cols = columns();
         return (get(ij / cols, ij % cols));
     }
-    
+
     @Override
     public void set(int ij, double x)
     {
@@ -115,7 +115,7 @@ public abstract class AbstractDoubleArray implements IDoubleArray
 
         return res;
     }
-    
+
     @Override
     public IDoubleIterator iterator()
     {
@@ -163,7 +163,7 @@ public abstract class AbstractDoubleArray implements IDoubleArray
     {
         return (new DoubleArrayView(this, i, 0, i + 1, columns()));
     }
-    
+
     @Override
     public IDoubleArray viewColumn(int j)
     {
@@ -181,7 +181,7 @@ public abstract class AbstractDoubleArray implements IDoubleArray
     {
         return (new DoubleArrayView(this, selectedRows, selectedColumns));
     }
-        
+
     @Override
     public boolean equals(Object o)
     {
@@ -189,7 +189,7 @@ public abstract class AbstractDoubleArray implements IDoubleArray
         {
             return (false);
         }
-                
+
         IDoubleArray oo = (IDoubleArray) o;
 
         if (oo.size () != size())
@@ -200,7 +200,7 @@ public abstract class AbstractDoubleArray implements IDoubleArray
 
         if (oo.columns() != columns())
             return false;
-        
+
         for (int i = 0; i < oo.size(); i++)
         {
             if (oo.get(i) != this.get(i))
@@ -217,11 +217,11 @@ public abstract class AbstractDoubleArray implements IDoubleArray
         int hash = 3;
         return hash;
     }
- 
+
     @Override
     public String toString()
     {
         return(Doubles.util.toString(this));
     }
-    
+
 }

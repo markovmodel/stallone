@@ -46,8 +46,8 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
 
         Algebra.util.scale(1.0 / Algebra.util.sum(this.X), this.X);
 
-        this.itX = this.X.nonzeroIterator();        
-        
+        this.itX = this.X.nonzeroIterator();
+
         this.Xrow = new double[X.rows()];
         updateXrow();
     }
@@ -59,20 +59,20 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
 
         itX.reset();
         int i, j;
-        
+
         while (itX.hasNext())
         {
             i = itX.row();
             j = itX.column();
 
-            Xrow[i] += X.get(i, j);            
+            Xrow[i] += X.get(i, j);
             itX.advance();
         }
-        
+
         for (i=0; i<Xrow[i]; i++)
         {
             Xsum += Xrow[i];
-        }        
+        }
     }
 
     public double logL()
@@ -129,12 +129,12 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
     public void step()
     {
         //System.out.println("stepping: ");
-        
-        
+
+
         itX.reset();
         int i, j;
         double xij;
-        
+
         while (itX.hasNext())
         {
             i = itX.row();
@@ -151,8 +151,8 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
 
         //System.out.println("X = \n"+X+"\n");
         //System.out.println("Xrow = "+doubleArrays.toString(Xrow));
-        
-        
+
+
         double ll = logL();
 
         if (verbose)
@@ -160,7 +160,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
             System.out.println((logliks.size() + 1) + "\t" + ll);
         }
 
-        
+
         this.logliks.append(ll);
     }
 
@@ -233,7 +233,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
 
         return (T);
     }
-    
+
     public IDoubleArray getSymmetricCorrelationMatrix()
     {
         return(X);

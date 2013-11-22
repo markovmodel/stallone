@@ -30,13 +30,13 @@ public class PrimitiveDoubleArray extends AbstractDoubleArray
     {
         return(x[i]);
     }
-    
+
     @Override
     public double get(int i, int j)
     {
         if (j != 0)
             throw(new ArrayIndexOutOfBoundsException("This is a column vector. Cannot access column index "+j));
-        
+
         return(x[i]);
     }
 
@@ -45,22 +45,22 @@ public class PrimitiveDoubleArray extends AbstractDoubleArray
     {
         x[i] = v;
     }
-    
+
     @Override
     public void set(int i, int j, double val)
     {
         if (j != 0)
             throw(new ArrayIndexOutOfBoundsException("This is a column vector. Cannot access column index "+j));
-        
+
         x[i] = val;
-    }    
+    }
     @Override
     public void copyFrom(IDoubleArray other)
     {
         for (int i=0; i<other.size(); i++)
             x[i] = other.get(i);
     }
-    
+
     public void set(double[] _x)
     {
         this.x = _x;
@@ -89,7 +89,7 @@ public class PrimitiveDoubleArray extends AbstractDoubleArray
     {
         return(new PrimitiveDoubleArray(new double[size]));
     }
-    
+
     @Override
     public int order()
     {
@@ -119,5 +119,5 @@ public class PrimitiveDoubleArray extends AbstractDoubleArray
     {
         return false;
     }
-        
+
 }

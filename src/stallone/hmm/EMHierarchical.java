@@ -23,16 +23,16 @@ public class EMHierarchical implements IHMMOptimizer
     private IParametricFunction outputModel;
     private IParameterEstimator outputEstimator;
     private int nstates;
-    
+
     // optimization parameters
     private IHMMParameters[] parameters;
     private int nsteps;
     private double dectol;
-    
+
     // result
     private IHMM hmmBest = null;
-    
-    
+
+
     public EMHierarchical(List<IDataSequence> _obs, IParametricFunction _outputModel, IParameterEstimator _outputEstimator)
     {
         this.obs = _obs;
@@ -44,10 +44,10 @@ public class EMHierarchical implements IHMMOptimizer
     {
         this.parameters = _parameters;
     }
-    
+
     /**
      * Sets the number of optimization steps for level 1
-     * @param n 
+     * @param n
      */
     public void setInitialNumberOfSteps(int n)
     {
@@ -58,7 +58,7 @@ public class EMHierarchical implements IHMMOptimizer
     {
         this.dectol = tol;
     }
-    
+
     public void run()
             throws ParameterEstimationException
     {
@@ -105,11 +105,11 @@ public class EMHierarchical implements IHMMOptimizer
             }
 
             totaloptsteps += optsteps;
-            
+
             // if we only have one parameter set left, we're done.
             if (parameters.length == 1)
                 break;
-            
+
             // select the best
             int[] SI = IntsPrimitive.util.mirror(DoublesPrimitive.util.sortedIndexes(likelihoods));
             double[] newlikelihoods = new double[likelihoods.length / 2];
@@ -126,8 +126,8 @@ public class EMHierarchical implements IHMMOptimizer
         }
 
         hmmBest = emlast.getHMM();
-    }    
-    
+    }
+
     public IHMM getHMM()
     {
         return hmmBest;

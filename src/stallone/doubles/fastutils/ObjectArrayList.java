@@ -31,8 +31,8 @@ package stallone.doubles.fastutils;
 /* Equality */
 /* Object/Reference-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,13 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.RandomAccess;
 import java.util.NoSuchElementException;
-/** A type-specific array-based list; provides some additional methods that use polymorphism to avoid (un)boxing. 
+/** A type-specific array-based list; provides some additional methods that use polymorphism to avoid (un)boxing.
  *
  * <P>This class implements a lightweight, fast, open, optimized,
  * reuse-oriented version of array-based lists. Instances of this class
@@ -60,10 +60,10 @@ import java.util.NoSuchElementException;
  * {@linkplain #trim() trimming methods} lets you control the size of the
  * backing array; this is particularly useful if you reuse instances of this class.
  * Range checks are equivalent to those of {@link java.util}'s classes, but
- * they are delayed as much as possible. 
+ * they are delayed as much as possible.
  *
  * <p>The backing array is exposed by the {@link #elements()} method. If an instance
- * of this class was created {@linkplain #wrap(Object[],int) by wrapping}, 
+ * of this class was created {@linkplain #wrap(Object[],int) by wrapping},
  * backing-array reallocations will be performed using reflection, so that
  * {@link #elements()} can return an array of the same type of the original array; the comments
  * about efficiency made in {@link it.unimi.dsi.fastutil.objects.ObjectArrays} apply here.
@@ -179,8 +179,8 @@ public class ObjectArrayList <K> extends AbstractObjectList <K> implements Rando
 	 * <P>If this array list was created by wrapping a given array, it is guaranteed
 	 * that the type of the returned array will be the same. Otherwise, the returned
 	 * array will be of type {@link Object Object[]} (in spite of the declared return type).
-	 * 
-	 * <strong>Warning</strong>: This behaviour may cause (unfathomable) 
+	 *
+	 * <strong>Warning</strong>: This behaviour may cause (unfathomable)
 	 * run-time errors if a method expects an array
 	 * actually of type <code>K[]</code>, but this methods returns an array
 	 * of type {@link Object Object[]}.
@@ -312,7 +312,7 @@ public class ObjectArrayList <K> extends AbstractObjectList <K> implements Rando
  public boolean isEmpty() {
   return size == 0;
  }
- /** Trims this array list so that the capacity is equal to the size. 
+ /** Trims this array list so that the capacity is equal to the size.
 	 *
 	 * @see java.util.ArrayList#trimToSize()
 	 */
@@ -320,7 +320,7 @@ public class ObjectArrayList <K> extends AbstractObjectList <K> implements Rando
   trim( 0 );
  }
  /** Trims the backing array if it is too large.
-	 * 
+	 *
 	 * If the current array length is smaller than or equal to
 	 * <code>n</code>, this method does nothing. Otherwise, it trims the
 	 * array length to the maximum between <code>n</code> and {@link #size()}.

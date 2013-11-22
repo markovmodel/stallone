@@ -35,7 +35,7 @@ public class Grid implements IGrid
     private int[] sizes;
     // pre-computed significance numbers that are used to calculate single indexes
     private int[] numbers;
-    
+
     // pre-constructed holder for neighbor indexes
     private IntArrayView preNeighborIndexes;
     // pre-constructed holder for neighbor indexes
@@ -53,7 +53,7 @@ public class Grid implements IGrid
     {
         init(griddef);
     }
-    
+
     public Grid(IDoubleArray bounds, double _step)
     {
         IDoubleArray griddef = new PrimitiveDoubleTable(bounds.rows(), 3);
@@ -68,7 +68,7 @@ public class Grid implements IGrid
 
     /**
      * Constructs grid from [xmin, dx, xmax], [ymin, dy, ymax], ...
-     * @param griddef 
+     * @param griddef
      */
     private void init(IDoubleArray griddef)
     {
@@ -88,9 +88,9 @@ public class Grid implements IGrid
             right[i] = griddef.get(i,2);
             width[i] = right[i]-left[i];
             pointPositions[i] = Doubles.create.arrayRange(left[i]+(step[i]/2), right[i]-(step[i]/2)+(1e-6*step[i]), step[i]);
-            sizes[i] = pointPositions[i].size();            
+            sizes[i] = pointPositions[i].size();
         }
-        
+
         numbers[dim-1] = 1;
         for (int i=(dim-2); i>=0; i--)
             numbers[i] = numbers[i+1] * sizes[i];
@@ -125,18 +125,18 @@ public class Grid implements IGrid
         }
         return(multIndex);
     }
-    
+
     @Override
     public int getIndex(int... indexes)
     {
         int res = 0;
-        
+
         for (int i=0; i<multIndex.length; i++)
             res += indexes[i]*numbers[i];
         return(res);
     }
 
-    
+
     @Override
     public int getIndex(IIntArray indexes)
     {
@@ -166,16 +166,16 @@ public class Grid implements IGrid
         for (int i=0; i<size; i++)
         {
             double xc = x.get(i);
-            
+
             int ic = (int)((xc-left[i])/step[i]);
             if (ic < 0)
                 ic = 0;
             if (ic > sizes[i]-1)
                 ic = sizes[i]-1;
-            
+
             preMultIndex.set(i, ic);
         }
-        
+
         return(preMultIndex);
     }
 
@@ -197,8 +197,8 @@ public class Grid implements IGrid
         IDoubleArray res = Doubles.create.sparseColumn(size());
         res.set(assign(x), 1.0);
         return res;
-    }    
-    
+    }
+
     @Override
     public int size()
     {
@@ -207,7 +207,7 @@ public class Grid implements IGrid
             res *= sizes[i];
         return(res);
     }
-    
+
     @Override
     public int dimension()
     {
@@ -219,7 +219,7 @@ public class Grid implements IGrid
     {
         return(getPoint(getMultiIndex(i)));
     }
-    
+
     @Override
     public IDoubleArray getView(int i)
     {
@@ -271,12 +271,12 @@ public class Grid implements IGrid
                 indexes[i] -= 1;
             }
         }
-                
+
         preNeighborMultIndexes.setView(0, 0, nneighbors, dim);
-                
+
         return(preNeighborMultIndexes);
     }
-    
+
     @Override
     public IDataSequence getNeighbors(int index)
     {
@@ -293,7 +293,7 @@ public class Grid implements IGrid
         return i;
     }
 
-    
+
 }
 class GridPointIterator implements Iterator<IDoubleArray>
 {
@@ -303,7 +303,7 @@ class GridPointIterator implements Iterator<IDoubleArray>
 
     int dim;
     IDoubleArray prePoint;
-    
+
     public GridPointIterator(int[] sizes, IDoubleArray[] pointPositions)
     {
          count = new Counter(Ints.create.arrayFrom(sizes));
@@ -324,9 +324,9 @@ class GridPointIterator implements Iterator<IDoubleArray>
 
         for (int i=0; i<dim; i++)
             prePoint.set(i, pointPositions[i].get(c.get(i)));
-        
+
         overflow = count.inc();
-        
+
         return(prePoint);
     }
 
@@ -335,5 +335,5 @@ class GridPointIterator implements Iterator<IDoubleArray>
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

@@ -19,14 +19,14 @@ public class CompactRandomClustering extends AbstractRegularClustering
     private RandomClustering bestClustering;
     private int nclusters = 2;
     private int nrepeat = 0;
-    
+
     public CompactRandomClustering(int _nClusters, int _nrepeat)
     {
         nclusters = _nClusters;
         if (_nrepeat > 1)
             this.nrepeat = _nrepeat;
     }
-        
+
     @Override
     public void perform()
     {
@@ -37,7 +37,7 @@ public class CompactRandomClustering extends AbstractRegularClustering
         double DB = cluster.clusterIndexDaviesBouldin(data, bestClustering.getClusterCenters(), metric, bestClustering.getClusterIndexes());
         //double DB = cluster.clusterNoncompactness(data, bestClustering.getClusterCenters(), metric, bestClustering.getClusterIndexes());
         //double DB = cluster.clusterIndexSizeImbalance(bestClustering.getClusterIndexes());
-        
+
         for (int i=1; i<nrepeat; i++)
         {
             RandomClustering rcnew = new RandomClustering(nclusters);
@@ -54,7 +54,7 @@ public class CompactRandomClustering extends AbstractRegularClustering
                 bestClustering = rcnew;
             }
         }
-        
+
         System.out.println("Choose clustering with DB = "+DB);
 
         super.clusterCenters = bestClustering.getClusterCenters();
@@ -67,7 +67,7 @@ public class CompactRandomClustering extends AbstractRegularClustering
     {
         return bestClustering.getClusterIndexes();
     }
-    
+
     public static void main(String[] args) throws IOException
     {
         if (args.length == 0)
@@ -75,16 +75,16 @@ public class CompactRandomClustering extends AbstractRegularClustering
             System.out.println("CompactRandomClustering <datafile> <nclusters> <nrepeats>");
             System.exit(0);
         }
-        
+
         IDataSequence data = dataNew.dataSequenceLoader(args[0]).load();
         int nclusters = str.toInt(args[1]);
         int nrepeats = str.toInt(args[2]);
-        
+
         CompactRandomClustering C = new CompactRandomClustering(nclusters, nrepeats);
         C.setClusterInput(data);
         C.setMetric(new EuclideanDistance());
         C.perform();
-        
+
         IIntArray assign = C.getClusterIndexes();
         ints.print(assign,"","\n");
     }

@@ -30,7 +30,7 @@ public class HarmonicNetwork extends AbstractPotential
     public HarmonicNetwork(int _natoms)
     {
         this.natoms = _natoms;
-        
+
         this.coordinates = Doubles.create.array(_natoms, 3);
         this.gradient = Doubles.create.array(_natoms, 3);
     }
@@ -82,7 +82,7 @@ System.out.println(" b ["+b[0]+","+b[1]+"]\t"+e);
 
             // gradient
             double fm = k.get(i) * (d - d0.get(i));
-            
+
             IDoubleArray mg1 = metric.gradientX(c1, c2);
             for (int dim = 0; dim < 3; dim++)
             {
@@ -122,11 +122,11 @@ System.out.println(" b ["+b[0]+","+b[1]+"]\t"+e);
     {
         return(coordinates);
     }
-    
+
     @Override
     public int getNumberOfVariables()
     {
         return(coordinates.size());
     }
-    
+
 }

@@ -36,14 +36,14 @@ public class AsciiDataSequenceWriter implements IDataWriter
         try
         {
             writer.write(Doubles.util.toString(data," ")+"\n");
-        } 
+        }
         catch (IOException ex)
         {
             Logger.getLogger(AsciiDataSequenceWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
         // System.out.println( x );
     }
-    
+
     @Override
     public void addAll(Iterable<IDoubleArray> data)
     {
@@ -53,7 +53,7 @@ public class AsciiDataSequenceWriter implements IDataWriter
 
 
     @Override
-    public void close() 
+    public void close()
             throws IOException
     {
         writer.close();

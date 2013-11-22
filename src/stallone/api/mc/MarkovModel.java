@@ -20,5 +20,5 @@ public class MarkovModel
      */
     public static final MarkovModelFactory create = new MarkovModelFactory();
 
-    
+
 }

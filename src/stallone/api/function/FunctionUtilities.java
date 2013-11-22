@@ -10,5 +10,5 @@ package stallone.api.function;
  */
 public class FunctionUtilities
 {
-    
+
 }

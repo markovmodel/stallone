@@ -15,8 +15,8 @@ public interface IDataWriter
 {
     public void add(IDoubleArray data);
 
-    public void addAll(Iterable<IDoubleArray> data);    
-    
+    public void addAll(Iterable<IDoubleArray> data);
+
     public void close()
             throws IOException;
 }

@@ -22,7 +22,7 @@ public interface IEnergyModel
     public boolean calculate();
 
     public int getNDimensions();
-    
+
     public double getEnergy();
 
     public IDoubleArray getGradient();

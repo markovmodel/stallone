@@ -11,16 +11,16 @@ import java.util.HashMap;
 
 /**
  *
- * Transforms discrete trajectories into coarse-grained discrete Trajectories by 
+ * Transforms discrete trajectories into coarse-grained discrete Trajectories by
  * milestoning count
- * 
+ *
  * @author noe
  */
 public class MilestoningFilter
 {
     private Iterable<IIntArray> cores;
     private HashMap<Integer,Integer> state2core;
-    
+
     public MilestoningFilter(Iterable<IIntArray> _cores)
     {
         this.cores = _cores;
@@ -36,12 +36,12 @@ public class MilestoningFilter
             c++;
         }
     }
-    
+
     public MilestoningFilter(IIntArray... _cores)
     {
         this(Arrays.asList(_cores));
     }
-        
+
         /**
          * Filters the trajectory using milestoning count
          * @param traj
@@ -56,7 +56,7 @@ public class MilestoningFilter
             if (state2core.containsKey(traj.get(ifirst)))
                 break;
         }
-        
+
         // no core found -> result trajectory is empty.
         if (ifirst >= traj.size())
             return(Ints.create.array(0));
@@ -72,8 +72,8 @@ public class MilestoningFilter
 
             res.set(i-ifirst, currentCore);
         }
-        
+
         return(res);
     }
-    
+
 }

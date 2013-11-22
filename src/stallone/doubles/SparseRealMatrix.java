@@ -49,7 +49,7 @@ public class SparseRealMatrix extends AbstractDoubleArray
             rowVectors[i] = source.rowVectors[i].copy();
         }
     }
-    
+
     @Override
     public void zero()
     {
@@ -70,7 +70,7 @@ public class SparseRealMatrix extends AbstractDoubleArray
     {
         return(cols);
     }
-    
+
     @Override
     public double get(final int i, final int j)
     {
@@ -106,7 +106,7 @@ public class SparseRealMatrix extends AbstractDoubleArray
             target.set(it.row(), it.column(), it.get());
         }
     }
-    
+
 
     @Override
     public IDoubleArray copy()

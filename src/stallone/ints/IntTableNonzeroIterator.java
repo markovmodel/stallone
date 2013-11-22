@@ -14,16 +14,16 @@ import stallone.api.ints.IIntArray;
 public class IntTableNonzeroIterator extends IntTableIterator
 {
     int index1=0, size;
-    
+
     public IntTableNonzeroIterator(IIntArray _x)
     {
         super(_x);
-        
+
         this.size = _x.size();
 
         goToFirstNonzero();
     }
-    
+
     private void goToFirstNonzero()
     {
         index1=0;
@@ -41,13 +41,13 @@ public class IntTableNonzeroIterator extends IntTableIterator
     {
         goToFirstNonzero();
     }
-    
+
 
 
     /**
      * Goes to the next value. Does not return anything. You have to get the content with get().
      * Usage Example:
-     * 
+     *
      * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
      * {
      *      System.out.println("current element: " + it.get());
@@ -64,5 +64,5 @@ public class IntTableNonzeroIterator extends IntTableIterator
             }
         }
     }
-    
+
 }

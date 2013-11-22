@@ -40,8 +40,8 @@ public class MatrixGraph implements IIntGraph
     public boolean contains(int vertex1, int vertex2)
     {
         return(matrix.get(vertex1,vertex2) > 0);
-    }    
-    
+    }
+
     @Override
     public IIntIterator nodeIterator()
     {
@@ -89,14 +89,14 @@ class MatrixGraphNeighborIterator implements IIntIterator
 {
     private int myself;
     private IDoubleIterator it;
-    
+
     public MatrixGraphNeighborIterator(int _myself, IDoubleIterator _it)
     {
         this.myself = _myself;
         this.it = _it;
         skipmyself();
     }
-    
+
     @Override
     public boolean hasNext()
     {
@@ -127,7 +127,7 @@ class MatrixGraphNeighborIterator implements IIntIterator
         if (it.getIndex() == myself)
             it.advance();
     }
-    
+
     @Override
     public void advance()
     {
@@ -168,7 +168,7 @@ class MatrixGraphNeighborIterator implements IIntIterator
 
 class MatrixGraphEdgeIterator implements Iterator<IIntEdge>
 {
-    private IDoubleArray M;   
+    private IDoubleArray M;
     private IDoubleIterator it;
     private IIntEdge e;
 
@@ -177,7 +177,7 @@ class MatrixGraphEdgeIterator implements Iterator<IIntEdge>
         this.it = _it;
         e = new IntEdge(-1,-1);
     }
-    
+
     @Override
     public boolean hasNext()
     {

@@ -19,7 +19,7 @@ import stallone.api.doubles.IDoubleArray;
 /**
  * @author  Martin Senne
  */
-public class ArrayNumericalEquality //implements INumericalEquality<IMatrix> 
+public class ArrayNumericalEquality //implements INumericalEquality<IMatrix>
 {
     public boolean numericallyEqual(final IDoubleArray o1, final IDoubleArray o2, final double precision)
     {

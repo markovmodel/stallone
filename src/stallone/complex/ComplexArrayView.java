@@ -14,7 +14,7 @@ import stallone.doubles.IArrayIndexMap;
  *
  * @author noe
  */
-public class ComplexArrayView 
+public class ComplexArrayView
     extends AbstractComplexArray
 //    implements IComplexArray
 {
@@ -34,7 +34,7 @@ public class ComplexArrayView
      * Costructor for order 1 array views
      * @param _data
      * @param _from
-     * @param _to 
+     * @param _to
      */
     public ComplexArrayView(IComplexArray _data, int _from, int _to)
     {
@@ -64,7 +64,7 @@ public class ComplexArrayView
     {
         this.carr = _data;
         this.map = ArrayIndexMap.createMap(_data, indexes);
-    }    
+    }
 
     @Override
     public int rows()
@@ -77,7 +77,7 @@ public class ComplexArrayView
     {
         return (map.columns());
     }
-    
+
     @Override
     public boolean isReal()
     {
@@ -95,7 +95,7 @@ public class ComplexArrayView
     {
         carr.setRe(map.getRow(i), map.getColumn(j), x);
     }
-    
+
     @Override
     public double getIm(int i, int j)
     {

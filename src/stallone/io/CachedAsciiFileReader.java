@@ -36,7 +36,7 @@ public class CachedAsciiFileReader
 
     public CachedAsciiFileReader()
     {}
-    
+
     /**
      * Fast reader for asci files.
      *
@@ -69,17 +69,17 @@ public class CachedAsciiFileReader
 
         this.lineStartOffsets = null;
     }
-    
+
     public void setFilename(final String _filename)
     {
         this.filename = _filename;
     }
-    
+
     public void setCommentPattern(final Pattern _commentPattern)
     {
         this.usedCommentPattern = _commentPattern;
     }
-    
+
     public void open()
             throws IOException
     {
@@ -92,9 +92,9 @@ public class CachedAsciiFileReader
      * Determine byte offset of each line in the file.
      * Calls {@link #evaluateLineWhileScanning(java.lang.String, int) } which can be overriden in subclasses
      *   as a quasi-callback.
-     * 
+     *
      * This method MUST be called before invoking {@link #getLine(int) } or {@link #getNumberOfLines() }
-     * 
+     *
      */
     public void scan()
             throws IOException
@@ -158,7 +158,7 @@ public class CachedAsciiFileReader
         return relevantLines;
     }
 
-    
+
     /**
      * Get line with line number <code>lineNumber</code>.
      *

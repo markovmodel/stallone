@@ -19,15 +19,15 @@ public class DiscretePotentialMetropolisMarkovChain extends MarkovChain
     public DiscretePotentialMetropolisMarkovChain(IGriddedFunction f, double kT)
     {
         IDoubleArray _T = Doubles.create.array(f.size(), f.size());
-        
+
         for (int i=0; i<f.size(); i++)
         {
             IDoubleArray xi = f.get(i);
             double Ei = f.f(xi);
             IIntArray neighbors = f.getNeighborIndexes(i);
 
-            double psum = 0;            
-            
+            double psum = 0;
+
             for (int j=0; j<neighbors.size(); j++)
             {
                 int n = neighbors.get(j);
@@ -39,9 +39,9 @@ public class DiscretePotentialMetropolisMarkovChain extends MarkovChain
             }
             _T.set(i,i, 1.0-psum);
         }
-        
+
         super.T = _T;
         super.dd = new DiscreteDistributions(_T);
     }
-    
+
 }

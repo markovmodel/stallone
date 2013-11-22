@@ -42,7 +42,7 @@ public class PrimitiveIntTools
             res[i] = from(a[i]);
         }
         return (res);
-    }    
+    }
     public static int[] from(float[] a)
     {
         int[] res = new int[a.length];
@@ -62,7 +62,7 @@ public class PrimitiveIntTools
         }
         return (res);
     }
-    
+
     /**
     allocates the size for a two-dimensional double array with the same
     sizes as the given integer array.

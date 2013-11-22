@@ -49,7 +49,7 @@ public abstract class AbstractComplexArray
         }
     };
     protected transient IteratorType defaultIteratorType = IteratorType.NON_ZERO;*/
-    
+
     @Override
     public int order()
     {
@@ -60,14 +60,14 @@ public abstract class AbstractComplexArray
             order++;
         return(order);
     }
-    
+
     @Override
     public boolean isReal()
     {
         for (IComplexIterator it = nonzeroComplexIterator(); it.hasNext(); it.advance())
             if (it.getIm() != 0)
                 return false;
-        
+
         return true;
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractComplexArray
     }
 
 
-    
+
     @Override
     public double get(int ij)
     {
@@ -95,8 +95,8 @@ public abstract class AbstractComplexArray
     public double getRe(int ij)
     {
         return getRe(ij/columns(), ij%columns());
-    }    
-    
+    }
+
     @Override
     public double getIm(int ij)
     {
@@ -113,22 +113,22 @@ public abstract class AbstractComplexArray
     public void setRe(int ij, double value)
     {
         setRe(ij/columns(), ij%columns(), value);
-    }    
-    
+    }
+
     @Override
     public void setIm(int ij, double value)
     {
         setIm(ij/columns(), ij%columns(), value);
     }
-    
-    
+
+
     @Override
     public void set(int i, double re, double im)
     {
         setRe(i,re);
         setIm(i,im);
     }
-    
+
     @Override
     public void set(int i, int j, double re, double im)
     {
@@ -136,7 +136,7 @@ public abstract class AbstractComplexArray
         setIm(i,j,im);
     }
 
-    
+
     @Override
     public void zero()
     {
@@ -145,7 +145,7 @@ public abstract class AbstractComplexArray
             it.set(0,0);
         }
     }
-    
+
     @Override
     public void copyFrom(IComplexArray other)
     {
@@ -156,7 +156,7 @@ public abstract class AbstractComplexArray
         for (int i=0; i<_size; i++)
             set(i,other.getRe(i),getIm(i));
     }
-    
+
     @Override
     public void copyInto(IComplexArray other)
     {
@@ -167,14 +167,14 @@ public abstract class AbstractComplexArray
         for (int i=0; i<_size; i++)
             other.set(i,getRe(i),getIm(i));
     }
-    
+
     @Override
     public double[] getRealArray()
     {
         return(getArray());
     }
-    
-    
+
+
     @Override
     public double[] getImaginaryArray()
     {
@@ -183,19 +183,19 @@ public abstract class AbstractComplexArray
             res[i] = getIm(i);
         return(res);
     }
-    
+
     @Override
     public double[] getRealRow(int row)
     {
         return(getRow(row));
     }
-    
+
     @Override
     public double[] getRealColumn(int col)
     {
         return(getColumn(col));
     }
-    
+
     @Override
     public double[] getImaginaryRow(int row)
     {
@@ -212,14 +212,14 @@ public abstract class AbstractComplexArray
         for (int i=0; i<res.length; i++)
             res[i] = getIm(i,col);
         return(res);
-    }    
-        
+    }
+
     @Override
     public double[][] getRealTable()
     {
         return(getTable());
     }
-    
+
     @Override
     public double[][] getImaginaryTable()
     {
@@ -229,7 +229,7 @@ public abstract class AbstractComplexArray
             res[it.row()][it.column()] = it.getIm();
         }
         return(res);
-    }        
+    }
     /**
      * Return default iterator {@link #defaultIteratorType). The default iterator is the iterator over non-zero entries
      * {@link IteratorType#NON_ZERO}. This method is identical to calling {@code
@@ -290,7 +290,7 @@ public abstract class AbstractComplexArray
     {
         return new GenericFullMatrixIterator(this);
     }*/
-        
+
     @Override
     public IComplexIterator complexIterator()
     {
@@ -301,8 +301,8 @@ public abstract class AbstractComplexArray
     public IComplexIterator nonzeroComplexIterator()
     {
         return(new ComplexArrayNonzeroIterator(this));
-    }       
-    
+    }
+
     /*@Override
     public Iterator<IVector> rowIterator()
     {
@@ -315,7 +315,7 @@ public abstract class AbstractComplexArray
             {
                 m=_m;
             }
-            
+
             @Override
             public boolean hasNext()
             {
@@ -336,7 +336,7 @@ public abstract class AbstractComplexArray
                 throw new UnsupportedOperationException("Not supported.");
             }
         }
-        
+
         return(new RowIterator(this));
     }*/
 
@@ -363,13 +363,13 @@ public abstract class AbstractComplexArray
     {
         return new ComplexArrayView(this, selectedRows, selectedColumns);
     }
-    
+
     @Override
     public IDoubleArray viewReal()
     {
         return this;
     }
-    
+
     @Override
     public IDoubleArray viewImaginary()
     {
@@ -410,7 +410,7 @@ public abstract class AbstractComplexArray
         } // end if-else
 
         System.out.println("done");
-        
+
         return strBuf.toString();
     }
 }

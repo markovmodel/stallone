@@ -18,23 +18,23 @@ public class Viterbi
 {
     private IHMMForwardModel forwardModel;
     private ArrayList<IIntArray> paths = new ArrayList<IIntArray>();
-    
+
     public Viterbi(IHMMForwardModel _forwardModel)
     {
         this.forwardModel = _forwardModel;
         for (int i=0; i<_forwardModel.getNObs(); i++)
             paths.add(this.calculate(i));
     }
-    
+
     private IIntArray calculate(int itraj)
     {
         int ntime = forwardModel.getNObs(itraj);
         //System.out.println("traj = "+itraj+"  ntime = "+ntime);
         int nstates = forwardModel.getNStates();
-        
+
         double[][] T1 = new double[ntime][nstates];
         int[][] ptr = new int[ntime][nstates];
-        
+
         // first timestep
         for (int s=0; s<nstates; s++)
         {
@@ -78,16 +78,16 @@ public class Viterbi
         {
             path.set(t, ptr[t+1][path.get(t+1)]);
         }
-        
+
         return path;
     }
-    
-    
+
+
     public IIntArray getPath(int i)
     {
         return paths.get(i);
     }
-    
+
     public List<IIntArray> getPaths()
     {
         return paths;

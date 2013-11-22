@@ -113,12 +113,12 @@ public class AlgebraFactory
         return (blas);
         // return new SparseArpackEigenvalueDecomposition(new Algebra(), matrix);
     }
-    
+
     /**
-     * 
+     *
      * @param matrix
      * @param nev the number of requested eigenvector / eigenvalue pairs
-     * @return 
+     * @return
      */
     public IEigenvalueSolver eigenSolver(final IDoubleArray matrix, int nev)
     {

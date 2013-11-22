@@ -26,11 +26,11 @@ public interface IHMMHiddenVariables
         public double getBeta(int t, int s);
 
         public double getGamma(int t, int s);
-        
+
         /**
          * Gets all gamma values of state s
          * @param s
-         * @return 
+         * @return
          */
         public IDoubleArray getGammaByState(int s);
 

@@ -15,20 +15,20 @@ public class ComplexArrayElement implements IComplexElement
 {
     public IComplexArray table;
     public int row, col;
-    
+
     public ComplexArrayElement(IComplexArray _table, int _row, int _col)
     {
         this.table = _table;
         this.row = _row;
         this.col = _col;
     }
-    
+
     public void setIndex(int _row, int _col)
     {
         this.row = _row;
         this.col = _col;
     }
-    
+
     @Override
     public int row()
     {
@@ -40,7 +40,7 @@ public class ComplexArrayElement implements IComplexElement
     {
         return(col);
     }
-    
+
     @Override
     public double get()
     {

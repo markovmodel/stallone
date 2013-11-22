@@ -19,9 +19,9 @@ public interface IMarkovPropagator
     public void set(IDoubleArray _P);
 
     /**
-     * 
+     *
      * @param t the time
      * @return the propagator for time t
      */
-    public IDoubleArray propagate(double t);    
+    public IDoubleArray propagate(double t);
 }

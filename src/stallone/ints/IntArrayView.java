@@ -17,7 +17,7 @@ public class IntArrayView implements IIntArray
     private IIntArray data;
     private int left, top, right, bottom;
     private int nrows, ncols, size;
-    
+
     /**
      * Generates a view to the data using the window top,left (inclusive) to bottom,right (exclusive)
      */
@@ -26,12 +26,12 @@ public class IntArrayView implements IIntArray
         this.data = _data;
         setView(_top, _left, _bottom, _right);
     }
-    
+
     /**
      * Costructor for order 1 array views
      * @param _data
      * @param _from
-     * @param _to 
+     * @param _to
      */
     public IntArrayView(IIntArray _data, int _from, int _to)
     {
@@ -41,14 +41,14 @@ public class IntArrayView implements IIntArray
         this.data = _data;
         this.setView(_from, _to);
     }
-    
+
     public final void setView(int _top, int _left, int _bottom, int _right)
     {
         this.left = _left;
         this.top = _top;
         this.right = _right;
         this.bottom = _bottom;
-        
+
         this.nrows = _bottom - _top;
         this.ncols = _right - _left;
         this.size = nrows*ncols;
@@ -58,18 +58,18 @@ public class IntArrayView implements IIntArray
     {
         if (data.order() > 1)
             throw(new IllegalArgumentException("Cannot use order-1 array view constructor for a table"));
-        
+
         this.top = _from;
         this.bottom = _to;
         this.left = 0;
         this.right = 1;
-        
+
         this.nrows = _to - _from;
         this.ncols = 1;
         this.size = nrows;
     }
-    
-    
+
+
     @Override
     public int size()
     {
@@ -127,7 +127,7 @@ public class IntArrayView implements IIntArray
     public int[] getArray()
     {
         int[] res = new int[size];
-        
+
         for (int i=0; i<size; i++)
             res[i] = get(i);
 
@@ -149,11 +149,11 @@ public class IntArrayView implements IIntArray
     public int[] getRow(int row)
     {
         int[] res = new int[ncols];
-        
+
         for (int i=0; i<ncols; i++)
             res[i] = get(row,i);
 
-        return res;                
+        return res;
     }
 
     @Override
@@ -166,11 +166,11 @@ public class IntArrayView implements IIntArray
     public int[] getColumn(int col)
     {
         int[] res = new int[nrows];
-        
+
         for (int i=0; i<nrows; i++)
             res[i] = get(i, col);
 
-        return res;                
+        return res;
     }
 
     @Override
@@ -234,5 +234,5 @@ public class IntArrayView implements IIntArray
     {
         return data.isSparse();
     }
-    
+
 }

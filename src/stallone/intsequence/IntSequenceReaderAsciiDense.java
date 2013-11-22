@@ -22,9 +22,9 @@ import stallone.io.CachedAsciiFileReader;
  */
 public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
     implements IIntReader
-{    
+{
     private boolean scanned = false;
-    
+
     //private boolean uniformDimension = false;
     private int dimension = 0;
     private int line = 0;
@@ -32,7 +32,7 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
     public IntSequenceReaderAsciiDense()
     {
     }
-    
+
     public IntSequenceReaderAsciiDense(String _file)
             throws IOException
     {
@@ -50,15 +50,15 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
             this.scanned = false;
         }
     }
-    
+
     @Override
     public final void open()
             throws IOException
     {
         super.open();
         scan();
-    }    
-    
+    }
+
     @Override
     public final void scan()
             throws IOException
@@ -69,7 +69,7 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
             scanned = true;
         }
     }
-        
+
     @Override
     //TODO: should check whether all lines are consistent
     protected boolean scanLine(String textline, int currentLineNumber)
@@ -77,7 +77,7 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
         String[] words = Strings.util.split(textline);
         return (words.length == 1);
     }
-        
+
     @Override
     public int size()
     {
@@ -90,13 +90,13 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
     {
         // rough estimate
         return(size()*4);
-    }    
+    }
 
     @Override
     public int get(int i)
     {
         String strline = super.getLine(i);
-    
+
         int res = 0;
         try
         {
@@ -108,7 +108,7 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
         }
         return res;
     }
-    
+
     @Override
     public void close()
             throws IOException
@@ -125,5 +125,5 @@ public class IntSequenceReaderAsciiDense extends CachedAsciiFileReader
             res.set(i, get(i));
         return res;
     }
-          
+
 }

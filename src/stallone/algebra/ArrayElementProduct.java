@@ -25,7 +25,7 @@ import static stallone.doubles.DoubleArrayTest.*;
  *
  * @author  Frank Noe
  */
-public class ArrayElementProduct //implements IMatrixSum 
+public class ArrayElementProduct //implements IMatrixSum
 {
     public IDoubleArray multiplyToNewDense(final IDoubleArray a, final IDoubleArray b)
     {
@@ -40,7 +40,7 @@ public class ArrayElementProduct //implements IMatrixSum
         multiplySparse(a,b,target);
         return target;
     }
-    
+
     public void multiplyToSparse(final IDoubleArray a, final IDoubleArray b)
     {
         multiplySparse(a,b,a);
@@ -50,7 +50,7 @@ public class ArrayElementProduct //implements IMatrixSum
     {
         multiplyDense(a,b,a);
     }
-    
+
     public void multiplyDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         assertEqualDimensions(a, b);
@@ -69,7 +69,7 @@ public class ArrayElementProduct //implements IMatrixSum
             }
         }
     }
-    
+
     //@Override
     public void multiplySparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
@@ -79,7 +79,7 @@ public class ArrayElementProduct //implements IMatrixSum
         if (a != target)
         {
             target.zero();
-        
+
             for (IDoubleIterator it = a.nonzeroIterator(); it.hasNext(); it.advance())
                 target.set(it.row(), it.column(), it.get());
         }
@@ -88,10 +88,10 @@ public class ArrayElementProduct //implements IMatrixSum
         {
             int i = it.row();
             int j = it.column();
-            target.set(i, j, target.get(i,j) * it.get());        
+            target.set(i, j, target.get(i,j) * it.get());
         }
       }
-    
+
     public IComplexArray multiplyToNewDense(final IComplexArray a, final IComplexArray b)
     {
         IComplexArray target = a.copy();
@@ -104,18 +104,18 @@ public class ArrayElementProduct //implements IMatrixSum
         IComplexArray target = a.copy();
         multiplySparse(a,b,target);
         return target;
-    }    
-    
+    }
+
     public void multiplyToDense(final IComplexArray a, final IComplexArray b)
     {
         multiplyDense(a,b,a);
     }
-    
+
     public void multiplyToSparse(final IComplexArray a, final IComplexArray b)
     {
         multiplySparse(a,b,a);
     }
-    
+
     //@Override
     public void multiplyDense(final IComplexArray a, final IComplexArray b, final IComplexArray target)
     {
@@ -141,7 +141,7 @@ public class ArrayElementProduct //implements IMatrixSum
             }
         }
     }
-    
+
     //@Override
     public void sumSparse(final IComplexArray a, final IComplexArray b, final IComplexArray target)
     {
@@ -151,11 +151,11 @@ public class ArrayElementProduct //implements IMatrixSum
         if (a != target)
         {
             target.zero();
-                
+
             for (IComplexIterator it = a.nonzeroComplexIterator(); it.hasNext(); it.advance())
                 target.set(it.row(), it.column(), it.getRe(), it.getIm());
         }
-        
+
         for (IComplexIterator it = b.nonzeroComplexIterator(); it.hasNext(); it.advance())
         {
             int i = it.row();
@@ -168,5 +168,5 @@ public class ArrayElementProduct //implements IMatrixSum
 
                 target.set(i, j, aRe*bRe - aIm*bIm, aRe*bIm + aIm*bRe);
         }
-      }    
+      }
 }

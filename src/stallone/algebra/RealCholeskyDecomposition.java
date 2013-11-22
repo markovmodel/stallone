@@ -64,7 +64,7 @@ public class RealCholeskyDecomposition implements ICholeskyDecomposition {
 
     /**
      * Get the decomposition matrix L if it exists.
-     * 
+     *
      * @return The output matrix L or {@code null}, if the algorithm failed.
      */
     @Override
@@ -79,7 +79,7 @@ public class RealCholeskyDecomposition implements ICholeskyDecomposition {
 
     /**
      * Set the input matrix A to given matrix.
-     * 
+     *
      * @param matrix The new input matrix.
      */
     protected void setInputMatrix(IDoubleArray matrix) {

@@ -59,7 +59,7 @@ public class RealSparseLinearSystem implements ILinearSystem {
 //    Solver("QMR","Quasi-Minimal Residual method. QMR solves the unsymmetric linear system Ax = b using the Quasi-Minimal Residual method. " +
 //                 "QMR uses two preconditioners, and by default these are the same preconditioner.");
 //    Solver("","");
-    
+
     public static final int BiCGstab = 1;
     public static final int BiCG = 2;
     public static final int CG = 3;
@@ -70,7 +70,7 @@ public class RealSparseLinearSystem implements ILinearSystem {
     private IDoubleArray wrappedSolutionVector;
 
     private no.uib.cipr.matrix.sparse.AbstractIterativeSolver solver;
-    
+
     private no.uib.cipr.matrix.Matrix leftSideMatrix;
     private no.uib.cipr.matrix.Vector coefficientVector;
     private no.uib.cipr.matrix.Vector solutionVector;
@@ -80,10 +80,10 @@ public class RealSparseLinearSystem implements ILinearSystem {
     public RealSparseLinearSystem( int solverType ) {
         this.solverType = solverType;
     }
-    
+
     /**
      * Matrix leftSideMatrix should be sparse.
-     * 
+     *
      * @param leftSideMatrix
      */
     @Override
@@ -116,7 +116,7 @@ public class RealSparseLinearSystem implements ILinearSystem {
             monitor.setMaxIterations(1000000);
 
             solver.setIterationMonitor( monitor );
-            
+
             // A, b, x
             solver.solve(leftSideMatrix, coefficientVector, solutionVector);
         } catch (IterativeSolverNotConvergedException ex) {

@@ -14,12 +14,12 @@ import stallone.api.ints.IIntArray;
 public interface ICountMatrixEstimator
 {
     public void addInput(IIntArray traj);
-    
+
     public void addInput(Iterable<IIntArray> traj);
-    
+
     public void setLag(int lag);
-    
+
     public IDoubleArray estimate();
-    
+
     public IDoubleArray getCountMatrix();
 }

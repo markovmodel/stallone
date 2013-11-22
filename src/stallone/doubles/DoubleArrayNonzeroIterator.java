@@ -18,7 +18,7 @@ public class DoubleArrayNonzeroIterator extends DoubleArrayIterator
         super(_x);
         goToFirstNonzero();
     }
-    
+
     private void goToFirstNonzero()
     {
         // set i to the next nonzero index
@@ -32,13 +32,13 @@ public class DoubleArrayNonzeroIterator extends DoubleArrayIterator
     {
         goToFirstNonzero();
     }
-    
+
 
 
     /**
      * Goes to the next value. Does not return anything. You have to get the content with get().
      * Usage Example:
-     * 
+     *
      * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
      * {
      *      System.out.println("current element: " + it.get());
@@ -51,5 +51,5 @@ public class DoubleArrayNonzeroIterator extends DoubleArrayIterator
             if (x.get(i) != 0)
                 break;
     }
-    
+
 }

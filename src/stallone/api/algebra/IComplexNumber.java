@@ -50,7 +50,7 @@ public interface IComplexNumber {
      * @param  real  the real part the complex number to be set.
      */
     void set(double real);
-    
+
     /**
      * Sets the real part of this complex number.
      *
@@ -217,8 +217,8 @@ public interface IComplexNumber {
      * @return  this
      */
     IComplexNumber add(IComplexNumber other);
-    
+
     IComplexNumber addRe(double re);
-    
+
     IComplexNumber addIm(double im);
 }

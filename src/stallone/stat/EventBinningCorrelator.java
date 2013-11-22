@@ -81,7 +81,7 @@ public class EventBinningCorrelator
         parser.addIntCommand("samplingtime", true);
 
         parser.addDoubleCommand("windowfraction", true);
-        
+
         parser.addCommand("subtractmean", true);
 
         // parse
@@ -111,14 +111,14 @@ public class EventBinningCorrelator
         public double width;
         public double t, tl, tr;
         public int l=0, r=0; // first event index included and first event index after window [t-width, t+width]
-        
+
         public Window(IDoubleArray _times, IDoubleArray _data, double _width)
         {
             this.times = _times;
             this.data = _data;
             this.width = _width;
         }
-        
+
         /**
          * Positions the window to time t.
          */
@@ -127,18 +127,18 @@ public class EventBinningCorrelator
             this.t = _t;
             this.tl = t-width/2.0;
             this.tr = t+width/2.0;
-            
+
             l=0;
             r=0;
             advance(0);
         }
-        
+
         public void advance(double dt)
         {
             this.t += dt;
             this.tl = t-width/2.0;
             this.tr = t+width/2.0;
-            
+
             // move left index
             while (l<times.size())
             {
@@ -147,7 +147,7 @@ public class EventBinningCorrelator
                 else
                     break;
             }
-                
+
             // move right index
             while (r<times.size())
             {
@@ -157,19 +157,19 @@ public class EventBinningCorrelator
                     break;
             }
         }
-        
+
         public boolean isEmpty()
         {
             return (l==r);
         }
-        
+
         public boolean endOfData()
         {
             return (l>=times.size());
         }
     }
-    
-    
+
+
     public double correlate(IDoubleArray time, IDoubleArray data, double tau, double windowSize)
     {
         if (time.size() != data.size())
@@ -182,14 +182,14 @@ public class EventBinningCorrelator
 
         Window w1 = new Window(time, data, windowSize);
         w1.init(windowSize/2.0);
-        
+
         Window w2 = new Window(time, data, windowSize);
         w2.init(windowSize/2.0 + tau);
 
         // estimate
         double sum = 0;
         double count = 0;
-        
+
         while(!w2.endOfData())
         {
             /*
@@ -198,7 +198,7 @@ public class EventBinningCorrelator
                     System.out.println("t = "+w1.t+"\t times ["+w1.tl+","+w1.tr+"] -> ["+w2.tl+","+w2.tr+"]");
                     System.out.println("  w1=("+w1.l+", "+w1.r+") w2="+w2.l+", "+w2.r);
                 }*/
-                
+
             // update convolution sums
             if ((!w1.isEmpty()) && (!w2.isEmpty()))
             {
@@ -206,7 +206,7 @@ public class EventBinningCorrelator
                 double x2 = (cumdata.get(w2.r) - cumdata.get(w2.l))/((double)(w2.r-w2.l));
                 sum += x1*x2;
                 count += 1.0;
-                
+
                 /*if (tau == 0)
                 {
                     System.out.println("t = "+w1.t+"\t times ["+w1.tl+","+w1.tr+"] -> ["+w2.tl+","+w2.tr+"]");
@@ -214,12 +214,12 @@ public class EventBinningCorrelator
                     System.out.println("  x1= "+x1+"  x2= "+x2);
                 }*/
             }
-            
+
             // advance window by dt.
             w1.advance(samplingTime);
             w2.advance(samplingTime);
         }
-        
+
         return sum / count;
     }
 

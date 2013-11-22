@@ -20,7 +20,7 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
     {
         this.x = _x;
         this.ndim = x[0].length;
-        
+
         for (int i=1; i<_x.length; i++)
             if (_x[i].length != ndim)
                 throw(new IllegalArgumentException("Trying to construct DoubleTable with ragged array. Only rectangular arrays are permitted."));
@@ -100,7 +100,7 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
     {
         return (new PrimitiveDoubleTable(size,1));
     }
-    
+
     @Override
     public IDoubleArray create(int rows, int cols)
     {
@@ -159,7 +159,7 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
     {
         if (size() != other.size())
             throw(new IllegalArgumentException("Inconsistent sizes. This array has size "+size()+" other array has size "+other.size()));
-        
+
         Doubles.util.copyInto(this, 0, size(), other, 0);
     }
 
@@ -168,7 +168,7 @@ public class PrimitiveDoubleTable extends AbstractDoubleArray
     {
         return false;
     }
-    
+
 
 }
 

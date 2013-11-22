@@ -16,7 +16,7 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
     private IDoubleArray darr;
     private ComplexArrayView rowview = null;
     private ComplexArrayView colview = null;
-    
+
     public ComplexDoubleArrayView(IDoubleArray _darr)
     {
         this.darr = _darr;
@@ -171,7 +171,7 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
     {
         return(darr.getColumn(j));
     }
-    
+
 
     @Override
     public IComplexArray create(int size)
@@ -184,7 +184,7 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
     {
         int cols = columns();
         darr.set(i/cols,i%cols,re);
-        
+
         if (im != 0)
             throw new UnsupportedOperationException("No imaginary part supported");
     }
@@ -193,7 +193,7 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
     public void set(int i, int j, double re, double im)
     {
         darr.set(i,j,re);
-        
+
         if (im != 0)
             throw new UnsupportedOperationException("No imaginary part supported");
     }
@@ -211,5 +211,5 @@ public class ComplexDoubleArrayView extends AbstractComplexArray
     }
 
 
-    
+
 }

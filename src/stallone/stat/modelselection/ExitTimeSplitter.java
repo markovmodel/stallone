@@ -18,7 +18,7 @@ public class ExitTimeSplitter
 
     public static boolean VERBOSE = false;
     private double splitAt = 1.5;
-    
+
     private int nburnin = 1000, nsample = 100000;
     // input
     private IIntList states = intsNew.list(0);
@@ -54,7 +54,7 @@ public class ExitTimeSplitter
     {
         splitAt = _splitAt;
     }
-    
+
     public int getNsamples(int i)
     {
         if (exitTimesByState[i].length > 10000)
@@ -63,7 +63,7 @@ public class ExitTimeSplitter
             return 100000;
         return 1000000;
     }
-    
+
     public void run()
     {
         // count states
@@ -158,12 +158,12 @@ public class ExitTimeSplitter
     {
         return newStates;
     }
-    
+
     /**
      * Returns the split parameters for the requested state
      * @param state
      * @return if not split: (1, k, 0), where k is the exit rate
-     * if split: (a, k1, k2), where the exit time model is a*exp(-k1 t) + (1-a)*exp(-k2 t) 
+     * if split: (a, k1, k2), where the exit time model is a*exp(-k1 t) + (1-a)*exp(-k2 t)
      */
     public double[] getSplittingParameters(int state)
     {
@@ -175,7 +175,7 @@ public class ExitTimeSplitter
         System.out.println("state\tevents\tsamples\tnstates\tsplit?\tamplitude\trate k1\trate k2");
         for (int i = 0; i < isStateSplit.length; i++)
         {
-            System.out.println(i 
+            System.out.println(i
                     + "\t" + exitTimesByState[i].length
                     + "\t" + getNsamples(i)
                     + "\t" + populatedStates[i]

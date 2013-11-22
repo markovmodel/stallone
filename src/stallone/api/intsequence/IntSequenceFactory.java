@@ -18,7 +18,7 @@ import stallone.io.CachedAsciiFileReader;
  */
 public class IntSequenceFactory
 {
-    public IIntSequenceLoader intSequenceLoader(List<String> files) 
+    public IIntSequenceLoader intSequenceLoader(List<String> files)
             throws IOException
     {
         // test first file
@@ -44,14 +44,14 @@ public class IntSequenceFactory
         for (String s : files)
             loader.addSource(s);
         return (loader);
-    }    
-    
+    }
+
     public IIntWriter intSequenceWriter(String file)
             throws IOException
     {
         return new IntSequenceWriterAsciiDense(file);
     }
-    
+
     public IntArrayTokenizer intSequenceTokenizer(IIntArray arr)
     {
         return new IntArrayTokenizer(arr);

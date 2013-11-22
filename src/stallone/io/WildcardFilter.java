@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
+ *
  * The implementation of a FileFilter, which uses the special characters (in a ms-dos like manner)
  *
  * <ul>
@@ -60,7 +60,7 @@ public class WildcardFilter implements FileFilter
 
         // turn the search pattern into a regular expression
         // original character within searchpattern are enclosed into quotation by "\Q" and "\E"
-        // 
+        //
         // a*b#.abc => \Qa\E.*\Qb\E\\d+.\Qabc\E
         while (pos < searchPattern.length())
         {

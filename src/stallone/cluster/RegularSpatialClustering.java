@@ -70,7 +70,7 @@ public class RegularSpatialClustering
         DataList centroids = new DataList();
 
         Iterator<IDoubleArray> it = data.iterator();
-        
+
         if (datasize > 0)
         {
             // take first element as centroid

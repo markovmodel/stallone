@@ -13,23 +13,23 @@ import java.util.Iterator;
 public interface IIntIterator extends Iterator<IIntElement>
 {
     public void reset();
-    
+
     public void advance();
-    
-    
+
+
     public int getIndex();
-    
+
     public int row();
-    
+
     public int column();
-    
+
     public int get();
-    
+
     public void set(int x);
-    
+
     @Override
     public boolean hasNext();
-    
+
     @Override
     public IIntElement next();
 }

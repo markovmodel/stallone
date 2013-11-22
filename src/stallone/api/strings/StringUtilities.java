@@ -22,7 +22,7 @@ public class StringUtilities
             list.add(s);
         return list;
     }
-    
+
     public String[] toArray(List<String> list)
     {
         String[] arr = new String[list.size()];
@@ -30,7 +30,7 @@ public class StringUtilities
             arr[i] = list.get(i);
         return arr;
     }
-    
+
     public String[] getLines(String str)
     {
 		StringTokenizer tok = new StringTokenizer(str, "\n");
@@ -292,7 +292,7 @@ public class StringUtilities
         {
             try
             {
-                res[i] = toDouble(words[i]);            
+                res[i] = toDouble(words[i]);
             }
             catch(NumberFormatException e)
             {
@@ -300,8 +300,8 @@ public class StringUtilities
             }
         }
         return(res);
-    }    
-    
+    }
+
     public double[][] toDoubleTable(String str)
     {
         String[] lines = str.split("[;\n]");
@@ -310,7 +310,7 @@ public class StringUtilities
             res[i] = toDoubleArray(lines[i]);
         return(res);
     }
-    
+
     public String[] concat(String[] a1, String[] a2)
     {
 	String[] res = new String[a1.length+a2.length];
@@ -454,5 +454,5 @@ public class StringUtilities
 	for (int i=0; i<arr.length; i++)
 	    res[i] = arr[i][k];
 	return(res);
-    }    
+    }
 }

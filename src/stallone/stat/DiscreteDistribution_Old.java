@@ -29,17 +29,17 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
         weight = 0;
         updateInc();
     }
-    
+
     public DiscreteDistribution_Old(IDoubleArray arr)
     {
         this(arr.getArray());
     }
-    
+
     public void setPrior(double[] _prior)
     {
         priorCount = _prior;
     }
-    
+
     private final void updateInc()
     {
         pinc[0] = p[0];
@@ -84,9 +84,9 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
     }
 
     /**
-     * 
+     *
      * @param x observed histogram
-     * @return 
+     * @return
      */
     @Override
     public double f(double... x)
@@ -136,7 +136,7 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
         System.out.println("making an unweighted estimate");
         p = doubleArrays.copy(priorCount);
         weight = doubleArrays.sum(priorCount);
-        
+
         if (data.dimension() == p.length)
         {
             for (IDoubleArray arr : data)
@@ -158,7 +158,7 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
             else
                 throw new IllegalArgumentException("incompatible dimension of observation");
         }
-        
+
         p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
         updateInc();
         return doublesNew.arrayFrom(p);
@@ -202,9 +202,9 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
                 throw new IllegalArgumentException("incompatible dimension of observation");
         }
 
-        
+
         //System.out.println("estimate before normalization: "+doubleArrays.toString(p,", "));
-        
+
         p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
         //System.out.println("estimate after normalization: "+doubleArrays.toString(p,", "));
         updateInc();
@@ -216,7 +216,7 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
     public void initialize()
     {
         p = doubleArrays.copy(priorCount);
-        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
         updateInc();
         weight = doubleArrays.sum(priorCount);
     }
@@ -243,7 +243,7 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
         p = doubleArrays.subtract(p, priorCount);
 
         // renormalize
-        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
         weight += oldWeight;
     }
 
@@ -260,7 +260,7 @@ public class DiscreteDistribution_Old implements IParametricFunction, IParameter
         p = doubleArrays.subtract(p, priorCount);
 
         // renormalize
-        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);        
+        p = doubleArrays.multiply(1.0/doubleArrays.sum(p), p);
         weight += oldWeight;
     }
 

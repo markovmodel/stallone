@@ -14,7 +14,7 @@ public interface IIntWriter
 {
     public void add(int data);
 
-    public void addAll(IIntArray data);    
-    
+    public void addAll(IIntArray data);
+
     public void close();
 }

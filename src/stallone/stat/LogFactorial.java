@@ -12,7 +12,7 @@ public class LogFactorial
 {
     private int nmax;
     private double[] preCalculated;
-    
+
     public LogFactorial(int _nmax)
     {
         this.nmax = _nmax;
@@ -21,7 +21,7 @@ public class LogFactorial
         for (int i=0; i<=_nmax; i++)
             preCalculated[i] = calculateNow(i);
     }
-    
+
     private static double calculateNow(int n)
     {
         double logfac = 0;
@@ -32,8 +32,8 @@ public class LogFactorial
         }
 
         return (logfac);
-    }    
-    
+    }
+
     public double calculate(int n)
     {
         if (n <= nmax)

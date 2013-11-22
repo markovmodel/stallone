@@ -21,7 +21,7 @@ public class DataSequenceArray implements IDataSequence
 
     /**
      * Untimed data sequence
-     * @param _data 
+     * @param _data
      */
     public DataSequenceArray(IDoubleArray[] _data)
     {
@@ -31,7 +31,7 @@ public class DataSequenceArray implements IDataSequence
     /**
      * Timed data sequence
      * @param _times
-     * @param _data 
+     * @param _data
      */
     public DataSequenceArray(double[] _times, IDoubleArray[] _data)
     {
@@ -41,7 +41,7 @@ public class DataSequenceArray implements IDataSequence
 
     /**
      * Untimed data array
-     * @param _data 
+     * @param _data
      */
     public DataSequenceArray(double[][] _data)
     {
@@ -52,14 +52,14 @@ public class DataSequenceArray implements IDataSequence
 
     /**
      * Timed data array
-     * @param _data 
+     * @param _data
      */
     public DataSequenceArray(double[] _times, double[][] _data)
     {
         this(_data);
         this.times = _times;
     }
-    
+
     public DataSequenceArray(IDoubleArray _data)
     {
         this(_data.getTable());
@@ -69,13 +69,13 @@ public class DataSequenceArray implements IDataSequence
     {
         this(_times.getArray(), _data.getTable());
     }
-    
+
     @Override
     public int size()
     {
         return(data.length);
     }
-    
+
     public int dimension()
     {
         return(data[0].size());
@@ -86,7 +86,7 @@ public class DataSequenceArray implements IDataSequence
     {
         return(data[i]);
     }
-    
+
     @Override
     public IDoubleArray getView(int i)
     {
@@ -113,17 +113,17 @@ public class DataSequenceArray implements IDataSequence
         else
             return times[i];
     }
-    
+
     private class ElementIterator implements Iterator<IDoubleArray>
     {
         private IDoubleArray[] data;
         private int i=0;
-        
+
         public ElementIterator(IDoubleArray[] _data)
         {
             this.data = _data;
         }
-        
+
         @Override
         public boolean hasNext()
         {
@@ -149,17 +149,17 @@ public class DataSequenceArray implements IDataSequence
     {
         private IDoubleArray[] data;
         private int i=0, spacing;
-        
+
         private IDoubleArray[] d12 = new IDoubleArray[2];
         private DataSequenceArray res = new DataSequenceArray(d12);
-        
-        
+
+
         public PairIterator(IDoubleArray[] _data, int _spacing)
         {
             this.data = _data;
             this.spacing = _spacing;
         }
-        
+
         @Override
         public boolean hasNext()
         {
@@ -181,5 +181,5 @@ public class DataSequenceArray implements IDataSequence
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
-    
+
 }

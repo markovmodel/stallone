@@ -38,25 +38,25 @@ public class WrappedMTJVector extends AbstractDoubleArray {
     }
 
     @Override
-    public double get(int i, int j) 
+    public double get(int i, int j)
     {
         assertColumnExists(this, j);
         return mtjVector.get(i);
     }
 
     @Override
-    public void set(int i, double x) 
+    public void set(int i, double x)
     {
         mtjVector.set(i,x);
     }
-    
+
     @Override
-    public void set(int i, int j, double x) 
+    public void set(int i, int j, double x)
     {
         assertColumnExists(this, j);
         mtjVector.set(i,x);
     }
-    
+
 
 
     @Override
@@ -69,7 +69,7 @@ public class WrappedMTJVector extends AbstractDoubleArray {
     {
         throw new UnsupportedOperationException("Cannot create a wrapped MTJ matrix.");
     }
-    
+
     @Override
     public IDoubleArray create(int rows, int cols)
     {

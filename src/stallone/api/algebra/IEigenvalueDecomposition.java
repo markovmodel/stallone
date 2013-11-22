@@ -15,13 +15,13 @@ public interface IEigenvalueDecomposition
 {
     /**
      * Returns the number of eigenvalue / eigenvector pairs available. If the decomposition has full rank, size = dimension.
-     * @return 
+     * @return
      */
     public int availableEigenpairs();
 
     /**
-     * Returns the size of the decomposed matrix. 
-     * @return 
+     * Returns the size of the decomposed matrix.
+     * @return
      */
     public int fullRank();
 
@@ -44,10 +44,10 @@ public interface IEigenvalueDecomposition
      * Sorts eigenpairs such that the eigenvalue real parts are descending.
      */
     public void sortRealDescending();
-    
+
     public boolean hasLeftEigenvectors();
     public boolean hasRightEigenvectors();
-    
+
     /**
      * Gets the right complex eigenvector matrix, if available.
      * By convention, this matrix has the eigenvectors in the columns.
@@ -58,11 +58,11 @@ public interface IEigenvalueDecomposition
      * Same as getLeftEigenvectorMatrix.
      */
     public IComplexArray R();
-    
+
     public IComplexArray getRightEigenvector(int i);
-    
+
     /**
-     * Gets the left complex eigenvector matrix, if available. 
+     * Gets the left complex eigenvector matrix, if available.
      * By convention, this matrix has the eigenvectors in the rows.
      */
     public IComplexArray getLeftEigenvectorMatrix();
@@ -76,7 +76,7 @@ public interface IEigenvalueDecomposition
 
     /**
      * Returns the diagonal matrix with eigenvalues on the diagonal.
-     * @return 
+     * @return
      */
     public IComplexArray getDiagonalMatrix();
 
@@ -84,25 +84,25 @@ public interface IEigenvalueDecomposition
      * Same as getDiagonalMatrix.
      */
     public IComplexArray D();
-    
+
     /**
      * Get eigenvalues.
      *
      * @return  complex vector of eigenvalues
      */
-    public IComplexArray getEval();    
-    
+    public IComplexArray getEval();
+
     public IComplexNumber getEval(int i);
-    
+
     public IDoubleArray getEvalNorm();
-    
+
     public double getEvalNorm(int i);
 
     public IDoubleArray getEvalRe();
-    
+
     public double getEvalRe(int i);
-    
+
     public IDoubleArray getEvalIm();
-    
+
     public double getEvalIm(int i);
 }

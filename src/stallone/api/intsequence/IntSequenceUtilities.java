@@ -23,7 +23,7 @@ public class IntSequenceUtilities
             throws IOException
     {
         return IntSequence.create.intSequenceLoader(files).loadAll();
-    }    
+    }
 
     public IIntArray loadIntSequence(String file)
             throws IOException
@@ -31,27 +31,27 @@ public class IntSequenceUtilities
         List<String> files = new ArrayList<String>();
         files.add(file);
         return loadIntSequences(files).get(0);
-    }    
-    
+    }
+
     public void writeIntSequence(IIntArray data, String file)
             throws IOException
     {
             IntSequenceWriterAsciiDense writer = new IntSequenceWriterAsciiDense(file);
             writer.addAll(data);
             writer.close();
-    }    
-    
+    }
+
     public void writeIntSequences(List<IIntArray> data, List<String> files)
             throws IOException
     {
         if (data.size() != files.size())
             throw new IllegalArgumentException("Number of sequences is different from number of target files");
-        
+
         for (int itraj=0; itraj<data.size(); itraj++)
         {
             writeIntSequence(data.get(itraj), files.get(itraj));
         }
-    }    
+    }
 
     public void writeIntSequenceSparse(IIntArray data, String file)
             throws IOException
@@ -60,20 +60,20 @@ public class IntSequenceUtilities
             writer.addAll(data);
             writer.close();
     }
-    
+
     public void writeIntSequencesSparse(List<IIntArray> data, List<String> files)
             throws IOException
     {
         if (data.size() != files.size())
             throw new IllegalArgumentException("Number of sequences is different from number of target files");
-        
+
         for (int itraj=0; itraj<data.size(); itraj++)
         {
             writeIntSequenceSparse(data.get(itraj), files.get(itraj));
         }
-    }    
-    
-    
+    }
+
+
     public int max(Iterable<IIntArray> paths)
     {
         int n = 0;
@@ -83,8 +83,8 @@ public class IntSequenceUtilities
         }
         return n;
     }
-    
-    
+
+
     /**
      * Returns an array of [index, lifetime] for each contiguous path piece
      * @param path a sequence of integers
@@ -110,7 +110,7 @@ public class IntSequenceUtilities
         int state = path.get(begin);
         int time = path.size() - begin;
         res.add(new int[]{state,time});
-        
+
         return res;
     }
     /**
@@ -136,11 +136,11 @@ public class IntSequenceUtilities
                 begin = t;
             }
         }
-        
+
         return lists;
     }
 
-    
+
     /**
      * Returns a list of times each integer value was continuously seen in the given path
      * @param paths a sequence of integers
@@ -164,13 +164,13 @@ public class IntSequenceUtilities
 
         return (res);
     }
-    
+
     /**
-     * 
+     *
      * @param em
      * @param nstates
      * @param ntraj
-     * @return 
+     * @return
      */
     public double[][] cumulativeLifetimeDistribution(List<IIntArray> paths)
     {
@@ -191,10 +191,10 @@ public class IntSequenceUtilities
             // sort times descendingly
             Ints.util.sort(times[s]);
             Ints.util.mirror(times[s]);
-            
+
             // count occurances longer than t
             int n = 0;
-            
+
             for (int t = cumdist.length-1; t>=0; t--)
             {
                 // count occurances longer than t
@@ -204,13 +204,13 @@ public class IntSequenceUtilities
                         n++;
                     cumdist[t][s] = (double)n / (double)(times[s].size());
                 }
-            }            
+            }
         }
-                
+
         return (cumdist);
     }
-    
-    
-    
+
+
+
 
 }

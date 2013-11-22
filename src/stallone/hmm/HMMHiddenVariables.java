@@ -15,7 +15,7 @@ import stallone.api.io.IO;
 /**
  *
  * Class for holding the hidden variables of a HMM. Actual size can be smaller than the capacity
- * 
+ *
  * @author noe
  */
 public class HMMHiddenVariables implements IHMMHiddenVariables
@@ -49,16 +49,16 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
 
     /**
      * Sets the length to a smaller value than the capacity.
-     * @param l 
+     * @param l
      */
     public void setLength(int l)
     {
         if (l<0 || l>capacity)
             IO.util.error("Trying to set illegal length "+l+" in Hidden Variables. Capacity is "+capacity);
-        
+
         this.length = l;
     }
-    
+
     /**
      * Sets the hidden variables on the observed events according to this path
      */
@@ -77,21 +77,21 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
 
         /*
         System.out.println("L = "+L+" obs size = "+observation.size()+" path length = "+path.size());
-        
+
         if (L == 7849)
         {
             System.out.println("first: "+observation.getTime(0)+"\t"+observation.get(0));
             System.out.println("first: "+observation.getTime(7848)+"\t"+observation.get(7848));
             System.exit(0);
         }*/
-        
+
         double x;
         for (int t=0; t<L; t++)
         {
             int ti=t;
             if (observation != null)
                 ti = (int)Math.round(observation.getTime(t));
-            
+
             for (int s=0; s<nstates; s++)
             {
                 if (s == path.get(ti))
@@ -106,23 +106,23 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
                 setAlpha(t,s,x);
                 setBeta(t,s,x);
                 setPout(t,s,x);
-            }            
+            }
         }
-        
+
         updateGamma();
     }
-    
+
     public void setPath(IIntArray path)
     {
         setPath(null, path);
     }
 
-    
+
     public int getCapacity()
     {
         return capacity;
     }
-    
+
     @Override
     public int size()
     {
@@ -142,7 +142,7 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
         if (t >= length)
             IO.util.error("Accessing illegal time index "+t+" in Hidden Variables. Capacity is "+capacity+", but only "+length+" timesteps are accessible in this trajectory.");
     }
-    
+
     private void checkIndex(int t, int s)
     {
         if (t < 0 || t >= capacity)
@@ -152,7 +152,7 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
         if (s < 0 || s >= nstates)
             IO.util.error("Accessing illegal state index "+s+" in Hidden Variables. We have "+nstates+" states available.");
     }
-    
+
     public void setAlpha(int t, int s, double x)
     {
         checkIndex(t,s);

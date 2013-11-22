@@ -9,7 +9,7 @@ package stallone.api;
  * General interface for algorithms. A unique interface for running pre-constructed
  * Algorithms is for example useful for distributed computing - where a Set of
  * Algorithms can be run in different threads
- * 
+ *
  * @author noe
  */
 public interface IAlgorithm

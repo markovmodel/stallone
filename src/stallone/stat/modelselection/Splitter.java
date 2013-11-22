@@ -13,7 +13,7 @@ public class Splitter
 {
     private double[] exitTimes;
     private ExitTimes et;
-    
+
     public Splitter(double[] _exitTimes, int _nburnin, int _nsample)
     {
         exitTimes = _exitTimes;
@@ -27,7 +27,7 @@ public class Splitter
         et = new ExitTimes(_exitTimes);
         et.run(1000, 10000);
     }
-    
+
     public boolean split()
     {
         return(et.getNumberOfStates() > 1.5);
@@ -36,12 +36,12 @@ public class Splitter
     /**
      * Returns a vector of 0's and 1's, depending to which state the corresponding exit time is assigned.
      * Return a vector of all 0's if only one state is found.
-     * @return 
+     * @return
      */
     public int[] getAssignment()
     {
         int[] res = new int[exitTimes.length];
-        
+
         if (et.getNumberOfStates() <= 1.5)
         {
             return res;
@@ -52,7 +52,7 @@ public class Splitter
             double a = par[0];
             double k1 = par[1];
             double k2 = par[2];
-            
+
             for (int i=0; i<res.length; i++)
             {
                 if (a*k1*Math.exp(-k1*exitTimes[i]) < (1-a)*k2*Math.exp(-k2*exitTimes[i]))
@@ -63,10 +63,10 @@ public class Splitter
             return res;
         }
     }
-    
+
     /**
      * Get array of exit time arrays (either one or two arrays)
-     * @return 
+     * @return
      */
     public double[][] getExitTimes()
     {
@@ -82,5 +82,5 @@ public class Splitter
         else
             return new double[][]{exitTimes};
     }
-      
+
 }

@@ -26,10 +26,10 @@ public class Log
             LOGGER.addHandler(new ConsoleHandler());
         }
     }
-    
+
     public static void logError(String message)
     {
         LOGGER.log(Level.SEVERE, message);
     }
-    
+
 }

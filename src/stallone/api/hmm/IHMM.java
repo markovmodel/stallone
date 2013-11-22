@@ -14,13 +14,13 @@ import stallone.api.ints.IIntArray;
 public interface IHMM
 {
     public IHMMParameters getParameters();
-    
+
     public IHMMHiddenVariables getHidden(int itraj);
-    
+
     public List<IIntArray> viterbi();
-    
-    public double getLogLikelihood();    
-    
-    public double[] getLogLikelihoodHistory();    
-    
+
+    public double getLogLikelihood();
+
+    public double[] getLogLikelihoodHistory();
+
 }

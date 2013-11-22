@@ -43,7 +43,7 @@ public class PrimitiveDoubleTools
         }
         return (res);
     }
-    
+
     public static double[] createInitialized(int size, double d)
     {
         double[] res = new double[size];
@@ -76,7 +76,7 @@ public class PrimitiveDoubleTools
             res[i] = from(a[i]);
         }
         return (res);
-    }    
+    }
     public static double[] from(float[] a)
     {
         double[] res = new double[a.length];
@@ -249,7 +249,7 @@ public class PrimitiveDoubleTools
     }
 
     /**
-     * Scalar product 
+     * Scalar product
      */
     public static double dot(double[] arr1, double[] arr2)
     {
@@ -262,7 +262,7 @@ public class PrimitiveDoubleTools
     }
 
     /**
-     * Weighted scalar product 
+     * Weighted scalar product
      */
     public static double dot(double[] arr1, double[] arr2, double[] w)
     {

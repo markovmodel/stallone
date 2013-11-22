@@ -18,5 +18,5 @@ public class Graph
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final GraphFactory create = new GraphFactory();    
+    public static final GraphFactory create = new GraphFactory();
 }

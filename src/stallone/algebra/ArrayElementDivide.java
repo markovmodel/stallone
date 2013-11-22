@@ -23,7 +23,7 @@ import static stallone.doubles.DoubleArrayTest.*;
  *
  * @author  Frank Noe
  */
-public class ArrayElementDivide //implements IMatrixSum 
+public class ArrayElementDivide //implements IMatrixSum
 {
     public IDoubleArray divideToNewDense(final IDoubleArray a, final IDoubleArray b)
     {
@@ -38,7 +38,7 @@ public class ArrayElementDivide //implements IMatrixSum
         divideSparse(a,b,target);
         return target;
     }
-    
+
     public void divideToSparse(final IDoubleArray a, final IDoubleArray b)
     {
         divideSparse(a,b,a);
@@ -48,7 +48,7 @@ public class ArrayElementDivide //implements IMatrixSum
     {
         divideDense(a,b,a);
     }
-    
+
     public void divideDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         assertEqualDimensions(a, b);
@@ -67,7 +67,7 @@ public class ArrayElementDivide //implements IMatrixSum
             }
         }
     }
-    
+
     //@Override
     public void divideSparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
@@ -78,14 +78,14 @@ public class ArrayElementDivide //implements IMatrixSum
         {
             target.zero();
         }
-        
+
         for (IDoubleIterator it = a.nonzeroIterator(); it.hasNext(); it.advance())
         {
             int i = it.row();
             int j = it.column();
             target.set(i, j, it.get()/b.get(i,j));
-        }        
+        }
       }
-    
+
 
 }

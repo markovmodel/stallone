@@ -62,7 +62,7 @@ public class LennardJonesSystem  extends AbstractPotential
         this.coordinates = Doubles.create.array(_natoms, 3);
         this.gradient = Doubles.create.array(_natoms, 3);
     }
-    
+
     public void setMetric(IDifferentiableMetric<IDoubleArray> m)
     {
         metric = m;
@@ -160,5 +160,5 @@ System.out.println(" vdw ["+i+","+j+"]\t"+e+"\t at d = "+d+" \t with eps = "+eps
     {
         return(coordinates.size());
     }
-    
+
 }

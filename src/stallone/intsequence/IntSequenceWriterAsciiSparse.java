@@ -19,7 +19,7 @@ public class IntSequenceWriterAsciiSparse implements IIntWriter
     boolean hasData = false, lastDataWritten = false;
     int time = 0;
     int lastData = 0;
-    
+
     public IntSequenceWriterAsciiSparse(String file)
             throws IOException
     {
@@ -46,7 +46,7 @@ public class IntSequenceWriterAsciiSparse implements IIntWriter
             lastData = data;
             lastDataWritten = true;
         }
-            
+
         if (data != lastData) // new data.
         {
             if (!lastDataWritten) // then also write the previous step

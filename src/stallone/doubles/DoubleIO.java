@@ -19,24 +19,24 @@ import stallone.util.StringTools;
  */
 public class DoubleIO
 {
-    
+
     // ************************************************************************
     //
     // Double Array Output
     //
     // ************************************************************************
-    
+
     public static void print(IDoubleArray arr, String del, Appendable app)
     {
         print(arr, del, del, app);
     }
-    
+
     public static void print(IDoubleArray arr, String del,
             int predig, int postdig, Appendable app)
     {
         print(arr, del, del, predig, postdig, app);
     }
-        
+
     public static String toString(IDoubleArray arr, String del)
     {
         StringBuilder strb = new StringBuilder();
@@ -48,8 +48,8 @@ public class DoubleIO
     {
         print(arr, del, System.out);
     }
-    
-    
+
+
     public static String toString(IDoubleArray arr, String del,
             int predig, int postdig)
     {
@@ -57,19 +57,19 @@ public class DoubleIO
         print(arr, del, predig, postdig, strb);
         return(strb.toString());
     }
-    
+
     public static void print(IDoubleArray arr, String del, int predig, int postdig)
     {
         print(arr, del, predig, postdig, System.out);
-    }    
-    
+    }
+
     // ************************************************************************
     //
     // Double Array Input
     //
     // ************************************************************************
 
-    
+
     public static IDoubleArray readDoubleArray(String str, String delimiters)
     {
         StringTokenizer tok = new StringTokenizer(str, delimiters);
@@ -80,12 +80,12 @@ public class DoubleIO
             res.set(k++, StringTools.toDouble(tok.nextToken()));
         return(res);
     }
-    
+
     public static IDoubleArray readDoubleArray(String str)
     {
         return(readDoubleArray(str," ,;\t\n"));
-    }    
-    
+    }
+
     // ************************************************************************
     //
     // Double Table
@@ -113,10 +113,10 @@ public class DoubleIO
             e.printStackTrace();
         }
     }
-    
+
     public static void print(IDoubleArray arr, String coldel, String linedel,
             int predig, int postdig, Appendable app)
-    {        
+    {
         try
         {
             for (int i = 0; i < arr.rows(); i++)
@@ -136,7 +136,7 @@ public class DoubleIO
             e.printStackTrace();
         }
     }
-        
+
     public static String toString(IDoubleArray arr)
     {
         if (arr.order() <= 1 && arr.columns() == 1)
@@ -145,10 +145,10 @@ public class DoubleIO
             return(toString(arr, "\t"));
         else if (arr.order() == 2)
             return (toString(arr, "\t", "\n"));
-        else 
+        else
             throw(new RuntimeException("Trying to print array with order "+arr.order()+". Currently not implemented"));
     }
-    
+
     public static void print(IDoubleArray arr, Appendable out)
     {
         if (arr.order() <= 1 && arr.columns() == 1)
@@ -172,25 +172,25 @@ public class DoubleIO
         print(arr, coldel, linedel, strbuf);
         return (strbuf.toString());
     }
-    
+
     public static void print(IDoubleArray arr, String coldel, String linedel)
     {
         print(arr, coldel, linedel, System.out);
     }
-    
+
     public static String toString(IDoubleArray arr, String coldel, String linedel,
             int predig, int postdig)
     {
         StringBuilder strbuf = new StringBuilder("");
         print(arr, coldel, linedel, predig, postdig, strbuf);
         return (strbuf.toString());
-    }    
-    
+    }
+
     public static void print(IDoubleArray arr, String coldel, String linedel, int predig, int postdig)
     {
         print(arr, coldel, linedel, predig, postdig, System.out);
-    }    
-    
+    }
+
     // ************************************************************************
     //
     // Double Table Input
@@ -209,25 +209,25 @@ public class DoubleIO
         {
             int[] libd = reader.getLargestIntBlockDimensions();
             int[] lnbd = reader.getLargestNumberBlockDimensions();
-            
+
             if (libd[0] == lnbd[0] && (libd[1] == 2 || libd[1] == 3) && lnbd[1] == 3) // guess this is sparse
                 sparse = true;
         }
-        
+
         return sparse;
     }
-    
+
     public static IDoubleArray readDoubleMatrix(String file)
             throws FileNotFoundException, IOException
     {
         BlockFileReader reader = new BlockFileReader(file);
         reader.scan();
-        
+
         // find out whether the matrix is saved in sparse or dense format.
         boolean sparse = isSparseFormat(reader);
-        
+
         double[][] block = reader.getLargestDoubleBlock();
-        
+
         IDoubleArray res = null;
         if (sparse)
         {
@@ -249,10 +249,10 @@ public class DoubleIO
         {
             res = Doubles.create.array(block);
         }
-        
+
         return res;
     }
-    
+
     /*public static IDataList<IDoubleArray> readDoubleArrays(String str, String colDelimiters, String lineDelimiters)
     {
         StringTokenizer tok = new StringTokenizer(str, lineDelimiters);
@@ -262,21 +262,21 @@ public class DoubleIO
             res.set(i, readDoubleArray(str, colDelimiters));
         return(res);
     }
-    
+
     public static IDoubleTable readDoubleTable(String str, String colDelimiters, String lineDelimiters)
     {
         IDataList<IDoubleArray> arrays = readDoubleArrays(str, colDelimiters, lineDelimiters);
         int col = 0;
-        
+
         for (int i=0; i<arrays.size(); i++)
             if (arrays.get(i).size() > col)
                 col = arrays.get(i).size();
 
         return(Doubles.data.createMatrix(arrays));
     }
-    
+
     public static IDoubleTable readDoubleTable(String str)
     {
         return(readDoubleTable(str," ,;\t", "\n"));
-    }    */    
+    }    */
 }

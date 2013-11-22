@@ -18,5 +18,5 @@ public class DataSequence
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final DataSequenceFactory create = new DataSequenceFactory();        
+    public static final DataSequenceFactory create = new DataSequenceFactory();
 }

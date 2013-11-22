@@ -40,20 +40,20 @@ public class HMMFactory
         int interleaf = (int)Math.max(1, size / maxsize);
         return DataSequence.util.concat(_obs, interleaf);
     }
-    
+
     private IDoubleArray[] initialParametersGaussian1D(List<IDataSequence> _obs, int nstates)
     {
         // cluster data
         IDataSequence obscat = concat(_obs, nstates*1000);
-        
+
         System.out.println("Data concatenated to size "+obscat.size());
 
         System.out.println("Clustering...");
-        
+
         IClustering cluster = Clustering.util.densityBased(obscat, nstates);
 
         System.out.println("done.");
-        
+
         IIntArray ci = cluster.getClusterIndexes();
         IDoubleArray[] res = new IDoubleArray[nstates];
         for (int state=0; state<nstates; state++)
@@ -86,7 +86,7 @@ public class HMMFactory
         par.setTransitionMatrix(T0);
         return par;
     }
-    
+
     public IHMMParameters parameters(int nstates, boolean _isReversible, boolean _isStationary, IParametricFunction outputModel)
     {
         IHMMParameters par = parameters(nstates, _isReversible, _isStationary);
@@ -96,26 +96,26 @@ public class HMMFactory
             par.setOutputParameters(i, doublesNew.array(npar));
         return par;
     }
-    
+
     public IExpectationMaximization em(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         boolean saveMemory = false;
-        
+
         IExpectationMaximization em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), outputModel, outputEstimator, saveMemory);
         em.setInitialParameters(initialParameters);
-        
+
         return em;
-    }    
+    }
 
     public IExpectationMaximization em(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, List<IIntArray> initialPaths, boolean reversible)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         boolean saveMemory = false;
 
@@ -125,63 +125,63 @@ public class HMMFactory
         // construct em:
         IExpectationMaximization em = new EM(_obs, eventBased, nstates, reversible, outputModel, outputEstimator, saveMemory);
         // default parameters:
-        IHMMParameters par0 = parameters(nstates, reversible, true, outputModel);        
+        IHMMParameters par0 = parameters(nstates, reversible, true, outputModel);
         em.setInitialParameters(par0);
 
         em.setInitialPaths(initialPaths);
-        
+
         return em;
-    }    
-    
+    }
+
     public IHMMOptimizer emMultiStart(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, IHMMParameters[] initialParameters,
             int nscansteps, int nscans, int nconvsteps, double dectol)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         boolean saveMemory = false;
-        
+
         EMMultiStart em = new EMMultiStart(_obs, outputModel, outputEstimator, initialParameters);
         em.setNumberOfScanningSteps(nscansteps);
         em.setNumberOfConvergenceSteps(nconvsteps);
         em.setLikelihoodDecreaseTolerance(dectol);
-        
-        return em;
-    }        
 
-    public IHMMOptimizer emHierarchical(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator, 
+        return em;
+    }
+
+    public IHMMOptimizer emHierarchical(List<IDataSequence> _obs, IParametricFunction outputModel, IParameterEstimator outputEstimator,
             IHMMParameters[] initialParameters, int nInitialSteps, double dectol, boolean saveMemory)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         //boolean saveMemory = false;
-        
+
         EMHierarchical em = new EMHierarchical(_obs, outputModel, outputEstimator);
         em.setInitialParameters(initialParameters);
         em.setInitialNumberOfSteps(nInitialSteps);
         em.setLikelihoodDecreaseTolerance(dectol);
-        
+
         return em;
-    }        
+    }
 
     /**
-     * 
+     *
      * @param _obs
      * @param initialParameters
      * @param prior prior counts for the output probabilities
-     * @return 
+     * @return
      */
     public IExpectationMaximization emDiscrete(List<IDataSequence> _obs, IHMMParameters initialParameters, double[] prior)
     {
         // check if the data is event-based
         boolean eventBased = false;
-        
+
         // save memory?
         boolean saveMemory = false;
-        
+
         // output model and parametrizer
         DiscreteDistribution dd = new DiscreteDistribution(initialParameters.getOutputParameters(0));
         dd.setPrior(prior);
@@ -189,45 +189,45 @@ public class HMMFactory
         em.setInitialParameters(initialParameters);
 
         return em;
-    }    
-    
+    }
+
     public IExpectationMaximization emDiscrete(List<IDataSequence> _obs, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = false;
-        
+
         // save memory?
         boolean saveMemory = false;
-        
+
         // output model and parametrizer
         DiscreteDistribution_Old dd = new DiscreteDistribution_Old(initialParameters.getOutputParameters(0));
         EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), dd, dd, saveMemory);
         em.setInitialParameters(initialParameters);
-        
+
         return em;
-    }    
-    
-    
+    }
+
+
     public IExpectationMaximization emGaussian(List<IDataSequence> _obs, IHMMParameters initialParameters)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         boolean saveMemory = false;
         // output model and parametrizer
         GaussianUnivariate gauss = new GaussianUnivariate(0,1);
         EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), gauss, gauss, saveMemory);
         em.setInitialParameters(initialParameters);
-        
+
         return em;
-    }    
+    }
 
     public IExpectationMaximization emGaussian(List<IDataSequence> _obs, List<IIntArray> initialPaths, boolean reversible)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // save memory?
         boolean saveMemory = false;
         // output model and parametrizer
@@ -235,18 +235,18 @@ public class HMMFactory
 
         // count states:
         int nstates = IntSequence.util.max(initialPaths)+1;
-        
+
         EM em = new EM(_obs, eventBased, nstates, reversible, gauss, gauss, saveMemory);
         em.setInitialPaths(initialPaths);
-        
+
         return em;
-    }    
-    
+    }
+
     public IExpectationMaximization emGaussian(List<IDataSequence> _obs, int nstates)
     {
         // check if the data is event-based
         boolean eventBased = true;
-        
+
         // initial T
         IDoubleArray T = Algebra.util.add(Doubles.create.diag(nstates, 0.9), Doubles.create.matrix(nstates, nstates, 0.1/(double)nstates));
         // initial p0

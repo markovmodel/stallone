@@ -17,15 +17,15 @@ public class IntTableIterator implements IIntIterator
     protected IIntArray X;
     protected int i=0,j=0;
     protected int rows,cols;
-    
-   
+
+
     public IntTableIterator(IIntArray _X)
     {
         this.X = _X;
         this.rows = X.rows();
         this.cols = X.columns();
     }
-        
+
     @Override
     public void reset()
     {
@@ -33,13 +33,13 @@ public class IntTableIterator implements IIntIterator
         j = 0;
     }
 
-    
+
     @Override
     public boolean hasNext()
     {
         return(i < cols && j < rows);
     }
-    
+
 
     @Override
     public int row()
@@ -69,7 +69,7 @@ public class IntTableIterator implements IIntIterator
     {
         return(X.get(i,j));
     }
-    
+
     @Override
     public void set(int newValue)
     {

@@ -26,7 +26,7 @@ public class LangevinLeapFrog implements IIntegratorThermostatted
     private IDoubleArray xBackup = null, vBackup = null;
 
     /**
-     * 
+     *
      * @param _dt time step
      * @param gamma collision rate
      */
@@ -36,7 +36,7 @@ public class LangevinLeapFrog implements IIntegratorThermostatted
         this.gamma = _gamma;
         this.kT = _kT;
     }
-    
+
     @Override
     public IIntegrator copy()
     {
@@ -45,7 +45,7 @@ public class LangevinLeapFrog implements IIntegratorThermostatted
         res.setFailsafe(failures);
         res.setMasses(masses.copy());
         res.setV(v.copy());
-        
+
         return(res);
     }
 

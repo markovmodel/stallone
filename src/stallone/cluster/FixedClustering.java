@@ -16,12 +16,12 @@ import stallone.api.ints.IIntArray;
 public class FixedClustering extends AbstractRegularClustering
 {
     IIntArray data2cluster;
-    
+
     public FixedClustering(IDataSequence _clusterCenters)
     {
         this.clusterCenters = _clusterCenters;
     }
-    
+
     @Override
     public void perform()
     {
@@ -34,7 +34,7 @@ public class FixedClustering extends AbstractRegularClustering
 
         for (int i=0; i<this.clusterCenters.size(); i++)
             System.out.print(ints.count(data2cluster, i)+", ");
-        
+
         // done
         this.resultsAvailable = true;    }
 
@@ -43,5 +43,5 @@ public class FixedClustering extends AbstractRegularClustering
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

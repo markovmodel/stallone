@@ -72,7 +72,7 @@ public class QuickSortDouble implements ISortDouble
         this.sorted = target;
         this.indexes = Ints.create.arrayRange(data.size());
     }
-    
+
     @Override
     public IDoubleArray sort()
     {
@@ -81,7 +81,7 @@ public class QuickSortDouble implements ISortDouble
             return(sorted);
         }
         quicksort(0, sorted.size() - 1);
-        
+
         return(sorted);
     }
 

@@ -18,22 +18,22 @@ public class JEPFunction implements IFunction
 {
     protected JEP jep = new JEP();
     protected String[] variables;
-    
+
     /**
      * Initilializes a real-valued function that is parsed with JEP. Variables are explicitly specified
      * @param _variables
-     * @param _expression 
+     * @param _expression
      */
     public JEPFunction(String[] _variables, String _expression)
     {
         jep.addStandardFunctions();
         jep.addStandardConstants();
-        
+
         if (_variables == null)
         {
             jep.setAllowUndeclared(true);
             jep.parseExpression(_expression);
-            
+
             ArrayList<String> var = new ArrayList<String>();
             if (jep.getVar("x") != null)
                 var.add("x");
@@ -62,18 +62,18 @@ public class JEPFunction implements IFunction
         }
     }
 
-    
+
     /**
      * Initilializes a real-valued function that is parsed with JEP. Variables are implicitly specified:
      * Variables are ordered in the sequence x,x0,x1,x2,...,x9,y,y0,y1,y2,...,y9,z,z0,z1,z2,...,z9.
      * @param _variables
-     * @param _expression 
+     * @param _expression
      */
     public JEPFunction(String _expression)
     {
         this(null, _expression);
     }
-    
+
     @Override
     public int getNumberOfVariables()
     {
@@ -88,10 +88,10 @@ public class JEPFunction implements IFunction
 
         for (int i=0; i<variables.length; i++)
             jep.addVariable(variables[i], x[i]);
-        
+
         return(jep.getValue());
     }
-    
+
     @Override
     public double f(IDoubleArray x)
     {

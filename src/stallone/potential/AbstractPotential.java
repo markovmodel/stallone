@@ -17,7 +17,7 @@ public abstract class AbstractPotential
     implements IEnergyModel, IFunctionC1
 {
     PrimitiveDoubleArray tmp_x;
-    
+
     @Override
     public double f(IDoubleArray x)
     {
@@ -35,7 +35,7 @@ public abstract class AbstractPotential
             tmp_x.set(x);
         return(f(tmp_x));
     }
-    
+
     @Override
     public IDoubleArray grad(IDoubleArray x)
     {
@@ -43,7 +43,7 @@ public abstract class AbstractPotential
         calculate();
         return(getGradient());
     }
-    
+
     @Override
     public IDoubleArray grad(double... x)
     {
@@ -52,7 +52,7 @@ public abstract class AbstractPotential
         else
             tmp_x.set(x);
         return(grad(tmp_x));
-        
+
     }
-    
+
 }

@@ -72,11 +72,11 @@ public class HarmonicOscillator  extends AbstractPotential
     {
         return (energy);
     }
-    
+
     @Override
     public int getNumberOfVariables()
     {
         return(1);
     }
-    
+
 }

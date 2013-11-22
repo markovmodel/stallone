@@ -21,7 +21,7 @@ public class RandomClustering extends AbstractRegularClustering
     protected int nClusters;
     protected IIntArray centerIndexes;
     protected IIntArray data2cluster;
-    
+
     public RandomClustering(int _nClusters)
     {
         this.nClusters = _nClusters;
@@ -31,7 +31,7 @@ public class RandomClustering extends AbstractRegularClustering
      * Checks if the new center is different from the accepted centers
      * @param acceptedCenters
      * @param newCenter
-     * @return 
+     * @return
      */
     private boolean isNew(IDataSequence acceptedCenters, IDoubleArray newCenter)
     {
@@ -40,7 +40,7 @@ public class RandomClustering extends AbstractRegularClustering
                 return false;
         return true;
     }
-    
+
     private IDataList select(IIntArray indexes)
     {
         IDataList res = dataNew.createDatalist();
@@ -62,7 +62,7 @@ public class RandomClustering extends AbstractRegularClustering
         }
         return res;
     }
-        
+
     @Override
     public void perform()
     {
@@ -99,7 +99,7 @@ public class RandomClustering extends AbstractRegularClustering
         this.centerIndexes = acceptedCenterIndexes;
         this.clusterCenters = acceptedCenters;
         //System.out.println("CLUSTERing to centers: "+centerIndexes);
-        
+
         // assign data
         this.voronoiPartitioning = discNew.voronoiDiscretization(clusterCenters, this.metric);
         this.data2cluster = intsNew.array(datasize);
@@ -111,7 +111,7 @@ public class RandomClustering extends AbstractRegularClustering
         for (int i=0; i<nClusters; i++)
             System.out.print(ints.count(data2cluster, i)+", ");
         System.out.println();*/
-        
+
         // done
         this.resultsAvailable = true;
     }
@@ -121,5 +121,5 @@ public class RandomClustering extends AbstractRegularClustering
     {
         return data2cluster;
     }
-    
+
 }

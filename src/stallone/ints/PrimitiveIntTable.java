@@ -21,7 +21,7 @@ public class PrimitiveIntTable implements IIntArray
     {
         this.x = _x;
         this.ndim = x[0].length;
-        
+
         for (int i=1; i<_x.length; i++)
             if (_x[i].length != ndim)
                 throw(new IllegalArgumentException("Trying to construct DoubleTable with ragged array. Only rectangular arrays are permitted."));
@@ -43,7 +43,7 @@ public class PrimitiveIntTable implements IIntArray
     {
         x[row][col] = val;
     }
-    
+
     @Override
     public void copyFrom(IIntArray other)
     {
@@ -114,14 +114,14 @@ public class PrimitiveIntTable implements IIntArray
     {
         throw new UnsupportedOperationException("Not supported.");
     }
-    
+
     @Override
     public IIntArray create(int rows, int cols)
     {
         return (new PrimitiveIntTable(rows,cols));
     }
 
-    
+
     @Override
     public IIntIterator iterator()
     {
@@ -247,7 +247,7 @@ public class PrimitiveIntTable implements IIntArray
     {
         if (size() != other.size())
             throw(new IllegalArgumentException("Inconsistent sizes. This array has size "+size()+" other array has size "+other.size()));
-        
+
         Ints.util.copyInto(this, 0, size(), other, 0);
     }
 
@@ -256,7 +256,7 @@ public class PrimitiveIntTable implements IIntArray
     {
         return false;
     }
-    
+
 
 }
 

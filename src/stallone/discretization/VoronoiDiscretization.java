@@ -11,7 +11,7 @@ import stallone.api.datasequence.IDataSequence;
  * Performs a voronoi partitioning.
  *
  * @param <T> is the type of data to partition
- * 
+ *
  * @author  Martin Senne
  */
 public class VoronoiDiscretization implements IDiscretization
@@ -73,13 +73,13 @@ public class VoronoiDiscretization implements IDiscretization
             throw new RuntimeException("Can not assign cluster.");
         }
     }
-    
+
     @Override
     public IDoubleArray getRepresentative(IDoubleArray p)
     {
         return clusterCenters.get(assign(p));
     }
-        
+
     /**
      * Get the membership assignment of object p.
      *

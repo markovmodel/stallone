@@ -26,20 +26,20 @@ public class DataSequenceLoaderIterator implements Iterator<IDoubleArray>
         openThisReader(reader);
         //this.preconstructedVector = Doubles.create.array(_reader._reader.dimension());
     }
-    
+
     private void openThisReader(IDataReader _reader){
             try{
                     _reader.open();
-                } 
+                }
                 catch(IOException e){
                     throw (new RuntimeException("IOException during Trajectory iteration: " + e));
                 }
         }
-        
+
         private void closeThisReader(IDataReader _reader){
             try{
                     _reader.close();
-                } 
+                }
                 catch(IOException e){
                     throw (new RuntimeException("IOException during Trajectory iteration: " + e));
                 }
@@ -64,7 +64,7 @@ public class DataSequenceLoaderIterator implements Iterator<IDoubleArray>
     {
         throw new UnsupportedOperationException("Remove not supported.");
     }
-    
+
     @Override
     protected void finalize() throws Throwable{
         closeThisReader(reader);

@@ -13,7 +13,7 @@ public class Merger
 {
     private double[][] exitTimes;
     private double[][] numberOfStates;
-    
+
     public Merger(double[][] _exitTimes, int _nburnin, int _nsample)
     {
         exitTimes = _exitTimes;
@@ -25,7 +25,7 @@ public class Merger
         exitTimes = _exitTimes;
         run(1000, 10000);
     }
-    
+
     private void run(int _nburnin, int _nsample)
     {
         for (int i=1; i<exitTimes.length; i++)
@@ -40,10 +40,10 @@ public class Merger
             }
         }
     }
-    
+
     /**
      * Returns true if any merge has occurred
-     * @return 
+     * @return
      */
     public boolean hasMerged()
     {
@@ -57,7 +57,7 @@ public class Merger
         }
         return false;
     }
-    
+
     private int findSet(int[][] sets, int state)
     {
         for (int i=0; i<sets.length; i++)
@@ -65,10 +65,10 @@ public class Merger
                 return i;
         return -1;
     }
-    
+
     /**
-     * Returns a vector of the 
-     * @return 
+     * Returns a vector of the
+     * @return
      */
     public int[][] getMerge()
     {
@@ -84,7 +84,7 @@ public class Merger
         }
         // sort
         int[] I = doubleArrays.sortedIndexes(nstatesLin);
-        
+
         int[][] sets = new int[numberOfStates.length][1];
         for (int i=0; i<sets.length; i++)
             sets[i][0] = i;
@@ -98,11 +98,11 @@ public class Merger
             // merge these two states:
             int state1 = i/numberOfStates.length;
             int state2 = i%numberOfStates.length;
-            
+
             // get indexes of sets
             int set1 = findSet(sets, state1);
             int set2 = findSet(sets, state2);
-            
+
             // check if all states of these sets are pairwise mergeable
             boolean merge = true;
             for (int j1=0; j1<sets[set1].length; j1++)
@@ -111,7 +111,7 @@ public class Merger
                     if (numberOfStates[sets[set1][j1]][sets[set2][j2]] >= 1.5)
                         merge = false;
                 }
-            
+
             // merge
             if (merge)
             {
@@ -119,8 +119,8 @@ public class Merger
                 sets = intArrays.removeByIndex(sets, set2);
             }
         }
-        
+
         return sets;
     }
-    
+
 }

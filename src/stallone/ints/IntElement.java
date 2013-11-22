@@ -13,7 +13,7 @@ import stallone.api.ints.IIntElement;
 public class IntElement implements IIntElement
 {
     int row,col,index,x;
-    
+
     public IntElement(int _row, int _col, int _index, int _x)
     {
         this.row = _row;
@@ -21,23 +21,23 @@ public class IntElement implements IIntElement
         this.index = _index;
         this.x = _x;
     }
-    
+
     public void setIndex(int _index)
     {
         this.index = _index;
     }
-    
+
     public void setIndex(int _row, int _col)
     {
         this.row = _row;
         this.col = _col;
     }
-    
+
     public void setValue(int _x)
     {
         this.x = _x;
     }
-    
+
     @Override
     public int index()
     {
@@ -67,5 +67,5 @@ public class IntElement implements IIntElement
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

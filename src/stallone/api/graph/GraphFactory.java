@@ -18,10 +18,10 @@ public class GraphFactory
     {
         return(new MatrixGraph(M));
     }
-    
+
     public IIntConnectivity connectivityChecker(IIntGraph g)
     {
         IIntConnectivity res = new IntStrongConnectivity(g);
         return(res);
-    }    
+    }
 }

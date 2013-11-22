@@ -31,7 +31,7 @@ public class HMMForwardModel implements IHMMForwardModel
 
     private ITransitionMatrixEstimator Testimator;
     private MatrixPowerCache matrixPower;
-    
+
     public HMMForwardModel(List<IDataSequence> _obs, boolean _eventBased, int _nstates, boolean reversible, IParametricFunction _fOut)
     {
         obs = _obs;
@@ -42,7 +42,7 @@ public class HMMForwardModel implements IHMMForwardModel
         {
             fOut[i] = _fOut.copy();
         }
-        
+
         // find out what is the maximum time step and initialized matrix power cache.
         if (eventBased)
         {
@@ -58,7 +58,7 @@ public class HMMForwardModel implements IHMMForwardModel
                 dtmax = 1000;
             matrixPower = new MatrixPowerCache(dtmax);
         }
-        
+
         // construct transition matrix estimator
         if (reversible)
         {
@@ -69,10 +69,10 @@ public class HMMForwardModel implements IHMMForwardModel
             Testimator = MarkovModel.create.createTransitionMatrixEstimatorNonrev();
         }
     }
-    
+
     /**
      * Sets the underlying parameter set.
-     * @param _par 
+     * @param _par
      */
     public void setParameters(IHMMParameters _par)
     {
@@ -82,7 +82,7 @@ public class HMMForwardModel implements IHMMForwardModel
             fOut[i].setParameters(_par.getOutputParameters(i));
         }
     }
-    
+
     /**
      * Creates deep copy
      * @return
@@ -99,19 +99,19 @@ public class HMMForwardModel implements IHMMForwardModel
     {
         return nstates;
     }
-    
+
     //@Override
     public int getNObs()
     {
         return obs.size();
-    }        
-    
+    }
+
     //@Override
     public int getNObs(int traj)
     {
         return obs.get(traj).size();
-    }    
-    
+    }
+
     public boolean isEventBased()
     {
         return eventBased;
@@ -142,7 +142,7 @@ public class HMMForwardModel implements IHMMForwardModel
         IDoubleArray x = obs.get(traj).get(timeindex);
         return fOut[state].f(x);
     }
-    
+
     public IDoubleArray getObs(int traj, int timeindex)
     {
         IDoubleArray x = obs.get(traj).get(timeindex);

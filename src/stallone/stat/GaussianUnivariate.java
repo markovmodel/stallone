@@ -17,7 +17,7 @@ import stallone.api.stat.IParameterEstimator;
 public class GaussianUnivariate implements IParametricFunction, IParameterEstimator
 {
     private IDoubleArray parameters; // mean and variance
-    
+
     // pre-calculated for speed-up
     private double a,b;
 
@@ -26,19 +26,19 @@ public class GaussianUnivariate implements IParametricFunction, IParameterEstima
         parameters = _parameters;
         precalc();
     }
-    
+
     public GaussianUnivariate(double mean, double variance)
     {
         parameters = Doubles.create.arrayFrom(mean, variance);
         precalc();
     }
-    
+
     final private void precalc()
     {
         a = Math.sqrt(1.0/(parameters.get(1)*2*Math.PI));
         b = - 1.0 / (2.0 * parameters.get(1));
     }
-    
+
     @Override
     public IDoubleArray getParameters()
     {
@@ -91,11 +91,11 @@ public class GaussianUnivariate implements IParametricFunction, IParameterEstima
             var += d*d;
         }
         var /= (double)(data.size()-1);
-        
+
         par.set(0, mean);
         par.set(1, var);
-        
-        return par;        
+
+        return par;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class GaussianUnivariate implements IParametricFunction, IParameterEstima
     {
         IDoubleArray par = Doubles.create.array(2);
         double W = 0;
-        
+
         // mean
         double mean = 0;
         for (int i=0; i<data.size(); i++)
@@ -121,15 +121,15 @@ public class GaussianUnivariate implements IParametricFunction, IParameterEstima
             var += weights.get(i) * d*d;
         }
         var /= W-1;
-        
+
         par.set(0, mean);
         par.set(1, var);
-        
-        return par;        
+
+        return par;
     }
 
     private double sumRunning, sumSquaredRunning, totalWeightRunning;
-    
+
     @Override
     public void initialize()
     {
@@ -176,7 +176,7 @@ public class GaussianUnivariate implements IParametricFunction, IParameterEstima
     {
         double mean = sumRunning / totalWeightRunning;
         double var = sumSquaredRunning / totalWeightRunning - mean*mean;
-        
+
         return Doubles.create.arrayFrom(mean, var);
     }
 

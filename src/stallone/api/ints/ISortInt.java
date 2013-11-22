@@ -15,10 +15,10 @@ public interface ISortInt
     public void setData(IIntArray data, IIntArray target);
 
     public void setData(IIntArray data);
-    
+
     public IIntArray sort();
-    
+
     public IIntArray getSortedIndexes();
-    
+
     public IIntArray getSortedData();
 }

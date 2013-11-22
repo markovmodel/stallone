@@ -20,7 +20,7 @@ public class StationaryDistribution
     IDoubleArray T = null;
     boolean reversible = false;
     IDoubleArray pi = null;
-    
+
     List<IIntArray> components = null;
     List<IDoubleArray> componentsPi = null;
 
@@ -28,10 +28,10 @@ public class StationaryDistribution
     {
         this.T = _T;
     }
-    
+
     /**
      * Calculates stationary distribution using  rate matrix
-     * @param _K 
+     * @param _K
      */
     public void setK(IDoubleArray _K)
     {
@@ -67,7 +67,7 @@ public class StationaryDistribution
         }
         return(true);
     }
-    
+
     /**
      * if there exists one component that has an outgoing edge into another component,
      * these components are merged. Only one pair of components is merged in this way.
@@ -137,17 +137,17 @@ public class StationaryDistribution
         C = Ints.util.subset(C, I);
 
         this.components = C;
-        
+
         this.componentsPi = new ArrayList<IDoubleArray>(this.components.size());
         for (int i=0; i<C.size(); i++)
             this.componentsPi.add(null);
-        
+
         //System.out.println("Component lengths: "+IntArrays.toString(IntArrays.lengths(C)));
-        
+
         /*
         Graph g = Graph.fromWeightMatrix(T);
         int[][] C = g.strongComponents();
-        
+
         // merge components that have outfluxes into one of their targets (arbitrary which one is chosen)
         int[][] Cmerged = null;
         while ((Cmerged = mergeZeroComponent(C)) != null)
@@ -156,14 +156,14 @@ public class StationaryDistribution
         }
         this.components = C;
         this.componentsPi = new double[this.components.length][T.length];
-         * 
+         *
          */
     }
 
     public IDoubleArray calculate()
     {
         pi = Doubles.create.array(T.rows());
-        
+
         // check transition matrix structure and determine components
         calculateComponents();
 
@@ -175,12 +175,12 @@ public class StationaryDistribution
                 IDoubleArray row = Tsub.viewRow(i);
                 Algebra.util.scale(1.0/Doubles.util.sum(row), row);
             }
-            
+
             //System.out.println(c+" "+componentIsClosed(components[c]));
-            
+
             if (!componentIsClosed(components.get(c)))
                 continue; // no probability in this set.
-            
+
             IDoubleArray pisub = calculateSub(Tsub);
 
             /*if (c == 0)
@@ -188,24 +188,24 @@ public class StationaryDistribution
             System.out.println("Submatrix: "+Tsub.length);
             for (int j=0; j<Tsub.length; j++)
                 System.out.println(j+" "+DoubleArrays.sum(Tsub[j]));
-            
+
             Graph g = Graph.fromWeightMatrix(Tsub);
             int[][] C = g.strongComponents();
             System.out.println("Number of components: "+C.length);
 
             System.out.println("PI: ");
             DoubleArrays.print(pisub,"\n");
-            
+
             System.out.println("T sub:");
             AlgebraPrimitive.writeMatrixSparse(Tsub,System.out);
 
                 System.exit(0);
             }
-             * 
+             *
              */
-            
+
             this.componentsPi.set(c, pisub);
-            
+
             for (int i=0; i<pisub.size(); i++)
             {
                 int s = components.get(c).get(i);
@@ -214,7 +214,7 @@ public class StationaryDistribution
                 //this.componentsPi.get(c).set(s, pisub.get(i));
                 //System.out.println("trying to get from component "+c+" with size "+components.get(c));
                 //System.out.println("trying to get from pi comp with size "+componentsPi.get(c));
-                               
+
             }
         }
         return (pi);
@@ -242,9 +242,9 @@ public class StationaryDistribution
         evd.sortNormDescending();
 
         IDoubleArray l1 = evd.getLeftEigenvector(0).copy();
-        
-        Algebra.util.scale(1.0 / Doubles.util.sum(l1), l1);        
-        
+
+        Algebra.util.scale(1.0 / Doubles.util.sum(l1), l1);
+
         return(l1);
     }
 
@@ -305,7 +305,7 @@ public class StationaryDistribution
     {
         return(componentsPi);
     }
-    
+
     public static IDoubleArray calculate(IDoubleArray T)
     {
         StationaryDistribution statdist = new StationaryDistribution();

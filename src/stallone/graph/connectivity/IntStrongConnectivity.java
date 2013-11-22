@@ -17,20 +17,20 @@ public class IntStrongConnectivity implements IIntConnectivity
     private IIntGraph graph;
 
     private HashMap<Integer,IntVertexInfo> vertex2info = new HashMap<Integer, IntVertexInfo>();
-    
+
     // private List<ArrayList<N>> components;
     private List<IntSortedSet> internalComponents;
     private List<IIntArray> components;
 
     private int index;
-    
+
     private Stack<IntVertexInfo> S;
 
     public IntStrongConnectivity(IIntGraph graph)
     {
         setGraph(graph);
     }
-    
+
     @Override
     public final void setGraph(IIntGraph graph)
     {
@@ -41,12 +41,12 @@ public class IntStrongConnectivity implements IIntConnectivity
             IntVertexInfo ivi = new IntVertexInfo(it.get());
             vertex2info.put(it.get(), ivi);
         }
-                
+
         internalComponents = new ArrayList<IntSortedSet>();
         components = new ArrayList<IIntArray>();
 
         index = 0;
-        S = new Stack<IntVertexInfo>();    
+        S = new Stack<IntVertexInfo>();
     }
 
     /**
@@ -65,7 +65,7 @@ public class IntStrongConnectivity implements IIntConnectivity
                 perform(tmp.get(i).node);
             }
         }
-        
+
         // clean up component lists:
         for (IntSortedSet iss: internalComponents)
         {
@@ -92,7 +92,7 @@ public class IntStrongConnectivity implements IIntConnectivity
         for (IIntIterator it = graph.neighborIterator(v.node); it.hasNext(); it.advance())
         {
             int node = it.get();
-            
+
             IntVertexInfo vp = vertex2info.get(node);
 
             if (vp.index == -1)

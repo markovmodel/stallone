@@ -25,25 +25,25 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
     private int nIterPer1 = 1000;
     private IDoubleList logliks = Doubles.create.list(nIterMax);
 
-    private IDoubleArray C;    
-    
+    private IDoubleArray C;
+
     private IDoubleArray pi = null;
     private IDoubleArray X;
     private IDoubleIterator itX;
 
     private boolean verbose = false;
-    
+
     public TransitionMatrixEstimatorRevFixPi(IDoubleArray _C, IDoubleArray _pi)
     {
         this.pi = _pi;
-        this.setCounts(_C);        
+        this.setCounts(_C);
     }
 
     public TransitionMatrixEstimatorRevFixPi(IDoubleArray _pi)
     {
         this.pi = _pi;
-    }    
-    
+    }
+
     private void initX()
     {
         // initial T(tau)
@@ -72,7 +72,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         {
             int i = it.row();
             int j = it.column();
-            
+
                 if (i != j)
                 {
                     X.set(i,j, 0.5 * (pi.get(i) * T.get(i,j) + pi.get(j) * T.get(j,i)));
@@ -101,9 +101,9 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         {
             X.set(i,i, pi.get(i) - Doubles.util.sum(X.viewRow(i)));
         }
-        
+
         this.itX = X.nonzeroIterator();
-        
+
         // TEST
         /*System.out.println("Testing X: ");
         IDoubleArray T2 = X.copy();
@@ -112,28 +112,28 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         for (int i=0; i<pitest.size(); i++)
             System.out.println(pi.get(i)+"\t"+pitest.get(i));*/
     }
-    
+
     private double logL()
-    {        
+    {
         // compute likelihood using the matrix iterator
         double ll = 0;
-        
+
         itX.reset();
         int i,j;
-        
+
         while(itX.hasNext())
         {
             i = itX.row();
             j = itX.column();
-            
+
             if (X.get(i,j) > 0)
             {
                 ll += C.get(i,j) * Math.log(X.get(i,j) / pi.get(i));
             }
-            
+
             itX.advance();
         }
-      
+
         return (ll);
     }
 
@@ -165,7 +165,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
                     +(C.get(i,j)+C.get(j,i))*Math.log(X.get(i,j) + d);
         return(dll);
     }
-    
+
     private double opt(int i, int j, double dmin, double dmax)
     {
         double x_ii = X.get(i,i);
@@ -183,24 +183,24 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
 
         double d1 = (E - Math.sqrt(A - B))/D;
         double d2 = (E + Math.sqrt(A - B))/D;
-        
+
         double lbest = dLL(i,j,0);
         double dbest = 0;
-        
+
         double l = dLL(i,j,dmin);
         if (l>lbest)
         {
             lbest = l;
             dbest = dmin;
         }
-        
+
         l = dLL(i,j,dmax);
         if (l>lbest)
         {
             lbest = l;
             dbest = dmax;
         }
-        
+
         // test d1
         if (d1 >= dmin && d1 <= dmax)
         {
@@ -221,11 +221,11 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
                 lbest = l;
                 dbest = d2;
             }
-        }        
-        
-        return(dbest);                    
+        }
+
+        return(dbest);
     }
-    
+
     private void optimizeElement(int i, int j)
     {
         double dmin = -X.get(i,j);
@@ -262,27 +262,27 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
     {
         itX.reset();
         int i,j;
-        
+
         while(itX.hasNext())
         {
             i = itX.row();
             j = itX.column();
-                        
+
             if (i<j)
             {
                 optimizeElement(i,j);
             }
             itX.advance();
         }
-        
+
         double ll = logL();
-        
+
         if (verbose)
         {
             //System.out.println(DoubleArrays.toString(X,"\t","\t"));
             System.out.println((logliks.size() + 1) + "\t" + ll);
-        }        
-        
+        }
+
         this.logliks.append(ll);
     }
 
@@ -312,11 +312,11 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         this.C = _C;
 
         initX();
-        
+
         double ll = logL();
 
         this.logliks = Doubles.create.list(nIterMax);
-        this.logliks.append(ll);        
+        this.logliks.append(ll);
     }
 
     @Override
@@ -335,7 +335,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         // output likelihood list
         //for (int i=0; i<this.logliks.size(); i++)
         //    System.err.println("# "+i+"\t"+this.logliks.get(i));
-        
+
         IDoubleArray T = X.create(X.rows(),X.columns());
         for (IDoubleIterator it = X.nonzeroIterator(); it.hasNext(); it.advance())
         {
@@ -347,17 +347,17 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
 
         return (T);
     }
-        
+
     public double[] getLikelihoodHistory()
     {
         return(this.logliks.getArray());
     }
-    
+
     public int getIterations()
     {
         return(this.logliks.size());
     }
-    
+
     public void setVerbose(boolean _verbose)
     {
         this.verbose = _verbose;

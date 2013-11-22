@@ -19,42 +19,42 @@ public interface IHMMParameters
      * @return deep copy of this parameter instance.
      */
     public IHMMParameters copy();
-    
+
     /**
      * Returns the number of states
-     * @return 
+     * @return
      */
     public int getNStates();
-    
+
     /**
      * Returns the parameters of the specified output model.
      * @param state the state index
-     * @return 
+     * @return
      */
     public IDoubleArray getOutputParameters(int state);
 
     /**
      * Sets the parameters of the specified output model
      * @param state
-     * @param par 
+     * @param par
      */
     public void setOutputParameters(int state, IDoubleArray par);
-    
+
     /**
      * Returns the transition matrix
-     * @return 
+     * @return
      */
     public IDoubleArray getTransitionMatrix();
-    
+
     /**
      * Sets the transition matrix
-     * @param T 
+     * @param T
      */
     public void setTransitionMatrix(IDoubleArray T);
-    
+
     /**
      * Returns the initial state distribution.
-     * @return 
+     * @return
      */
     public IDoubleArray getInitialDistribution();
 
@@ -62,9 +62,9 @@ public interface IHMMParameters
      * Sets the initial state distribution.
      */
     public void setInitialDistribution(IDoubleArray p0);
-    
+
     public boolean isReversible();
-    
+
     public boolean isStationary();
-    
+
 }

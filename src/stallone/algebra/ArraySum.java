@@ -25,7 +25,7 @@ import static stallone.doubles.DoubleArrayTest.*;
  *
  * @author  Frank Noe
  */
-public class ArraySum //implements IMatrixSum 
+public class ArraySum //implements IMatrixSum
 {
 
     public IDoubleArray addToNewDense(final IDoubleArray a, final IDoubleArray b)

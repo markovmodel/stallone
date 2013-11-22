@@ -10,5 +10,5 @@ package stallone.api.discretization;
  */
 public class DiscretizationUtilities
 {
-    
+
 }

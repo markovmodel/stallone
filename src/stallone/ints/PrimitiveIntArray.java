@@ -64,13 +64,13 @@ public class PrimitiveIntArray implements IIntArray
     {
         return(new PrimitiveIntArray(new int[size]));
     }
-    
+
     @Override
     public IIntIterator iterator()
     {
         return(new IntArrayIterator(this));
     }
-    
+
     @Override
     public boolean equals(Object o)
     {
@@ -88,7 +88,7 @@ public class PrimitiveIntArray implements IIntArray
         }
         return (true);
     }
-    
+
     public String toString()
     {
         return(PrimitiveIntTools.toString(x));
@@ -162,7 +162,7 @@ public class PrimitiveIntArray implements IIntArray
     {
         if (other.size() != size())
             throw (new IllegalArgumentException("Incompatible sizes. This array has size "+size()+", the other array has size "+other.size()));
-        
+
         Ints.util.copyInto(this, 0, size(), other, 0);
     }
 
@@ -201,5 +201,5 @@ public class PrimitiveIntArray implements IIntArray
     {
         return false;
     }
-        
+
 }

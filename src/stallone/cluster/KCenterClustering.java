@@ -63,7 +63,7 @@ public class KCenterClustering implements IClustering, IDiscretization
 
         // first cluster center is randomly selected
         // Random rnd = new Random(randomSeed);
-        // clusterCenterIndexes[0] = rnd.nextInt(dataPoints.size());        
+        // clusterCenterIndexes[0] = rnd.nextInt(dataPoints.size());
 
         // first cluster center is equal to first frame
         Iterator<IDoubleArray> it = data.iterator();

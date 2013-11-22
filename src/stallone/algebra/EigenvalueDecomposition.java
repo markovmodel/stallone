@@ -17,7 +17,7 @@ import stallone.complex.ComplexNumber;
 /**
  *
  * Data container for eigenvalue decomposition of a matrix
- * 
+ *
  * @author noe
  */
 public class EigenvalueDecomposition implements IEigenvalueDecomposition
@@ -34,7 +34,7 @@ public class EigenvalueDecomposition implements IEigenvalueDecomposition
         L = _L;
         eval = _eval;
         R = _R;
-        
+
         // determine rank and available eigenvalues.
         if (_L != null)
         {
@@ -60,7 +60,7 @@ public class EigenvalueDecomposition implements IEigenvalueDecomposition
                 throw new IllegalArgumentException("Inconsistent sizes of eigenvector matrices or eigenvalues: (" + L.rows() + "x" + L.columns() + "  (" + eval.size() + ")  " + R.rows() + "x" + R.columns());
             }
         }
-        
+
         if (_L == null && _R == null)
         {
             availableEigenvalues = _eval.size();
@@ -223,7 +223,7 @@ public class EigenvalueDecomposition implements IEigenvalueDecomposition
         }
         return res;
     }
-    
+
     @Override
     public IDoubleArray getEvalNorm()
     {

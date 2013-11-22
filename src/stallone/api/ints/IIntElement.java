@@ -11,12 +11,12 @@ package stallone.api.ints;
 public interface IIntElement
 {
     public int index();
-    
+
     public int row();
-    
+
     public int column();
-    
+
     public int get();
-    
+
     public void set(int x);
 }

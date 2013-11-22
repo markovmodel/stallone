@@ -17,12 +17,12 @@ public class GenericPotential extends AbstractPotential
     private IDoubleArray x;
     private double f;
     private IDoubleArray grad;
-    
+
     public GenericPotential(IFunctionC1 _function)
     {
         this.function = _function;
     }
-    
+
     @Override
     public void setCoordinates(IDoubleArray coordinates)
     {
@@ -66,5 +66,5 @@ public class GenericPotential extends AbstractPotential
     {
         return(function.getNumberOfVariables());
     }
-    
+
 }

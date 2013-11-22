@@ -14,6 +14,6 @@ public interface IGriddedFunction
     extends IGrid, IDiscretizedFunction
 {
     public double f(int... indexes);
-    
+
     public double f(IIntArray indexes);
 }

@@ -18,16 +18,16 @@ public class FoldingModelSimple  extends AbstractPotential
 {
     private double df, kf, du, ku;
     private int ndim = 3;
-    
+
     private IDoubleArray center;
     private IDoubleArray crd;
     private double energy;
     private IDoubleArray grad;
-    
+
     private EuclideanDistance euclid = new EuclideanDistance();
-            
+
     /*
-     * Folding model with 
+     * Folding model with
      * d < df:  U = -kf/2 (d-df)^2
      * d > du:  U = ku/2 (d-du)^2
      * else     U = 0
@@ -36,18 +36,18 @@ public class FoldingModelSimple  extends AbstractPotential
     {
         if (_df < 0 || _kf < 0 || _du < 0 || _ku < 0 || _df > _du || ndim < 1)
             throw(new IllegalArgumentException("Illegal Parameters"));
-        
+
         df = _df;
         kf = _kf;
         du = _du;
         ku = _ku;
         ndim = _ndim;
-        
-        
+
+
         this.center = Doubles.create.array(ndim);
         this.crd = Doubles.create.array(ndim);
     }
-    
+
     @Override
     public void setCoordinates(IDoubleArray coordinates)
     {
@@ -63,7 +63,7 @@ public class FoldingModelSimple  extends AbstractPotential
         double d = euclid.distance(center, crd);
         grad = euclid.gradientY(center, crd);
         double g = 0;
-        
+
         if (d < df)
         {
             energy = -kf/2 * (d-df) * (d-df);
@@ -78,10 +78,10 @@ public class FoldingModelSimple  extends AbstractPotential
         {
             energy = 0;
         }
-        
+
         for (int i=0; i<grad.size(); i++)
             grad.set(i, g*grad.get(i));
-        
+
         return(true);
     }
 
@@ -108,11 +108,11 @@ public class FoldingModelSimple  extends AbstractPotential
     {
         return(crd);
     }
-    
+
     /**
      * Calculates the probability density depending on the distance.
      * @param distance distance
-     * @return 
+     * @return
      */
     public double probabilityDensity(double distance, double kT)
     {
@@ -129,19 +129,19 @@ public class FoldingModelSimple  extends AbstractPotential
         else
         {
             e = 0;
-        }        
-        
+        }
+
         double A = MathTools.hyperSphereSurfaceArea(ndim, distance);
-        
+
         double p = Math.exp(-e/kT)*A;
-        
+
         return(p);
     }
-    
+
     @Override
     public int getNumberOfVariables()
     {
         return(crd.size());
     }
-    
+
 }

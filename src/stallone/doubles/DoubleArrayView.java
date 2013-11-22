@@ -31,7 +31,7 @@ public class DoubleArrayView extends AbstractDoubleArray
      * Costructor for order 1 array views
      * @param _data
      * @param _from
-     * @param _to 
+     * @param _to
      */
     public DoubleArrayView(IDoubleArray _data, int _from, int _to)
     {

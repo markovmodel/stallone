@@ -32,7 +32,7 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
 
     private IDoubleArray vector;
     private SparseVectorIndexMap sparseIndexMap;
-    
+
     public SparseVectorNonzeroIterator(IDoubleArray _vector, SparseVectorIndexMap _map)
     {
         //super(_vector);
@@ -101,7 +101,7 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
             nextPos = sparseIndexMap.nonZeroIndices[0];
         }
     }
-    
+
     @Override
     public boolean hasNext()
     {
@@ -126,7 +126,7 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
             advance();
 
             element.setIndex(nextPos);
-            
+
             // return current
             return element;
         }

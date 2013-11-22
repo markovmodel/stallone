@@ -19,17 +19,17 @@ import java.util.logging.Logger;
 public class DenseAsciiVectorsWriter {
     private List<IComplexArray> vectors;
     private String filename;
-    
+
     private boolean allPurelyReal;
 
     public DenseAsciiVectorsWriter(List<IComplexArray> vectors, String filename) {
         this.vectors = vectors;
         this.filename = filename;
-        
+
         if (vectors.isEmpty()) {
             throw new IllegalArgumentException("List of vectors is empty.");
         }
-        
+
         boolean first = true;
         int vectorSize = vectors.get(0).size();
         for (IComplexArray v : vectors) {
@@ -37,7 +37,7 @@ public class DenseAsciiVectorsWriter {
                 throw new IllegalArgumentException("Vector do not all have the same length.");
             }
         }
-        
+
         allPurelyReal = true;
         for (IComplexArray v : vectors) {
             if (!v.isReal()) {
@@ -54,7 +54,7 @@ public class DenseAsciiVectorsWriter {
 
             int rows = vectors.get(0).size();
             int cols = vectors.size();
-            
+
             if ( allPurelyReal) {
                 writer.write("DENSE " + Integer.toString(rows) + " " + Integer.toString(cols));
             } else {
@@ -66,7 +66,7 @@ public class DenseAsciiVectorsWriter {
 
                 // write one line
                 StringBuilder lineBuilder = new StringBuilder();
-                
+
                 for (int j = 0; j < cols; j++) {
                     double re = vectors.get(j).getRe(i);
                     double im = vectors.get(j).getIm(i);
@@ -90,7 +90,7 @@ public class DenseAsciiVectorsWriter {
             }
         } // end try-catch-finally
     }
-    
+
     /*public static void main(String[] args) {
         IDoubleArray v1 = Doubles.create.array(2);
         v1.set(0, 1.0d);
@@ -98,13 +98,13 @@ public class DenseAsciiVectorsWriter {
         IComplexArray v2 = Complex.create.array(2);
         v2.set(0, 1.0, 0.0);
         v2.set(1, 3.0, -5.0);
-        
+
         List<IDoubleArray> vectors = new ArrayList<IDoubleArray>();
         vectors.add(v1);
         vectors.add(v2);
-        
+
         DenseAsciiVectorsWriter writer = new DenseAsciiVectorsWriter(vectors, "/home/fischbac/vectors.dat");
         writer.perform();
-        
+
     }*/
 }

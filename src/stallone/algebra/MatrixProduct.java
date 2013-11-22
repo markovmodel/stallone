@@ -23,17 +23,17 @@ import static stallone.doubles.DoubleArrayTest.*;
  *
  * @author  Frank Noe
  */
-public class MatrixProduct //implements IMatrixProduct 
+public class MatrixProduct //implements IMatrixProduct
 {
     InnerProduct ip = new InnerProduct(true);
-    
+
     public IDoubleArray multiplyToNew(final IDoubleArray a, final IDoubleArray b)
     {
         IDoubleArray res = a.create(a.rows(), b.columns());
         multiply(a,b,res);
         return res;
     }
-    
+
     //@Override
     public void multiply(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
@@ -62,7 +62,7 @@ public class MatrixProduct //implements IMatrixProduct
             }
         }
     }
-    
+
     public void sparseMultiply(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
@@ -92,7 +92,7 @@ public class MatrixProduct //implements IMatrixProduct
         multiply(a,b,res);
         return res;
     }
-    
+
     public void multiply(final IComplexArray a, final IComplexArray b, final IComplexArray target)
     {
         // Extract some parameters for easier access
@@ -106,7 +106,7 @@ public class MatrixProduct //implements IMatrixProduct
         assertRows(target, b.columns());
 
         double sumRe, sumIm, aRe, aIm, bRe, bIm;
-        
+
         for (int l = 0; l < colsB; l++)
         {
             for (int k = 0; k < rowsA; k++)
@@ -127,9 +127,9 @@ public class MatrixProduct //implements IMatrixProduct
                 target.setRe(k, l, sumRe);
                 target.setIm(k, l, sumIm);
             }
-        }        
+        }
     }
-    
+
     public void sparseMultiply(final IComplexArray a, final IComplexArray b, final IComplexArray target)
     {
         // Extract some parameters for easier access
@@ -150,6 +150,6 @@ public class MatrixProduct //implements IMatrixProduct
             cj = b.viewColumn(j);
             target.set(i, j, ip.innerProductSparse(a, b));
         }
-    }    
-    
+    }
+
 }

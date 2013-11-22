@@ -28,8 +28,8 @@ public class DataSequenceFactory
     {
         DataSequenceLoader_SingleReaderImpl loader = new DataSequenceLoader_SingleReaderImpl(files, sequenceLoader);
         return (loader);
-    }  
-    
+    }
+
     public IDataSequenceLoader dataSequenceLoader(List<String> files)
             throws IOException
     {
@@ -49,7 +49,7 @@ public class DataSequenceFactory
     {
         return new DataSequenceLoader_SingleDataIterable(loader,stepsize);
     }
-    
+
     public IDataList createDatalist()
     {
         DataList ds = new DataList();
@@ -59,7 +59,7 @@ public class DataSequenceFactory
     /**
      * Writes to standard out
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataWriter createConsoleDataOutput(int dimension)
     {
@@ -70,7 +70,7 @@ public class DataSequenceFactory
     /**
      * Writes to standard out
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataWriter createConsoleDataOutput(int dimension, String dataDelimiter, String datasetDelimiter)
     {
@@ -83,18 +83,18 @@ public class DataSequenceFactory
      * Writes to file. Automatically identifies filetype by extension.
      * @param size
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataWriter createDataWriter(String file, int size, int dimension)
             throws FileNotFoundException, IOException
     {
         return DataSequenceFileFormats.createWriter(file, size, dimension);
-    }    
-    
+    }
+
     /**
      * Writes to file
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataWriter createASCIIDataWriter(String file, int dimension)
             throws FileNotFoundException
@@ -102,11 +102,11 @@ public class DataSequenceFactory
         StreamDataWriter out = new StreamDataWriter(file);
         return(out);
     }
-    
+
     /**
      * Writes to file
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataWriter createASCIIDataWriter(String file, int dimension, String dataDelimiter, String datasetDelimiter)
             throws FileNotFoundException
@@ -115,16 +115,16 @@ public class DataSequenceFactory
         out.setOutputDelimiters(dataDelimiter, datasetDelimiter);
         return(out);
     }
-    
+
     /**
      * creates an ascii file reader
      * @param dimension
-     * @return 
+     * @return
      */
     public IDataReader createASCIIDataReader(String file)
             throws IOException
-    {        
+    {
         AsciiDataSequenceReader input = new AsciiDataSequenceReader(file);
         return(input);
-    }    
+    }
 }

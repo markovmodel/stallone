@@ -25,7 +25,7 @@ public class IntSequencesFileLoader
 
     private int currentSource; // the source that is currently in the loader
     private boolean isOpen; // when the loader is currently open
-    
+
     // info
     class DataSequenceInfo
     {
@@ -54,7 +54,7 @@ public class IntSequencesFileLoader
     }
 
     /**
-     * Scans all files or data base entries. 
+     * Scans all files or data base entries.
      */
     @Override
     public void scan()
@@ -84,7 +84,7 @@ public class IntSequencesFileLoader
 
     /**
      * Total number of sequences
-     * @return 
+     * @return
      */
     @Override
     public int numberOfSequences()
@@ -94,7 +94,7 @@ public class IntSequencesFileLoader
 
     /**
      * Total number of data objects
-     * @return 
+     * @return
      */
     @Override
     public int size()
@@ -102,10 +102,10 @@ public class IntSequencesFileLoader
         return (totalSize);
     }
 
-    /** 
+    /**
      * size of the sequence with the given index
      * @param trajIndex
-     * @return 
+     * @return
      */
     @Override
     public int size(int trajIndex)
@@ -126,7 +126,7 @@ public class IntSequencesFileLoader
     /**
      * Returns an iterable that can iterate over single data sequences.
      * Each data sequence is fully loaded into memory at a time. Only one file is open at a time
-     * @return 
+     * @return
      */
     @Override
     public Iterable<IIntArray> getSingleSequenceLoader()
@@ -174,7 +174,7 @@ public class IntSequencesFileLoader
 
         if (!isOpen)
             loader.open();
-        
+
         return loader.get(frameIndex);
     }
 
@@ -191,13 +191,13 @@ public class IntSequencesFileLoader
 
         if (!isOpen)
             loader.open();
-        
+
         return loader.load();
     }
-    
+
     /**
      * Loads everything into memory
-     * @return 
+     * @return
      */
     @Override
     public List<IIntArray> loadAll()
@@ -224,7 +224,7 @@ public class IntSequencesFileLoader
             {
                 loader.setSource(sources.get(0));
                 loader.open();
-            } 
+            }
             catch (IOException e)
             {
                 throw (new RuntimeException(e));

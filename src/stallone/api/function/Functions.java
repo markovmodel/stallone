@@ -19,5 +19,5 @@ public class Functions
     /**
      * The default factory for algebra datatypes, such as Vectors and Matrices
      */
-    public static final FunctionFactory create = new FunctionFactory();    
+    public static final FunctionFactory create = new FunctionFactory();
 }

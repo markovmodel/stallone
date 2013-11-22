@@ -13,6 +13,6 @@ import stallone.api.doubles.IDoubleArray;
 public interface IReversibleSamplingStep
 {
     public void init(IDoubleArray _C, IDoubleArray _T, IDoubleArray _mu);
-    
+
     public boolean step();
 }

@@ -29,12 +29,12 @@ public class TPTFlux implements ITPTFlux
     private IDoubleArray qforward, qbackward;
     private IDoubleArray flux, netflux;
     private double totalflux, kAB;
-    
+
     /**
      * Constructs a TPT object from the rate- or transition matrix M from set A to set B
      * @param M the transition or rate matrix
      * @param _A
-     * @param _B 
+     * @param _B
      */
     public TPTFlux(IDoubleArray M, IIntArray _A, IIntArray _B)
     {
@@ -55,9 +55,9 @@ public class TPTFlux implements ITPTFlux
         {
             throw (new IllegalArgumentException("Trying to construct TPT with a matrix that is neither a transition nor a rate matrix"));
         }
-        
+
     }
-    
+
     public final void setTransitionMatrix(IDoubleArray _T)
     {
         P = _T;
@@ -71,26 +71,26 @@ public class TPTFlux implements ITPTFlux
         this.committor.setRateMatrix(_K);
         this.statdist.setK(_K);
     }
-    
+
     /**
      * optional
-     * @param pi 
+     * @param pi
      */
     public void setStationaryDistribution(IDoubleArray _pi)
     {
         this.pi = Doubles.create.array(_pi.getArray());
     }
-    
+
     public void calculate()
     {
         // stationary distribution if necessary
         if (pi == null)
             pi = statdist.calculate();
-        
+
         // committor
         qbackward = committor.backwardCommittor();
         qforward = committor.forwardCommittor();
-        
+
         // flux
         this.flux = P.create(P.rows(), P.columns());
         for (IDoubleIterator it = P.nonzeroIterator(); it.hasNext(); it.advance())
@@ -109,22 +109,22 @@ public class TPTFlux implements ITPTFlux
             int j = it.column();
 		if (flux.get(i,j) > flux.get(j,i))
 		    netflux.set(i,j, flux.get(i,j) - flux.get(j,i));
-        }        
-        
+        }
+
         // total flux
         totalflux = 0;
         for (int i=0; i<A.size(); i++)
             totalflux += Doubles.util.sum(flux.viewRow(i));
-        
+
         // kAB
         kAB = totalflux / Doubles.util.sum(Algebra.util.multiplyElementsToNew(pi, qbackward));
     }
-    
+
     public IDoubleArray getStationaryDistribution()
     {
         return(pi);
     }
-    
+
     public IDoubleArray getBackwardCommittor()
     {
         return(qbackward);
@@ -144,12 +144,12 @@ public class TPTFlux implements ITPTFlux
     {
         return(netflux);
     }
-    
+
     public double getTotalFlux()
     {
         return(totalflux);
     }
-    
+
     public double getRate()
     {
         return(kAB);

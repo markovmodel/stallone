@@ -33,7 +33,7 @@ public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleAr
         this.loader = _loader;
         this.stepsize = _stepsize;
     }
-    
+
     @Override
     public boolean hasNext()
     {

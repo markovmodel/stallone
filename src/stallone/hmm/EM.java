@@ -27,18 +27,18 @@ public class EM implements IExpectationMaximization, IHMM
     private IParameterEstimator[] outputModelEstimators;
     private ForwardBackward trajEstimator;
     double  logLikelihood = Double.NEGATIVE_INFINITY;
-    
+
     // initial hidden path, if set
     private List<IIntArray> initPaths;
 
     // hidden variables are stored when saveMemory mode is off
     private HMMHiddenVariables[] hidden = null;
     private boolean saveMemory = false;
-    
+
     // optimization parameters
     private int nStepsMax = 1;
     private double dectol = 0.1;
-    
+
     // results
     private double[] likelihoods;
 
@@ -51,14 +51,14 @@ public class EM implements IExpectationMaximization, IHMM
      * @param _saveMemory if the hidden trajectories should be always constructed on the fly.
      */
     public EM(List<IDataSequence> _obs, boolean eventBased, int nstates, boolean reversible,
-              IParametricFunction _fOut, IParameterEstimator _outputModelEstimator, 
+              IParametricFunction _fOut, IParameterEstimator _outputModelEstimator,
               boolean _saveMemory)
     {
         if (_obs == null)
             throw new IllegalArgumentException("Observation is "+null);
         if (_obs.size() == 0)
             throw new IllegalArgumentException("Observation has zero Elements");
-        
+
         this.obs = _obs;
         this.model = new HMMForwardModel(_obs, eventBased, nstates, reversible, _fOut);
         this.saveMemory = _saveMemory;
@@ -99,20 +99,20 @@ public class EM implements IExpectationMaximization, IHMM
 
     /**
      * Initializes the EM by providing the initial parameter set.
-     * @param _par 
+     * @param _par
      */
     public void setInitialParameters(IHMMParameters _par)
     {
         model.setParameters(_par);
     }
-    
+
     public void setInitialPaths(List<IIntArray> _initPaths)
     {
         this.initPaths = _initPaths;
         // set initial counts to make sure Baum-Welch works
         model.setTransitionCounts(MarkovModel.util.estimateC(initPaths, 1));
     }
-    
+
     /**
      * If false, all hidden pathways will be kept in memory. This is the faster
      * option If true, each hidden pathway will be regenerated whenever needed.
@@ -124,7 +124,7 @@ public class EM implements IExpectationMaximization, IHMM
     {
         saveMemory = sm;
     }
-    
+
     /**
      * @param mode MODE_MAXPATH = 1, MODE_VITERBI = 2, MODE_BAUMWELCH = 3;
      * default is: MODE_BAUMWELCH
@@ -133,10 +133,10 @@ public class EM implements IExpectationMaximization, IHMM
     {
         this.countMatrixEstimator.setCountMode(mode);
     }
-    
+
     /**
      * Sets the number of EM steps after which the algorithm terminates
-     * @param nsteps 
+     * @param nsteps
      */
     public void setMaximumNumberOfStep(int nsteps)
     {
@@ -145,13 +145,13 @@ public class EM implements IExpectationMaximization, IHMM
 
     /**
      * Sets the maximum admissible decrease of the likelihood over the previous maximum after which the optimization still continues.
-     * @param _dectol 
+     * @param _dectol
      */
     public void setLikelihoodDecreaseTolerance(double _dectol)
     {
         this.dectol = _dectol;
     }
-    
+
     public void run()
             throws ParameterEstimationException
     {
@@ -159,12 +159,12 @@ public class EM implements IExpectationMaximization, IHMM
         logLikelihood = Double.NEGATIVE_INFINITY;
 
         // if given initial path, take an M-step first with this initial path
-        
+
         //System.out.println("initial logL = "+logLikelihood);
-        
+
         if (initPaths != null)
             emStep(initPaths);
-        
+
         //System.out.println("after 1 em step logL = "+logLikelihood);
 
         for (int n = 0; n < nStepsMax; n++)
@@ -172,7 +172,7 @@ public class EM implements IExpectationMaximization, IHMM
             res[n] = emStep(null);
 
             //System.out.println("res[n] logL = "+res[n]+" compare to "+logLikelihood);
-            
+
             if (res[n] + dectol < logLikelihood)
             {
                 System.out.println(" next likelihood = " + res[n] + " exiting.");
@@ -204,10 +204,10 @@ public class EM implements IExpectationMaximization, IHMM
     }
 
     /**
-     * 
+     *
      * @param initPaths Set to the initial pathway (E-step will be skipped) or to null (E-step will be computed)
      * @return
-     * @throws ParameterEstimationException 
+     * @throws ParameterEstimationException
      */
     private double emStep(List<IIntArray> _initPaths)
             throws ParameterEstimationException
@@ -277,11 +277,11 @@ public class EM implements IExpectationMaximization, IHMM
             {
                 this.model.setOutputParameters(s, outputModelEstimators[s].getEstimate());
             }
-        }         
+        }
 
         return res;
     }
-    
+
     public IHMMHiddenVariables getHidden(int itraj)
     {
         if (saveMemory)
@@ -301,28 +301,28 @@ public class EM implements IExpectationMaximization, IHMM
             return (hidden[itraj]);
         }
     }
-    
+
     public IHMMParameters getParameters()
     {
         return model.getParameters();
     }
-    
+
     public double getLogLikelihood()
     {
         return logLikelihood;
     }
-    
+
     public List<IIntArray> viterbi()
     {
         Viterbi v = new Viterbi(model);
         return v.getPaths();
     }
-    
+
     public IHMM getHMM()
     {
         return this;
     }
-    
+
     public double[] getLogLikelihoodHistory()
     {
         return likelihoods;

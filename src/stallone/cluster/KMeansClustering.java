@@ -58,9 +58,9 @@ public class KMeansClustering implements IClustering
     private int maxIterations;
     /** Only used internally during initialisation. */
     private IIntArray indices;
-    
+
     private IDiscretization voronoiDiscretization;
-            
+
 
     public KMeansClustering()
     {
@@ -128,7 +128,7 @@ public class KMeansClustering implements IClustering
         this.size = size;
         assignments = new IntArrayList(size);
     }
-    
+
     @Override
     public void setMetric(IMetric<IDoubleArray> metric)
     {
@@ -181,7 +181,7 @@ public class KMeansClustering implements IClustering
             }
         }
         while (clustersChanged && doMoreIterations);
-        
+
         // final cluster center assignment
         this.voronoiDiscretization = Discretization.create.voronoiDiscretization(clusterCenters, metric);
     }
@@ -242,7 +242,7 @@ public class KMeansClustering implements IClustering
 
         // sum up all data points per cluster they are assigned to
         double[] assignmentWeight = new double[this.numberOfClusters];
-        
+
         int j = 0;
         for (Iterator<IDoubleArray> it = data.iterator(); it.hasNext();)
         //for (int j = 0; j < data.size(); j++)
@@ -260,18 +260,18 @@ public class KMeansClustering implements IClustering
         }
 
         // normalize
-        
+
         List<Integer> emptyCenterIndices = new ArrayList<Integer>();
-        
+
         for (int i = 0; i < numberOfClusters; i++)
         {
             //Store indices of empty cluster centers
             if(assignmentWeight[i]==0.0d){
-                emptyCenterIndices.add(i);                
+                emptyCenterIndices.add(i);
             }
             Algebra.util.scale(1.0d / assignmentWeight[i], clusterCenters.get(i));
         }
-        
+
         //Remove empty cluster centers
         if(!emptyCenterIndices.isEmpty()){
             if(emptyCenterIndices.size()>=numberOfClusters){
@@ -284,9 +284,9 @@ public class KMeansClustering implements IClustering
                     clusterCenters.remove(i);
                     numberOfClusters--;
                 }
-            }            
+            }
         }
-        
+
     }
 
     @Override
@@ -328,7 +328,7 @@ public class KMeansClustering implements IClustering
     {
         return clusterCenters.get(i);
     }
-    
+
     @Override
     public int assign(IDoubleArray data)
     {
@@ -340,7 +340,7 @@ public class KMeansClustering implements IClustering
     {
         return clusterCenters.get(assign(p));
     }
-        
+
     @Override
     public IDoubleArray assignFuzzy(IDoubleArray data)
     {

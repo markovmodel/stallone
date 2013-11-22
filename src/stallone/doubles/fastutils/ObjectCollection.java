@@ -31,8 +31,8 @@ package stallone.doubles.fastutils;
 /* Equality */
 /* Object/Reference-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ package stallone.doubles.fastutils;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 import java.util.Collection;
 /** A type-specific {@link Collection}; provides some additional methods
@@ -58,8 +58,8 @@ import java.util.Collection;
 public interface ObjectCollection <K> extends Collection<K>, ObjectIterable <K> {
  /** Returns a type-specific iterator on the elements of this collection.
 	 *
-	 * <p>Note that this specification strengthens the one given in 
-	 * {@link java.lang.Iterable#iterator()}, which was already 
+	 * <p>Note that this specification strengthens the one given in
+	 * {@link java.lang.Iterable#iterator()}, which was already
 	 * strengthened in the corresponding type-specific class,
 	 * but was weakened by the fact that this interface extends {@link Collection}.
 	 *
@@ -74,10 +74,10 @@ public interface ObjectCollection <K> extends Collection<K>, ObjectIterable <K> 
  @Deprecated
  ObjectIterator <K> objectIterator();
  /** Returns an containing the items of this collection;
-	 * the runtime type of the returned array is that of the specified array. 
+	 * the runtime type of the returned array is that of the specified array.
 	 *
 	 * <p><strong>Warning</strong>: Note that, contrarily to {@link Collection#toArray(Object[])}, this
-	 * methods just writes all elements of this collection: no special 
+	 * methods just writes all elements of this collection: no special
 	 * value will be added after the last one.
 	 *
 	 * @param a if this array is big enough, it will be used to store this collection.

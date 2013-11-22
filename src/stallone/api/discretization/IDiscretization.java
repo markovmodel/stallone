@@ -8,7 +8,7 @@ import stallone.api.doubles.IDoubleArray;
 /**
  * @author Frank Noe
  */
-public interface IDiscretization 
+public interface IDiscretization
 {
 
     /**
@@ -23,10 +23,10 @@ public interface IDiscretization
     /**
      * Gets the representative grid point
      * @param p
-     * @return 
+     * @return
      */
     public IDoubleArray getRepresentative(IDoubleArray p);
-    
+
     /**
      * Get the membership assignment of object p.
      *

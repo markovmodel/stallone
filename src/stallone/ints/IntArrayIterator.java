@@ -32,7 +32,7 @@ public class IntArrayIterator implements IIntIterator
     {
         i=0;
     }
-    
+
     public boolean hasNext()
     {
         return(i<size);
@@ -41,7 +41,7 @@ public class IntArrayIterator implements IIntIterator
     /**
      * Goes to the next value. Does not return anything. You have to get the content with get().
      * Usage Example:
-     * 
+     *
      * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
      * {
      *      System.out.println("current element: " + it.get());
@@ -55,7 +55,7 @@ public class IntArrayIterator implements IIntIterator
 
     /**
      * Returns the current index. Good to know if this is a sparse vector iterator!
-     * @return 
+     * @return
      */
     @Override
     public int getIndex()
@@ -65,14 +65,14 @@ public class IntArrayIterator implements IIntIterator
 
     /**
      * Returns the current value
-     * @return 
+     * @return
      */
     @Override
     public int get()
     {
         return(x.get(i));
     }
-    
+
     /**
      * Sets the current value
      */

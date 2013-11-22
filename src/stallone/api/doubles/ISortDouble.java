@@ -15,10 +15,10 @@ public interface ISortDouble
     public void setData(IDoubleArray data, IDoubleArray target);
 
     public void setData(IDoubleArray data);
-    
+
     public IDoubleArray sort();
-    
+
     public IIntArray getSortedIndexes();
-    
+
     public IDoubleArray getSortedData();
 }

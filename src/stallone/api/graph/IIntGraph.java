@@ -12,16 +12,16 @@ import stallone.api.ints.IIntIterator;
  *
  * @author  Martin Senne
  */
-public interface IIntGraph 
+public interface IIntGraph
 {
     public int numberOfNodes();
-    
+
     public int numberOfArcs();
-    
+
     /**
      * Returns true if vertex is contained
      * @param vertex
-     * @return 
+     * @return
      */
     public boolean contains(int vertex);
 
@@ -29,15 +29,15 @@ public interface IIntGraph
      * Returns true if edge is contained
      * @param vertex1
      * @param vertex2
-     * @return 
+     * @return
      */
     public boolean contains(int vertex1, int vertex2);
-    
+
     public IIntArray getNodes();
-       
+
     public IIntIterator nodeIterator();
 
     public IIntIterator neighborIterator(int node);
 
-    public Iterator<IIntEdge> edgeIterator();    
+    public Iterator<IIntEdge> edgeIterator();
 }

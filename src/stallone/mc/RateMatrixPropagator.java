@@ -20,7 +20,7 @@ public final class RateMatrixPropagator implements IMarkovPropagator
     // input T
     private IDoubleArray K;
     private boolean reversible;
-    
+
     private IDoubleArray R,L;
     private IDoubleArray evalReal;
 
@@ -28,7 +28,7 @@ public final class RateMatrixPropagator implements IMarkovPropagator
     {
         set(_K);
     }
-    
+
     /**
      * Sets the basic propagator
      * @param _P the propagator
@@ -37,7 +37,7 @@ public final class RateMatrixPropagator implements IMarkovPropagator
     public void set(IDoubleArray _K)
     {
         this.K = _K;
-        
+
         IEigenvalueDecomposition evd = Algebra.util.evd(_K);
         IComplexArray evComplex = evd.getEval();
         if (evComplex.isReal())
@@ -47,14 +47,14 @@ public final class RateMatrixPropagator implements IMarkovPropagator
             R = evd.getRightEigenvectorMatrix();
         }
         else
-            reversible = false;            
+            reversible = false;
     }
-    
+
     @Override
     public IDoubleArray propagate(double t)
     {
         IDoubleArray res = null;
-        
+
         if (reversible)
         {
             IDoubleArray evalPower = Doubles.create.array(evalReal.size());
@@ -68,7 +68,7 @@ public final class RateMatrixPropagator implements IMarkovPropagator
         {
             throw(new IllegalArgumentException("Trying to use a nonreversible rate matrix propagator. This is not implemented yet."));
         }
-        
+
         return(res);
     }
 }

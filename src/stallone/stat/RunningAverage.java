@@ -12,14 +12,14 @@ public class RunningAverage
 {
     private double mean=0, variance=0;
     private int n=0;
-    
+
     public RunningAverage()
     {
     }
-    
+
     /**
      * Adds a data point
-     * @param x 
+     * @param x
      */
     public void add(double x)
     {
@@ -37,21 +37,21 @@ public class RunningAverage
     {
         return(mean);
     }
-    
+
     public double getStandardDeviation()
     {
         return(Math.sqrt(variance));
     }
-    
+
     public double getVariance()
     {
         return(variance);
     }
-    
+
     public int getN()
     {
         return(n);
     }
-    
-    
+
+
 }

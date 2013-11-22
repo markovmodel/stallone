@@ -15,7 +15,7 @@ import stallone.mc.StationaryDistribution;
 
 /**
  * Calculates expectations and correlations of functions of states
- * 
+ *
  * @author noe
  */
 public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpectral
@@ -26,7 +26,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
 
     // stationary distribution
     private IDoubleArray pi;
-    
+
     // spectral components
     private IDoubleArray timescales;
     private IDoubleArray R; // eigenvectors, normalized with sqrt()
@@ -49,11 +49,11 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
             throw(new IllegalArgumentException("Trying to construct DynamicalExpectationsSpectral with a Matrix that is neither a transition nor a rate matrix"));
         }
     }
-    
+
     public DynamicalExpectationsSpectral()
     {
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setT(stallone.api.doubles.IDoubleArray)
      */
@@ -63,7 +63,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
         this.T = _T;
         statdist.setT(_T);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setK(stallone.api.doubles.IDoubleArray)
      */
@@ -73,7 +73,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
         this.T = null;
         statdist.setK(_K);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#setStationaryDistribution(stallone.api.doubles.IDoubleArray)
      */
@@ -87,7 +87,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
     {
         if (K==null && T==null)
             throw(new RuntimeException("Trying to calculate dynamical expectations before setting T or K."));
-        
+
         // calculates the stationary distribution if not given
         if (pi == null)
         {
@@ -102,7 +102,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
             timescales = Doubles.create.array(evalT.size());
             for (int i=0; i<timescales.size(); i++)
                 timescales.set(i, -1/Math.log(Math.abs(evalT.get(i))));
-            
+
             R = evd.getRightEigenvectorMatrix();
         }
         else
@@ -112,21 +112,21 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
             timescales = Doubles.create.array(evalK.size());
             for (int i=0; i<timescales.size(); i++)
                 timescales.set(i, -1/Math.abs(evalK.get(i)));
-            
+
             R = evd.getRightEigenvectorMatrix();
         }
-        
+
         // normalize eigenvectors
         for (int i=0; i<R.columns(); i++)
         {
             IDoubleArray ri = R.viewColumn(i);
             double s = Math.sqrt(Algebra.util.dot(ri, ri, pi));
-            
+
             for (int j=0; j<R.size(); j++)
                 R.set(j,i, R.get(j,i) / s);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#calculatePerturbationExpectation(stallone.api.doubles.IDoubleArray, stallone.api.doubles.IDoubleArray)
      */
@@ -134,7 +134,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
     {
         if (pi == null || timescales == null || R == null)
             calculateAlgebra();
-        
+
         amplitudes = Doubles.create.array(timescales.size());
         for (int i=0; i<amplitudes.size(); i++)
         {
@@ -143,7 +143,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
             amplitudes.set(i, a1*a2);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#calculateAutocorrelation(stallone.api.doubles.IDoubleArray)
      */
@@ -151,7 +151,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
     {
         if (pi == null || timescales == null || R == null)
             calculateAlgebra();
-        
+
         amplitudes = Doubles.create.array(timescales.size());
         for (int i=0; i<amplitudes.size(); i++)
         {
@@ -167,7 +167,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
     {
         if (pi == null || timescales == null || R == null)
             calculateAlgebra();
-        
+
         amplitudes = Doubles.create.array(timescales.size());
         for (int i=0; i<amplitudes.size(); i++)
         {
@@ -176,7 +176,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
             amplitudes.set(i, a1*a2);
         }
     }
-        
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#getAmplitudes()
      */
@@ -192,7 +192,7 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
     {
         return(timescales);
     }
-    
+
     /* (non-Javadoc)
      * @see stallone.mc.correlations.IDynamicalExpectationsSpectral#getValue(double)
      */
@@ -205,5 +205,5 @@ public class DynamicalExpectationsSpectral implements IDynamicalExpectationsSpec
         }
         return(res);
     }
-    
+
 }

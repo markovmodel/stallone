@@ -26,8 +26,8 @@
 /* Object/Reference-only definitions (keys) */
 /* Primitive-type-only definitions (keys) */
 /* Object/Reference-only definitions (values) */
-/*		 
- * Copyright (C) 2002-2011 Sebastiano Vigna 
+/*
+ * Copyright (C) 2002-2011 Sebastiano Vigna
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 package stallone.doubles.fastutils;
 
@@ -85,7 +85,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
 	 *
 	 * <p>The actual table size will be the least power of two greater than <code>expected</code>/<code>f</code>.
 	 *
-	 * @param expected the expected number of elements in the hash set. 
+	 * @param expected the expected number of elements in the hash set.
 	 * @param f the load factor.
 	 */
  @SuppressWarnings("unchecked")
@@ -101,7 +101,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
  }
  /** Creates a new hash set with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor.
 	 *
-	 * @param expected the expected number of elements in the hash set. 
+	 * @param expected the expected number of elements in the hash set.
 	 */
  public IntOpenHashSet( final int expected ) {
   this( expected, DEFAULT_LOAD_FACTOR );
@@ -114,34 +114,34 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
  }
  /** Creates a new hash set copying a given collection.
 	 *
-	 * @param c a {@link Collection} to be copied into the new hash set. 
+	 * @param c a {@link Collection} to be copied into the new hash set.
 	 * @param f the load factor.
 	 */
  public IntOpenHashSet( final Collection<? extends Integer> c, final float f ) {
   this( c.size(), f );
   addAll( c );
  }
- /** Creates a new hash set  with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor 
+ /** Creates a new hash set  with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor
 	 * copying a given collection.
 	 *
-	 * @param c a {@link Collection} to be copied into the new hash set. 
+	 * @param c a {@link Collection} to be copied into the new hash set.
 	 */
  public IntOpenHashSet( final Collection<? extends Integer> c ) {
   this( c, DEFAULT_LOAD_FACTOR );
  }
  /** Creates a new hash set copying a given type-specific collection.
 	 *
-	 * @param c a type-specific collection to be copied into the new hash set. 
+	 * @param c a type-specific collection to be copied into the new hash set.
 	 * @param f the load factor.
 	 */
  public IntOpenHashSet( final IntCollection c, final float f ) {
   this( c.size(), f );
   addAll( c );
  }
- /** Creates a new hash set  with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor 
+ /** Creates a new hash set  with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor
 	 * copying a given type-specific collection.
 	 *
-	 * @param c a type-specific collection to be copied into the new hash set. 
+	 * @param c a type-specific collection to be copied into the new hash set.
 	 */
  public IntOpenHashSet( final IntCollection c ) {
   this( c, DEFAULT_LOAD_FACTOR );
@@ -200,16 +200,16 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
  }
  /** Creates a new hash set copying the elements of an array.
 	 *
-	 * @param a an array to be copied into the new hash set. 
+	 * @param a an array to be copied into the new hash set.
 	 * @param f the load factor.
 	 */
  public IntOpenHashSet( final int[] a, final float f ) {
   this( a, 0, a.length, f );
  }
- /** Creates a new hash set with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor 
+ /** Creates a new hash set with {@link Hash#DEFAULT_LOAD_FACTOR} as load factor
 	 * copying the elements of an array.
 	 *
-	 * @param a an array to be copied into the new hash set. 
+	 * @param a an array to be copied into the new hash set.
 	 */
  public IntOpenHashSet( final int[] a ) {
   this( a, DEFAULT_LOAD_FACTOR );
@@ -299,7 +299,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
   return size == 0;
  }
  /** A no-op for backward compatibility.
-	 * 
+	 *
 	 * @param growthFactor unused.
 	 * @deprecated Since <code>fastutil</code> 6.1.0, hash tables are doubled when they are too full.
 	 */
@@ -371,7 +371,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
   return true;
  }
  /** Rehashes this set, making the table as small as possible.
-	 * 
+	 *
 	 * <P>This method rehashes the table to the smallest size satisfying the
 	 * load factor. It can be used when the set will not be changed anymore, so
 	 * to optimize access speed and size.
@@ -392,7 +392,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
   return true;
  }
  /** Rehashes this set if the table is too large.
-	 * 
+	 *
 	 * <P>Let <var>N</var> be the smallest table size that can hold
 	 * <code>max(n,{@link #size()})</code> entries, still satisfying the load factor. If the current
 	 * table size is smaller than or equal to <var>N</var>, this method does
@@ -451,7 +451,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
   this.key = newKey;
   this.used = newUsed;
  }
- /** Returns a deep copy of this set. 
+ /** Returns a deep copy of this set.
 	 *
 	 * <P>This method performs a deep copy of this hash set; the data stored in the
 	 * set, however, is not cloned. Note that this makes a difference only for object keys.
@@ -473,7 +473,7 @@ public class IntOpenHashSet extends AbstractIntSet implements java.io.Serializab
  }
  /** Returns a hash code for this set.
 	 *
-	 * This method overrides the generic method provided by the superclass. 
+	 * This method overrides the generic method provided by the superclass.
 	 * Since <code>equals()</code> is not overriden, it is important
 	 * that the value returned by this method is the same value as
 	 * the one returned by the overriden method.

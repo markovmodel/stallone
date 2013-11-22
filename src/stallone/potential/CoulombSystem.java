@@ -43,7 +43,7 @@ public class CoulombSystem  extends AbstractPotential
     {
         if (_bonded.columns() != 2)
             throw(new IllegalArgumentException("_bonded must be a nx2 table"));
-        
+
         this.natoms = _charges.size();
         this.bonded = new boolean[_charges.size()][_charges.size()];
         for (int i=0; i<_bonded.size(); i++)
@@ -53,7 +53,7 @@ public class CoulombSystem  extends AbstractPotential
 
         this.gradient = Doubles.create.array(_charges.size(), 3);
     }
-    
+
     public CoulombSystem(IDoubleArray _charges, boolean[][] _bonded, double _epsilonr)
     {
         this.natoms = _charges.size();
@@ -104,7 +104,7 @@ public class CoulombSystem  extends AbstractPotential
                 double e = charges.get(i) * charges.get(j) / (4*Math.PI*epsilon0*epsilonr*d);
                 this.energy += e;
 //System.out.println(" c ["+i+","+j+"]\t"+e);
-                
+
                 // gradient
                 double fm = -charges.get(i) * charges.get(j) / (4*Math.PI*epsilon0*epsilonr*d*d);
 
@@ -155,5 +155,5 @@ public class CoulombSystem  extends AbstractPotential
         return(coordinates.size());
     }
 
-    
+
 }
