@@ -137,8 +137,11 @@ public class XtcReader implements IDataReader
     public IDataSequence load()
     {
         IDataList res = DataSequence.create.createDatalist();
-        for (int i=0; i<this.size(); i++)
-            res.add(get(i).copy());
+        for (int i=0; i<this.size(); i++) {
+            // TODO : think about it: why should one use a copy here?
+            //res.add(get(i).copy());
+            res.add(get(i));
+        }
         return res;
     }
 
