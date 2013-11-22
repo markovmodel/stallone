@@ -105,6 +105,7 @@ public class DataSequenceFactory
 
     /**
      * Writes to file
+     * TODO: what is dimension used for?
      * @param dimension
      * @return
      */
