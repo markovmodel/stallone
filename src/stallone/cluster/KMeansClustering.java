@@ -58,6 +58,7 @@ public class KMeansClustering implements IClustering
     private int maxIterations;
     /** Only used internally during initialisation. */
     private IIntArray indices;
+    private List<Integer> emptyCenterIndices = new ArrayList<Integer>();
 
     private IDiscretization voronoiDiscretization;
 
@@ -251,7 +252,7 @@ public class KMeansClustering implements IClustering
             IDoubleArray currentVector = it.next();
 
             int assignedTo = assignments.get(j);
-            assignmentWeight[assignedTo] += 1.0d;
+            assignmentWeight[assignedTo] += 1;
 
             IDoubleArray clusterCenter = clusterCenters.get(assignedTo);
             Algebra.util.addTo(clusterCenter, currentVector);
@@ -261,8 +262,8 @@ public class KMeansClustering implements IClustering
 
         // normalize
 
-        List<Integer> emptyCenterIndices = new ArrayList<Integer>();
-
+        emptyCenterIndices.clear();
+        
         for (int i = 0; i < numberOfClusters; i++)
         {
             //Store indices of empty cluster centers
