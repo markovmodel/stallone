@@ -311,6 +311,8 @@ public class XtcFile implements IReleasableFile
      * Datastructure to store uncompressed atom coordinates.
      */
     protected float[][] coordinatesUncompressed;
+    
+    protected int[] bytes = new int[32];
 
     /**
      * Constructor, open and read input file trajectory.
@@ -1328,13 +1330,14 @@ public class XtcFile implements IReleasableFile
     private int[] receiveints(int[] buf, int num_of_bits, int[] sizes)
     {
         final int num_of_ints = 3;
-        int[] bytes =
-        {
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
-        }; // in c:  int bytes[32]
+//        int[] bytes =
+//        {
+//            0, 0, 0, 0, 0, 0, 0, 0,
+//            0, 0, 0, 0, 0, 0, 0, 0,
+//            0, 0, 0, 0, 0, 0, 0, 0,
+//            0, 0, 0, 0, 0, 0, 0, 0
+//        }; // in c:  int bytes[32]
+        Arrays.fill(this.bytes, 0);
         int[] nums =
         {
             0, 0, 0
