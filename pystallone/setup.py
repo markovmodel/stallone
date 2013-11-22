@@ -93,5 +93,6 @@ setup(name=__name__,
       cmdclass=dict(build=mybuild,
                     install=myinstall,
                     clean=myclean),
-      # runtime dependencies
-      requires=['jcc (>=1.6)'])
+      # build time dependencies                                                 
+      install_requires = ['JCC >=2.17']
+) 
