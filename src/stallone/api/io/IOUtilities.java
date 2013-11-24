@@ -1,5 +1,7 @@
 package stallone.api.io;
 
+import static stallone.api.API.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +11,7 @@ import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import stallone.io.CachedAsciiFileReader;
 import stallone.io.RecursiveFileList;
 import stallone.io.WildcardFilter;
 
@@ -173,6 +176,27 @@ public class IOUtilities
         return(res);
     }
 
+    public String[] readLines(String fileName) throws IOException
+    {
+        CachedAsciiFileReader reader = ioNew.asciiReader(fileName);
+        reader.scan();
+
+        int nlines = reader.getNumberOfLines();
+        String[] res = new String[nlines];
+        for (int i=0; i<res.length; i++)
+            res[i] = reader.getLine(i);
+        return res;
+    }
+    
+    public String[][] readWords(String fileName) throws IOException
+    {
+        String[] lines = readLines(fileName);
+        String[][] words = new String[lines.length][];
+        for (int i=0; i<words.length; i++)
+            words[i] = str.split(lines[i]);
+        return words;
+    }
+    
     public void writeString(String fileName, String content)
     {
 	try
