@@ -4,8 +4,11 @@
  */
 package stallone.api.strings;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import stallone.ints.PrimitiveIntTools;
 
@@ -383,6 +386,29 @@ public class StringUtilities
     public int findBackward(String[] arr, String pattern)
     { return(findForward(arr,pattern,arr.length-1));}
 
+    /**
+       Adds blanks to the right until size is reached
+     */
+    public static String flushLeft(String str, int size)
+    {
+	StringBuffer strbuf = new StringBuffer(str);
+	for (int i=str.length(); i<size; i++)
+	    strbuf.append(" ");
+	return(strbuf.toString());
+    }
+
+    /**
+       Adds blanks to the left until size is reached
+     */
+    public static String flushRight(String str, int size)
+    {
+	StringBuffer strbuf = new StringBuffer();
+	for (int i=str.length(); i<size; i++)
+	    strbuf.append(" ");
+	strbuf.append(str);
+	return(strbuf.toString());
+    }    
+    
     public String[] copy(String[] arr)
     {
         String[] res = new String[arr.length];
@@ -455,4 +481,30 @@ public class StringUtilities
 	    res[i] = arr[i][k];
 	return(res);
     }
+
+    public static String toScientific(double I, int digits)
+    {
+	StringBuffer strbuf = new StringBuffer("0.");
+	for (int i=0; i<digits; i++)
+	    strbuf.append("#");
+	strbuf.append("E0");
+	DecimalFormat df = new DecimalFormat(strbuf.toString());
+	return(df.format(I));
+    }
+
+    public static String toPrecision(double I, int digits1, int digits2)
+    {
+	if (digits2 == 0)
+	    return(String.valueOf((int)Math.round(I)));
+
+	StringBuffer strbuf = new StringBuffer("");
+	for (int i=0; i<digits1-1; i++)
+	    strbuf.append("#");
+	strbuf.append("0.");
+	for (int i=0; i<digits2; i++)
+	    strbuf.append("#");
+	DecimalFormat df = new DecimalFormat(strbuf.toString(), new DecimalFormatSymbols(Locale.ENGLISH));
+	return(df.format(I));
+    }
+    
 }
