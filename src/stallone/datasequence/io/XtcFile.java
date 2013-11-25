@@ -2,9 +2,11 @@ package stallone.datasequence.io;
 
 import java.io.*;
 import java.nio.*;
-
 import java.util.Arrays;
+
+import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IReleasableFile;
+import stallone.doubles.PrimitiveDoubleTable;
 import stallone.doubles.fastutils.LongArrayList;
 import stallone.io.CachedRandomAccessFile;
 
@@ -310,9 +312,14 @@ public class XtcFile implements IReleasableFile
     /**
      * Datastructure to store uncompressed atom coordinates.
      */
-    protected float[][] coordinatesUncompressed;
+    protected IDoubleArray coordinatesUncompressed;
     
     protected int[] bytes = new int[32];
+    
+    /**
+     * indicates, that currently set files header has been scanned.
+     */
+    protected boolean initialized = false;
 
     /**
      * Constructor, open and read input file trajectory.
@@ -347,6 +354,11 @@ public class XtcFile implements IReleasableFile
      */
     private void init() throws FileNotFoundException, IOException
     {
+        // read file header only once.
+        if (this.initialized)
+            return;
+        
+        System.out.println("xtcfile.init()");
         // read input file trajectory
         this.randomAccessFile = new CachedRandomAccessFile(filename);
         // for non cached access
@@ -387,16 +399,16 @@ public class XtcFile implements IReleasableFile
 
         LongArrayList tempFramePositions = new LongArrayList(50000); // tmp vector to store the starting position of the
         // frames randomAccessFile input file (length of
-        // vector can be incresed, the length of a array
+        // vector can be increased, the length of a array
         // not !)
         int framesDetected = 0;
-        boolean eof = false;
+//        boolean eof = false;
         long pos = 0;
 
         int magicRead; // frameHeader
         int noOfAtomsRead; // frameHeader
-        int frameNoRead; // frameHeader
-        float simulationTime; // simulationTime
+//        int frameNoRead; // frameHeader
+//        float simulationTime; // simulationTime
 
         int noOfAtomsRead2; // coordinates header
         int sizeOfCoordinates; // coordinates header
@@ -499,7 +511,7 @@ public class XtcFile implements IReleasableFile
 
         for (int i = 0; i < numberOfFrames; i++)
         {
-            this.frameBroken[i] = false;
+//            this.frameBroken[i] = false; // is already false
 
             long tmpPosition = tempFramePositions.getLong(i);
 
@@ -526,13 +538,17 @@ public class XtcFile implements IReleasableFile
         tempFramePositions = null; // free memory
 
         // fix size of atom coordinates, to improve optimisation
-        this.coordinatesUncompressed = new float[this.nrAtoms][3];
+        this.coordinatesUncompressed = new PrimitiveDoubleTable(new double[this.nrAtoms][3]);//float[this.nrAtoms][3];
 
         // clean up and reset stuff
         this.randomAccessFile.seek(0); // set inputfile pointer to start postion
         this.nrOfCurrentFrameHeader = -1; // no proper frame header date is read randomAccessFile at the moment
         this.nrOfCurrentFrameCoordinates = -1; // no proper frame coordinates date is read randomAccessFile at the
         // moment
+        
+        
+        // setting header initialized.
+        this.initialized = true;
     }
 
     /**
@@ -758,9 +774,9 @@ public class XtcFile implements IReleasableFile
 
                         for (int iiAtom = 0; iiAtom < this.nrAtoms; iiAtom++)
                         {
-                            this.coordinatesUncompressed[iiAtom][0] = bb.getFloat(); // read x coordinate of atom
-                            this.coordinatesUncompressed[iiAtom][1] = bb.getFloat(); // read y coordinate of atom
-                            this.coordinatesUncompressed[iiAtom][2] = bb.getFloat(); // read z coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 0, bb.getFloat()); // read x coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 1, bb.getFloat()); // read y coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 2, bb.getFloat()); // read z coordinate of atom
                         }
                     } // end if-else
 
@@ -805,9 +821,8 @@ public class XtcFile implements IReleasableFile
     public static String byteToString(byte in)
     {
         byte ch = 0x00;
-        int i = 0;
         String out = new String("");
-        String[] pseudo =
+        final String[] pseudo =
         {
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"
         };
@@ -850,33 +865,31 @@ public class XtcFile implements IReleasableFile
 
             return false;
         }
-        else
-        { // frame exist => read header information from current frame
+        
+        // frame exist => read header information from current frame
+        if (this.nrOfCurrentFrameCoordinates != frameIndex)
+        { // only read frame header and coordinates if it is a
+            // new frame, if it is already the current frame don't
+            // do anything
 
-            if (this.nrOfCurrentFrameCoordinates != frameIndex)
-            { // only read frame header and coordinates if it is a
-                // new frame, if it is already the current frame don't
-                // do anything
+            if (this.nrOfCurrentFrameHeader != frameIndex)
+            {
+                readFrame(frameIndex);
+            } // reread frame header, only needed randomAccessFile cases of programming errors
 
-                if (this.nrOfCurrentFrameHeader != frameIndex)
-                {
-                    readFrame(frameIndex);
-                } // reread frame header, only needed randomAccessFile cases of programming errors
+            this.nrOfCurrentFrameCoordinates = frameIndex; // store the nr. of the current frame (from 0 to
+            // numOfFrames-1), to avoid reading and decoding same
+            // frame data
 
-                this.nrOfCurrentFrameCoordinates = frameIndex; // store the nr. of the current frame (from 0 to
-                // numOfFrames-1), to avoid reading and decoding same
-                // frame data
-
-                if (this.nrAtoms > 9)
-                { // coordinates of atoms are compressed => uncompress them , if coordinates are
-                    // not compressed don't do anything
-                    this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision,
-                            true); // uncompress coordinates
-                }
+            if (this.nrAtoms > 9)
+            { // coordinates of atoms are compressed => uncompress them , if coordinates are
+                // not compressed don't do anything
+                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision,
+                        true); // uncompress coordinates
             }
+        }
 
-            return true;
-        } // end if-else
+        return true;
     }
 
     /**
@@ -889,7 +902,7 @@ public class XtcFile implements IReleasableFile
      * @return coordinates of atoms randomAccessFile current frame ((amount
      * atoms)x3 array )
      */
-    public float[][] getPositionsAt(int frameIndex) throws IOException
+    public IDoubleArray getPositionsAt(int frameIndex) throws IOException
     {
         //      System.out.println("frame index "+frameIndex+" "+randomAccessFile.getFilePointer());
 
@@ -1112,41 +1125,8 @@ public class XtcFile implements IReleasableFile
         int i, num;
         int num_of_bytes;
         int num_of_bits;
-        int[] bytes =
-        {
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        }; // randomAccessFile c:  int bytes[32]
+        int[] bytes = new int[32];
+       // randomAccessFile c:  int bytes[32]
         int bytecnt;
         int tmp;
         num_of_bytes = 1;
@@ -1182,8 +1162,7 @@ public class XtcFile implements IReleasableFile
             num *= 2;
         }
 
-        int tmpsum = num_of_bits + (num_of_bytes * 8);
-
+        //        int tmpsum = num_of_bits + (num_of_bytes * 8);
         // System.out.println("num_of_ints=3" +" sizes[0]=" +sizes[0]+" sizes[1]=" +sizes[1]+" sizes[2]=" +sizes[2]+ "
         // num_of_bits=" +num_of_bits+" num_of_bytes=" +num_of_bytes+" tmpsum="+tmpsum);
         return num_of_bits + (num_of_bytes * 8);
@@ -1348,7 +1327,8 @@ public class XtcFile implements IReleasableFile
         // num_of_ints=%d  num_of_bits=%d  sizes[]={%d %d %d} nums[]={%d %d %d}\n", num_of_ints, num_of_bits,
         // sizes[0],sizes[1],sizes[2],nums[0],nums[1],nums[2]);}
 
-        bytes[1] = bytes[2] = bytes[3] = 0;
+        // unneccessary assignment.
+//        bytes[1] = bytes[2] = bytes[3] = 0;
         num_of_bytes = 0;
 
         while (num_of_bits > 8)
@@ -1417,7 +1397,7 @@ public class XtcFile implements IReleasableFile
      * @return Method returns the uncompressed coordinates of the atoms
      * randomAccessFile the current frame
      */
-    private float[][] xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision, boolean readWriteMode)
+    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision, boolean readWriteMode)
     {
         /*
          * private float[][] xdr3dfcoord(boolean readWriteMode) { XDR *xdrs :=
@@ -1428,7 +1408,7 @@ public class XtcFile implements IReleasableFile
          * false=:write
          */
 
-        float[][] lfp = new float[nrAtoms][3];
+        IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
 
         if (readWriteMode == false)
         { // write coordinates
@@ -1443,7 +1423,7 @@ public class XtcFile implements IReleasableFile
             int[] thiscoord = new int[3];
             int[] prevcoord = new int[3];
             int[] bitsizeInt = new int[3];
-            int flag, k, run, i, iOutput, prevrun, is_smaller, bitSize, tmp;
+            int flag, k, run, i, iOutput,/* prevrun,*/ is_smaller, bitSize, tmp;
 
             // I don't know in detail what this array does, but it has a interesting structure
             // First 9 elements are 0 => if system has =< 9 atoms  coordinates are not compressed ?!
@@ -1463,17 +1443,18 @@ public class XtcFile implements IReleasableFile
             };
 
             final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
-            final int lastidx = xtc_magicints.length; // max. position of elements in array
+//            final int lastidx = xtc_magicints.length; // max. position of elements in array
             int smallidx = amountBitsForCompressedCoordinates;
-            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
+//            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
             // compresisng coordinates and the maximum element
             // randomAccessFile array xtc_magicints
-            int minidx = maxidx - 8; /*
+//            int minidx = maxidx - 8;
+            /*
              * often this equal smallidx
              */
             int smaller = xtc_magicints[Math.max(firstidx, smallidx - 1)] / 2;
             int small = xtc_magicints[smallidx] / 2;
-            int larger = xtc_magicints[maxidx];
+//            int larger = xtc_magicints[maxidx];
             sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
 
             float inv_precision = (float) (1.0 / precision); // calculate invers precision for decoding atom coordinates
@@ -1493,7 +1474,8 @@ public class XtcFile implements IReleasableFile
                 bitsizeInt[0] = sizeofint(sizeInt[0]);
                 bitsizeInt[1] = sizeofint(sizeInt[1]);
                 bitsizeInt[2] = sizeofint(sizeInt[2]);
-                bitSize = 0; /*
+                bitSize = 0;
+                /*
                  * flag the use of large sizes
                  */
             }
@@ -1567,9 +1549,9 @@ public class XtcFile implements IReleasableFile
                             tmp = thiscoord[2];
                             thiscoord[2] = prevcoord[2];
                             prevcoord[2] = tmp;
-                            lfp[iOutput][0] = prevcoord[0] * inv_precision;
-                            lfp[iOutput][1] = prevcoord[1] * inv_precision;
-                            lfp[iOutput][2] = prevcoord[2] * inv_precision;
+                            lfp.set(iOutput, 0, prevcoord[0] * inv_precision);
+                            lfp.set(iOutput, 1, prevcoord[1] * inv_precision);
+                            lfp.set(iOutput, 2, prevcoord[2] * inv_precision);
                             iOutput++;
                         }
                         else
@@ -1580,19 +1562,18 @@ public class XtcFile implements IReleasableFile
                         }
 
                         // undo the conversion of atom coordinates from float to int
-                        lfp[iOutput][0] = thiscoord[0] * inv_precision;
-                        lfp[iOutput][1] = thiscoord[1] * inv_precision;
-                        lfp[iOutput][2] = thiscoord[2] * inv_precision;
+                        lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
+                        lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
+                        lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
                         iOutput++;
                     } // end for
                 }
                 else
                 {
-
                     // undo the conversion of atom coordinates from float to int
-                    lfp[iOutput][0] = thiscoord[0] * inv_precision;
-                    lfp[iOutput][1] = thiscoord[1] * inv_precision;
-                    lfp[iOutput][2] = thiscoord[2] * inv_precision;
+                    lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
+                    lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
+                    lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
                     iOutput++;
                 } // end if-else
 
