@@ -906,8 +906,8 @@ public class XtcFile implements IReleasableFile
             if (this.nrAtoms > 9)
             { // coordinates of atoms are compressed => uncompress them , if coordinates are
                 // not compressed don't do anything
-                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision,
-                        true); // uncompress coordinates
+                // uncompress coordinates
+                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision);
             }
         }
 
@@ -1402,13 +1402,11 @@ public class XtcFile implements IReleasableFile
      * randomAccessFile first three bytes of buffer)
      * @param nrAtoms number of atoms randomAccessFile current frame
      * @param precision used for compressing atom coordinates
-     * @param readWriteMode (true=:uncompress coordinates , false=:compress
-     * coordinates => not jet implemented)
      *
      * @return Method returns the uncompressed coordinates of the atoms
      * randomAccessFile the current frame
      */
-    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision, boolean readWriteMode)
+    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision)
     {
         /*
          * private float[][] xdr3dfcoord(boolean readWriteMode) { XDR *xdrs :=
@@ -1421,180 +1419,172 @@ public class XtcFile implements IReleasableFile
 
         IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
 
-        if (readWriteMode == false)
-        { // write coordinates
-            // not yet implemented
+        int[] sizeInt = new int[3];
+        int[] sizeSmall = new int[3];
+
+        int[] thiscoord = new int[3];
+        int[] prevcoord = new int[3];
+        int[] bitsizeInt = new int[3];
+        int flag, k, run, i, iOutput,/* prevrun,*/ is_smaller, bitSize, tmp;
+
+        final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
+//            final int lastidx = xtc_magicints.length; // max. position of elements in array
+        int smallidx = amountBitsForCompressedCoordinates;
+//            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
+        // compresisng coordinates and the maximum element
+        // randomAccessFile array xtc_magicints
+//            int minidx = maxidx - 8;
+        /*
+         * often this equal smallidx
+         */
+        int smaller = xtc_magicints[Math.max(firstidx, smallidx - 1)] / 2;
+        int small = xtc_magicints[smallidx] / 2;
+//            int larger = xtc_magicints[maxidx];
+        sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
+
+        float inv_precision = (float) (1.0 / precision); // calculate invers precision for decoding atom coordinates
+        int[] buf = coordinatesCompressed; // randomAccessFile array buf points to buffer with the compressed
+        // coordinates
+        buf[0] = buf[1] = buf[2] = 0; // buf[0-2] are special and do not contain actual data
+
+        // Calculate the coding base from the maximal digit randomAccessFile the base by adding 1. E.g. 10 base:
+        // maximal digit 9 =>9+1=10 =coding base !
+        sizeInt[0] = maxInt[0] - minInt[0] + 1;
+        sizeInt[1] = maxInt[1] - minInt[1] + 1;
+        sizeInt[2] = maxInt[2] - minInt[2] + 1;
+
+        // calculate the amount of bits needed to encode numbers randomAccessFile the range sizeInt
+        if ((sizeInt[0] | sizeInt[1] | sizeInt[2]) > 0xffffff)
+        {
+            bitsizeInt[0] = sizeofint(sizeInt[0]);
+            bitsizeInt[1] = sizeofint(sizeInt[1]);
+            bitsizeInt[2] = sizeofint(sizeInt[2]);
+            bitSize = 0;
+            /*
+             * flag the use of large sizes
+             */
         }
         else
-        { // read coordinates
+        {
+            bitSize = sizeofints(sizeInt);
+        }
 
-            int[] sizeInt = new int[3];
-            int[] sizeSmall = new int[3];
+        run = 0;
+        i = 0;
+        iOutput = 0;
 
-            int[] thiscoord = new int[3];
-            int[] prevcoord = new int[3];
-            int[] bitsizeInt = new int[3];
-            int flag, k, run, i, iOutput,/* prevrun,*/ is_smaller, bitSize, tmp;
+        while (i < nrAtoms)
+        { // for loop implemented a while (easier to optimse)=> for every atom randomAccessFile
+            // frame decode coordinate
 
-            final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
-//            final int lastidx = xtc_magicints.length; // max. position of elements in array
-            int smallidx = amountBitsForCompressedCoordinates;
-//            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
-            // compresisng coordinates and the maximum element
-            // randomAccessFile array xtc_magicints
-//            int minidx = maxidx - 8;
-            /*
-             * often this equal smallidx
-             */
-            int smaller = xtc_magicints[Math.max(firstidx, smallidx - 1)] / 2;
-            int small = xtc_magicints[smallidx] / 2;
-//            int larger = xtc_magicints[maxidx];
-            sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
-
-            float inv_precision = (float) (1.0 / precision); // calculate invers precision for decoding atom coordinates
-            int[] buf = coordinatesCompressed; // randomAccessFile array buf points to buffer with the compressed
-            // coordinates
-            buf[0] = buf[1] = buf[2] = 0; // buf[0-2] are special and do not contain actual data
-
-            // Calculate the coding base from the maximal digit randomAccessFile the base by adding 1. E.g. 10 base:
-            // maximal digit 9 =>9+1=10 =coding base !
-            sizeInt[0] = maxInt[0] - minInt[0] + 1;
-            sizeInt[1] = maxInt[1] - minInt[1] + 1;
-            sizeInt[2] = maxInt[2] - minInt[2] + 1;
-
-            // calculate the amount of bits needed to encode numbers randomAccessFile the range sizeInt
-            if ((sizeInt[0] | sizeInt[1] | sizeInt[2]) > 0xffffff)
+            if (bitSize == 0)
             {
-                bitsizeInt[0] = sizeofint(sizeInt[0]);
-                bitsizeInt[1] = sizeofint(sizeInt[1]);
-                bitsizeInt[2] = sizeofint(sizeInt[2]);
-                bitSize = 0;
-                /*
-                 * flag the use of large sizes
-                 */
+                thiscoord[0] = receivebits(buf, bitsizeInt[0]);
+                thiscoord[1] = receivebits(buf, bitsizeInt[1]);
+                thiscoord[2] = receivebits(buf, bitsizeInt[2]);
             }
             else
             {
-                bitSize = sizeofints(sizeInt);
+                thiscoord = receiveints(buf, bitSize, sizeInt);
             }
 
-            run = 0;
-            i = 0;
-            iOutput = 0;
+            i++; // increse for loop counter
 
-            while (i < nrAtoms)
-            { // for loop implemented a while (easier to optimse)=> for every atom randomAccessFile
-                // frame decode coordinate
+            // add intial offset to "compressed coordinates" to  get the original atom coordinates
+            thiscoord[0] += minInt[0];
+            thiscoord[1] += minInt[1];
+            thiscoord[2] += minInt[2];
 
-                if (bitSize == 0)
+            prevcoord[0] = thiscoord[0];
+            prevcoord[1] = thiscoord[1];
+            prevcoord[2] = thiscoord[2];
+
+            flag = receivebits(buf, 1);
+            is_smaller = 0;
+
+            if (flag == 1)
+            {
+                run = receivebits(buf, 5);
+                is_smaller = run % 3;
+                run -= is_smaller;
+                is_smaller--;
+            }
+
+            if (run > 0)
+            {
+
+                for (k = 0; k < run; k += 3)
                 {
-                    thiscoord[0] = receivebits(buf, bitsizeInt[0]);
-                    thiscoord[1] = receivebits(buf, bitsizeInt[1]);
-                    thiscoord[2] = receivebits(buf, bitsizeInt[2]);
-                }
-                else
-                {
-                    thiscoord = receiveints(buf, bitSize, sizeInt);
-                }
+                    thiscoord = receiveints(buf, smallidx, sizeSmall);
+                    i++;
+                    thiscoord[0] += prevcoord[0] - small;
+                    thiscoord[1] += prevcoord[1] - small;
+                    thiscoord[2] += prevcoord[2] - small;
 
-                i++; // increse for loop counter
-
-                // add intial offset to "compressed coordinates" to  get the original atom coordinates
-                thiscoord[0] += minInt[0];
-                thiscoord[1] += minInt[1];
-                thiscoord[2] += minInt[2];
-
-                prevcoord[0] = thiscoord[0];
-                prevcoord[1] = thiscoord[1];
-                prevcoord[2] = thiscoord[2];
-
-                flag = receivebits(buf, 1);
-                is_smaller = 0;
-
-                if (flag == 1)
-                {
-                    run = receivebits(buf, 5);
-                    is_smaller = run % 3;
-                    run -= is_smaller;
-                    is_smaller--;
-                }
-
-                if (run > 0)
-                {
-
-                    for (k = 0; k < run; k += 3)
+                    if (k == 0)
                     {
-                        thiscoord = receiveints(buf, smallidx, sizeSmall);
-                        i++;
-                        thiscoord[0] += prevcoord[0] - small;
-                        thiscoord[1] += prevcoord[1] - small;
-                        thiscoord[2] += prevcoord[2] - small;
 
-                        if (k == 0)
-                        {
-
-                            // interchange first with second atom for better compression of water molecules
-                            tmp = thiscoord[0];
-                            thiscoord[0] = prevcoord[0];
-                            prevcoord[0] = tmp;
-                            tmp = thiscoord[1];
-                            thiscoord[1] = prevcoord[1];
-                            prevcoord[1] = tmp;
-                            tmp = thiscoord[2];
-                            thiscoord[2] = prevcoord[2];
-                            prevcoord[2] = tmp;
-                            lfp.set(iOutput, 0, prevcoord[0] * inv_precision);
-                            lfp.set(iOutput, 1, prevcoord[1] * inv_precision);
-                            lfp.set(iOutput, 2, prevcoord[2] * inv_precision);
-                            iOutput++;
-                        }
-                        else
-                        {
-                            prevcoord[0] = thiscoord[0];
-                            prevcoord[1] = thiscoord[1];
-                            prevcoord[2] = thiscoord[2];
-                        }
-
-                        // undo the conversion of atom coordinates from float to int
-                        lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
-                        lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
-                        lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                        // interchange first with second atom for better compression of water molecules
+                        tmp = thiscoord[0];
+                        thiscoord[0] = prevcoord[0];
+                        prevcoord[0] = tmp;
+                        tmp = thiscoord[1];
+                        thiscoord[1] = prevcoord[1];
+                        prevcoord[1] = tmp;
+                        tmp = thiscoord[2];
+                        thiscoord[2] = prevcoord[2];
+                        prevcoord[2] = tmp;
+                        lfp.set(iOutput, 0, prevcoord[0] * inv_precision);
+                        lfp.set(iOutput, 1, prevcoord[1] * inv_precision);
+                        lfp.set(iOutput, 2, prevcoord[2] * inv_precision);
                         iOutput++;
-                    } // end for
-                }
-                else
-                {
+                    }
+                    else
+                    {
+                        prevcoord[0] = thiscoord[0];
+                        prevcoord[1] = thiscoord[1];
+                        prevcoord[2] = thiscoord[2];
+                    }
+
                     // undo the conversion of atom coordinates from float to int
                     lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
                     lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
                     lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
                     iOutput++;
-                } // end if-else
+                } // end for
+            }
+            else
+            {
+                // undo the conversion of atom coordinates from float to int
+                lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
+                lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
+                lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                iOutput++;
+            } // end if-else
 
-                smallidx += is_smaller;
+            smallidx += is_smaller;
 
-                if (is_smaller < 0)
+            if (is_smaller < 0)
+            {
+                small = smaller;
+
+                if (smallidx > firstidx)
                 {
-                    small = smaller;
-
-                    if (smallidx > firstidx)
-                    {
-                        smaller = xtc_magicints[smallidx - 1] / 2;
-                    }
-                    else
-                    {
-                        smaller = 0;
-                    }
+                    smaller = xtc_magicints[smallidx - 1] / 2;
                 }
-                else if (is_smaller > 0)
+                else
                 {
-                    smaller = small;
-                    small = xtc_magicints[smallidx] / 2;
+                    smaller = 0;
                 }
+            }
+            else if (is_smaller > 0)
+            {
+                smaller = small;
+                small = xtc_magicints[smallidx] / 2;
+            }
 
-                sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
-            } // end while
-        } // end if-else
+            sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
+        } // end while
 
         return lfp; // return decompressed atom coordinates
     }
