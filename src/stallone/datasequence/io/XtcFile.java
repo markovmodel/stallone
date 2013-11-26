@@ -184,7 +184,7 @@ public class XtcFile implements IReleasableFile
      * The file we are reading from.
      */
     protected CachedRandomAccessFile randomAccessFile;
-    //protected RandomAccessFile randomAccessFile2;
+
     /**
      * By this java class supported gromacs versions (="magic number"),
      * 1995_10=0x000007cb.
@@ -193,6 +193,24 @@ public class XtcFile implements IReleasableFile
     {
         1995
     };
+    
+    // I don't know in detail what this array does, but it has a interesting structure
+    // First 9 elements are 0 => if system has =< 9 atoms  coordinates are not compressed ?!
+    // Every third element is 2^i , e.g. 2^3=8 (10 element), 2^4=16 (13 element), 2^5=32 (16 element) ...
+    // The elements randomAccessFile the array are correlated with the amount of bits used for encoding the
+    // atom coordinates
+    protected final static int[] xtc_magicints =
+    {
+        0, 0, 0, 0, 0, 0, 0, 0, 0,
+        8, 10, 12, 16, 20, 25, 32, 40, 50, 64,
+        80, 101, 128, 161, 203, 256, 322, 406, 512, 645,
+        812, 1024, 1290, 1625, 2048, 2580, 3250, 4096, 5060, 6501,
+        8192, 10321, 13003, 16384, 20642, 26007, 32768, 41285, 52015, 65536,
+        82570, 104031, 131072, 165140, 208063, 262144, 330280, 416127, 524287, 660561,
+        832255, 1048576, 1321122, 1664510, 2097152, 2642245, 3329021, 4194304, 5284491, 6658042,
+        8388607, 10568983, 13316085, 16777216
+    };
+    
     /**
      * Number of frames (from 1 to n), frameIndex goes from 0 to n-1.
      */
@@ -406,13 +424,10 @@ public class XtcFile implements IReleasableFile
         // vector can be increased, the length of a array
         // not !)
         int framesDetected = 0;
-//        boolean eof = false;
         long pos = 0;
 
         int magicRead; // frameHeader
         int noOfAtomsRead; // frameHeader
-//        int frameNoRead; // frameHeader
-//        float simulationTime; // simulationTime
 
         int noOfAtomsRead2; // coordinates header
         int sizeOfCoordinates; // coordinates header
@@ -505,8 +520,6 @@ public class XtcFile implements IReleasableFile
         this.numOfFrames = framesDetected;
 
         // copy starting postion of frames from vector into an array and check their size
-        // Object[] tmp = tempFramePositions.toArray();
-
         int numberOfFrames = tempFramePositions.size();
         this.framePos = new long[numberOfFrames];
         this.frameBroken = new boolean[numberOfFrames];
@@ -515,8 +528,6 @@ public class XtcFile implements IReleasableFile
 
         for (int i = 0; i < numberOfFrames; i++)
         {
-//            this.frameBroken[i] = false; // is already false
-
             long tmpPosition = tempFramePositions.getLong(i);
 
             if (((tmpPosition - tmpPosition_old) % 4) != 0)
@@ -541,11 +552,11 @@ public class XtcFile implements IReleasableFile
 
         tempFramePositions = null; // free memory
 
-        // fix size of atom coordinates, to improve optimisation
-        this.coordinatesUncompressed = new PrimitiveDoubleTable(new double[this.nrAtoms][3]);//float[this.nrAtoms][3];
+        // fix size of atom coordinates, to improve optimization
+        this.coordinatesUncompressed = new PrimitiveDoubleTable(new double[this.nrAtoms][3]);
 
         // clean up and reset stuff
-        this.randomAccessFile.seek(0); // set inputfile pointer to start postion
+        this.randomAccessFile.seek(0); // set inputfile pointer to start position
         this.nrOfCurrentFrameHeader = -1; // no proper frame header date is read randomAccessFile at the moment
         this.nrOfCurrentFrameCoordinates = -1; // no proper frame coordinates date is read randomAccessFile at the
         // moment
@@ -1320,27 +1331,16 @@ public class XtcFile implements IReleasableFile
     private int[] receiveints(int[] buf, int num_of_bits, int[] sizes)
     {
         final int num_of_ints = 3;
-//        int[] bytes =
-//        {
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0
-//        }; // in c:  int bytes[32]
         Arrays.fill(this.bytes, 0);
         int[] nums =
         {
             0, 0, 0
         }; // in c function parameter
 
-        int i, j, num_of_bytes, p, num, sizes_valueAtPostionI;
+        int i, j, num_of_bytes = 0, p, num, sizes_valueAtPostionI;
         // {int tmpII=0; printf("*riB* buf=");for(tmpII=1; tmpII<=4; tmpII++){printf("%x " ,buf[tmpII]);} printf(",
         // num_of_ints=%d  num_of_bits=%d  sizes[]={%d %d %d} nums[]={%d %d %d}\n", num_of_ints, num_of_bits,
         // sizes[0],sizes[1],sizes[2],nums[0],nums[1],nums[2]);}
-
-        // unneccessary assignment.
-//        bytes[1] = bytes[2] = bytes[3] = 0;
-        num_of_bytes = 0;
 
         while (num_of_bits > 8)
         {
@@ -1419,7 +1419,6 @@ public class XtcFile implements IReleasableFile
          * false=:write
          */
 
-        // TODO: is this neccessary since we already store a member var for uncompressed coords
         IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
 
         if (readWriteMode == false)
@@ -1436,23 +1435,6 @@ public class XtcFile implements IReleasableFile
             int[] prevcoord = new int[3];
             int[] bitsizeInt = new int[3];
             int flag, k, run, i, iOutput,/* prevrun,*/ is_smaller, bitSize, tmp;
-
-            // I don't know in detail what this array does, but it has a interesting structure
-            // First 9 elements are 0 => if system has =< 9 atoms  coordinates are not compressed ?!
-            // Every third element is 2^i , e.g. 2^3=8 (10 element), 2^4=16 (13 element), 2^5=32 (16 element) ...
-            // The elements randomAccessFile the array are correlated with the amount of bits used for encoding the
-            // atom coordinates
-            final int[] xtc_magicints =
-            {
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                8, 10, 12, 16, 20, 25, 32, 40, 50, 64,
-                80, 101, 128, 161, 203, 256, 322, 406, 512, 645,
-                812, 1024, 1290, 1625, 2048, 2580, 3250, 4096, 5060, 6501,
-                8192, 10321, 13003, 16384, 20642, 26007, 32768, 41285, 52015, 65536,
-                82570, 104031, 131072, 165140, 208063, 262144, 330280, 416127, 524287, 660561,
-                832255, 1048576, 1321122, 1664510, 2097152, 2642245, 3329021, 4194304, 5284491, 6658042,
-                8388607, 10568983, 13316085, 16777216
-            };
 
             final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
 //            final int lastidx = xtc_magicints.length; // max. position of elements in array
