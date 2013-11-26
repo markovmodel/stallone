@@ -1,5 +1,0 @@
-pystallone.egg-info/PKG-INFO
-pystallone.egg-info/SOURCES.txt
-pystallone.egg-info/dependency_links.txt
-pystallone.egg-info/not-zip-safe
-pystallone.egg-info/top_level.txt
