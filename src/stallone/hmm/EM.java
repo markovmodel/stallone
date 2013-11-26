@@ -106,6 +106,7 @@ public class EM implements IExpectationMaximization, IHMM
         model.setParameters(_par);
     }
 
+    @Override
     public void setInitialPaths(List<IIntArray> _initPaths)
     {
         this.initPaths = _initPaths;
@@ -138,6 +139,7 @@ public class EM implements IExpectationMaximization, IHMM
      * Sets the number of EM steps after which the algorithm terminates
      * @param nsteps
      */
+    @Override
     public void setMaximumNumberOfStep(int nsteps)
     {
         this.nStepsMax = nsteps;
@@ -147,11 +149,13 @@ public class EM implements IExpectationMaximization, IHMM
      * Sets the maximum admissible decrease of the likelihood over the previous maximum after which the optimization still continues.
      * @param _dectol
      */
+    @Override
     public void setLikelihoodDecreaseTolerance(double _dectol)
     {
         this.dectol = _dectol;
     }
 
+    @Override
     public void run()
             throws ParameterEstimationException
     {
@@ -282,6 +286,7 @@ public class EM implements IExpectationMaximization, IHMM
         return res;
     }
 
+    @Override
     public IHMMHiddenVariables getHidden(int itraj)
     {
         if (saveMemory)
@@ -302,29 +307,40 @@ public class EM implements IExpectationMaximization, IHMM
         }
     }
 
+    @Override
     public IHMMParameters getParameters()
     {
         return model.getParameters();
     }
 
+    @Override
     public double getLogLikelihood()
     {
         return logLikelihood;
     }
 
+    @Override
     public List<IIntArray> viterbi()
     {
         Viterbi v = new Viterbi(model);
         return v.getPaths();
     }
 
+    @Override
     public IHMM getHMM()
     {
         return this;
     }
 
+    @Override
     public double[] getLogLikelihoodHistory()
     {
         return likelihoods;
+    }
+
+    @Override
+    public IDoubleArray getTransitionMatrix()
+    {
+        return model.getParameters().getTransitionMatrix();
     }
 }

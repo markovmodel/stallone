@@ -26,6 +26,7 @@ import stallone.mc.MarkovChain;
 import stallone.mc.StationaryDistribution;
 
 import stallone.mc.estimator.TransitionMatrixLikelihood;
+import stallone.mc.pcca.MetastableSubspace;
 import stallone.mc.pcca.PCCA;
 
 /**
@@ -385,6 +386,22 @@ public class MarkovModelUtilities
     {
         PCCA pcca = MarkovModel.create.createPCCA(M, nstates);
         return(pcca.getFuzzy());
+    }
+    
+    /**
+     * coarse-grains a transition matrix to a metastable state transition matrix and a output probability matrix.
+     * @param M
+     * @param nstates
+     * @return two double arrays: [Tc, Pout]. 
+     * Tc is a nstates x nstates coarse-grained transition matrix 
+     * and Pout is a nstates x n output probability matrix.
+     */
+    public IDoubleArray[] coarseGrain(IDoubleArray T, int nstates)
+    {
+        MetastableSubspace ms = new MetastableSubspace(T);
+        ms.coarseGrain(nstates);
+        IDoubleArray[] res = {ms.getCoarseGrainedTransitionMatrix(), ms.getObservationProbabilities()};
+        return res;
     }
 
     public IDoubleArray forwardCommittor(IDoubleArray M, IIntArray A, IIntArray B)

@@ -4,6 +4,8 @@
  */
 package stallone.api.hmm;
 
+import static stallone.api.API.*;
+
 import java.util.List;
 import stallone.api.algebra.Algebra;
 import stallone.api.cluster.Clustering;
@@ -23,8 +25,7 @@ import stallone.hmm.EMMultiStart;
 import stallone.hmm.HMMParameters;
 import stallone.stat.GaussianUnivariate;
 
-import static stallone.api.API.*;
-import stallone.stat.DiscreteDistribution_Old;
+import stallone.hmm.pmm.NinjaEstimator;
 import stallone.stat.DiscreteDistribution;
 
 /**
@@ -200,7 +201,7 @@ public class HMMFactory
         boolean saveMemory = false;
 
         // output model and parametrizer
-        DiscreteDistribution_Old dd = new DiscreteDistribution_Old(initialParameters.getOutputParameters(0));
+        DiscreteDistribution dd = new DiscreteDistribution(initialParameters.getOutputParameters(0));
         EM em = new EM(_obs, eventBased, initialParameters.getNStates(), initialParameters.isReversible(), dd, dd, saveMemory);
         em.setInitialParameters(initialParameters);
 
@@ -258,4 +259,39 @@ public class HMMFactory
 
         return emGaussian(_obs, initialParameters);
     }
+    
+    
+    /**
+     * 
+     * @param _dtrajs List of discrete trajectories
+     */
+    public IExpectationMaximization pmm(List<IIntArray> _dtrajs, 
+            int nHiddenStates, int lag, int timeshift,
+            int nconvsteps, double dectol, IDoubleArray TCinit, IDoubleArray chiInit)
+    {
+        NinjaEstimator ninja = new NinjaEstimator(_dtrajs);
+        ninja.setNHiddenStates(nHiddenStates);
+        ninja.setNIterHMMMax(nconvsteps);
+        ninja.setHMMLikelihoodMaxIncrease(dectol);
+        
+        ninja.setTau(lag);
+        ninja.setTimeshift(timeshift);
+
+        // initialization from last lag
+        if (TCinit != null && chiInit != null)
+            ninja.setInit(TCinit, chiInit);
+        
+        return ninja;
+    }
+
+    /**
+     * 
+     * @param _dtrajs List of discrete trajectories
+     */
+    public IExpectationMaximization pmm(List<IIntArray> _dtrajs, 
+            int nHiddenStates, int lag, int timeshift,
+            int nconvsteps)
+    {
+        return pmm(_dtrajs, nHiddenStates, lag, timeshift, nconvsteps, 0.1, null, null);
+    }    
 }

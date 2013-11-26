@@ -1,6 +1,7 @@
 package stallone.mc.pcca;
 
 import stallone.api.algebra.Algebra;
+import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
