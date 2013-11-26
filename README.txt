@@ -3,7 +3,7 @@ You have to execute the install.sh script in libraries __before__ invoking maven
 to install the JEP library to you local maven repository.
 
 1. Install JEP to local repo (pwd is root of repo)
-sh libraries/install.sh
+cd libraries && sh install.sh
 
 To build a distribution of stallone you invoke maven like this:
 mvn -PbuildDistribution -Dmaven.test.skip=true install

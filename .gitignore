@@ -1,3 +1,8 @@
+*.jar
+target
+build*
+/.settings
+*.egg-info
 /bin
 /nbproject/private/
 /build/

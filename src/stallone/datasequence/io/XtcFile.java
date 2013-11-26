@@ -2,9 +2,11 @@ package stallone.datasequence.io;
 
 import java.io.*;
 import java.nio.*;
-
 import java.util.Arrays;
+
+import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IReleasableFile;
+import stallone.doubles.PrimitiveDoubleTable;
 import stallone.doubles.fastutils.LongArrayList;
 import stallone.io.CachedRandomAccessFile;
 
@@ -182,7 +184,7 @@ public class XtcFile implements IReleasableFile
      * The file we are reading from.
      */
     protected CachedRandomAccessFile randomAccessFile;
-    //protected RandomAccessFile randomAccessFile2;
+
     /**
      * By this java class supported gromacs versions (="magic number"),
      * 1995_10=0x000007cb.
@@ -191,6 +193,24 @@ public class XtcFile implements IReleasableFile
     {
         1995
     };
+    
+    // I don't know in detail what this array does, but it has a interesting structure
+    // First 9 elements are 0 => if system has =< 9 atoms  coordinates are not compressed ?!
+    // Every third element is 2^i , e.g. 2^3=8 (10 element), 2^4=16 (13 element), 2^5=32 (16 element) ...
+    // The elements randomAccessFile the array are correlated with the amount of bits used for encoding the
+    // atom coordinates
+    protected final static int[] xtc_magicints =
+    {
+        0, 0, 0, 0, 0, 0, 0, 0, 0,
+        8, 10, 12, 16, 20, 25, 32, 40, 50, 64,
+        80, 101, 128, 161, 203, 256, 322, 406, 512, 645,
+        812, 1024, 1290, 1625, 2048, 2580, 3250, 4096, 5060, 6501,
+        8192, 10321, 13003, 16384, 20642, 26007, 32768, 41285, 52015, 65536,
+        82570, 104031, 131072, 165140, 208063, 262144, 330280, 416127, 524287, 660561,
+        832255, 1048576, 1321122, 1664510, 2097152, 2642245, 3329021, 4194304, 5284491, 6658042,
+        8388607, 10568983, 13316085, 16777216
+    };
+    
     /**
      * Number of frames (from 1 to n), frameIndex goes from 0 to n-1.
      */
@@ -310,9 +330,19 @@ public class XtcFile implements IReleasableFile
     /**
      * Datastructure to store uncompressed atom coordinates.
      */
-    protected float[][] coordinatesUncompressed;
+    protected IDoubleArray coordinatesUncompressed;
     
     protected int[] bytes = new int[32];
+    
+    /**
+     * will be used while frame-wise reading this file
+     */
+    protected ByteBuffer bb = null;
+    
+    /**
+     * indicates, that currently set files header has been scanned.
+     */
+    protected boolean initialized = false;
 
     /**
      * Constructor, open and read input file trajectory.
@@ -347,6 +377,10 @@ public class XtcFile implements IReleasableFile
      */
     private void init() throws FileNotFoundException, IOException
     {
+        // read file header only once.
+        if (this.initialized)
+            return;
+        
         // read input file trajectory
         this.randomAccessFile = new CachedRandomAccessFile(filename);
         // for non cached access
@@ -387,16 +421,13 @@ public class XtcFile implements IReleasableFile
 
         LongArrayList tempFramePositions = new LongArrayList(50000); // tmp vector to store the starting position of the
         // frames randomAccessFile input file (length of
-        // vector can be incresed, the length of a array
+        // vector can be increased, the length of a array
         // not !)
         int framesDetected = 0;
-        boolean eof = false;
         long pos = 0;
 
         int magicRead; // frameHeader
         int noOfAtomsRead; // frameHeader
-        int frameNoRead; // frameHeader
-        float simulationTime; // simulationTime
 
         int noOfAtomsRead2; // coordinates header
         int sizeOfCoordinates; // coordinates header
@@ -489,8 +520,6 @@ public class XtcFile implements IReleasableFile
         this.numOfFrames = framesDetected;
 
         // copy starting postion of frames from vector into an array and check their size
-        // Object[] tmp = tempFramePositions.toArray();
-
         int numberOfFrames = tempFramePositions.size();
         this.framePos = new long[numberOfFrames];
         this.frameBroken = new boolean[numberOfFrames];
@@ -499,8 +528,6 @@ public class XtcFile implements IReleasableFile
 
         for (int i = 0; i < numberOfFrames; i++)
         {
-            this.frameBroken[i] = false;
-
             long tmpPosition = tempFramePositions.getLong(i);
 
             if (((tmpPosition - tmpPosition_old) % 4) != 0)
@@ -525,14 +552,18 @@ public class XtcFile implements IReleasableFile
 
         tempFramePositions = null; // free memory
 
-        // fix size of atom coordinates, to improve optimisation
-        this.coordinatesUncompressed = new float[this.nrAtoms][3];
+        // fix size of atom coordinates, to improve optimization
+        this.coordinatesUncompressed = new PrimitiveDoubleTable(new double[this.nrAtoms][3]);
 
         // clean up and reset stuff
-        this.randomAccessFile.seek(0); // set inputfile pointer to start postion
+        this.randomAccessFile.seek(0); // set inputfile pointer to start position
         this.nrOfCurrentFrameHeader = -1; // no proper frame header date is read randomAccessFile at the moment
         this.nrOfCurrentFrameCoordinates = -1; // no proper frame coordinates date is read randomAccessFile at the
         // moment
+        
+        
+        // setting header initialized.
+        this.initialized = true;
     }
 
     /**
@@ -665,7 +696,6 @@ public class XtcFile implements IReleasableFile
                 this.nrOfCurrentFrameHeader = frameIndex; // store the nr. of the current frame (from 0 to
                 // numOfFrames-1), to avoid reading and decoding same frame
                 // data
-
                 this.frameSize = getFrameSize(frameIndex); // frame size randomAccessFile bytes
                 this.coordinatesHeaderAndCoordinatesSize = this.frameSize - this.frameHeaderSize; // size
                 // randomAccessFile
@@ -676,12 +706,20 @@ public class XtcFile implements IReleasableFile
 
                 // no checking for end of file etc has to be done, this was already done randomAccessFile the
                 // constructor
-                byte[] buf = new byte[this.frameSize]; // create a buffer array wich has the size randomAccessFile bytes
-                // of frameSize
-                this.randomAccessFile.readFully(buf); // read bytes of inputfile to byte array "buf"
-
-                ByteBuffer bb = ByteBuffer.wrap(buf); // convert byte array "buf" to buffer "bb"
-
+                
+                // create a buffer array wich has the size randomAccessFile bytes
+                // and ensure current frameSize fits in capacity of byte buffer.
+                if(bb == null || bb.capacity() < this.frameSize) {
+                    // in case of underrun, allocate 1.5 times more memory than for last frame
+                	// to avoid further reallocations.
+                	int newSize = (int)Math.floor(this.frameSize*1.5);
+                    bb = ByteBuffer.wrap(new byte[newSize]);
+                }
+                
+                // reset input positions and read current frameSize bytes.
+                bb.clear();
+                this.randomAccessFile.readFully(bb.array(), this.frameSize);
+                
                 try
                 {
                     this.magicNrFileVersion = bb.getInt(); // read  "magic number" (=Gromacs version)
@@ -758,9 +796,9 @@ public class XtcFile implements IReleasableFile
 
                         for (int iiAtom = 0; iiAtom < this.nrAtoms; iiAtom++)
                         {
-                            this.coordinatesUncompressed[iiAtom][0] = bb.getFloat(); // read x coordinate of atom
-                            this.coordinatesUncompressed[iiAtom][1] = bb.getFloat(); // read y coordinate of atom
-                            this.coordinatesUncompressed[iiAtom][2] = bb.getFloat(); // read z coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 0, bb.getFloat()); // read x coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 1, bb.getFloat()); // read y coordinate of atom
+                            this.coordinatesUncompressed.set(iiAtom, 2, bb.getFloat()); // read z coordinate of atom
                         }
                     } // end if-else
 
@@ -770,7 +808,7 @@ public class XtcFile implements IReleasableFile
 
                     System.out.println("Frame current " + frameIndex + " from " + framePos[frameIndex] + " to "
                             + framePos[frameIndex + 1]);
-
+                    byte[] buf = bb.array();
                     for (int i = 0; i < buf.length; i++)
                     {
 
@@ -805,9 +843,8 @@ public class XtcFile implements IReleasableFile
     public static String byteToString(byte in)
     {
         byte ch = 0x00;
-        int i = 0;
         String out = new String("");
-        String[] pseudo =
+        final String[] pseudo =
         {
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"
         };
@@ -850,33 +887,31 @@ public class XtcFile implements IReleasableFile
 
             return false;
         }
-        else
-        { // frame exist => read header information from current frame
+        
+        // frame exist => read header information from current frame
+        if (this.nrOfCurrentFrameCoordinates != frameIndex)
+        { // only read frame header and coordinates if it is a
+            // new frame, if it is already the current frame don't
+            // do anything
 
-            if (this.nrOfCurrentFrameCoordinates != frameIndex)
-            { // only read frame header and coordinates if it is a
-                // new frame, if it is already the current frame don't
-                // do anything
+            if (this.nrOfCurrentFrameHeader != frameIndex)
+            {
+                readFrame(frameIndex);
+            } // reread frame header, only needed randomAccessFile cases of programming errors
 
-                if (this.nrOfCurrentFrameHeader != frameIndex)
-                {
-                    readFrame(frameIndex);
-                } // reread frame header, only needed randomAccessFile cases of programming errors
+            this.nrOfCurrentFrameCoordinates = frameIndex; // store the nr. of the current frame (from 0 to
+            // numOfFrames-1), to avoid reading and decoding same
+            // frame data
 
-                this.nrOfCurrentFrameCoordinates = frameIndex; // store the nr. of the current frame (from 0 to
-                // numOfFrames-1), to avoid reading and decoding same
-                // frame data
-
-                if (this.nrAtoms > 9)
-                { // coordinates of atoms are compressed => uncompress them , if coordinates are
-                    // not compressed don't do anything
-                    this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision,
-                            true); // uncompress coordinates
-                }
+            if (this.nrAtoms > 9)
+            { // coordinates of atoms are compressed => uncompress them , if coordinates are
+                // not compressed don't do anything
+                // uncompress coordinates
+                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision);
             }
+        }
 
-            return true;
-        } // end if-else
+        return true;
     }
 
     /**
@@ -889,7 +924,7 @@ public class XtcFile implements IReleasableFile
      * @return coordinates of atoms randomAccessFile current frame ((amount
      * atoms)x3 array )
      */
-    public float[][] getPositionsAt(int frameIndex) throws IOException
+    public IDoubleArray getPositionsAt(int frameIndex) throws IOException
     {
         //      System.out.println("frame index "+frameIndex+" "+randomAccessFile.getFilePointer());
 
@@ -1112,41 +1147,8 @@ public class XtcFile implements IReleasableFile
         int i, num;
         int num_of_bytes;
         int num_of_bits;
-        int[] bytes =
-        {
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        }; // randomAccessFile c:  int bytes[32]
+        int[] bytes = new int[32];
+       // randomAccessFile c:  int bytes[32]
         int bytecnt;
         int tmp;
         num_of_bytes = 1;
@@ -1182,8 +1184,7 @@ public class XtcFile implements IReleasableFile
             num *= 2;
         }
 
-        int tmpsum = num_of_bits + (num_of_bytes * 8);
-
+        //        int tmpsum = num_of_bits + (num_of_bytes * 8);
         // System.out.println("num_of_ints=3" +" sizes[0]=" +sizes[0]+" sizes[1]=" +sizes[1]+" sizes[2]=" +sizes[2]+ "
         // num_of_bits=" +num_of_bits+" num_of_bytes=" +num_of_bytes+" tmpsum="+tmpsum);
         return num_of_bits + (num_of_bytes * 8);
@@ -1330,26 +1331,16 @@ public class XtcFile implements IReleasableFile
     private int[] receiveints(int[] buf, int num_of_bits, int[] sizes)
     {
         final int num_of_ints = 3;
-//        int[] bytes =
-//        {
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0,
-//            0, 0, 0, 0, 0, 0, 0, 0
-//        }; // in c:  int bytes[32]
         Arrays.fill(this.bytes, 0);
         int[] nums =
         {
             0, 0, 0
         }; // in c function parameter
 
-        int i, j, num_of_bytes, p, num, sizes_valueAtPostionI;
+        int i, j, num_of_bytes = 0, p, num, sizes_valueAtPostionI;
         // {int tmpII=0; printf("*riB* buf=");for(tmpII=1; tmpII<=4; tmpII++){printf("%x " ,buf[tmpII]);} printf(",
         // num_of_ints=%d  num_of_bits=%d  sizes[]={%d %d %d} nums[]={%d %d %d}\n", num_of_ints, num_of_bits,
         // sizes[0],sizes[1],sizes[2],nums[0],nums[1],nums[2]);}
-
-        bytes[1] = bytes[2] = bytes[3] = 0;
-        num_of_bytes = 0;
 
         while (num_of_bits > 8)
         {
@@ -1411,13 +1402,11 @@ public class XtcFile implements IReleasableFile
      * randomAccessFile first three bytes of buffer)
      * @param nrAtoms number of atoms randomAccessFile current frame
      * @param precision used for compressing atom coordinates
-     * @param readWriteMode (true=:uncompress coordinates , false=:compress
-     * coordinates => not jet implemented)
      *
      * @return Method returns the uncompressed coordinates of the atoms
      * randomAccessFile the current frame
      */
-    private float[][] xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision, boolean readWriteMode)
+    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision)
     {
         /*
          * private float[][] xdr3dfcoord(boolean readWriteMode) { XDR *xdrs :=
@@ -1428,198 +1417,174 @@ public class XtcFile implements IReleasableFile
          * false=:write
          */
 
-        float[][] lfp = new float[nrAtoms][3];
+        IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
 
-        if (readWriteMode == false)
-        { // write coordinates
-            // not yet implemented
+        int[] sizeInt = new int[3];
+        int[] sizeSmall = new int[3];
+
+        int[] thiscoord = new int[3];
+        int[] prevcoord = new int[3];
+        int[] bitsizeInt = new int[3];
+        int flag, k, run, i, iOutput,/* prevrun,*/ is_smaller, bitSize, tmp;
+
+        final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
+//            final int lastidx = xtc_magicints.length; // max. position of elements in array
+        int smallidx = amountBitsForCompressedCoordinates;
+//            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
+        // compresisng coordinates and the maximum element
+        // randomAccessFile array xtc_magicints
+//            int minidx = maxidx - 8;
+        /*
+         * often this equal smallidx
+         */
+        int smaller = xtc_magicints[Math.max(firstidx, smallidx - 1)] / 2;
+        int small = xtc_magicints[smallidx] / 2;
+//            int larger = xtc_magicints[maxidx];
+        sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
+
+        float inv_precision = (float) (1.0 / precision); // calculate invers precision for decoding atom coordinates
+        int[] buf = coordinatesCompressed; // randomAccessFile array buf points to buffer with the compressed
+        // coordinates
+        buf[0] = buf[1] = buf[2] = 0; // buf[0-2] are special and do not contain actual data
+
+        // Calculate the coding base from the maximal digit randomAccessFile the base by adding 1. E.g. 10 base:
+        // maximal digit 9 =>9+1=10 =coding base !
+        sizeInt[0] = maxInt[0] - minInt[0] + 1;
+        sizeInt[1] = maxInt[1] - minInt[1] + 1;
+        sizeInt[2] = maxInt[2] - minInt[2] + 1;
+
+        // calculate the amount of bits needed to encode numbers randomAccessFile the range sizeInt
+        if ((sizeInt[0] | sizeInt[1] | sizeInt[2]) > 0xffffff)
+        {
+            bitsizeInt[0] = sizeofint(sizeInt[0]);
+            bitsizeInt[1] = sizeofint(sizeInt[1]);
+            bitsizeInt[2] = sizeofint(sizeInt[2]);
+            bitSize = 0;
+            /*
+             * flag the use of large sizes
+             */
         }
         else
-        { // read coordinates
+        {
+            bitSize = sizeofints(sizeInt);
+        }
 
-            int[] sizeInt = new int[3];
-            int[] sizeSmall = new int[3];
+        run = 0;
+        i = 0;
+        iOutput = 0;
 
-            int[] thiscoord = new int[3];
-            int[] prevcoord = new int[3];
-            int[] bitsizeInt = new int[3];
-            int flag, k, run, i, iOutput, prevrun, is_smaller, bitSize, tmp;
+        while (i < nrAtoms)
+        { // for loop implemented a while (easier to optimse)=> for every atom randomAccessFile
+            // frame decode coordinate
 
-            // I don't know in detail what this array does, but it has a interesting structure
-            // First 9 elements are 0 => if system has =< 9 atoms  coordinates are not compressed ?!
-            // Every third element is 2^i , e.g. 2^3=8 (10 element), 2^4=16 (13 element), 2^5=32 (16 element) ...
-            // The elements randomAccessFile the array are correlated with the amount of bits used for encoding the
-            // atom coordinates
-            final int[] xtc_magicints =
+            if (bitSize == 0)
             {
-                0, 0, 0, 0, 0, 0, 0, 0, 0,
-                8, 10, 12, 16, 20, 25, 32, 40, 50, 64,
-                80, 101, 128, 161, 203, 256, 322, 406, 512, 645,
-                812, 1024, 1290, 1625, 2048, 2580, 3250, 4096, 5060, 6501,
-                8192, 10321, 13003, 16384, 20642, 26007, 32768, 41285, 52015, 65536,
-                82570, 104031, 131072, 165140, 208063, 262144, 330280, 416127, 524287, 660561,
-                832255, 1048576, 1321122, 1664510, 2097152, 2642245, 3329021, 4194304, 5284491, 6658042,
-                8388607, 10568983, 13316085, 16777216
-            };
-
-            final int firstidx = 9; // start postion in array xtc_magicints  of first number !=0
-            final int lastidx = xtc_magicints.length; // max. position of elements in array
-            int smallidx = amountBitsForCompressedCoordinates;
-            int maxidx = Math.min(lastidx, smallidx + 8); // select minimum number btween the amount of bits used for
-            // compresisng coordinates and the maximum element
-            // randomAccessFile array xtc_magicints
-            int minidx = maxidx - 8; /*
-             * often this equal smallidx
-             */
-            int smaller = xtc_magicints[Math.max(firstidx, smallidx - 1)] / 2;
-            int small = xtc_magicints[smallidx] / 2;
-            int larger = xtc_magicints[maxidx];
-            sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
-
-            float inv_precision = (float) (1.0 / precision); // calculate invers precision for decoding atom coordinates
-            int[] buf = coordinatesCompressed; // randomAccessFile array buf points to buffer with the compressed
-            // coordinates
-            buf[0] = buf[1] = buf[2] = 0; // buf[0-2] are special and do not contain actual data
-
-            // Calculate the coding base from the maximal digit randomAccessFile the base by adding 1. E.g. 10 base:
-            // maximal digit 9 =>9+1=10 =coding base !
-            sizeInt[0] = maxInt[0] - minInt[0] + 1;
-            sizeInt[1] = maxInt[1] - minInt[1] + 1;
-            sizeInt[2] = maxInt[2] - minInt[2] + 1;
-
-            // calculate the amount of bits needed to encode numbers randomAccessFile the range sizeInt
-            if ((sizeInt[0] | sizeInt[1] | sizeInt[2]) > 0xffffff)
-            {
-                bitsizeInt[0] = sizeofint(sizeInt[0]);
-                bitsizeInt[1] = sizeofint(sizeInt[1]);
-                bitsizeInt[2] = sizeofint(sizeInt[2]);
-                bitSize = 0; /*
-                 * flag the use of large sizes
-                 */
+                thiscoord[0] = receivebits(buf, bitsizeInt[0]);
+                thiscoord[1] = receivebits(buf, bitsizeInt[1]);
+                thiscoord[2] = receivebits(buf, bitsizeInt[2]);
             }
             else
             {
-                bitSize = sizeofints(sizeInt);
+                thiscoord = receiveints(buf, bitSize, sizeInt);
             }
 
-            run = 0;
-            i = 0;
-            iOutput = 0;
+            i++; // increse for loop counter
 
-            while (i < nrAtoms)
-            { // for loop implemented a while (easier to optimse)=> for every atom randomAccessFile
-                // frame decode coordinate
+            // add intial offset to "compressed coordinates" to  get the original atom coordinates
+            thiscoord[0] += minInt[0];
+            thiscoord[1] += minInt[1];
+            thiscoord[2] += minInt[2];
 
-                if (bitSize == 0)
+            prevcoord[0] = thiscoord[0];
+            prevcoord[1] = thiscoord[1];
+            prevcoord[2] = thiscoord[2];
+
+            flag = receivebits(buf, 1);
+            is_smaller = 0;
+
+            if (flag == 1)
+            {
+                run = receivebits(buf, 5);
+                is_smaller = run % 3;
+                run -= is_smaller;
+                is_smaller--;
+            }
+
+            if (run > 0)
+            {
+
+                for (k = 0; k < run; k += 3)
                 {
-                    thiscoord[0] = receivebits(buf, bitsizeInt[0]);
-                    thiscoord[1] = receivebits(buf, bitsizeInt[1]);
-                    thiscoord[2] = receivebits(buf, bitsizeInt[2]);
-                }
-                else
-                {
-                    thiscoord = receiveints(buf, bitSize, sizeInt);
-                }
+                    thiscoord = receiveints(buf, smallidx, sizeSmall);
+                    i++;
+                    thiscoord[0] += prevcoord[0] - small;
+                    thiscoord[1] += prevcoord[1] - small;
+                    thiscoord[2] += prevcoord[2] - small;
 
-                i++; // increse for loop counter
-
-                // add intial offset to "compressed coordinates" to  get the original atom coordinates
-                thiscoord[0] += minInt[0];
-                thiscoord[1] += minInt[1];
-                thiscoord[2] += minInt[2];
-
-                prevcoord[0] = thiscoord[0];
-                prevcoord[1] = thiscoord[1];
-                prevcoord[2] = thiscoord[2];
-
-                flag = receivebits(buf, 1);
-                is_smaller = 0;
-
-                if (flag == 1)
-                {
-                    run = receivebits(buf, 5);
-                    is_smaller = run % 3;
-                    run -= is_smaller;
-                    is_smaller--;
-                }
-
-                if (run > 0)
-                {
-
-                    for (k = 0; k < run; k += 3)
+                    if (k == 0)
                     {
-                        thiscoord = receiveints(buf, smallidx, sizeSmall);
-                        i++;
-                        thiscoord[0] += prevcoord[0] - small;
-                        thiscoord[1] += prevcoord[1] - small;
-                        thiscoord[2] += prevcoord[2] - small;
 
-                        if (k == 0)
-                        {
-
-                            // interchange first with second atom for better compression of water molecules
-                            tmp = thiscoord[0];
-                            thiscoord[0] = prevcoord[0];
-                            prevcoord[0] = tmp;
-                            tmp = thiscoord[1];
-                            thiscoord[1] = prevcoord[1];
-                            prevcoord[1] = tmp;
-                            tmp = thiscoord[2];
-                            thiscoord[2] = prevcoord[2];
-                            prevcoord[2] = tmp;
-                            lfp[iOutput][0] = prevcoord[0] * inv_precision;
-                            lfp[iOutput][1] = prevcoord[1] * inv_precision;
-                            lfp[iOutput][2] = prevcoord[2] * inv_precision;
-                            iOutput++;
-                        }
-                        else
-                        {
-                            prevcoord[0] = thiscoord[0];
-                            prevcoord[1] = thiscoord[1];
-                            prevcoord[2] = thiscoord[2];
-                        }
-
-                        // undo the conversion of atom coordinates from float to int
-                        lfp[iOutput][0] = thiscoord[0] * inv_precision;
-                        lfp[iOutput][1] = thiscoord[1] * inv_precision;
-                        lfp[iOutput][2] = thiscoord[2] * inv_precision;
+                        // interchange first with second atom for better compression of water molecules
+                        tmp = thiscoord[0];
+                        thiscoord[0] = prevcoord[0];
+                        prevcoord[0] = tmp;
+                        tmp = thiscoord[1];
+                        thiscoord[1] = prevcoord[1];
+                        prevcoord[1] = tmp;
+                        tmp = thiscoord[2];
+                        thiscoord[2] = prevcoord[2];
+                        prevcoord[2] = tmp;
+                        lfp.set(iOutput, 0, prevcoord[0] * inv_precision);
+                        lfp.set(iOutput, 1, prevcoord[1] * inv_precision);
+                        lfp.set(iOutput, 2, prevcoord[2] * inv_precision);
                         iOutput++;
-                    } // end for
-                }
-                else
-                {
-
-                    // undo the conversion of atom coordinates from float to int
-                    lfp[iOutput][0] = thiscoord[0] * inv_precision;
-                    lfp[iOutput][1] = thiscoord[1] * inv_precision;
-                    lfp[iOutput][2] = thiscoord[2] * inv_precision;
-                    iOutput++;
-                } // end if-else
-
-                smallidx += is_smaller;
-
-                if (is_smaller < 0)
-                {
-                    small = smaller;
-
-                    if (smallidx > firstidx)
-                    {
-                        smaller = xtc_magicints[smallidx - 1] / 2;
                     }
                     else
                     {
-                        smaller = 0;
+                        prevcoord[0] = thiscoord[0];
+                        prevcoord[1] = thiscoord[1];
+                        prevcoord[2] = thiscoord[2];
                     }
-                }
-                else if (is_smaller > 0)
-                {
-                    smaller = small;
-                    small = xtc_magicints[smallidx] / 2;
-                }
 
-                sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
-            } // end while
-        } // end if-else
+                    // undo the conversion of atom coordinates from float to int
+                    lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
+                    lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
+                    lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                    iOutput++;
+                } // end for
+            }
+            else
+            {
+                // undo the conversion of atom coordinates from float to int
+                lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
+                lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
+                lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                iOutput++;
+            } // end if-else
+
+            smallidx += is_smaller;
+
+            if (is_smaller < 0)
+            {
+                small = smaller;
+
+                if (smallidx > firstidx)
+                {
+                    smaller = xtc_magicints[smallidx - 1] / 2;
+                }
+                else
+                {
+                    smaller = 0;
+                }
+            }
+            else if (is_smaller > 0)
+            {
+                smaller = small;
+                small = xtc_magicints[smallidx] / 2;
+            }
+
+            sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
+        } // end while
 
         return lfp; // return decompressed atom coordinates
     }
