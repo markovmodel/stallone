@@ -317,6 +317,11 @@ public class XtcFile implements IReleasableFile
     protected int[] bytes = new int[32];
     
     /**
+     * will be used while frame-wise reading this file
+     */
+    protected ByteBuffer bb = null;
+    
+    /**
      * indicates, that currently set files header has been scanned.
      */
     protected boolean initialized = false;
@@ -358,7 +363,6 @@ public class XtcFile implements IReleasableFile
         if (this.initialized)
             return;
         
-        System.out.println("xtcfile.init()");
         // read input file trajectory
         this.randomAccessFile = new CachedRandomAccessFile(filename);
         // for non cached access
@@ -681,7 +685,6 @@ public class XtcFile implements IReleasableFile
                 this.nrOfCurrentFrameHeader = frameIndex; // store the nr. of the current frame (from 0 to
                 // numOfFrames-1), to avoid reading and decoding same frame
                 // data
-
                 this.frameSize = getFrameSize(frameIndex); // frame size randomAccessFile bytes
                 this.coordinatesHeaderAndCoordinatesSize = this.frameSize - this.frameHeaderSize; // size
                 // randomAccessFile
@@ -692,12 +695,20 @@ public class XtcFile implements IReleasableFile
 
                 // no checking for end of file etc has to be done, this was already done randomAccessFile the
                 // constructor
-                byte[] buf = new byte[this.frameSize]; // create a buffer array wich has the size randomAccessFile bytes
-                // of frameSize
-                this.randomAccessFile.readFully(buf); // read bytes of inputfile to byte array "buf"
-
-                ByteBuffer bb = ByteBuffer.wrap(buf); // convert byte array "buf" to buffer "bb"
-
+                
+                // create a buffer array wich has the size randomAccessFile bytes
+                // and ensure current frameSize fits in capacity of byte buffer.
+                if(bb == null || bb.capacity() < this.frameSize) {
+                    // in case of underrun, allocate 1.5 times more memory than for last frame
+                	// to avoid further reallocations.
+                	int newSize = (int)Math.floor(this.frameSize*1.5);
+                    bb = ByteBuffer.wrap(new byte[newSize]);
+                }
+                
+                // reset input positions and read current frameSize bytes.
+                bb.clear();
+                this.randomAccessFile.readFully(bb.array(), this.frameSize);
+                
                 try
                 {
                     this.magicNrFileVersion = bb.getInt(); // read  "magic number" (=Gromacs version)
@@ -786,7 +797,7 @@ public class XtcFile implements IReleasableFile
 
                     System.out.println("Frame current " + frameIndex + " from " + framePos[frameIndex] + " to "
                             + framePos[frameIndex + 1]);
-
+                    byte[] buf = bb.array();
                     for (int i = 0; i < buf.length; i++)
                     {
 
@@ -1408,6 +1419,7 @@ public class XtcFile implements IReleasableFile
          * false=:write
          */
 
+        // TODO: is this neccessary since we already store a member var for uncompressed coords
         IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
 
         if (readWriteMode == false)

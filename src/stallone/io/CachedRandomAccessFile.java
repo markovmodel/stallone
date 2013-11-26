@@ -174,10 +174,19 @@ public class CachedRandomAccessFile implements IReleasableFile
         this.randomAccessFile = new RandomAccessFile(filename, "r");
     }
 
-    public void readFully(byte[] b) throws IOException
+    /**
+     * reads data into given buffer
+     * @param b buffer to read into
+     * @param size cut off, if size <= 0 only size of buffer b will be red.
+     * @throws IOException
+     */
+    public void readFully(byte[] b, int size) throws IOException
     {
-
-        int requestedSize = b.length;
+        int requestedSize;
+        if(size <= 0)
+            requestedSize = b.length;
+        else
+            requestedSize = size;
         int alreadyRead = 0;
 
         while (alreadyRead < requestedSize)
