@@ -187,16 +187,11 @@ public class DcdReader implements IDataReader
     {
 
         // unset all flags
-//        format__dcd_is_xplor = false;
         format__dcd_is_charmm = false;
         format__dcd_has_4dims = false;
         format__dcd_has_extra_block = false;
-//        format__dcd_has_64bit_rec = false;
 
         ByteBuffer mainHeaderRecord = readNextRecord();
-
-        // System.out.println(mainHeaderRecord);
-        // System.out.println(mainHeaderRecord.get(0));
 
         // check for proper size of first record and CORD identifier
         if ((mainHeaderRecord.remaining() == 84)
