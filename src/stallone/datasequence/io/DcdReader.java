@@ -358,15 +358,8 @@ public class DcdReader implements IDataReader
      */
     private IDoubleArray readNextFrame(IDoubleArray target) throws IOException
     {
-
-        if (niceRandomAccessFile.fitsInBuffer((int) framesizeRegular))
-        {
-            // System.out.println( "Fits into buffer." );
-        }
-        else
-        {
-            System.out.println("Does not fit into buffer.");
-        }
+    	// ensure frame fits into buffer.
+        niceRandomAccessFile.fitsInBuffer((int) framesizeRegular);
 
         if (format__dcd_has_extra_block)
         {
