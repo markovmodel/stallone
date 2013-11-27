@@ -27,11 +27,9 @@ import stallone.io.NicelyCachedRandomAccessFile;
 public class DcdReader implements IDataReader
 {
     private String filename;
-//    private boolean format__dcd_is_xplor;
     private boolean format__dcd_is_charmm;
     private boolean format__dcd_has_4dims;
     private boolean format__dcd_has_extra_block;
-//    private boolean format__dcd_has_64bit_rec;
     private ByteOrder byteOrder;
     private NicelyCachedRandomAccessFile niceRandomAccessFile;
     /** Number of sets of coordinates (NSET), that is number of frames. */
