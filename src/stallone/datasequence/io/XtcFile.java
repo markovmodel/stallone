@@ -707,7 +707,7 @@ public class XtcFile implements IReleasableFile
                 // no checking for end of file etc has to be done, this was already done randomAccessFile the
                 // constructor
                 
-                // create a buffer array wich has the size randomAccessFile bytes
+                // create a buffer array which has the size randomAccessFile bytes
                 // and ensure current frameSize fits in capacity of byte buffer.
                 if(bb == null || bb.capacity() < this.frameSize) {
                     // in case of underrun, allocate 1.5 times more memory than for last frame
