@@ -497,19 +497,19 @@ public class DcdReader implements IDataReader
     @Override
     public IDoubleArray get(int frameIndex)
     {
-        return(get(frameIndex, preconstructedArray));
+        return get(frameIndex, preconstructedArray);
     }
 
     @Override
     public IDoubleArray getView(int index)
     {
-        return(get(index));
+        return get(index);
     }
 
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return(new DataSequenceLoaderIterator(this));
+        return new DataSequenceLoaderIterator(this);
     }
 
     @Override
@@ -521,16 +521,15 @@ public class DcdReader implements IDataReader
         return res;
     }
 
-    //@Override
     public String getFileName()
     {
-        return(filename);
+        return filename;
     }
 
     @Override
     public long memorySize()
     {
-        return(this.size()*this.dimension()*8);
+        return this.size()*this.dimension()*8;
     }
 
     class DcdFrameDataIterator implements Iterator<IDoubleArray>
@@ -540,7 +539,7 @@ public class DcdReader implements IDataReader
         @Override
         public boolean hasNext()
         {
-            return(index < size());
+            return index < size();
         }
 
         @Override
@@ -548,7 +547,7 @@ public class DcdReader implements IDataReader
         {
             IDoubleArray res = get(index, preconstructedArray);
             index++;
-            return(res);
+            return res;
         }
 
         @Override
