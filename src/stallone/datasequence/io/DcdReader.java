@@ -9,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
-import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.IDataReader;
+import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.datasequence.DataSequenceLoaderIterator;
@@ -27,8 +27,6 @@ import stallone.io.NicelyCachedRandomAccessFile;
 public class DcdReader implements IDataReader
 {
     private String filename;
-    private static boolean DEBUG = false;
-    private static boolean DEBUG_VERBOSE = false;
     private boolean format__dcd_is_xplor;
     private boolean format__dcd_is_charmm;
     private boolean format__dcd_has_4dims;
@@ -54,10 +52,17 @@ public class DcdReader implements IDataReader
     private int nextFrameIndex;
 
     private IDoubleArray preconstructedArray;
-
+    private Logger logger;
+    
+    /**
+     * constructs DcdReader with given filename
+     * @param _filename
+     * @throws IOException
+     */
     public DcdReader(String _filename) throws IOException
     {
         this.filename = _filename;
+        this.logger = Logger.getLogger(DcdReader.class.getName());
         niceRandomAccessFile = new NicelyCachedRandomAccessFile(_filename);
         this.initialize();
     }
@@ -100,22 +105,12 @@ public class DcdReader implements IDataReader
 
         if (recordLengthBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt() == 84)
         {
-
-            if (DEBUG)
-            {
-                System.out.println("Little endian encoding.");
-            }
-
+            logger.log(Level.FINE, "Little endian encoding.");
             return ByteOrder.LITTLE_ENDIAN;
         }
         else if (recordLengthBuffer.order(ByteOrder.BIG_ENDIAN).getInt() == 84)
         {
-
-            if (DEBUG)
-            {
-                System.out.println("Big endian encoding.");
-            }
-
+            logger.log(Level.FINE, "Big endian encoding.");
             return ByteOrder.BIG_ENDIAN;
         }
         else
@@ -150,12 +145,7 @@ public class DcdReader implements IDataReader
         // check record length
         if (recordLength == verifyRecordLength)
         {
-
-            if (DEBUG_VERBOSE)
-            {
-                System.out.println("Record (length=" + recordLength + ") found and read.");
-            }
-
+            logger.log(Level.FINEST, "Record (length=" + recordLength + ") found and read.");
             return recordByteBuffer;
         }
         else
@@ -182,12 +172,7 @@ public class DcdReader implements IDataReader
         // check record length
         if (recordLength == verifyRecordLength)
         {
-
-            if (DEBUG_VERBOSE)
-            {
-                System.out.println("Record (length=" + recordLength + ") found and skipped.");
-            }
-
+            logger.log(Level.FINEST, "Record (length=" + recordLength + ") found and skipped.");
             return;
         }
         else
@@ -231,72 +216,48 @@ public class DcdReader implements IDataReader
             {
                 format__dcd_is_charmm = true;
 
-                if (DEBUG)
-                {
-                    System.out.println("CHARMM format DCD file (also NAMD 2.1 and later).");
-                }
+                logger.log(Level.FINE, "CHARMM format DCD file (also NAMD 2.1 and later).");
 
                 if (mainHeaderRecord.getInt(44) != 0)
                 {
                     format__dcd_has_extra_block = true;
 
-                    if (DEBUG)
-                    {
-                        System.out.println("  Has extra block.");
-                    }
+                    logger.log(Level.FINE, "  Has extra block.");
                 }
 
                 if (mainHeaderRecord.getInt(48) != 0)
                 {
                     format__dcd_has_4dims = true;
 
-                    if (DEBUG)
-                    {
-                        System.out.println("  Has 4-dims.");
-                    }
+                    logger.log(Level.FINE, "  Has 4-dims.");
                 }
             }
             else
             {
                 format__dcd_is_xplor = true; // must be an X-PLOR format DCD file
 
-                if (DEBUG)
-                {
-                    System.out.println("X-PLOR format DCD file (also NAMD 2.0 and earlier).");
-                }
+                logger.log(Level.FINE, "X-PLOR format DCD file (also NAMD 2.0 and earlier).");
             } // end if-else
 
             // Store the number of sets of coordinates (NSET)
             this.numberOfFrames = mainHeaderRecord.getInt(4);
 
-            if (DEBUG)
-            {
-                System.out.println("  Number of sets of coordinates: " + this.numberOfFrames);
-            }
+            logger.log(Level.FINE, "  Number of sets of coordinates: " + this.numberOfFrames);
 
             // Store ISTART, the starting timestep
             this.startingTimestep = mainHeaderRecord.getInt(8);
 
-            if (DEBUG)
-            {
-                System.out.println("  Starting timestep            : " + this.startingTimestep);
-            }
+            logger.log(Level.FINE, "  Starting timestep            : " + this.startingTimestep);
 
             // Store NSAVC, the number of timesteps between dcd saves
             this.numberOfTimestepsBetweenSaves = mainHeaderRecord.getInt(12);
 
-            if (DEBUG)
-            {
-                System.out.println("  Timesteps between dcd saves  : " + this.numberOfTimestepsBetweenSaves);
-            }
+            logger.log(Level.FINE, "  Timesteps between dcd saves  : " + this.numberOfTimestepsBetweenSaves);
 
             // Store NAMNF, the number of fixed atoms */
             this.numberOfFixedAtoms = mainHeaderRecord.getInt(36);
 
-            if (DEBUG)
-            {
-                System.out.println("  Number of fixed atoms        : " + this.numberOfFixedAtoms);
-            }
+            logger.log(Level.FINE, "  Number of fixed atoms        : " + this.numberOfFixedAtoms);
 
             if (this.numberOfFixedAtoms > 0)
             {
@@ -315,10 +276,7 @@ public class DcdReader implements IDataReader
                 this.delta = mainHeaderRecord.getDouble(40);
             }
 
-            if (DEBUG)
-            {
-                System.out.println("  Timestep                     : " + this.delta);
-            }
+            logger.log(Level.FINE, "  Timestep                     : " + this.delta);
 
             ByteBuffer descriptionHeaderRecord = readNextRecord();
             int lines = descriptionHeaderRecord.getInt();
@@ -327,18 +285,12 @@ public class DcdReader implements IDataReader
             for (int i = 0; i < lines; i++)
             {
                 descriptionHeaderRecord.get(line);
-
-                String s = new String(line);
-                //System.out.println("  Header (text)                : " + s);
             }
 
             ByteBuffer noOfAtomsRecord = readNextRecord();
             this.numberOfAtoms = noOfAtomsRecord.getInt(0);
 
-            if (DEBUG)
-            {
-                System.out.println("  No of atoms                  : " + this.numberOfAtoms);
-            }
+            logger.log(Level.FINE, "No of atoms : " + this.numberOfAtoms);
 
             // get position framestart
             this.frameAreaStartingPosition = niceRandomAccessFile.getFilePointer();
@@ -378,12 +330,7 @@ public class DcdReader implements IDataReader
 
             if (niceRandomAccessFile.length() == endpos)
             {
-
-                if (DEBUG)
-                {
-                    System.out.println("Checking file size vs. calculated number of frames .... OK.");
-                }
-
+                logger.log(Level.FINE, "Checking file size vs. calculated number of frames .... OK.");
             }
             else
             {
@@ -424,7 +371,6 @@ public class DcdReader implements IDataReader
 
         if (format__dcd_has_extra_block)
         {
-
             // read away extra block, which contains unit cell per frame
             skipNextRecord();
         }
@@ -514,26 +460,19 @@ public class DcdReader implements IDataReader
                 this.nextFrameIndex = frameIndex;
                 niceRandomAccessFile.seek(getPositionOfFrame(frameIndex));
 
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("Repositioning for frame " + frameIndex + " to "
+                logger.log(Level.FINEST, "Repositioning for frame " + frameIndex + " to "
                             + niceRandomAccessFile.getFilePointer());
-                }
             }
             else
             {
-
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("File position is okay. Frame " + frameIndex + " is at "
+                logger.log(Level.FINEST, "File position is okay. Frame " + frameIndex + " is at "
                             + niceRandomAccessFile.getFilePointer());
-                }
             }
 
             return readNextFrame(target);
         } catch (IOException ex)
         {
-            Logger.getLogger(DcdReader.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             throw new RuntimeException("Problems reading DCD, caught I/O exception.");
         } // end try-catch
     }
@@ -579,7 +518,7 @@ public class DcdReader implements IDataReader
     {
         IDataList res = DataSequence.create.createDatalist();
         for (int i=0; i<this.size(); i++)
-            res.add(get(i).copy());
+            res.add(get(i));
         return res;
     }
 
@@ -619,57 +558,4 @@ public class DcdReader implements IDataReader
             throw new UnsupportedOperationException("Remove not supported.");
         }
     }
-
-
-    /**
-     * Main.
-     *
-     * @param  args
-     */
-//    public static void main(String[] args) {
-//
-//        try {
-//
-//            // DcdReader reader = new DcdReader( "/home/noe/moldata/Actin/filament/prod1_nowat.dcd" );
-//            // DcdReader reader = new DcdReader( "/home/fischbac/traj.dcd" );
-//            NiceDcdReader reader = new NiceDcdReader("/home/fischbac/prod1_nowat.dcd");
-//            System.out.println("");
-//            System.out.println("Frame 0 ==================== ");
-//
-//            IVector t0 = reader.readNextFrame(DenseVector.getNewInstanceFactory());
-//            System.out.println("");
-//            System.out.println("Frame 1 ==================== ");
-//
-//            IVector t1 = reader.readNextFrame(DenseVector.getNewInstanceFactory());
-//            System.out.println("");
-//            System.out.println("Frame 2 ==================== ");
-//
-//            IVector t2 = reader.readNextFrame(DenseVector.getNewInstanceFactory());
-//            System.out.println("");
-//            System.out.println("Frame 999 ================== ");
-//
-//            IVector t999 = reader.getFrameData(999, DenseVector.getNewInstanceFactory());
-//            IVector t1_2 = reader.getFrameData(1, DenseVector.getNewInstanceFactory());
-//            IVector t2_2 = reader.readNextFrame(DenseVector.getNewInstanceFactory());
-//
-//            // double[][] d1   = reader.get( 1 );
-//            // double[][] d999 = reader.get( 999 );
-//
-//
-//            System.out.println("0   :" + t0.get(0) + " " + t0.get(1) + " " + t0.get(2) + " " + t0.get(500 * 3));
-//            System.out.println("1   :" + t1.get(0) + " " + t1.get(1) + " " + t1.get(2) + " " + t1.get(500 * 3));
-//            System.out.println("2   :" + t2.get(0) + " " + t2.get(1) + " " + t2.get(2) + " " + t2.get(500 * 3));
-//            System.out.println("999 :" + t999.get(0) + " " + t999.get(1) + " " + t999.get(2) + " " + t999.get(500 * 3));
-//            System.out.println("1   :" + t1_2.get(0) + " " + t1_2.get(1) + " " + t1_2.get(2) + " " + t1_2.get(500 * 3));
-//            System.out.println("2   :" + t2_2.get(0) + " " + t2_2.get(1) + " " + t2_2.get(2) + " " + t2_2.get(500 * 3));
-//            // System.out.println( "1   :" +   d1[0][0]    + " " +   d1[0][1]    + " " +   d1[0][2]    + " " +
-//            // d1[500][0]  );
-//            // System.out.println( "999 :" + d999[0][0]    + " " + d999[0][1]    + " " + d999[0][2]    + " " +
-//            // d999[500][0]  );
-//
-//
-//        } catch (IOException ex) {
-//            Logger.getLogger(DcdReader.class.getName()).log(Level.SEVERE, null, ex);
-//        } // end try-catch
-//    }
 }
