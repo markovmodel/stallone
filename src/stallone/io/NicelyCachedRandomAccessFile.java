@@ -3,9 +3,11 @@ package stallone.io;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import stallone.api.io.IReleasableFile;
 
 /**
@@ -21,8 +23,6 @@ import stallone.api.io.IReleasableFile;
 public class NicelyCachedRandomAccessFile implements IReleasableFile
 {
     private String filename;
-    private static final boolean DEBUG = false;
-    private static final boolean DEBUG_VERBOSE = false;
     protected ByteBuffer pageBuffer;
     protected int pageSize;
     protected long currentPos;
@@ -31,6 +31,7 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
     protected RandomAccessFile randomAccessFile;
     protected FileChannel randomAccessChannel;
     protected long filesize;
+    private Logger logger;
 
     public NicelyCachedRandomAccessFile(String _filename) throws FileNotFoundException, IOException
     {
@@ -42,6 +43,8 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
         this.filename = _filename;
         this.randomAccessFile = new RandomAccessFile(_filename, "r");
         this.randomAccessChannel = randomAccessFile.getChannel();
+        
+        this.logger = Logger.getLogger(NicelyCachedRandomAccessFile.class.getName());
 
         this.pageSize = pageSize;
         this.pageBuffer = ByteBuffer.allocate(pageSize);
@@ -66,20 +69,13 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
 
         if (size <= this.pageSize)
         {
-
-            if (DEBUG_VERBOSE)
-            {
-                System.out.println("fitsInBuffer: enough space");
-                System.out.println("  pageEnd: " + pageEnd + " currentPos: " + currentPos + " size " + size);
-            }
+            logger.log(Level.FINEST,"fitsInBuffer: enough space\n"+ 
+                    "  pageEnd: " + pageEnd + " currentPos: " + currentPos + " size " + size);
 
             if (pageEnd <= (currentPos + size))
             { // set position such that all data fits in buffer
 
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("  Force reload via makePageAvailable.");
-                }
+                logger.log(Level.FINEST, "  Force reload via makePageAvailable.");
 
                 makePageAvailable(true);
             }
@@ -102,10 +98,7 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
     public void changePageSize(int newPageSize) throws IOException
     {
 
-        if (DEBUG_VERBOSE)
-        {
-            System.out.println("changePageSize: currentPos: " + currentPos);
-        }
+        logger.log(Level.FINEST, "changePageSize: currentPos: " + currentPos);
 
         // set new page size and allocate appropriate buffer
         this.pageSize = newPageSize;
@@ -117,29 +110,13 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
 
     protected void makePageAvailable(boolean forceLoad) throws IOException
     {
-
-        if (DEBUG_VERBOSE)
-        {
-            System.out.println("makePageAailable: before: pageStart: " + pageStart + " currentPos " + currentPos
+        logger.log(Level.FINEST,"makePageAailable: before: pageStart: " + pageStart + " currentPos " + currentPos
                     + " pageEnd " + pageEnd);
-        }
 
         // check range and load new page if neccessary
         if ((currentPos < pageStart) || (pageEnd <= currentPos) || (forceLoad))
         {
-
-            if (DEBUG)
-            {
-
-                if (forceLoad)
-                {
-                    System.out.println("  Reloading - forced.");
-                }
-                else
-                {
-                    System.out.println("  Reloading.");
-                }
-            }
+            logger.log(Level.FINEST, forceLoad ? "  Reloading - forced." : "  Reloading.");
 
             // check against file size
             if (currentPos < filesize)
@@ -169,11 +146,8 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
             int actPageLength = (int) (pageEnd - pageStart);
             int readDataLength = randomAccessChannel.read(pageBuffer);
 
-            if (DEBUG_VERBOSE)
-            {
-                System.out.println("  Page length wanted: " + actPageLength);
-                System.out.println("  Data actually read: " + readDataLength);
-            }
+            logger.log(Level.FINEST, "  Page length wanted: " + actPageLength);
+            logger.log(Level.FINEST, "  Data actually read: " + readDataLength);
 
         } // end if
 
@@ -182,13 +156,8 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
         // seek or skipBytes have changed position
         pageBuffer.position((int) (currentPos - pageStart));
 
-        if (DEBUG_VERBOSE)
-        {
-            System.out.println("makePageAailable: after: pageStart: " + pageStart + " currentPos " + currentPos
+        logger.log(Level.FINEST,"makePageAailable: after: pageStart: " + pageStart + " currentPos " + currentPos
                     + " pageEnd " + pageEnd);
-        }
-
-
     }
 
     /**
@@ -221,15 +190,9 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
         makePageAvailable(false); // important: this needs to happen before pageEnd is used below: a new page can be
         // loaded
 
-        if (DEBUG)
-        {
-            System.out.println("readToBuffer: Reading " + numberOfBytes + " bytes.");
-        }
+        logger.log(Level.FINE, "readToBuffer: Reading " + numberOfBytes + " bytes.");
 
-        if (DEBUG_VERBOSE)
-        {
-            System.out.println("readToBuffer before: currentPos: " + currentPos + " pageStart: " + pageStart);
-        }
+        logger.log(Level.FINEST, "readToBuffer before: currentPos: " + currentPos + " pageStart: " + pageStart);
 
         int remaining = (int) (pageEnd - currentPos);
 
@@ -257,19 +220,13 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
                 // restore page buffer limit
                 pageBuffer.limit(savedLimit);
 
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("  Returned buffer (Size: " + numberOfBytes + ") is " + retBuffer);
-                    System.out.println("  Read page buffer              : " + pageBuffer);
-                }
+                logger.log(Level.FINEST, "  Returned buffer (Size: " + numberOfBytes + ") is " + retBuffer);
+                logger.log(Level.FINEST, "  Read page buffer              : " + pageBuffer);
 
                 // advance currentPos
                 currentPos += numberOfBytes;
 
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("readToBuffer after : currentPos: " + currentPos + " pageStart: " + pageStart);
-                }
+                logger.log(Level.FINEST, "readToBuffer after : currentPos: " + currentPos + " pageStart: " + pageStart);
 
                 return retBuffer;
 
@@ -277,10 +234,7 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
             else
             { // buffer does not contain enough elements
 
-                if (DEBUG_VERBOSE)
-                {
-                    System.out.println("readToBuffer: round the corner refill.");
-                }
+                logger.log(Level.FINEST, "readToBuffer: round the corner refill.");
 
                 ByteBuffer newRoundTheEdgeBuffer = ByteBuffer.allocate(numberOfBytes);
 
@@ -327,12 +281,9 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
         {
             int diff = (int) (filesize - currentPos);
             currentPos = filesize;
-
-            if (DEBUG)
-            {
-                System.out.println("Skipping " + n + " bytes. File limit exceeded. Current position afterwards: "
+            
+            logger.log(Level.FINE,"Skipping " + n + " bytes. File limit exceeded. Current position afterwards: "
                         + currentPos);
-            }
 
             return diff;
         }
@@ -340,10 +291,7 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
         {
             currentPos += n;
 
-            if (DEBUG)
-            {
-                System.out.println("Skipping " + n + " bytes. Current position afterwards: " + currentPos);
-            }
+            logger.log(Level.FINE, "Skipping " + n + " bytes. Current position afterwards: " + currentPos);
 
             return n;
         }
