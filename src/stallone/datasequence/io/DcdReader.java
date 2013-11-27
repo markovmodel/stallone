@@ -27,11 +27,11 @@ import stallone.io.NicelyCachedRandomAccessFile;
 public class DcdReader implements IDataReader
 {
     private String filename;
-    private boolean format__dcd_is_xplor;
+//    private boolean format__dcd_is_xplor;
     private boolean format__dcd_is_charmm;
     private boolean format__dcd_has_4dims;
     private boolean format__dcd_has_extra_block;
-    private boolean format__dcd_has_64bit_rec;
+//    private boolean format__dcd_has_64bit_rec;
     private ByteOrder byteOrder;
     private NicelyCachedRandomAccessFile niceRandomAccessFile;
     /** Number of sets of coordinates (NSET), that is number of frames. */
@@ -189,11 +189,11 @@ public class DcdReader implements IDataReader
     {
 
         // unset all flags
-        format__dcd_is_xplor = false;
+//        format__dcd_is_xplor = false;
         format__dcd_is_charmm = false;
         format__dcd_has_4dims = false;
         format__dcd_has_extra_block = false;
-        format__dcd_has_64bit_rec = false;
+//        format__dcd_has_64bit_rec = false;
 
         ByteBuffer mainHeaderRecord = readNextRecord();
 
@@ -234,8 +234,7 @@ public class DcdReader implements IDataReader
             }
             else
             {
-                format__dcd_is_xplor = true; // must be an X-PLOR format DCD file
-
+//                format__dcd_is_xplor = true; // must be an X-PLOR format DCD file
                 logger.log(Level.FINE, "X-PLOR format DCD file (also NAMD 2.0 and earlier).");
             } // end if-else
 
