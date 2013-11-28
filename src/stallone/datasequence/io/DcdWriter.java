@@ -32,6 +32,8 @@ public class DcdWriter implements IDataWriter
      * Number of frames alread written.
      */
     private int framesWritten;
+    
+    private ByteBuffer bb;
 
     /**
      * Constructor for writer, which writes DCD to a given file with name {@¢ode
@@ -143,12 +145,15 @@ public class DcdWriter implements IDataWriter
                 // 4 bytes per float, 4 bytes per int
 
                 int numberOfAtoms = n / 3;
+                
+                int nbytes = 4 * 3 * 2 + 4 * 3 * numberOfAtoms;
+                
+                if(bb == null || bb.capacity() < nbytes) {
+                    bb = ByteBuffer.wrap(new byte[nbytes]);
+                    bb.order(ByteOrder.LITTLE_ENDIAN);
+                }
 
-                byte[] bytes = new byte[4 * 3 * 2 + 4 * 3 * numberOfAtoms];
-
-                ByteBuffer bb = ByteBuffer.wrap(bytes);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-
+                bb.clear();
                 // write all x's, then all y's, then all z's
                 for (int d = 0; d < 3; d++)
                 {
@@ -164,7 +169,7 @@ public class DcdWriter implements IDataWriter
 
                     bb.putInt(chunksize);
                 }
-                stream.write(bytes);
+                stream.write(bb.array(), 0, nbytes);
             }
 
             // increase the number of written frames
