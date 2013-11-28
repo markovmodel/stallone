@@ -4,6 +4,8 @@
  */
 package stallone.hmm;
 
+import static stallone.api.API.*;
+
 import java.util.List;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.DoublesPrimitive;
@@ -342,5 +344,11 @@ public class EM implements IExpectationMaximization, IHMM
     public IDoubleArray getTransitionMatrix()
     {
         return model.getParameters().getTransitionMatrix();
+    }
+
+    @Override
+    public IDoubleArray getOutputParameters()
+    {
+        return model.getParameters().getOutputParameterMatrix();
     }
 }

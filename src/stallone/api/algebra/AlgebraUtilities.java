@@ -16,7 +16,6 @@ package stallone.api.algebra;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.api.algebra.INorm;
 import stallone.algebra.MatrixProduct;
 import stallone.algebra.InnerProduct;
 import stallone.algebra.ArrayNumericalEquality;
@@ -28,8 +27,6 @@ import stallone.algebra.ArrayScale;
 import stallone.algebra.ArrayTranspose;
 import stallone.algebra.ArraySum;
 import stallone.algebra.ScalarNumericalEquality;
-import stallone.doubles.io.SparseDoubleArrayAsciiWriter;
-import stallone.doubles.io.DenseDoubleArrayAsciiWriter;
 import stallone.complex.ComplexNumber;
 import stallone.api.complex.*;
 import static stallone.doubles.DoubleArrayTest.*;
@@ -562,17 +559,5 @@ public class AlgebraUtilities
     public boolean numericallyEquals(final IComplexNumber o1, final IComplexNumber o2, final double precision)
     {
         return scalarequal.numericallyEqual(o1, o2, precision);
-    }
-
-    public void saveMatrixDense(IDoubleArray matrix, String filename)
-    {
-        DenseDoubleArrayAsciiWriter writer = new DenseDoubleArrayAsciiWriter(matrix, filename);
-        writer.perform();
-    }
-
-    public void saveMatrixSparse(IDoubleArray matrix, String filename)
-    {
-        SparseDoubleArrayAsciiWriter writer = new SparseDoubleArrayAsciiWriter(matrix, filename);
-        writer.perform();
     }
 }

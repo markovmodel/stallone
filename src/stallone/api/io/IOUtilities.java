@@ -11,6 +11,7 @@ import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import stallone.io.BlockFileReader;
 import stallone.io.CachedAsciiFileReader;
 import stallone.io.RecursiveFileList;
 import stallone.io.WildcardFilter;
@@ -195,6 +196,18 @@ public class IOUtilities
         for (int i=0; i<words.length; i++)
             words[i] = str.split(lines[i]);
         return words;
+    }
+    
+    public double[][] readDoubleMatrix(String fileName) throws FileNotFoundException, IOException
+    {
+        BlockFileReader reader = ioNew.asciiNumberReader(fileName);
+        return reader.getLargestDoubleBlock();
+    }
+
+    public int[][] readIntMatrix(String fileName) throws FileNotFoundException, IOException
+    {
+        BlockFileReader reader = ioNew.asciiNumberReader(fileName);
+        return reader.getLargestIntBlock();
     }
     
     public void writeString(String fileName, String content)

@@ -6,10 +6,9 @@ package stallone.doubles;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.StringTokenizer;
-import stallone.api.doubles.Doubles;
-import stallone.api.doubles.DoublesPrimitive;
-import stallone.api.doubles.IDoubleArray;
+import stallone.api.doubles.*;
 import stallone.io.BlockFileReader;
 import stallone.util.StringTools;
 
@@ -253,6 +252,47 @@ public class DoubleIO
         return res;
     }
 
+    public static void writeMatrixDense(IDoubleArray M, Appendable app)
+            throws IOException
+    {
+        int nrows = M.rows();
+        int ncols = M.columns();
+        for (int i=0; i<nrows; i++)
+        {
+            for (int j=0; j<ncols; j++)
+            {
+                app.append(M.get(i,j)+" ");
+            }
+            app.append("\n");
+        }
+    }
+
+    public static void writeMatrixDense(IDoubleArray M, String filename)
+            throws IOException
+    {
+        PrintStream out = new PrintStream(filename);
+        writeMatrixDense(M, out);
+        out.close();
+    }
+    
+    public static void writeMatrixSparse(IDoubleArray M, Appendable app)
+            throws IOException
+    {
+        for (IDoubleIterator it = M.nonzeroIterator(); it.hasNext();)
+        {
+            IDoubleElement de = it.next();
+            app.append(de.row()+"\t"+de.column()+"\t"+de.get()+"\n");
+        }
+    }
+
+    public static void writeMatrixSparse(IDoubleArray M, String filename)
+            throws IOException
+    {
+        PrintStream out = new PrintStream(filename);
+        writeMatrixSparse(M, out);
+        out.close();
+    }
+    
     /*public static IDataList<IDoubleArray> readDoubleArrays(String str, String colDelimiters, String lineDelimiters)
     {
         StringTokenizer tok = new StringTokenizer(str, lineDelimiters);

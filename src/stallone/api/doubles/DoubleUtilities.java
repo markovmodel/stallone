@@ -4,6 +4,9 @@
  */
 package stallone.api.doubles;
 
+import static stallone.api.API.*;
+
+import java.io.IOException;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
@@ -11,6 +14,7 @@ import java.io.PrintStream;
 import java.util.*;
 import stallone.doubles.DoubleIO;
 import stallone.doubles.QuickSortDouble;
+import stallone.doubles.fastutils.DoubleIterator;
 
 /**
  *
@@ -977,6 +981,40 @@ public class DoubleUtilities
         return (c);
     }
 
+    public int countNonzero(IDoubleArray arr)
+    {
+        int res = 0;
+        for (IDoubleIterator it = arr.nonzeroIterator(); 
+                it.hasNext(); 
+                res++);
+        return res;
+    }
+    
+    public int[] nonzeroIndexes1D(IDoubleArray arr)
+    {
+        IIntList list = intsNew.list(arr.rows());
+        for (IDoubleIterator it = arr.nonzeroIterator(); it.hasNext();)
+        {
+            IDoubleElement de = it.next();
+            list.append(de.index());
+        }
+        return list.getArray();
+    }
+
+    public int[][] nonzeroIndexes2D(IDoubleArray arr)
+    {
+        int[][] res = new int[countNonzero(arr)][2];
+        int k = 0;
+        for (IDoubleIterator it = arr.nonzeroIterator(); it.hasNext();)
+        {
+            IDoubleElement de = it.next();
+            res[k][0] = de.row();
+            res[k][1] = de.column();
+            k++;
+        }
+        return res;
+    }
+    
     public double maxInLine(IDoubleArray arr, int i)
     {
         return (max(arr.viewRow(i)));
@@ -1047,4 +1085,27 @@ public class DoubleUtilities
         return(res);
     }
 
+    public void saveMatrixDense(IDoubleArray matrix, String filename) 
+            throws IOException
+    {
+        DoubleIO.writeMatrixDense(matrix, filename);
+    }
+
+    public void saveMatrixSparse(IDoubleArray matrix, String filename) throws IOException
+    {
+        DoubleIO.writeMatrixSparse(matrix, filename);
+    }
+
+    public void writeMatrixDense(IDoubleArray matrix, Appendable app) 
+            throws IOException
+    {
+        DoubleIO.writeMatrixDense(matrix, app);
+    }
+
+    public void writeMatrixSparse(IDoubleArray matrix, Appendable app) 
+            throws IOException
+    {
+        DoubleIO.writeMatrixSparse(matrix, app);
+    }
+    
 }

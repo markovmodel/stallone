@@ -265,9 +265,15 @@ public class HMMFactory
      * 
      * @param _dtrajs List of discrete trajectories
      */
-    public IExpectationMaximization pmm(List<IIntArray> _dtrajs, 
-            int nHiddenStates, int lag, int timeshift,
-            int nconvsteps, double dectol, IDoubleArray TCinit, IDoubleArray chiInit)
+    public IExpectationMaximization pmm(
+            List<IIntArray> _dtrajs, 
+            int nHiddenStates, 
+            int lag, 
+            int timeshift,
+            int nconvsteps, 
+            double dectol, 
+            IDoubleArray TCinit, 
+            IDoubleArray chiInit)
     {
         NinjaEstimator ninja = new NinjaEstimator(_dtrajs);
         ninja.setNHiddenStates(nHiddenStates);
@@ -288,10 +294,16 @@ public class HMMFactory
      * 
      * @param _dtrajs List of discrete trajectories
      */
-    public IExpectationMaximization pmm(List<IIntArray> _dtrajs, 
-            int nHiddenStates, int lag, int timeshift,
-            int nconvsteps)
+    public IExpectationMaximization pmm(
+            List<IIntArray> _dtrajs, 
+            int nHiddenStates, 
+            int lag)
     {
-        return pmm(_dtrajs, nHiddenStates, lag, timeshift, nconvsteps, 0.1, null, null);
+        int timeshift = Math.min(lag/10, 1);
+        int nconvsteps = 100 * nHiddenStates * nHiddenStates;
+        double dectol = -0.1;
+        IDoubleArray TCinit = null;
+        IDoubleArray chiInit = null;
+        return pmm(_dtrajs, nHiddenStates, lag, timeshift, nconvsteps, dectol, TCinit, chiInit);
     }    
 }

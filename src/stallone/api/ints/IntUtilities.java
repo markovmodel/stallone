@@ -773,6 +773,16 @@ public class IntUtilities
         return (removeValueToNew(arr1, Ints.create.arrayFrom(a2)));
     }
 
+    public String toString(IIntArray arr, String del)
+    {
+        return (io.toString(arr, del));
+    }
+
+    public void print(IIntArray arr, String del)
+    {
+        io.print(arr, del);
+    }
+    
 
     public String toString(IIntArray arr, String coldel, String linedel)
     {

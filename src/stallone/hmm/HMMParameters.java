@@ -5,6 +5,8 @@
 
 package stallone.hmm;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.hmm.IHMMParameters;
@@ -98,6 +100,15 @@ public class HMMParameters implements IHMMParameters
     public IDoubleArray getOutputParameters(int state)
     {
         return parOut[state];
+    }
+    
+    @Override
+    public IDoubleArray getOutputParameterMatrix()
+    {
+        double[][] res = new double[nstates][];
+        for (int i=0; i<res.length; i++)
+            res[i] = parOut[i].getArray();
+        return doublesNew.array(res);
     }
 
     @Override

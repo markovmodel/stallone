@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.hmm.pmm;
+package stallone.ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,8 +16,11 @@ import stallone.util.CommandLineParser;
 
 import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.hmm.IHMM;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
+import stallone.hmm.pmm.NinjaEstimator;
+import stallone.hmm.pmm.NinjaUtilities;
 
 /**
  *
@@ -53,8 +56,6 @@ public class NinjaEstimatorCmd
     private String outdir;
 
     
-    private NinjaEstimator ninja;
-    
     public boolean parseArguments(String[] args)
             throws FileNotFoundException, IOException
     {
@@ -71,11 +72,6 @@ public class NinjaEstimatorCmd
         parser.addCommand("estimate", false);
         parser.addIntArgument("estimate", true); // tau
         parser.addIntArgument("estimate", true); // average window
-        // option estimateMultiStart
-        parser.addCommand("estimatemult", false);
-        parser.addIntArgument("estimatemult", true); // tau
-        parser.addIntArgument("estimatemult", true); // average window
-        parser.addDoubleArrayCommand("metastabilities", false, new double[]{1.0, 2.0, 3.0, 5.0, 10.0}, 0.001, 1000000.0); // metastability multipliers
         // option hmm timescales
         parser.addCommand("hmmtimescales", false);
         parser.addIntArgument("hmmtimescales", true); // tau-min
@@ -84,7 +80,7 @@ public class NinjaEstimatorCmd
         parser.addIntArgument("hmmtimescales", true); // max-avg-window
         // hmm convergence options
         parser.addCommand("hmmconv",false);
-        parser.addDoubleArgument("hmmconv", true, 0, Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY); // dectol
+        parser.addDoubleArgument("hmmconv", true, -0.1, Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY); // dectol
         parser.addIntArgument("hmmconv", true, 1000, 0, Integer.MAX_VALUE); // niter
         // option
         parser.addCommand("direct", false);
@@ -174,9 +170,6 @@ public class NinjaEstimatorCmd
                 + "\n"
                 + " [-init <T-init> <chi-init>]"
                 + "\n"
-                + " -estimatemult <lag time> <average-window>" + "\n"
-                + " -metastabilities <factors>" + "\n"
-                + "\n"
                 + " -hmmtimescales <min-lag> <max-lag> <lag-mult> <timeshift>" + "\n"
                 + " [-direct]" + "\n"
                 + "  enforce direct estimate at each lagtime rather than using the previous result to initialize the next lagtime\n"
@@ -204,55 +197,14 @@ public class NinjaEstimatorCmd
             System.exit(0);
         }
 
-        // initialize NINJA
-        cmd.ninja = new NinjaEstimator(cmd.discreteTrajectories);
-        cmd.ninja.setNHiddenStates(cmd.nhidden);
-        cmd.ninja.setHMMLikelihoodMaxIncrease(cmd.hmmDecTol);
-        cmd.ninja.setNIterHMMMax(cmd.hmmNIter);
-        
-        
         if (cmd.singlePointEstimate)
         {
-            cmd.ninja.estimate();
+            IHMM pmm = hmm.pmm(cmd.discreteTrajectories, cmd.nhidden, cmd.tau, cmd.timeshift, cmd.hmmNIter, cmd.hmmDecTol, null, null);
             
-            IDoubleArray hmmTC = cmd.ninja.getHMMTransitionMatrix();
+            IDoubleArray hmmTC = pmm.getTransitionMatrix();
             io.writeString(cmd.outdir+"/hmmTc.dat", doubles.toString(hmmTC,"\t","\n"));
-            IDoubleArray hmmChi = cmd.ninja.getHMMOutputProbabilities();
+            IDoubleArray hmmChi = pmm.getOutputParameters();
             io.writeString(cmd.outdir+"/hmmChi.dat", doubles.toString(hmmChi,"\t","\n"));
-        }
-        else if (cmd.multiStartEstimate)
-        {
-            cmd.ninja.setTau(cmd.tau);
-            cmd.ninja.setTimeshift(cmd.timeshift);
-            cmd.ninja.estimateMSM();
-
-            IDoubleArray msmTC = cmd.ninja.getPCCATransitionMatrix();
-            IDoubleArray msmChi = cmd.ninja.getPCCAOutputProbabilities();
-
-            PrintStream itsout = new PrintStream(cmd.outdir+"/hmm-its.dat");
-
-            for (double m : cmd.metastabilities)
-            {
-                IDoubleArray msmTCscaled = NinjaUtilities.tuneMetastability(msmTC, m);
-                IDoubleArray initTS = msm.timescales(msmTCscaled, 1);
-                
-                System.out.println("Initial MSM timescales:\t"+doubles.toString(initTS," "));
-                
-                cmd.ninja.setInit(msmTCscaled, msmChi);
-
-                cmd.ninja.estimateHMM();
-                double[] hmmLikelihoodHistory = cmd.ninja.getHMMLikelihoodHistory();
-                double logL = hmmLikelihoodHistory[hmmLikelihoodHistory.length-1];
-                
-                IDoubleArray hmmTimescales = cmd.ninja.getHMMTimescales();
-
-                itsout.println(cmd.tau+"\t"+m+"\t"+logL+"\t"+doubles.toString(hmmTimescales," "));
-            }
-            /*
-            IDoubleArray hmmTC = cmd.ninja.getHMMTransitionMatrix();
-            io.writeString(cmd.outdir+"/hmmTc.dat", doubles.toString(hmmTC,"\t","\n"));
-            IDoubleArray hmmChi = cmd.ninja.getHMMOutputProbabilities();
-            io.writeString(cmd.outdir+"/hmmChi.dat", doubles.toString(hmmChi,"\t","\n"));*/
         }
         else if (cmd.hmmTimescalesEstimate)
         {
@@ -275,24 +227,25 @@ public class NinjaEstimatorCmd
                 //set lag and timeshift
                 int lag = lagtimes.get(i);
                 System.out.println("\ntau = "+lag+"\n");
-                cmd.ninja.setTau(lag);
-                cmd.ninja.setTimeshift(cmd.timeshift);
 
-                // initialization from last lag
+                // in direct mode, erase the results from last lag. Otherwise use as initialization.
                 if (cmd.direct)
-                    cmd.ninja.setInit(null, null);
-                else if (lastTC != null && lastChi != null)
-                    cmd.ninja.setInit(lastTC, lastChi);
-                cmd.ninja.estimate();
+                {
+                    lastTC = null;
+                    lastChi = null;
+                }
 
+                System.out.println("Hidden state: "+cmd.nhidden);
+                IHMM pmm = hmm.pmm(cmd.discreteTrajectories, cmd.nhidden, lag, cmd.timeshift, cmd.hmmNIter, cmd.hmmDecTol, lastTC, lastChi);
+                
                 // remember estimation results and use them as a next initializer.
-                lastTC = cmd.ninja.getHMMTransitionMatrix();
-                lastChi = cmd.ninja.getHMMOutputProbabilities();
-                double[] logL = cmd.ninja.getHMMLikelihoodHistory();
-                double lastLogL = logL[logL.length-1];
+                lastTC = pmm.getTransitionMatrix();
+                lastChi = pmm.getOutputParameters();
+                //double[] logL = cmd.ninja.getHMMLikelihoodHistory();
+                double lastLogL = pmm.getLogLikelihood();
 
                 // output timescales
-                IDoubleArray hmmTimescales = cmd.ninja.getHMMTimescales();
+                IDoubleArray hmmTimescales = msm.timescales(lastTC, lag);
                 itsout.println(lag+"\t"+lastLogL+"\t"+doubles.toString(hmmTimescales,""," "));
                 
                 // output hidden matrix

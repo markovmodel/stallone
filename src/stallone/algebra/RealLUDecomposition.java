@@ -13,6 +13,8 @@
  */
 package stallone.algebra;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
 import stallone.doubles.PrimitiveDoubleTable;
@@ -74,7 +76,6 @@ public class RealLUDecomposition implements ILUDecomposition
     @Override
     public void perform()
     {
-
         // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
         pivots = new int[m];
 
