@@ -138,7 +138,7 @@ public class ClusterFactory
 
     public IClustering createKcenter(IDataSequence data, IMetric metric, int k)
     {
-        return (createKcenter(data, new EuclideanDistance(), k));
+        return (createKcenter(data, data.size(), metric, k));
     }
 
     public IClustering createKcenter(Iterable<IDoubleArray> data, int size, int k)
