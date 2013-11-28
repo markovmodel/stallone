@@ -48,8 +48,9 @@ public class TestDCDReaderWriter
         assertTrue("length of input and output", seq.size() == outputSeq.size());
         
         int size = seq.size();
-        for(int i =0; i < size; i++) {
-            assertArrayEquals(seq.get(i).getArray(),
+        for(int i = 0; i < size; i++) {
+            assertArrayEquals("trajectory with index " + i + " differs.",
+                    seq.get(i).getArray(),
                     outputSeq.get(i).getArray(), 1E-6);
         }
     }
