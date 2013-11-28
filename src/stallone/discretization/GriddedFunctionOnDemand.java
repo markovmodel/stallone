@@ -42,7 +42,7 @@ public class GriddedFunctionOnDemand
     {
         this.F = _F;
 
-        int dof = _F.getNumberOfVariables();
+//        int dof = _F.getNumberOfVariables();
 
         this.grid = new Grid(griddef);
     }
@@ -148,7 +148,7 @@ public class GriddedFunctionOnDemand
     }
 
     @Override
-    public Iterator iterator()
+    public Iterator<IDoubleArray> iterator()
     {
         return(grid.iterator());
     }
