@@ -38,18 +38,19 @@ public class PathwayDecomposition
 
     public PathwayDecomposition(IDoubleArray _F, double[] _Q, int[] _A, int[] _B)
     {
-	this.Q = _Q;
+        this.Q = _Q;
         this.A = _A;
         this.B = _B;
 
         IIntGraph g = graphNew.intMatrixGraph(_F);
 
-	boolean[] inA = new boolean[_F.rows()];
-	for (int i=0; i<A.length; i++)
-	    inA[A[i]] = true;
-	boolean[] inB = new boolean[_F.rows()];
-	for (int i=0; i<B.length; i++)
-	    inB[B[i]] = true;
+        this.inA = new boolean[_F.rows()];
+        for (int i = 0; i < A.length; i++)
+            inA[A[i]] = true;
+        
+        inB = new boolean[_F.rows()];
+        for (int i = 0; i < B.length; i++)
+            inB[B[i]] = true;
 
         // convert double matrix into Big Decimals
         this.F = new SparseObjectMatrix2D(_F.rows(), _F.rows());
