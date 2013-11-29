@@ -4,16 +4,19 @@
  */
 package stallone.ui;
 
-import static stallone.api.API.*;
+import static stallone.api.API.doubles;
+import static stallone.api.API.doublesNew;
+import static stallone.api.API.intArrays;
+import static stallone.api.API.io;
+import static stallone.api.API.str;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import stallone.api.datasequence.IDataReader;
+
 import stallone.api.doubles.IDoubleArray;
-import stallone.io.CachedAsciiFileReader;
 import stallone.mc.tpt.PathwayDecomposition;
 import stallone.util.Arguments;
 
@@ -84,8 +87,8 @@ public class MSM_Flux
             int[] B = str.toIntArray(arg.getArgument("pathways",3));
 
             PathwayDecomposition decomp = new PathwayDecomposition(F, Q, A, B);
-            List<int[]> allPaths = new ArrayList();
-            List<Double> allFluxes = new ArrayList();
+            List<int[]> allPaths = new ArrayList<int[]>();
+            List<Double> allFluxes = new ArrayList<Double>();
             int[] path = null;
             double totalFlux = 0;
             do
