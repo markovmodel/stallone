@@ -209,6 +209,18 @@ public class IOUtilities
         BlockFileReader reader = ioNew.asciiNumberReader(fileName);
         return reader.getLargestIntBlock();
     }
+
+    public double[] readDoubleColumn(String fileName, int c) throws FileNotFoundException, IOException
+    {
+        BlockFileReader reader = ioNew.asciiNumberReader(fileName);
+        return reader.getDoubleColumn(c);
+    }
+
+    public int[] readIntColumn(String fileName, int c) throws FileNotFoundException, IOException
+    {
+        BlockFileReader reader = ioNew.asciiNumberReader(fileName);
+        return reader.getIntColumn(c);
+    }
     
     public void writeString(String fileName, String content)
     {

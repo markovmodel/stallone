@@ -12,7 +12,7 @@ import stallone.api.ints.IIntList;
 import java.util.*;
 import stallone.api.algebra.*;
 import stallone.api.graph.IIntGraph;
-import stallone.graph.MatrixGraph;
+import stallone.graph.MatrixIntGraph;
 import stallone.graph.connectivity.IntStrongConnectivity;
 
 public class StationaryDistribution
@@ -122,7 +122,7 @@ public class StationaryDistribution
 
     private void calculateComponents()
     {
-        IIntGraph g = new MatrixGraph(T);
+        IIntGraph g = new MatrixIntGraph(T);
         IntStrongConnectivity connectivity = new IntStrongConnectivity(g);
         connectivity.perform();
 

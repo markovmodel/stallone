@@ -35,6 +35,8 @@ public interface IIntGraph
 
     public IIntArray getNodes();
 
+    public IIntArray getNeighbors(int node);
+    
     public IIntIterator nodeIterator();
 
     public IIntIterator neighborIterator(int node);
