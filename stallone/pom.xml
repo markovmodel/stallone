@@ -33,6 +33,9 @@
 						<optimize>true</optimize>
 						<showWarnings>true</showWarnings>
 						<showDeprecation>true</showDeprecation>
+						<compilerArgs>
+							<arg>-Xlint:unchecked</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 			</plugins>
