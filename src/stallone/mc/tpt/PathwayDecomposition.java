@@ -220,12 +220,12 @@ public class PathwayDecomposition
     public int[] nextPathway()
     {
         // get current set of edges
-        ArrayList Elist = new ArrayList();
+        List<int[]> Elist = new ArrayList<int[]>();
         for (int i=0; i<F.rows(); i++)
             for (int j=0; j<F.rows(); j++)
                 if (F.get(i,j) != null)
                     if (((BigDecimal)F.get(i,j)).compareTo(BigDecimal.ZERO) > 0)
-			Elist.add(new int[]{i,j});
+                        Elist.add(new int[]{i,j});
         int[][] E = intArrays.List2Array2(Elist);
 
 	int[][] pathway = new int[0][];
