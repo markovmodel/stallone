@@ -27,6 +27,13 @@ public interface IHMM
     public IDoubleArray getTransitionMatrix();
 
     /**
+     * Short-cut method to obtain the output model parameter matrix. 
+     * For a discrete HMM, these are simply the discrete probability distributions.
+     * @return 
+     */
+    public IDoubleArray getOutputParameters();
+    
+    /**
      * Returns the Hidden variables (alpha, beta, gamma, likelihood)
      * @return 
      */

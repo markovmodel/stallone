@@ -13,6 +13,8 @@
  */
 package stallone.algebra;
 
+import static stallone.api.API.*;
+
 import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.IDoubleArray;
 
@@ -29,8 +31,17 @@ public class MatrixProduct //implements IMatrixProduct
 
     public IDoubleArray multiplyToNew(final IDoubleArray a, final IDoubleArray b)
     {
-        IDoubleArray res = a.create(a.rows(), b.columns());
-        multiply(a,b,res);
+        IDoubleArray res;
+        if (a.isSparse() && b.isSparse())
+        {
+            res = doublesNew.sparseMatrix(a.rows(), b.columns());
+            sparseMultiply(a,b,res);
+        }
+        else
+        {
+            res = doublesNew.denseMatrix(a.rows(), b.columns());
+            multiply(a,b,res);
+        }
         return res;
     }
 

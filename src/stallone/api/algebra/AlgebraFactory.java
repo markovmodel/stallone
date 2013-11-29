@@ -4,6 +4,8 @@
  */
 package stallone.api.algebra;
 
+import static stallone.api.API.*;
+
 import stallone.algebra.RealCholeskyDecomposition;
 import stallone.algebra.RealLUDecomposition;
 import stallone.algebra.RealLinearSystem;

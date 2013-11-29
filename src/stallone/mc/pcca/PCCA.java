@@ -1,5 +1,7 @@
 package stallone.mc.pcca;
 
+import static stallone.api.API.*;
+
 import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.doubles.Doubles;
@@ -141,7 +143,7 @@ public final class PCCA
             double comp = 0;
             double entry = 0;
             int[] index = new int[noOfClusters];
-            int[] indexAll = Ints.create.arrayRange(0, eigenvectors.rows()).getArray();
+            int[] indexAll = Ints.create.arrayRange(0, noOfClusters).getArray();
             IDoubleArray orthoSys = eigenvectors.copy();
             IDoubleArray dummy;
 
@@ -149,10 +151,9 @@ public final class PCCA
              *(quantified by the 2-norm)*/
             for (int i = 0; i < noOfPoints; i++)
             {
-
                 for (int j = i + 1; j < noOfPoints; j++)
                 {
-                    double dij = Algebra.util.distance(eigenvectors.viewRow(i), eigenvectors.viewRow(i));
+                    double dij = Algebra.util.distance(eigenvectors.viewRow(i), eigenvectors.viewRow(j));
 
                     if (dij > maxDist)
                     {

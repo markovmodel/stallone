@@ -13,6 +13,8 @@
  */
 package stallone.algebra;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
 

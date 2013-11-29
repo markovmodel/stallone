@@ -210,6 +210,13 @@ public class IntSequenceUtilities
         return (cumdist);
     }
 
+    public int[] lengths(List<IIntArray> dtrajs)
+    {
+        int[] res = new int[dtrajs.size()];
+        for (int i=0; i<res.length; i++)
+            res[i] = dtrajs.size();
+        return res;
+    }
 
 
 

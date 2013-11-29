@@ -34,6 +34,13 @@ public interface IHMMParameters
     public IDoubleArray getOutputParameters(int state);
 
     /**
+     * Returns the parameters of the specified output model.
+     * @param state the state index
+     * @return
+     */
+    public IDoubleArray getOutputParameterMatrix();
+
+    /**
      * Sets the parameters of the specified output model
      * @param state
      * @param par

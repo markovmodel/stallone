@@ -20,7 +20,7 @@ import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.graph.IIntGraph;
 import stallone.cluster.MilestoningFilter;
-import stallone.graph.MatrixGraph;
+import stallone.graph.MatrixIntGraph;
 import stallone.graph.connectivity.IntStrongConnectivity;
 import stallone.mc.MarkovChain;
 import stallone.mc.StationaryDistribution;
@@ -46,7 +46,7 @@ public class MarkovModelUtilities
 
     public List<IIntArray> connectedComponents(IDoubleArray P)
     {
-        IIntGraph g = new MatrixGraph(P);
+        IIntGraph g = new MatrixIntGraph(P);
         IntStrongConnectivity connectivity = new IntStrongConnectivity(g);
         connectivity.perform();
 

@@ -1,5 +1,7 @@
 package stallone.graph;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.Ints;
@@ -11,17 +13,20 @@ import stallone.ints.IntElement;
 import stallone.api.graph.IIntGraph;
 import stallone.api.graph.IIntEdge;
 import java.util.Iterator;
+import stallone.api.ints.*;
+
+
 
 
 /**
  *
  * @author  Frank Noe
  */
-public class MatrixGraph implements IIntGraph
+public class MatrixIntGraph implements IIntGraph
 {
     private IDoubleArray matrix;
 
-    public MatrixGraph(IDoubleArray matrix)
+    public MatrixIntGraph(IDoubleArray matrix)
     {
         this.matrix = matrix;
         if (matrix.rows() != matrix.columns())
@@ -82,9 +87,17 @@ public class MatrixGraph implements IIntGraph
     {
         return(Ints.create.arrayRange(matrix.rows()));
     }
+
+    @Override
+    public IIntArray getNeighbors(int node)
+    {
+        IIntList res = intsNew.list(5);
+        for (int i=0; i<matrix.columns(); i++)
+            if (matrix.get(node,i) != 0)
+                res.append(i);
+        return res;
+    }
 }
-
-
 class MatrixGraphNeighborIterator implements IIntIterator
 {
     private int myself;
