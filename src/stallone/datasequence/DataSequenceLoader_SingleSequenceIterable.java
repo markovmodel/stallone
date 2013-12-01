@@ -7,7 +7,7 @@ package stallone.datasequence;
 import java.io.IOException;
 import java.util.Iterator;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequenceLoader;
+import stallone.api.datasequence.IDataInput;
 
 /**
  *
@@ -16,9 +16,9 @@ import stallone.api.datasequence.IDataSequenceLoader;
 public class DataSequenceLoader_SingleSequenceIterable implements Iterable<IDataSequence>
 {
 
-    private IDataSequenceLoader loader;
+    private IDataInput loader;
 
-    DataSequenceLoader_SingleSequenceIterable(IDataSequenceLoader _loader)
+    DataSequenceLoader_SingleSequenceIterable(IDataInput _loader)
     {
         this.loader = _loader;
     }
@@ -33,10 +33,10 @@ public class DataSequenceLoader_SingleSequenceIterable implements Iterable<IData
 class DataSequenceLoader_SingleSequenceIterator implements Iterator<IDataSequence>
 {
 
-    private IDataSequenceLoader loader;
+    private IDataInput loader;
     private int itraj = 0;
 
-    public DataSequenceLoader_SingleSequenceIterator(IDataSequenceLoader _loader)
+    public DataSequenceLoader_SingleSequenceIterator(IDataInput _loader)
     {
         this.loader = _loader;
     }

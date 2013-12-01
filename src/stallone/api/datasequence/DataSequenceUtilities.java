@@ -29,7 +29,7 @@ public class DataSequenceUtilities
      * @param indexes nx2 array with trajectory and within-trajectory indexes
      * @return
      */
-    public List<IDataSequence> loadSubset(IDataSequenceLoader loader, IIntArray indexes)
+    public List<IDataSequence> loadSubset(IDataInput loader, IIntArray indexes)
             throws IOException
     {
         List<IDataSequence> res = new ArrayList<IDataSequence>();

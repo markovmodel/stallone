@@ -17,7 +17,7 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public interface IDataSequenceLoader
+public interface IDataInput
 {
 
     //public void setLoader(IDataReader loader);
