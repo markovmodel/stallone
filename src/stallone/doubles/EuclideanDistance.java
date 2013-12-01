@@ -12,7 +12,7 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public class EuclideanDistance implements IDifferentiableMetric
+public class EuclideanDistance implements IDifferentiableMetric<IDoubleArray>
 {
     private double d = 0;
     private int i = 0, size = 0;

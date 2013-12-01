@@ -38,18 +38,19 @@ public class PathwayDecomposition
 
     public PathwayDecomposition(IDoubleArray _F, double[] _Q, int[] _A, int[] _B)
     {
-	this.Q = _Q;
+        this.Q = _Q;
         this.A = _A;
         this.B = _B;
 
         IIntGraph g = graphNew.intMatrixGraph(_F);
 
-	boolean[] inA = new boolean[_F.rows()];
-	for (int i=0; i<A.length; i++)
-	    inA[A[i]] = true;
-	boolean[] inB = new boolean[_F.rows()];
-	for (int i=0; i<B.length; i++)
-	    inB[B[i]] = true;
+        this.inA = new boolean[_F.rows()];
+        for (int i = 0; i < A.length; i++)
+            inA[A[i]] = true;
+        
+        inB = new boolean[_F.rows()];
+        for (int i = 0; i < B.length; i++)
+            inB[B[i]] = true;
 
         // convert double matrix into Big Decimals
         this.F = new SparseObjectMatrix2D(_F.rows(), _F.rows());
@@ -220,12 +221,12 @@ public class PathwayDecomposition
     public int[] nextPathway()
     {
         // get current set of edges
-        ArrayList Elist = new ArrayList();
+        List<int[]> Elist = new ArrayList<int[]>();
         for (int i=0; i<F.rows(); i++)
             for (int j=0; j<F.rows(); j++)
                 if (F.get(i,j) != null)
                     if (((BigDecimal)F.get(i,j)).compareTo(BigDecimal.ZERO) > 0)
-			Elist.add(new int[]{i,j});
+                        Elist.add(new int[]{i,j});
         int[][] E = intArrays.List2Array2(Elist);
 
 	int[][] pathway = new int[0][];
