@@ -207,6 +207,9 @@ public class AlgebraUtilities
 
     public IDoubleArray multiplyElementsToNew(IDoubleArray arr1, IDoubleArray arr2)
     {
+        if(arr1.isSparse() || arr2.isSparse())
+            return elprod.multiplyToNewSparse(arr1, arr2);
+        
         return elprod.multiplyToNewDense(arr1, arr2);
     }
 
