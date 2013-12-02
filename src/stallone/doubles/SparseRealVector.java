@@ -189,6 +189,10 @@ public class SparseRealVector extends AbstractDoubleArray
         return (new SparseRealVector(rows));
     }
 
+    /**
+     * This class maps the non zero indices to the data array of SparseRealVector.
+     * It also reallocates the memory of this array, in case an additional index is needed.
+     */
     private class MyIndexMap extends SparseVectorIndexMap
     {
 
