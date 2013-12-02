@@ -94,7 +94,9 @@ public class SparseRealVector extends AbstractDoubleArray
      */
     public String toStringOfInternalData()
     {
-        return SparseVectorIndexMap.toString(sparseIndexMap.nonZeroIndices, " ") + "\n" + SparseVectorIndexMap.toString(data, " ") + "\n" + "Used: " + sparseIndexMap.usedNonZero;
+        return SparseVectorIndexMap.toString(sparseIndexMap.nonZeroIndices, " ")
+                + "\n" + SparseVectorIndexMap.toString(data, " ") + "\n" +
+                "Used: " + sparseIndexMap.usedNonZero;
     }
 
 
@@ -116,6 +118,7 @@ public class SparseRealVector extends AbstractDoubleArray
     @Override
     public IDoubleIterator iterator()
     {
+        // TODO: this should be some kind of SparseIterator
         return new DoubleArrayIterator(this);
     }
 
@@ -157,7 +160,13 @@ public class SparseRealVector extends AbstractDoubleArray
         int pos = sparseIndexMap.getPosition(i);
         if (pos < 0)
         {
-            throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+            // create index in map first and ensure we have memory for data.
+            if(i < size())
+            {
+                pos = sparseIndexMap.addIndex(i);
+            } else {
+                throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
+            }
         }
 
         data[pos] = x;
