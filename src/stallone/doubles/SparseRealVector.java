@@ -45,9 +45,10 @@ public class SparseRealVector extends AbstractDoubleArray
      */
     protected SparseRealVector(final SparseRealVector source)
     {
-        sparseIndexMap = new MyIndexMap(source.size());
-        this.data = new double[getNumberOfNonzero()];
-        System.arraycopy(source.data, 0, this.data, 0, sparseIndexMap.usedNonZero);
+        sparseIndexMap = source.getIndexMap();
+        int nnz = source.getNumberOfNonzero();
+        this.data = new double[nnz];
+        System.arraycopy(source.data, 0, this.data, 0, nnz);
     }
 
     public final int getNumberOfNonzero()
@@ -58,6 +59,8 @@ public class SparseRealVector extends AbstractDoubleArray
     @Override
     public void zero()
     {
+        sparseIndexMap.lastRequestedIndex = -1;
+        sparseIndexMap.lastRequestedPosition = -1;
         sparseIndexMap.usedNonZero = 0;
     }
 
@@ -118,7 +121,6 @@ public class SparseRealVector extends AbstractDoubleArray
     @Override
     public IDoubleIterator iterator()
     {
-        // TODO: this should be some kind of SparseIterator
         return new DoubleArrayIterator(this);
     }
 
@@ -144,6 +146,9 @@ public class SparseRealVector extends AbstractDoubleArray
         int pos = sparseIndexMap.getPosition(i);
         if (pos < 0)
         {
+            // if index is in valid bounds, fake a dense vector access.
+            if(i >= 0 && i < size())
+                return 0.0;
             throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
         }
 
@@ -161,7 +166,7 @@ public class SparseRealVector extends AbstractDoubleArray
         if (pos < 0)
         {
             // create index in map first and ensure we have memory for data.
-            if(i < size())
+            if(i >= 0 && i < size())
             {
                 pos = sparseIndexMap.addIndex(i);
             } else {
@@ -187,6 +192,13 @@ public class SparseRealVector extends AbstractDoubleArray
         }
 
         return (new SparseRealVector(rows));
+    }
+    
+    /**
+     * @return current index map
+     */
+    public SparseVectorIndexMap getIndexMap() {
+        return this.sparseIndexMap;
     }
 
     /**

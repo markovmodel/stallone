@@ -154,6 +154,7 @@ public abstract class SparseVectorIndexMap
 
         if ((pos < usedNonZero) && (nonZeroIndices[pos] == index))
         { // found
+            lastRequestedPosition = pos;
             return pos;
         }
         else
@@ -162,8 +163,9 @@ public abstract class SparseVectorIndexMap
 
             // Put in new structure
             nonZeroIndices[pos] = index;
+            
+            lastRequestedPosition = pos;
 
-            // newData[pos] = 0.;
             return pos;
         }
     }
@@ -336,7 +338,10 @@ public abstract class SparseVectorIndexMap
         System.arraycopy(nonZeroIndices, firstBlockLength + 1, nonZeroIndices, firstBlockLength, secondBlockLength);
     }
 
-    public void test()
+    /**
+     * since this modifies internal datastructures it should not be public.
+     */
+    private void test()
     {
         nonZeroIndices = new int[]
         {
@@ -422,24 +427,5 @@ public abstract class SparseVectorIndexMap
 
         return out.toString();
     }
-
-    /*public static void main(final String[] args)
-    {
-        final SparseRealVector vector = new SparseRealVector(10);
-
-        // vector.test();
-        vector.set(7, 6.0d);
-        vector.set(1, 3.0d);
-        vector.set(3, 2.0d);
-        vector.set(9, 16.0d);
-
-        System.out.println(vector);
-        System.out.println(vector.toStringOfInternalData());
-        vector.set(3, 0.0d);
-        System.out.println(vector);
-        System.out.println(vector.toStringOfInternalData());
-        vector.set(1, 0.0d);
-        System.out.println(vector);
-        System.out.println(vector.toStringOfInternalData());
-    }*/
+    
 }
