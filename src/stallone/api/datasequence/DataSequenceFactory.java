@@ -23,14 +23,14 @@ public class DataSequenceFactory
     {
         return new DataSequenceIterator(seq);
     }
-    public IDataSequenceLoader dataSequenceLoader(List<String> files, IDataReader sequenceLoader)
+    public IDataInput dataSequenceLoader(List<String> files, IDataReader sequenceLoader)
             throws IOException
     {
         DataSequenceLoader_SingleReaderImpl loader = new DataSequenceLoader_SingleReaderImpl(files, sequenceLoader);
         return (loader);
     }
 
-    public IDataSequenceLoader dataSequenceLoader(List<String> files)
+    public IDataInput dataSequenceLoader(List<String> files)
             throws IOException
     {
         IDataReader sequenceLoader = DataSequenceFileFormats.createLoader(files.get(0));
@@ -45,7 +45,7 @@ public class DataSequenceFactory
         return sequenceLoader;
     }
 
-    public Iterable<IDoubleArray> interleavedDataIterable(IDataSequenceLoader loader, int stepsize)
+    public Iterable<IDoubleArray> interleavedDataIterable(IDataInput loader, int stepsize)
     {
         return new DataSequenceLoader_SingleDataIterable(loader,stepsize);
     }

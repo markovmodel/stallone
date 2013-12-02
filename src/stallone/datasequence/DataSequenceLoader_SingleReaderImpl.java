@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequenceLoader;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IO;
 
@@ -32,7 +32,7 @@ import stallone.api.io.IO;
  * @author noe
  */
 public class DataSequenceLoader_SingleReaderImpl
-        implements IDataSequenceLoader
+        implements IDataInput
 {
     private List<String> sources;
     private boolean scanned = false;

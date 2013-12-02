@@ -12,7 +12,7 @@ import java.util.List;
 import static stallone.api.API.*;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequenceLoader;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.util.CommandLineParser;
@@ -53,7 +53,7 @@ public class MultiClusteringKmeans
         for (int i=0; i<ifiles.length; i++)
             inputFiles.add(ifiles[i]);
         
-        IDataSequenceLoader loader = dataNew.dataSequenceLoader(inputFiles);
+        IDataInput loader = dataNew.dataSequenceLoader(inputFiles);
         data = loader.loadAll();
 
         nclusters = parser.getInt("ncluster");

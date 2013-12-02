@@ -10,7 +10,7 @@ import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequenceLoader;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataWriter;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
@@ -472,7 +472,7 @@ public class AdaptiveDiscretization
         }
 
         System.out.println("reading input data ... ");
-        IDataSequenceLoader loader = dataNew.dataSequenceLoader(inputFiles);
+        IDataInput loader = dataNew.dataSequenceLoader(inputFiles);
         data = loader.loadAll();
         System.out.println(" done. size: " + data.get(0).size() + " x " + data.get(0).dimension());
 

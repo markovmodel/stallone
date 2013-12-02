@@ -6,7 +6,7 @@ package stallone.datasequence;
 
 import java.io.IOException;
 import java.util.Iterator;
-import stallone.api.datasequence.IDataSequenceLoader;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.doubles.IDoubleArray;
 
 
@@ -18,17 +18,17 @@ import stallone.api.doubles.IDoubleArray;
 public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleArray>
 {
 
-    protected IDataSequenceLoader loader;
+    protected IDataInput loader;
     protected int itraj = 0, iindex = 0;
     private int stepsize = 1;
 
-    public DataSequenceLoader_SingleDataIterator(IDataSequenceLoader _loader)
+    public DataSequenceLoader_SingleDataIterator(IDataInput _loader)
     {
         this.loader = _loader;
         this.stepsize = 1;
     }
 
-    public DataSequenceLoader_SingleDataIterator(IDataSequenceLoader _loader, int _stepsize)
+    public DataSequenceLoader_SingleDataIterator(IDataInput _loader, int _stepsize)
     {
         this.loader = _loader;
         this.stepsize = _stepsize;
