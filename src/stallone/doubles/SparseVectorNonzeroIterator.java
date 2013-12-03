@@ -16,66 +16,43 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
 {
     /** next position in vector the getIterable will be located at, when calling {@link #next() }. */
     protected int nextPos;
-    /** size of the referenced vector. */
-    protected int size;
+    
     /** state, if getIterable is finished e.g. reached its last position */
     protected boolean finished;
-    /**
-     * Scalar variable used to store value at next position Is modified by {@link AbstractMatrixIterator#readNext() }.
-     */
-    protected double nextValue;
+
     protected DoubleArrayElement element;
 
-
-    private int currentNonZeroPosition;
     private int nextNonZeroPosition;
 
-    private IDoubleArray vector;
     private SparseVectorIndexMap sparseIndexMap;
 
     public SparseVectorNonzeroIterator(IDoubleArray _vector, SparseVectorIndexMap _map)
     {
-        //super(_vector);
-        this.vector = _vector;
         sparseIndexMap = _map;
         element = new DoubleArrayElement(_vector);
-        /*
-        super(SparseRealVector.this);
-
+        
+        // if there are no non zero elements we are finished immediately
         if (sparseIndexMap.usedNonZero == 0)
         {
             finished = true;
         }
         else
         {
-            currentNonZeroPosition = -1; // not valid
-            nextNonZeroPosition = 0;
+            // start negative here, because advance() increments directly
+            nextNonZeroPosition = -1;
+            // set nextPos to first non zero index
             nextPos = sparseIndexMap.nonZeroIndices[0];
-        }*/
-    }
-
-    /*@Override
-    protected final void read()
-    {
-        scalar.setComplex(data[currentNonZeroPosition], 0.0d);
-        // standard is:
-        // referencedVector.getScalar(currentPos, scalar);
+        }
     }
 
     @Override
-    protected final void write()
-    {
-        data[currentNonZeroPosition] = scalar.getRe();
-        // standard is:
-        // referencedVector.setScalar(currentPos, scalar);
-    }*/
-
-    @Override
+    /**
+     * let indices point to next non zero element.
+     */
     public final void advance()
     {
-        currentNonZeroPosition = nextNonZeroPosition;
         nextNonZeroPosition++;
-
+        
         if (nextNonZeroPosition < sparseIndexMap.usedNonZero)
         {
             nextPos = sparseIndexMap.nonZeroIndices[nextNonZeroPosition];
@@ -96,7 +73,6 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
         }
         else
         {
-            currentNonZeroPosition = -1; // not valid
             nextNonZeroPosition = 0;
             nextPos = sparseIndexMap.nonZeroIndices[0];
         }
@@ -105,7 +81,8 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
     @Override
     public boolean hasNext()
     {
-        return !finished;
+    	// TODO: this used to be cached in finished variable, which one should be properly updated.
+        return nextNonZeroPosition +1 < sparseIndexMap.usedNonZero;
     }
 
     @Override
@@ -114,8 +91,10 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
         throw new UnsupportedOperationException("Not allowed.");
     }
 
+    /**
+     * note that next() calls advance(), so make sure not to use both.
+     */
     @Override
-//    public IScalarOfVector next()
     public IDoubleElement next()
     {
 
@@ -134,14 +113,6 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
         {
             throw new ArrayIndexOutOfBoundsException("Calling next(), but not value available.");
         }
-    }
-
-    /**
-     * Read next scalar at position (nextPos) to variable nextScalar.
-     */
-    protected void readNext()
-    {
-        nextValue = vector.get(nextPos);
     }
 
     @Override
