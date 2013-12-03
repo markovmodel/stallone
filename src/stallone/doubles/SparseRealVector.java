@@ -45,7 +45,7 @@ public class SparseRealVector extends AbstractDoubleArray
      */
     protected SparseRealVector(final SparseRealVector source)
     {
-        sparseIndexMap = source.getIndexMap();
+        sparseIndexMap = new MyIndexMap(source.getIndexMap());
         int nnz = source.getNumberOfNonzero();
         this.data = new double[nnz];
         System.arraycopy(source.data, 0, this.data, 0, nnz);
