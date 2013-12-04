@@ -2,146 +2,118 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package stallone.doubles;
 
+import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleElement;
-import stallone.api.doubles.IDoubleIterator;
 
 /**
  *
  * @author noe
  */
-public class SparseVectorNonzeroIterator implements IDoubleIterator
+public class DoubleArrayIterator implements IDoubleIterator
 {
-    /** next position in vector the getIterable will be located at, when calling {@link #next() }. */
-    protected int nextPos;
-    
-    /** state, if getIterable is finished e.g. reached its last position */
-    protected boolean finished;
+    protected IDoubleArray x;
+    protected int size;
+    protected int i=0;
+    private DoubleArrayElement o;
 
-    protected DoubleArrayElement element;
-
-    private int nextNonZeroPosition;
-
-    private SparseVectorIndexMap sparseIndexMap;
-
-    public SparseVectorNonzeroIterator(IDoubleArray _vector, SparseVectorIndexMap _map)
+    public DoubleArrayIterator(IDoubleArray _x)
     {
-        sparseIndexMap = _map;
-        element = new DoubleArrayElement(_vector);
-        
-        // if there are no non zero elements we are finished immediately
-        if (sparseIndexMap.usedNonZero == 0)
-        {
-            finished = true;
-        }
-        else
-        {
-            // start negative here, because advance() increments directly
-            nextNonZeroPosition = -1;
-            // set nextPos to first non zero index
-            nextPos = sparseIndexMap.nonZeroIndices[0];
-        }
-    }
-
-    @Override
-    /**
-     * let indices point to next non zero element.
-     */
-    public final void advance()
-    {
-        nextNonZeroPosition++;
-        
-        if (nextNonZeroPosition < sparseIndexMap.usedNonZero)
-        {
-            nextPos = sparseIndexMap.nonZeroIndices[nextNonZeroPosition];
-        }
-        else
-        {
-            finished = true;
-        }
+        System.out.println("Start Iterator");
+        this.x = _x;
+        this.size = x.size();
+        this.o = new DoubleArrayElement(_x);
     }
 
     @Override
     public void reset()
     {
-        // start position
-        if (sparseIndexMap.usedNonZero == 0)
-        {
-            finished = true;
-        }
-        else
-        {
-            nextNonZeroPosition = 0;
-            nextPos = sparseIndexMap.nonZeroIndices[0];
-        }
+        i=0;
+    }
+
+    public boolean hasNext()
+    {
+        System.out.println("has next: "+(i<size));
+        return(i<size);
+    }
+
+    /**
+     * Goes to the next value. Does not return anything. You have to get the content with get().
+     * Usage Example:
+     *
+     * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
+     * {
+     *      System.out.println("current element: " + it.get());
+     * }
+     */
+    @Override
+    public void advance()
+    {
+        System.out.println("advancing. new index: "+i);
+        i++;
+    }
+
+    /**
+     * Returns the current index. Good to know if this is a sparse vector iterator!
+     * @return
+     */
+    @Override
+    public int getIndex()
+    {
+        return(i);
+    }
+
+    /**
+     * Returns the current value
+     * @return
+     */
+    @Override
+    public double get()
+    {
+        System.out.println("getting ");
+        return(x.get(i));
+    }
+
+    /**
+     * Sets the current value
+     */
+    @Override
+    public void set(double newValue)
+    {
+        x.set(i, newValue);
     }
 
     @Override
-    public boolean hasNext()
+    public IDoubleElement next()
     {
-    	// TODO: this used to be cached in finished variable, which one should be properly updated.
-        return nextNonZeroPosition +1 < sparseIndexMap.usedNonZero;
+        System.out.println("Calling next");
+        o.setIndex(i);
+        o.set(x.get(i));
+        i++;
+        System.out.println("New index: "+i);
+        return(o);
     }
 
     @Override
     public void remove()
     {
-        throw new UnsupportedOperationException("Not allowed.");
-    }
-
-    /**
-     * note that next() calls advance(), so make sure not to use both.
-     */
-    @Override
-    public IDoubleElement next()
-    {
-
-        // makes "next" the "current" and finds next "next"
-        if (!finished)
-        {
-            // find next
-            advance();
-
-            element.setIndex(nextPos);
-
-            // return current
-            return element;
-        }
-        else
-        {
-            throw new ArrayIndexOutOfBoundsException("Calling next(), but not value available.");
-        }
-    }
-
-    @Override
-    public int getIndex()
-    {
-        return(nextPos);
+        throw new UnsupportedOperationException("Remove not supported.");
     }
 
     @Override
     public int row()
     {
-        return(element.row());
+        return(i);
     }
 
     @Override
     public int column()
     {
-        return(element.column());
+        return(0);
     }
 
-    @Override
-    public double get()
-    {
-        return(element.get());
-    }
 
-    @Override
-    public void set(double x)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
