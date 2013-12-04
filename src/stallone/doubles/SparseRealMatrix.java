@@ -168,18 +168,27 @@ public class SparseRealMatrix extends AbstractDoubleArray
 }
 
 
+/**
+ *
+ * @author noe
+ */
 class SparseRealMatrixNonzeroIterator implements IDoubleIterator
 {
-    IIntList nonzeroRows;
     private SparseRealMatrix M;
-    private IDoubleIterator vit;
-    int n;
-    int irow=0;
+    int nrows, ncols;
+    private DoubleTableElement de;
+    private IIntList nonzeroRows;
+
+    int irow=0, icol=0;
+    int row=0, col=0;
     
-    SparseRealMatrixNonzeroIterator(SparseRealMatrix _M)
+
+    public SparseRealMatrixNonzeroIterator(SparseRealMatrix _M)
     {
         M = _M;
-        n = _M.rows();
+        nrows = _M.rows();
+        ncols = _M.columns();
+        de = new DoubleTableElement(_M, 0, 0);
 
         nonzeroRows = intsNew.list(0);
         for (int i=0; i<_M.rows(); i++)
@@ -188,71 +197,21 @@ class SparseRealMatrixNonzeroIterator implements IDoubleIterator
                 nonzeroRows.append(i);
         }
         
-        irow = 0;
-        int row = nonzeroRows.get(irow);
-        vit = _M.rowVectors[row].nonzeroIterator();
-    }    
-    
+        System.out.println("nonzero rows: "+nonzeroRows);
+        
+        reset();
+    }
+
     @Override
     public void reset()
     {
         irow = 0;
-    }
-
-    @Override
-    public void advance()
-    {
-        if (vit == null)
-            return;
+        icol = 0;
+        row = nonzeroRows.get(irow);
+        col = M.rowVectors[row].getIndexMap().nonZeroIndices[icol];
         
-        System.out.println(" _advance()");
-        if (vit.hasNext())
-        {
-            System.out.println("  _vit.advance()");
-            vit.advance();
-        }
-        else
-        {
-            irow++;
-            if (irow < nonzeroRows.size())
-                vit = M.rowVectors[nonzeroRows.get(irow)].nonzeroIterator();
-            else
-                vit = null;
-            System.out.println("  irow = "+irow);
-            System.out.println("  vit = "+vit);
-        }
-    }
-
-    @Override
-    public int getIndex()
-    {
-        int row = nonzeroRows.get(irow);
-        int col = vit.getIndex();
-        return row * n + col;
-    }
-
-    @Override
-    public int row()
-    {
-        return nonzeroRows.get(irow);
-    }
-
-    @Override
-    public int column()
-    {
-        return vit.getIndex();
-    }
-
-    @Override
-    public double get()
-    {
-        return vit.get();
-    }
-
-    @Override
-    public void set(double x)
-    {
-        vit.set(x);
+        System.out.println("reset to: "+row+" "+col);
+        this.de = new DoubleTableElement(M, row, col);
     }
 
     @Override
@@ -260,24 +219,95 @@ class SparseRealMatrixNonzeroIterator implements IDoubleIterator
     {
         if (irow >= nonzeroRows.size())
             return false;
-        return vit.hasNext();
+        if (icol >= M.rowVectors[row].getIndexMap().usedNonZero)
+            return false;
+        return true;
+    }
+
+    /**
+     * Goes to the next value. Does not return anything. You have to get the content with get().
+     * Usage Example:
+     *
+     * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
+     * {
+     *      System.out.println("current element: " + it.get());
+     * }
+     */
+    @Override
+    public void advance()
+    {
+        if (icol+1 < M.rowVectors[row].getIndexMap().usedNonZero)
+            icol++;
+        else
+        {
+            irow++;
+            icol=0;
+        }
+        
+        // out of bounds: do nothing
+        if (irow >= nonzeroRows.size())
+            return;
+        
+        row = nonzeroRows.get(irow);
+        col = M.rowVectors[row].getIndexMap().nonZeroIndices[icol];
+    }
+
+    /**
+     * Returns the current index. Good to know if this is a sparse vector iterator!
+     * @return
+     */
+    @Override
+    public int getIndex()
+    {
+        return(row*ncols+col);
+    }
+
+    /**
+     * Returns the current value
+     * @return
+     */
+    @Override
+    public double get()
+    {
+        return M.get(row,col);
+    }
+
+    /**
+     * Sets the current value
+     */
+    @Override
+    public void set(double newValue)
+    {
+        M.set(row,col,newValue);
     }
 
     @Override
     public IDoubleElement next()
     {
-        IDoubleElement res;
-        if (vit != null)
-            res= vit.next();
-        else
-            res= null;
+        de.setIndex(row,col);
+        System.out.println(" next set to: "+row+" "+col);
         advance();
-        return res;
+        return de;
     }
 
     @Override
     public void remove()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Remove not supported.");
     }
+
+    @Override
+    public int row()
+    {
+        return row;
+    }
+
+    @Override
+    public int column()
+    {
+        return col;
+    }
+
+
 }
+

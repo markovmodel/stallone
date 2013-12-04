@@ -38,44 +38,24 @@ public class DoubleArrayIterator implements IDoubleIterator
         return(i<size);
     }
 
-    /**
-     * Goes to the next value. Does not return anything. You have to get the content with get().
-     * Usage Example:
-     *
-     * for (IDoubleArrayIterator it = arr.iterator(); it.hasNext(); it.next)
-     * {
-     *      System.out.println("current element: " + it.get());
-     * }
-     */
     @Override
     public void advance()
     {
         i++;
     }
 
-    /**
-     * Returns the current index. Good to know if this is a sparse vector iterator!
-     * @return
-     */
     @Override
     public int getIndex()
     {
         return(i);
     }
 
-    /**
-     * Returns the current value
-     * @return
-     */
     @Override
     public double get()
     {
         return(x.get(i));
     }
 
-    /**
-     * Sets the current value
-     */
     @Override
     public void set(double newValue)
     {
