@@ -13,7 +13,7 @@ import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.cluster.*;
 
-import stallone.doubles.MinimalRMSDistance3D;
+import stallone.coordinates.MinimalRMSDistance3D;
 
 /**
  *

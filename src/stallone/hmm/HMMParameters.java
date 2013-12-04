@@ -28,9 +28,11 @@ public class HMMParameters implements IHMMParameters
     private IDoubleArray p0;
     private boolean isReversible = false;
     private boolean isStationary = true;
+    private boolean fixT = false;
 
     private int nparameters;
     private IDoubleArray[] parOut;
+    private boolean fixParOut = false;
 
     public HMMParameters(int _nstates, boolean _isReversible, boolean _isStationary)
     {
@@ -62,7 +64,19 @@ public class HMMParameters implements IHMMParameters
             if (d.size() != nparameters)
                 throw(new IllegalArgumentException("Parameter sets don't have equal dimensions"));
     }
+    
+    @Override
+    public void fixTransitionMatrix(boolean ftm)
+    {
+        this.fixT = ftm;
+    }
 
+    @Override
+    public void fixOutputParameters(boolean fop)
+    {
+        this.fixParOut = fop;
+    }
+    
     /**
      * Creates deep copy
      * @return
@@ -114,6 +128,8 @@ public class HMMParameters implements IHMMParameters
     @Override
     public void setOutputParameters(int state, IDoubleArray par)
     {
+        if (fixParOut)
+            return; // don't do anything if output parameters are fixed
         parOut[state] = par;
     }
 
@@ -126,6 +142,8 @@ public class HMMParameters implements IHMMParameters
     @Override
     public void setTransitionMatrix(IDoubleArray _T)
     {
+        if (fixT)
+            return;
         T = _T;
         if (isStationary)
         {

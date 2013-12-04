@@ -22,7 +22,6 @@ public class DoubleArrayIterator implements IDoubleIterator
 
     public DoubleArrayIterator(IDoubleArray _x)
     {
-        System.out.println("Start Iterator");
         this.x = _x;
         this.size = x.size();
         this.o = new DoubleArrayElement(_x);
@@ -36,7 +35,6 @@ public class DoubleArrayIterator implements IDoubleIterator
 
     public boolean hasNext()
     {
-        System.out.println("has next: "+(i<size));
         return(i<size);
     }
 
@@ -52,7 +50,6 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public void advance()
     {
-        System.out.println("advancing. new index: "+i);
         i++;
     }
 
@@ -73,7 +70,6 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public double get()
     {
-        System.out.println("getting ");
         return(x.get(i));
     }
 
@@ -89,11 +85,9 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public IDoubleElement next()
     {
-        System.out.println("Calling next");
         o.setIndex(i);
         o.set(x.get(i));
         i++;
-        System.out.println("New index: "+i);
         return(o);
     }
 

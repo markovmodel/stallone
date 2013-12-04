@@ -9,7 +9,7 @@ import static stallone.api.API.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 import stallone.api.doubles.IDoubleArray;
-import stallone.mc.sampling.ITransitionMatrixSampler;
+import stallone.mc.sampling.*;
 
 /**
  *
@@ -215,8 +215,8 @@ public class MarkovModelFactoryTest
             {8, 2, 1},
             {2,10, 3},
             {2, 3, 6}});
-        ITransitionMatrixSampler sampler1 = msmNew.createTransitionMatrixSamplerRevMCMC(C);
-        ITransitionMatrixSampler sampler2 = msmNew.createTransitionMatrixSamplerRevGibbs(C);
+        ITransitionMatrixSampler sampler1 = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_MC());
+        ITransitionMatrixSampler sampler2 = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
         int nsample = 100000;
         double errtol = 1e-2;
         compareSamplers(sampler1, sampler2, C, nsample, errtol);
@@ -231,7 +231,8 @@ public class MarkovModelFactoryTest
         IDoubleArray C = doublesNew.array(new double[][]{
             {5,2},
             {1,10}});
-        testSampler2x2(msmNew.createTransitionMatrixSamplerRevMCMC(C), C, 100000, 1e-2);
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_MC());
+        testSampler2x2(sampler, C, 100000, 1e-2);
     }
 
     /**
@@ -243,7 +244,8 @@ public class MarkovModelFactoryTest
         IDoubleArray C = doublesNew.array(new double[][]{
             {5,2},
             {1,10}});
-        testSampler2x2(msmNew.createTransitionMatrixSamplerRevGibbs(C), C, 100000, 1e-2);
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
+        testSampler2x2(sampler, C, 100000, 1e-2);
     }
 
     /**

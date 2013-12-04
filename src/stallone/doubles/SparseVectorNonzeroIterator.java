@@ -13,18 +13,19 @@ import stallone.api.doubles.IDoubleElement;
  *
  * @author noe
  */
-public class DoubleArrayIterator implements IDoubleIterator
+public class SparseVectorNonzeroIterator implements IDoubleIterator
 {
     protected IDoubleArray x;
-    protected int size;
+    private SparseVectorIndexMap map;
+    protected int nonZeroSize;
     protected int i=0;
     private DoubleArrayElement o;
 
-    public DoubleArrayIterator(IDoubleArray _x)
+    public SparseVectorNonzeroIterator(IDoubleArray _x, SparseVectorIndexMap _map)
     {
-        System.out.println("Start Iterator");
         this.x = _x;
-        this.size = x.size();
+        map = _map;
+        this.nonZeroSize = map.usedNonZero;
         this.o = new DoubleArrayElement(_x);
     }
 
@@ -36,8 +37,7 @@ public class DoubleArrayIterator implements IDoubleIterator
 
     public boolean hasNext()
     {
-        System.out.println("has next: "+(i<size));
-        return(i<size);
+        return(i<nonZeroSize);
     }
 
     /**
@@ -52,7 +52,6 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public void advance()
     {
-        System.out.println("advancing. new index: "+i);
         i++;
     }
 
@@ -63,7 +62,7 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public int getIndex()
     {
-        return(i);
+        return(map.nonZeroIndices[i]);
     }
 
     /**
@@ -73,8 +72,8 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public double get()
     {
-        System.out.println("getting ");
-        return(x.get(i));
+        //System.out.println(" getting "+i+" "+map.nonZeroIndices[i]+" "+x.get(map.nonZeroIndices[i]));
+        return(x.get(map.nonZeroIndices[i]));
     }
 
     /**
@@ -83,17 +82,18 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public void set(double newValue)
     {
-        x.set(i, newValue);
+        x.set(map.nonZeroIndices[i], newValue);
     }
 
     @Override
     public IDoubleElement next()
     {
-        System.out.println("Calling next");
-        o.setIndex(i);
-        o.set(x.get(i));
+        //System.out.println(i+" "+map.nonZeroIndices[i]+" "+x.get(map.nonZeroIndices[i]));
+        o.setIndex(getIndex());
+        double y = get();
+        //System.out.println(" setting "+y);
+        o.set(y);
         i++;
-        System.out.println("New index: "+i);
         return(o);
     }
 
@@ -106,13 +106,19 @@ public class DoubleArrayIterator implements IDoubleIterator
     @Override
     public int row()
     {
-        return(i);
+        if (x.rows() == 1)
+            return 0;
+        else
+            return(getIndex());
     }
 
     @Override
     public int column()
     {
-        return(0);
+        if (x.columns() == 1)
+            return 0;
+        else
+            return(getIndex());
     }
 
 

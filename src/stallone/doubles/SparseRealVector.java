@@ -14,6 +14,7 @@
 package stallone.doubles;
 
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.doubles.IDoubleElement;
 import stallone.api.doubles.IDoubleIterator;
 
 /**
@@ -144,6 +145,7 @@ public class SparseRealVector extends AbstractDoubleArray
             throw new ArrayIndexOutOfBoundsException("Invalid index to column vector: " + i + ", " + j);
         }
         int pos = sparseIndexMap.getPosition(i);
+        
         if (pos < 0)
         {
             // if index is in valid bounds, fake a dense vector access.
@@ -245,4 +247,20 @@ public class SparseRealVector extends AbstractDoubleArray
     {
         return true;
     }
+    
+    
+    public static void main(String[] args)
+    {
+        SparseRealVector v = new SparseRealVector(10);
+        v.set(9, 0);
+        v.set(0, 5);
+        v.set(5, 2);
+        
+        for (IDoubleIterator it = v.nonzeroIterator(); it.hasNext();)
+        {
+            IDoubleElement de = it.next();
+            System.out.println(de.index()+" "+de.row()+" "+de.column()+" "+de.get());
+        }
+    }
+
 }

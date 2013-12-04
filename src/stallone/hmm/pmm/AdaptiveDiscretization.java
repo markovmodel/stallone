@@ -21,7 +21,7 @@ import stallone.api.hmm.ParameterEstimationException;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import stallone.doubles.EuclideanDistance;
-import stallone.doubles.MinimalRMSDistance3D;
+import stallone.coordinates.MinimalRMSDistance3D;
 import stallone.util.CommandLineParser;
 
 /*

@@ -74,4 +74,8 @@ public interface IHMMParameters
 
     public boolean isStationary();
 
+    public void fixTransitionMatrix(boolean ftm);
+
+    public void fixOutputParameters(boolean fop);
+    
 }

@@ -196,10 +196,10 @@ public abstract class SparseVectorIndexMap
         else
         {
             lastRequestedIndex = index;
+            int pos = getPosWhereValueEqualKey(index, 0, usedNonZero);
+            lastRequestedPosition = pos;
+            return pos;
         }
-
-        // System.out.println("getPosition ( " + index + ", 0, " + usedNonZero +")");
-        return getPosWhereValueEqualKey(index, 0, usedNonZero);
     }
 
     private void createRoomAt(final int pos)

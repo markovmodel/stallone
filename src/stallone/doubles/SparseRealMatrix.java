@@ -13,8 +13,12 @@
  */
 package stallone.doubles;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.doubles.IDoubleElement;
+import stallone.api.ints.IIntList;
 
 /**
  * Class SparseRealMatrix is an implementation based on a number of sparse row vectors.
@@ -23,8 +27,8 @@ import stallone.api.doubles.IDoubleArray;
  */
 public class SparseRealMatrix extends AbstractDoubleArray
 {
-    private IDoubleArray[] rowVectors;
-    private int rows,cols;
+    protected SparseRealVector[] rowVectors;
+    protected int rows,cols;
 
     public SparseRealMatrix(final int _rows, final int _cols)
     {
@@ -46,7 +50,7 @@ public class SparseRealMatrix extends AbstractDoubleArray
 
         for (int i = 0; i < rows; i++)
         {
-            rowVectors[i] = source.rowVectors[i].copy();
+            rowVectors[i] = (SparseRealVector)source.rowVectors[i].copy();
         }
     }
 
@@ -138,4 +142,142 @@ public class SparseRealMatrix extends AbstractDoubleArray
         return true;
     }
 
+    @Override
+    public IDoubleIterator nonzeroIterator()
+    {
+        return new SparseRealMatrixNonzeroIterator(this);
+    }
+
+    public static void main(String[] args)
+    {
+        SparseRealMatrix M = new SparseRealMatrix(10,10);
+        M.set(1,1, 1);
+        M.set(1,2, 2);
+        M.set(3,1, 3);
+        M.set(4,6, 4);
+        M.set(0,0, 5);
+        M.set(9,3, 6);
+        
+        for (IDoubleIterator it = M.nonzeroIterator(); it.hasNext();)
+        {
+            IDoubleElement e = it.next();
+            System.out.println(e.row()+" "+e.column()+" "+e.get());
+        }
+    }
+    
+}
+
+
+class SparseRealMatrixNonzeroIterator implements IDoubleIterator
+{
+    IIntList nonzeroRows;
+    private SparseRealMatrix M;
+    private IDoubleIterator vit;
+    int n;
+    int irow=0;
+    
+    SparseRealMatrixNonzeroIterator(SparseRealMatrix _M)
+    {
+        M = _M;
+        n = _M.rows();
+
+        nonzeroRows = intsNew.list(0);
+        for (int i=0; i<_M.rows(); i++)
+        {
+            if (_M.rowVectors[i].getNumberOfNonzero() > 0)
+                nonzeroRows.append(i);
+        }
+        
+        irow = 0;
+        int row = nonzeroRows.get(irow);
+        vit = _M.rowVectors[row].nonzeroIterator();
+    }    
+    
+    @Override
+    public void reset()
+    {
+        irow = 0;
+    }
+
+    @Override
+    public void advance()
+    {
+        if (vit == null)
+            return;
+        
+        System.out.println(" _advance()");
+        if (vit.hasNext())
+        {
+            System.out.println("  _vit.advance()");
+            vit.advance();
+        }
+        else
+        {
+            irow++;
+            if (irow < nonzeroRows.size())
+                vit = M.rowVectors[nonzeroRows.get(irow)].nonzeroIterator();
+            else
+                vit = null;
+            System.out.println("  irow = "+irow);
+            System.out.println("  vit = "+vit);
+        }
+    }
+
+    @Override
+    public int getIndex()
+    {
+        int row = nonzeroRows.get(irow);
+        int col = vit.getIndex();
+        return row * n + col;
+    }
+
+    @Override
+    public int row()
+    {
+        return nonzeroRows.get(irow);
+    }
+
+    @Override
+    public int column()
+    {
+        return vit.getIndex();
+    }
+
+    @Override
+    public double get()
+    {
+        return vit.get();
+    }
+
+    @Override
+    public void set(double x)
+    {
+        vit.set(x);
+    }
+
+    @Override
+    public boolean hasNext()
+    {
+        if (irow >= nonzeroRows.size())
+            return false;
+        return vit.hasNext();
+    }
+
+    @Override
+    public IDoubleElement next()
+    {
+        IDoubleElement res;
+        if (vit != null)
+            res= vit.next();
+        else
+            res= null;
+        advance();
+        return res;
+    }
+
+    @Override
+    public void remove()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

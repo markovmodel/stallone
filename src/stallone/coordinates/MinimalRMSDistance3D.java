@@ -1,4 +1,4 @@
-package stallone.doubles;
+package stallone.coordinates;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
@@ -41,6 +41,11 @@ public class MinimalRMSDistance3D implements IMetric<IDoubleArray>
         this.y_nk = new double[N][DIM];
     }
 
+    public int getN()
+    {
+        return this.N;
+    }
+    
     protected double calculateMinRMSD()
     {
 
