@@ -838,6 +838,8 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
     @Override
     public void setNumberOfRequestedEigenvalues(int _nev)
     {
+        if(_nev > this.matrix.columns())
+            throw new IllegalArgumentException("there cannot be more eigenvalues than columns of matrix.");
         this.nev = _nev;
     }
 }
