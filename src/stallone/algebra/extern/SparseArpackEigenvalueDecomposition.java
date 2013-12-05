@@ -113,7 +113,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         final int ishfts = 1;
 
         // maximum number of Arnoldi update iterations allowed.
-        final int maxitr = Math.max(n, 100);
+        final int maxitr = Math.max(n, this.maxIter);
 
         // Type of eigenwert problem to solve
         final int mode1 = 1;
@@ -121,7 +121,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         // iparam is always an array of length 11
         final int[] iparam =
         {
-            ishfts, 0, this.maxIter, 0, 0, 0, mode1, 0, 0, 0, 0
+            ishfts, 0, maxitr, 0, 0, 0, mode1, 0, 0, 0, 0
         };
 
         // ipntr is always an array of length 14
@@ -488,6 +488,34 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         }
         while ((ido.val == -1) || (ido.val == 1));
 
+        postProcess(n, bmat, which, ncv, resid, workd, lworkl, workl, v, info,
+                tol, iparam, ipntr);
+
+        result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
+    }
+
+    /**
+     * @param n
+     * @param bmat
+     * @param which
+     * @param ncv
+     * @param resid
+     * @param workd
+     * @param lworkl
+     * @param workl
+     * @param v
+     * @param info
+     * @param tol
+     * @param iparam
+     * @param ipntr
+     * @throws RuntimeException
+     */
+    private void postProcess(final int n, final String bmat,
+            final String which, final int ncv, final double[] resid,
+            final double[] workd, final int lworkl, final double[] workl,
+            final double[] v, final intW info, final doubleW tol,
+            final int[] iparam, final int[] ipntr) throws RuntimeException
+    {
         // POST-PROCESSing
         /*
             On the final return from dnaupd (indicated by ido = 99), the error flag info must be checked. 
@@ -706,8 +734,6 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
                 } // end for
             } // end if-else
         } // end if-else
-
-        result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
     }
 
     public IEigenvalueDecomposition getResult()
