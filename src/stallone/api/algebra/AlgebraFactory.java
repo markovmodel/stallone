@@ -97,40 +97,39 @@ public class AlgebraFactory
         return decomposition;
 
     }
-
-    public IEigenvalueSolver eigenSolver(final IDoubleArray matrix)
+    
+    public IEigenvalueSolver eigensolver(final IDoubleArray matrix, int nev)
     {
+        if (matrix.isSparse() && 10*nev < matrix.size())
+            return eigensolverSparse(matrix, nev);
+        else
+            return eigensolverDense(matrix);
+    }
+    
 
+    public IEigenvalueSolver eigensolverSparse(final IDoubleArray matrix, int n)
+    {
+        SparseArpackEigenvalueDecomposition solver = new SparseArpackEigenvalueDecomposition(matrix);
+        solver.setNumberOfRequestedEigenvalues(n);
+        return solver;
+    }
+    
+    public IEigenvalueSolver eigensolverDense(final IDoubleArray matrix)
+    {
         LapackEigenvalueDecomposition blas = new LapackEigenvalueDecomposition();
         blas.setMatrix(matrix);
         return (blas);
-        // return new SparseArpackEigenvalueDecomposition(new Algebra(), matrix);
     }
 
-    public IEigenvalueSolver eigenSolver(final IDoubleArray matrix, boolean computeLeftEV, boolean computeRightEV)
+    public IEigenvalueSolver eigensolverDense(final IDoubleArray matrix, boolean computeLeftEV, boolean computeRightEV)
     {
-
         LapackEigenvalueDecomposition blas = new LapackEigenvalueDecomposition(computeLeftEV, computeRightEV);
         blas.setMatrix(matrix);
         return (blas);
-        // return new SparseArpackEigenvalueDecomposition(new Algebra(), matrix);
     }
 
-    /**
-     *
-     * @param matrix
-     * @param nev the number of requested eigenvector / eigenvalue pairs
-     * @return
-     */
-    public IEigenvalueSolver eigenSolver(final IDoubleArray matrix, int nev)
-    {
-        return eigenSolver(matrix);
-        /*throw (new UnsupportedOperationException("EVD with fixed number of eigenvalues not yet implemented. "
-                + "We have to decide here whether to call dense or sparse solver, depending on size of the matrix and"
-                + "size of the eigenspace requested!"));*/
-    }
 
-    public IEigenvalueSolver eigenSolver(IDoubleArray matrix, String algoName)
+    public IEigenvalueSolver eigensolver(IDoubleArray matrix, String algoName)
     {
         if (algoName.equals(EigenvalueDecompositionEnum.DENSE_BLAS.name()))
         {

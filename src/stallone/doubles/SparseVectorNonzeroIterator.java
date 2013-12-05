@@ -92,7 +92,6 @@ public class SparseVectorNonzeroIterator implements IDoubleIterator
         o.setIndex(getIndex());
         double y = get();
         //System.out.println(" setting "+y);
-        o.set(y);
         i++;
         return(o);
     }

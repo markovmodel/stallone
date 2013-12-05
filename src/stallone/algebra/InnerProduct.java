@@ -17,6 +17,7 @@ import stallone.api.doubles.IDoubleIterator;
 import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.IComplexNumber;
+import stallone.api.doubles.IDoubleElement;
 
 import static stallone.doubles.DoubleArrayTest.*;
 
@@ -50,7 +51,7 @@ public class InnerProduct //implements IVectorInnerProduct
         return result;
     }
 
-    public double innerProductSparse(final IDoubleArray a, final IDoubleArray b)
+    public double innerProductSparseSparse(final IDoubleArray a, final IDoubleArray b)
     {
         assertOrder(a,1);
         assertOrder(b,1);
@@ -66,6 +67,24 @@ public class InnerProduct //implements IVectorInnerProduct
         return result;
     }
 
+    public double innerProductSparseDense(final IDoubleArray asparse, final IDoubleArray bdense)
+    {
+        assertOrder(asparse,1);
+        assertOrder(bdense,1);
+
+        double result = 0.0d;
+
+        for (IDoubleIterator it = asparse.nonzeroIterator(); it.hasNext(); it.advance())            
+        {
+            int i = it.getIndex();
+            double ai = it.get();
+            double bi = bdense.get(i);
+            result += ai * bi;
+        }
+
+        return result;
+    }
+    
     public double innerProduct(final IDoubleArray a, final IDoubleArray b, final IDoubleArray w)
     {
         assertOrder(a,1);
@@ -82,7 +101,27 @@ public class InnerProduct //implements IVectorInnerProduct
         return result;
     }
 
-    public double innerProductSpasre(final IDoubleArray a, final IDoubleArray b, final IDoubleArray w)
+    public double innerProductSparseDense(final IDoubleArray asparse, final IDoubleArray bdense, final IDoubleArray w)
+    {
+        assertOrder(asparse,1);
+        assertOrder(bdense,1);
+        assertOrder(w,1);
+
+        double result = 0.0d;
+
+        for (IDoubleIterator it = asparse.nonzeroIterator(); it.hasNext(); it.advance())            
+        {
+            int i = it.getIndex();
+            double ai = it.get();
+            double bi = bdense.get(i);
+            double wi = w.get(i);
+            result += ai * bi * wi;
+        }
+
+        return result;
+    }
+    
+    public double innerProductSparseSparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray w)
     {
         assertOrder(a,1);
         assertOrder(b,1);

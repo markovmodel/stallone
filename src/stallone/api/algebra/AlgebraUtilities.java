@@ -500,28 +500,35 @@ public class AlgebraUtilities
 
     public IEigenvalueDecomposition evd(final IDoubleArray matrix)
     {
-        IEigenvalueSolver solver = Algebra.create.eigenSolver(matrix);
+        IEigenvalueSolver solver = Algebra.create.eigensolverDense(matrix);
         solver.perform();
         return (solver.getResult());
     }
 
     public IEigenvalueDecomposition evd(final IDoubleArray matrix, boolean computeLeftEV, boolean computeRightEV)
     {
-        IEigenvalueSolver solver = Algebra.create.eigenSolver(matrix, computeLeftEV, computeRightEV);
+        IEigenvalueSolver solver = Algebra.create.eigensolverDense(matrix, computeLeftEV, computeRightEV);
+        solver.perform();
+        return (solver.getResult());
+    }
+
+    public IEigenvalueDecomposition evdSparse(final IDoubleArray matrix, int nev)
+    {
+        IEigenvalueSolver solver = Algebra.create.eigensolverSparse(matrix, nev);
         solver.perform();
         return (solver.getResult());
     }
 
     public IEigenvalueDecomposition evd(final IDoubleArray matrix, int nev)
     {
-        IEigenvalueSolver solver = Algebra.create.eigenSolver(matrix, nev);
+        IEigenvalueSolver solver = Algebra.create.eigensolver(matrix, nev);
         solver.perform();
         return (solver.getResult());
     }
 
     public IEigenvalueDecomposition evd(final IDoubleArray matrix, String algoName)
     {
-        IEigenvalueSolver solver = Algebra.create.eigenSolver(matrix, algoName);
+        IEigenvalueSolver solver = Algebra.create.eigensolver(matrix, algoName);
         solver.perform();
         return (solver.getResult());
     }

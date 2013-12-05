@@ -95,7 +95,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         final int ishfts = 1;
 
         // maximum number of Arnoldi update iterations allowed.
-        final int maxitr = 300;
+        final int maxitr = Math.max(n, 100);
 
         // Type of eigenwert problem to solve
         final int mode1 = 1;
@@ -568,7 +568,45 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         
         if (info.val < 0)
         {
-            throw new RuntimeException("ARPACK error: snaupd(1) returned with info = " + info.val);
+            String err = null;
+            if (info.val == 1)
+                err= "The Schur form computed by LAPACK routine dlahqr"
+                        + "could not be reordered by LAPACK routine dtrsen."
+                        + "Re-enter subroutine DNEUPD with IPARAM(5)=NCV and"
+                        + "increase the size of the arrays DR and DI to have"
+                        + "dimension at least dimension NCV and allocate at least NCV"
+                        + "columns for Z. NOTE: Not necessary if Z and V share"
+                        + "the same space. Please notify the authors if this error"
+                        + "occurs.";
+            else if (info.val == -1)
+                err = "N must be positive.";
+            else if (info.val == -2)
+                err = "NEV must be positive.";
+            else if (info.val == -3)
+                err = "NCV-NEV >= 2 and less than or equal to N.";
+            else if (info.val == -5)
+                err = "WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'";
+            else if (info.val == -6)
+                err = "BMAT must be one of 'I' or 'G'.";
+            else if (info.val == -7)
+                err = "Length of private work WORKL array is not sufficient.";
+            else if (info.val == -8)
+                err = "Error return from calculation of a real Schur form."
+                        + "Informational error from LAPACK routine dlahqr.";
+            else if (info.val == -9)
+                err = "Error return from calculation of eigenvectors."
+                        + "Informational error from LAPACK routine dtrevc.";
+            else if (info.val == -10)
+                err = "IPARAM(7) must be 1,2,3,4.";
+            else if (info.val == -11)
+                err = "IPARAM(7) = 1 and BMAT = 'G' are incompatible.";
+            else if (info.val == -12)
+                err = "HOWMNY = 'S' not yet implemented";
+            else if (info.val == -13)
+                err = "HOWMNY must be one of 'A' or 'P' if RVEC = .true.";
+            else if (info.val == -14)
+                err = "DNAUPD did not find any eigenvalues to sufficient accuracy";
+            throw new RuntimeException("ARPACK error: snaupd(1) returned with info = " + info.val+ "\n"+err);
         }
         else
         {
@@ -601,7 +639,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
             // Process the result
             if ((ierr.val != 0))
             {
-                throw new RuntimeException("ARPACK error: sneupd(2) returned with info = " + info.val);
+                throw new RuntimeException("ARPACK error: dneupd returned with info = " + ierr.val);
             }
             else
             {

@@ -66,7 +66,6 @@ public class DoubleArrayIterator implements IDoubleIterator
     public IDoubleElement next()
     {
         o.setIndex(i);
-        o.set(x.get(i));
         i++;
         return(o);
     }

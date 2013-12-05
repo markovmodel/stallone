@@ -148,23 +148,6 @@ public class SparseRealMatrix extends AbstractDoubleArray
         return new SparseRealMatrixNonzeroIterator(this);
     }
 
-    public static void main(String[] args)
-    {
-        SparseRealMatrix M = new SparseRealMatrix(10,10);
-        M.set(1,1, 1);
-        M.set(1,2, 2);
-        M.set(3,1, 3);
-        M.set(4,6, 4);
-        M.set(0,0, 5);
-        M.set(9,3, 6);
-        
-        for (IDoubleIterator it = M.nonzeroIterator(); it.hasNext();)
-        {
-            IDoubleElement e = it.next();
-            System.out.println(e.row()+" "+e.column()+" "+e.get());
-        }
-    }
-    
 }
 
 
@@ -197,8 +180,6 @@ class SparseRealMatrixNonzeroIterator implements IDoubleIterator
                 nonzeroRows.append(i);
         }
         
-        System.out.println("nonzero rows: "+nonzeroRows);
-        
         reset();
     }
 
@@ -210,7 +191,6 @@ class SparseRealMatrixNonzeroIterator implements IDoubleIterator
         row = nonzeroRows.get(irow);
         col = M.rowVectors[row].getIndexMap().nonZeroIndices[icol];
         
-        System.out.println("reset to: "+row+" "+col);
         this.de = new DoubleTableElement(M, row, col);
     }
 
@@ -285,7 +265,6 @@ class SparseRealMatrixNonzeroIterator implements IDoubleIterator
     public IDoubleElement next()
     {
         de.setIndex(row,col);
-        System.out.println(" next set to: "+row+" "+col);
         advance();
         return de;
     }

@@ -35,7 +35,12 @@ public class MatrixProduct //implements IMatrixProduct
         if (a.isSparse() && b.isSparse())
         {
             res = doublesNew.sparseMatrix(a.rows(), b.columns());
-            sparseMultiply(a,b,res);
+            multiplySparseSparse(a,b,res);
+        }
+        else if (a.isSparse() && !b.isSparse())
+        {
+            res = doublesNew.sparseMatrix(a.rows(), b.columns());
+            multiplySparseDense(a,b,res);
         }
         else
         {
@@ -45,8 +50,25 @@ public class MatrixProduct //implements IMatrixProduct
         return res;
     }
 
+    public IDoubleArray multiply(final IDoubleArray a, final IDoubleArray b, final IDoubleArray res)
+    {
+        if (a.isSparse() && b.isSparse())
+        {
+            multiplySparseSparse(a,b,res);
+        }
+        else if (a.isSparse() && !b.isSparse())
+        {
+            multiplySparseDense(a,b,res);
+        }
+        else
+        {
+            multiply(a,b,res);
+        }
+        return res;
+    }
+    
     //@Override
-    public void multiply(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
+    public void multiplyDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
         final int r = a.columns();
@@ -74,7 +96,7 @@ public class MatrixProduct //implements IMatrixProduct
         }
     }
 
-    public void sparseMultiply(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
+    public void multiplySparseDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
         final int r = a.columns();
@@ -84,7 +106,7 @@ public class MatrixProduct //implements IMatrixProduct
         // check dimensions
         assertCanMultiply(a,b);
         assertRows(target, a.rows());
-        assertRows(target, b.columns());
+        assertColumns(target, b.columns());
 
 //        IDoubleArray ri,cj;
         for (int i=0; i<rowsA; i++)
@@ -92,10 +114,32 @@ public class MatrixProduct //implements IMatrixProduct
         {
 //            ri = a.viewRow(i);
 //            cj = b.viewColumn(j);
-            target.set(i, j, ip.innerProductSparse(a, b));
+            target.set(i, j, ip.innerProductSparseDense(a.viewRow(i), b.viewColumn(j)));
         }
     }
 
+    public void multiplySparseSparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
+    {
+        // Extract some parameters for easier access
+        final int r = a.columns();
+        final int colsB = b.columns();
+        final int rowsA = a.rows();
+
+        // check dimensions
+        assertCanMultiply(a,b);
+        assertRows(target, a.rows());
+        assertColumns(target, b.columns());
+
+//        IDoubleArray ri,cj;
+        for (int i=0; i<rowsA; i++)
+        for (int j=0; j<colsB; j++)
+        {
+//            ri = a.viewRow(i);
+//            cj = b.viewColumn(j);
+            target.set(i, j, ip.innerProductSparseSparse(a.viewRow(i), b.viewColumn(j)));
+        }
+    }
+    
 
     public IComplexArray multiplyToNew(final IComplexArray a, final IComplexArray b)
     {
@@ -159,7 +203,7 @@ public class MatrixProduct //implements IMatrixProduct
         {
             ri = a.viewRow(i);
             cj = b.viewColumn(j);
-            target.set(i, j, ip.innerProductSparse(a, b));
+            target.set(i, j, ip.innerProductSparseSparse(a, b));
         }
     }
 
