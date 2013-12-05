@@ -102,7 +102,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
 
         System.out.println("Arnoldi basis length = "+v.length);
         
-        // info==0 => initialise resid with random numbers
+        // info==0 => initialize resid with random numbers
         final intW info = new intW(0);
 
         // stopping criterion
@@ -129,6 +129,40 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
 
         final intW ido = new intW(0);
 
+        calculate(n, x, y, bmat, which, ncv, resid, workd, lworkl, workl, v,
+                info, tol, iparam, ipntr, ido);
+
+        postProcess(n, bmat, which, ncv, resid, workd, lworkl, workl, v, info,
+                tol, iparam, ipntr);
+
+        result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
+    }
+
+    /**
+     * @param n
+     * @param x
+     * @param y
+     * @param bmat
+     * @param which
+     * @param ncv
+     * @param resid
+     * @param workd
+     * @param lworkl
+     * @param workl
+     * @param v
+     * @param info
+     * @param tol
+     * @param iparam
+     * @param ipntr
+     * @param ido
+     */
+    private void calculate(final int n, final IDoubleArray x,
+            final IDoubleArray y, final String bmat, final String which,
+            final int ncv, final double[] resid, final double[] workd,
+            final int lworkl, final double[] workl, final double[] v,
+            final intW info, final doubleW tol, final int[] iparam,
+            final int[] ipntr, final intW ido)
+    {
         // Call into ARPACK
         /*
         c  Reverse communication interface for the Implicitly Restarted Arnoldi
@@ -487,11 +521,6 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
             }
         }
         while ((ido.val == -1) || (ido.val == 1));
-
-        postProcess(n, bmat, which, ncv, resid, workd, lworkl, workl, v, info,
-                tol, iparam, ipntr);
-
-        result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
     }
 
     /**
@@ -801,7 +830,6 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         }
     }
 
-    //@Override
     public IComplexArray getLeftEigenvector(final int i)
     {
         throw new UnsupportedOperationException("Not supported yet.");
