@@ -18,10 +18,12 @@ import stallone.api.doubles.IDoubleArray;
  */
 public class AsciiDataSequenceWriter implements IDataWriter
 {
-
-    String filename;
-    BufferedWriter writer;
-    double currentTime;
+    private boolean fixedPrecision = false;
+    private int predigits = 5,postdigits = 5;
+    
+    private String filename;
+    private BufferedWriter writer;
+    private double currentTime;
 
     public AsciiDataSequenceWriter(String filename) throws IOException
     {
@@ -30,12 +32,24 @@ public class AsciiDataSequenceWriter implements IDataWriter
         currentTime = 0.0d;
     }
 
+    public void setFixedPrecision(int pre, int post)
+    {
+        fixedPrecision = true;
+        predigits = pre;
+        postdigits = post;
+    }
+    
     @Override
     public void add(IDoubleArray data)
     {
         try
         {
-            writer.write(Doubles.util.toString(data," ")+"\n");
+            String strout;
+            if (fixedPrecision)
+                strout = Doubles.util.toString(data," "," ",predigits,postdigits);
+            else
+                strout = Doubles.util.toString(data," "," ");
+            writer.write(strout+"\n");
         }
         catch (IOException ex)
         {

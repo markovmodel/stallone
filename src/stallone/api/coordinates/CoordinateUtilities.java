@@ -9,9 +9,11 @@ import static stallone.api.API.*;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.IDataWriter;
+import stallone.api.doubles.Doubles;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.coordinates.MinimalRMSDistance3D;
+import stallone.datasequence.io.AsciiDataSequenceWriter;
 
 /**
  *
@@ -19,7 +21,10 @@ import stallone.coordinates.MinimalRMSDistance3D;
  */
 public class CoordinateUtilities
 {
-    MinimalRMSDistance3D minrmsd = null;
+    private MinimalRMSDistance3D minrmsd = null;
+    private boolean fixedOutputPrecision = false;
+    private int outputPrecisionPre = 5;
+    private int outputPrecisionPost = 3;
 
     /**
      * Computes the minimal root mean square distance between x1 and x2.
@@ -44,6 +49,12 @@ public class CoordinateUtilities
         return minrmsd.distance(x1, x2);
     }
 
+    public void fixOutputPrecision(int pre, int post)
+    {
+        fixedOutputPrecision = true;
+        outputPrecisionPre = pre;
+        outputPrecisionPost = post;
+    }
     
     /**
      * calls distanceMatrix(x,set) on every data set in the reader and writes it to the writer
@@ -54,10 +65,14 @@ public class CoordinateUtilities
     public void convertToDistances(String infile, String outfile, int[] set) 
             throws IOException
     {
+        AsciiDataSequenceWriter w = null;
+        
         IDataReader reader = dataNew.dataSequenceLoader(infile);
         int N = reader.size();
         int dout = (set.length*(set.length-1))/2;
         IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
             IDoubleArray y = distanceMatrix(x, set);
@@ -80,6 +95,8 @@ public class CoordinateUtilities
         int N = reader.size();
         int dout = (set.length*(set.length-1))/2;
         IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
             IDoubleArray y = distanceMatrix(x, set);
@@ -102,6 +119,8 @@ public class CoordinateUtilities
         int N = reader.size();
         int dout = set1.length*set2.length;
         IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
             IDoubleArray y = distanceMatrix(x, set1, set2);
@@ -125,6 +144,8 @@ public class CoordinateUtilities
         int N = reader.size();
         int dout = set1.length*set2.length;
         IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
             IDoubleArray y = distanceMatrix(x, set1, set2);
@@ -362,7 +383,7 @@ public class CoordinateUtilities
             throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+m+","+n+")");
         for (int i=0; i<m; i++)
             for (int j=0; j<n; j++)
-                target[i][j] = doubleArrays.distance(x[set1[i]], x[set2[i]]);
+                target[i][j] = doubleArrays.distance(x[set1[i]], x[set2[j]]);
     }
 
     /**
