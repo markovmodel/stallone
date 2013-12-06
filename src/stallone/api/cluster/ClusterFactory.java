@@ -4,6 +4,11 @@
  */
 package stallone.api.cluster;
 
+import stallone.cluster.CompactRandomClustering;
+import stallone.cluster.FixedClustering;
+import stallone.cluster.DensityBasedClusteringSimpleN;
+import stallone.cluster.DensityBasedClusteringSimple;
+import stallone.cluster.RandomClustering;
 import stallone.cluster.RegularSpatialClustering;
 import stallone.cluster.KMeansClustering;
 import stallone.cluster.KCenterClustering;
@@ -11,7 +16,6 @@ import stallone.doubles.EuclideanDistance;
 import stallone.api.doubles.IMetric;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
-import stallone.cluster.*;
 
 import stallone.coordinates.MinimalRMSDistance3D;
 

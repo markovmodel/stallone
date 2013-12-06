@@ -2,16 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.util;
+package stallone.api.coordinates;
 
 import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
+import stallone.util.Arguments;
+import stallone.util.MathTools;
 
 /**
  *
  * @author noe
  */
-public class LinalgTools
+public class CoordinateUtilities3D
 {
 
     static long t;
@@ -918,37 +920,37 @@ public class LinalgTools
         double[] p3r = referenceCrds[i3];
         double[] p1copy = doubleArrays.copy(p1r);
 
-        double[] t = LinalgTools.subtract(p20, p2r);
-        LinalgTools.translate(buildCrds, sel, t[0], t[1], t[2]);
-        p1copy = LinalgTools.add(p1copy, t);
+        double[] t = CoordinateUtilities3D.subtract(p20, p2r);
+        CoordinateUtilities3D.translate(buildCrds, sel, t[0], t[1], t[2]);
+        p1copy = CoordinateUtilities3D.add(p1copy, t);
 
-        double[] n0 = LinalgTools.crossprod(LinalgTools.subtract(p20, p10),
-                LinalgTools.subtract(p20, p30));
-        double[] vCaNr = LinalgTools.subtract(p2r, p3r);
-        double[] nr = LinalgTools.crossprod(LinalgTools.subtract(p2r, p1r),
+        double[] n0 = CoordinateUtilities3D.crossprod(CoordinateUtilities3D.subtract(p20, p10),
+                CoordinateUtilities3D.subtract(p20, p30));
+        double[] vCaNr = CoordinateUtilities3D.subtract(p2r, p3r);
+        double[] nr = CoordinateUtilities3D.crossprod(CoordinateUtilities3D.subtract(p2r, p1r),
                 vCaNr);
-        double[] vrot1 = LinalgTools.crossprod(nr, n0);
-        double[] virt1 = LinalgTools.add(p20, vrot1);
-        double arot1 = LinalgTools.angleRad(nr, n0);
+        double[] vrot1 = CoordinateUtilities3D.crossprod(nr, n0);
+        double[] virt1 = CoordinateUtilities3D.add(p20, vrot1);
+        double arot1 = CoordinateUtilities3D.angleRad(nr, n0);
 
         if (arot1 > 0)
         {
             // rotate into new 1-2-3 plane
-            LinalgTools.rotatePointsRad(buildCrds, sel, p20, virt1, arot1);
-            LinalgTools.rotateRad(p1copy, p20, LinalgTools.add(p20, vrot1), arot1);
+            CoordinateUtilities3D.rotatePointsRad(buildCrds, sel, p20, virt1, arot1);
+            CoordinateUtilities3D.rotateRad(p1copy, p20, CoordinateUtilities3D.add(p20, vrot1), arot1);
         }
 
-        double arot2 = LinalgTools.angleRad(LinalgTools.subtract(p1copy, p20),
-                LinalgTools.subtract(p10, p20));
+        double arot2 = CoordinateUtilities3D.angleRad(CoordinateUtilities3D.subtract(p1copy, p20),
+                CoordinateUtilities3D.subtract(p10, p20));
         if (arot2 > 0)
         {
-            double[] n2 = LinalgTools.crossprod(LinalgTools.subtract(p1copy, p20),
-                    LinalgTools.subtract(p10, p20));
+            double[] n2 = CoordinateUtilities3D.crossprod(CoordinateUtilities3D.subtract(p1copy, p20),
+                    CoordinateUtilities3D.subtract(p10, p20));
 
             // rotate within 1-2-3 plane
-            double[] virt2 = LinalgTools.add(p20, n2);
-            LinalgTools.rotatePointsRad(buildCrds, sel, p20, virt2, arot2);
-            LinalgTools.rotateRad(p1copy, p20, virt2, arot2);
+            double[] virt2 = CoordinateUtilities3D.add(p20, n2);
+            CoordinateUtilities3D.rotatePointsRad(buildCrds, sel, p20, virt2, arot2);
+            CoordinateUtilities3D.rotateRad(p1copy, p20, virt2, arot2);
         }
     }
 
@@ -1053,13 +1055,13 @@ public class LinalgTools
         {
             double[][] V1 = doubleArrays.loadMatrix(arg.getArgument("subspaceOverlap", 0));
             double[][] V2 = doubleArrays.loadMatrix(arg.getArgument("subspaceOverlap", 1));
-            System.out.println(LinalgTools.subspaceOverlap(V1, V2));
+            System.out.println(CoordinateUtilities3D.subspaceOverlap(V1, V2));
         }
         if (arg.hasCommand("superspaceOverlap"))
         {
             double[][] V1 = doubleArrays.loadMatrix(arg.getArgument("superspaceOverlap", 0));
             double[][] V2 = doubleArrays.loadMatrix(arg.getArgument("superspaceOverlap", 1));
-            System.out.println(LinalgTools.superspaceOverlap(V1, V2));
+            System.out.println(CoordinateUtilities3D.superspaceOverlap(V1, V2));
         }
 
 

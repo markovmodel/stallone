@@ -8,7 +8,7 @@ import static stallone.api.API.*;
 
 import java.util.List;
 import stallone.api.algebra.Algebra;
-import stallone.api.cluster.Clustering;
+import stallone.api.cluster.Cluster;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataSequence;
@@ -51,7 +51,7 @@ public class HMMFactory
 
         System.out.println("Clustering...");
 
-        IClustering cluster = Clustering.util.densityBased(obscat, nstates);
+        IClustering cluster = Cluster.util.densityBased(obscat, nstates);
 
         System.out.println("done.");
 
@@ -60,7 +60,7 @@ public class HMMFactory
         for (int state=0; state<nstates; state++)
         {
             IParameterEstimator estimator = Statistics.create.parameterEstimatorGaussian1D();
-            res[state] = estimator.estimate(obscat, Clustering.util.membershipToState(cluster, state));
+            res[state] = estimator.estimate(obscat, Cluster.util.membershipToState(cluster, state));
         }
         return res;
     }

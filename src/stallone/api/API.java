@@ -16,6 +16,9 @@ import stallone.api.algebra.*;
 import stallone.api.cluster.*;
 import stallone.api.complex.ComplexFactory;
 import stallone.api.complex.ComplexUtilities;
+import stallone.api.coordinates.CoordinateFactory;
+import stallone.api.coordinates.CoordinateUtilities;
+import stallone.api.coordinates.CoordinateUtilities3D;
 import stallone.api.discretization.DiscretizationFactory;
 import stallone.api.discretization.DiscretizationUtilities;
 import stallone.api.dynamics.DynamicsFactory;
@@ -40,6 +43,7 @@ import stallone.ints.PrimitiveIntTools;
  */
 public class API
 {
+    // DATA
     public static IntUtilities ints = new IntUtilities();
     public static IntFactory intsNew = new IntFactory();
     public static PrimitiveIntTools intArrays = new PrimitiveIntTools();
@@ -57,6 +61,10 @@ public class API
     public static ComplexUtilities complex = new ComplexUtilities();
     public static ComplexFactory complexNew = new ComplexFactory();
 
+    public static CoordinateUtilities coor = new CoordinateUtilities();
+    public static CoordinateFactory coorNew = new CoordinateFactory();
+    public static CoordinateUtilities3D coor3d = new CoordinateUtilities3D();
+    
     public static StringUtilities str = new StringUtilities();
     public static StringFactory strNew = new StringFactory();
 
@@ -74,7 +82,7 @@ public class API
 
 
 
-
+    // ALGORITHMS
     public static AlgebraUtilities alg = new AlgebraUtilities();
     public static AlgebraFactory algNew = new AlgebraFactory();
 

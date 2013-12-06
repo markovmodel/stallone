@@ -8,7 +8,7 @@ package stallone.api.cluster;
  *
  * @author noe
  */
-public class Clustering
+public class Cluster
 {
     /**
      * The default object for providing algebraic operations for Vector/Matrix objects, such as add and multiply
