@@ -99,7 +99,7 @@ public class MatrixProduct //implements IMatrixProduct
     public void multiplySparseDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
-        final int r = a.columns();
+//        final int r = a.columns();
         final int colsB = b.columns();
         final int rowsA = a.rows();
 
@@ -121,7 +121,7 @@ public class MatrixProduct //implements IMatrixProduct
     public void multiplySparseSparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
-        final int r = a.columns();
+//        final int r = a.columns();
         final int colsB = b.columns();
         final int rowsA = a.rows();
 
