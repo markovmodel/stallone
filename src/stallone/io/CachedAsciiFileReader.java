@@ -25,6 +25,8 @@ public class CachedAsciiFileReader
     private static final Logger log = Logger.getLogger(CachedAsciiFileReader.class.getName());
     /** Filename of the file we are working with. */
     protected String filename;
+    /** scanned? */
+    private boolean scanned = false;
     /** For fast and efficient file access. */
     private CachedRandomAccessFile randomAccessFile;
     /** Number of lines this file has, which do not match commentLine pattern. */
@@ -99,6 +101,9 @@ public class CachedAsciiFileReader
     public void scan()
             throws IOException
     {
+        if (scanned)
+            return;
+        
         final int INITIAL_SIZE = 1000000;
 
         final LongArrayList lineOffsets = new LongArrayList(INITIAL_SIZE);
@@ -130,7 +135,7 @@ public class CachedAsciiFileReader
                 currentLineNumber++;
                 currentPos = randomAccessFile.getFilePointer();
                 lineOffsets.add(oldPos);
-
+                
                 // garbage collection is one solution
                 // if ( (currentLineNumber % 1000000) == 0) {
                 //    System.out.println("Scanned up to line: " + currentLineNumber);
@@ -144,6 +149,8 @@ public class CachedAsciiFileReader
         // determine line offsets
         lineStartOffsets = lineOffsets.toLongArray();
         relevantLines = lineStartOffsets.length;
+        
+        scanned = true;
     }
 
     /**

@@ -75,7 +75,7 @@ public class CoordinateUtilities
             ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
-            IDoubleArray y = distanceMatrix(x, set);
+            IDoubleArray y = distances(x, set);
             writer.add(y);
         }
         writer.close();
@@ -99,7 +99,7 @@ public class CoordinateUtilities
             ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
         for (IDoubleArray x : reader)
         {
-            IDoubleArray y = distanceMatrix(x, set);
+            IDoubleArray y = distances(x, set);
             writer.add(y);
         }
         writer.close();
@@ -263,7 +263,7 @@ public class CoordinateUtilities
     public void distances(double[][] x, int[] set, double[] target)
     {
         int n = set.length;
-        if (target.length != (n*n-1)/2)
+        if (target.length != (n*(n-1))/2)
             throw new IllegalArgumentException("target array has illegal size "+target.length+". requiring "+((n*n-1)/2));
         int p = 0;
         for (int i=0; i<n-1; i++)
@@ -284,7 +284,7 @@ public class CoordinateUtilities
     public void distances(double[][] x, int[][] set, double[] target)
     {
         int n = set.length;
-        if (target.length != (n*n-1)/2)
+        if (target.length != (n*(n-1))/2)
             throw new IllegalArgumentException("target array has illegal size "+target.length+". requiring "+((n*n-1)/2));
         int p = 0;
         for (int i=0; i<n-1; i++)
@@ -296,7 +296,7 @@ public class CoordinateUtilities
                 int nj = set[j].length;
                 for (int k=0; k<ni; k++)
                 {
-                    for (int l=0; l<nj; k++)
+                    for (int l=0; l<nj; l++)
                     {
                         double d = doubleArrays.distance(x[set[i][k]], x[set[j][l]]);
                         if (d < dmin)
@@ -351,7 +351,7 @@ public class CoordinateUtilities
                 int nj = set[j].length;
                 for (int k=0; k<ni; k++)
                 {
-                    for (int l=0; l<nj; k++)
+                    for (int l=0; l<nj; l++)
                     {
                         double d = doubleArrays.distance(x[set[i][k]], x[set[j][l]]);
                         if (d < dmin)
@@ -400,7 +400,7 @@ public class CoordinateUtilities
         int n = set2.length;
         if (target.length != m && target[0].length != n)
             throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+m+","+n+")");
-        for (int i=0; i<n; i++)
+        for (int i=0; i<m; i++)
         {
             for (int j=0; j<n; j++)
             {
@@ -409,7 +409,7 @@ public class CoordinateUtilities
                 int nj = set2[j].length;
                 for (int k=0; k<ni; k++)
                 {
-                    for (int l=0; l<nj; k++)
+                    for (int l=0; l<nj; l++)
                     {
                         double d = doubleArrays.distance(x[set1[i][k]], x[set2[j][l]]);
                         if (d < dmin)

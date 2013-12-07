@@ -6,11 +6,19 @@ package stallone.ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import static stallone.api.API.*;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.algebra.IEigenvalueSolver;
+import stallone.api.cluster.IClustering;
+import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataReader;
+import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.ints.IIntArray;
+import stallone.mc.sampling.ITransitionMatrixSampler;
 import stallone.util.MathTools;
 
 /**
@@ -22,53 +30,43 @@ public class Test
     public static void main(String[] args) 
             throws FileNotFoundException, IOException
     {        
-        List<String> solvernames = algNew.queryEigenvalueDecompositionNames();
-        System.out.println(solvernames);
+        String infile = "/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/long_md/tmp_tics.dat";
+        String outfile = "/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/long_md/tmp.dat";
+        /*
+        IDataReader reader = dataNew.dataSequenceLoader();
+        reader.scan();
+        int N = reader.size();
+        int d = reader.dimension();
+        System.out.println("Input shape = "+N+" x "+d);*/
+        List<String> names = new ArrayList();
+        names.add(infile);
+        IDataInput loader = dataNew.dataSequenceLoader(names);
+        loader.scan();
+        Iterable<IDoubleArray> it = loader.getSingleDataLoader();
+        
+        IClustering clustering = clusterNew.createRegularSpatial(it, loader.size(), 1.0);
+        clustering.perform();
+        IDiscretization assign = clustering.getClusterAssignment();
 
-        int N = 20000;
-        int radius = 20;
-        double D = 0.5;
-        IDoubleArray T = doublesNew.sparseMatrix(N, N);
-        for (int i=0; i<N; i++)
+        System.out.println("number of clusters: "+clustering.getNumberOfClusters());
+        //clustercenters = self.clustering.getClusterCenters();
+        //writer = API.dataNew.createASCIIDataWriter(self.file_clustercenters, 0, ' ', '\n')
+        //writer.addAll(clustercenters)
+        //writer.close()
+        System.out.println("Scanning input again:");
+        IDataReader loader2 = dataNew.dataSequenceLoader(infile);
+        
+        System.out.println("size = "+loader2.size());
+        System.out.println("dimension = "+loader2.dimension());
+        
+        Iterator<IDoubleArray> it2 = loader2.iterator();
+        while (it2.hasNext())
         {
-            double sum = 0;
-            
-            int jmin = Math.max(0, i-radius);
-            int jmax = Math.min(i+radius, N-1);
-            for (int j=jmin; j<=jmax; j++)
-            {
-                T.set(i,j,D * Math.random());
-            }
-            T.set(i,i,1);
-            //System.out.println(T.viewRow(i));
-            //System.out.println(i+"\t"+sum+"\t"+alg.norm(T.viewRow(i), 1));
+            IDoubleArray x = it2.next();
+            int i = assign.assign(x);
+            System.out.println(i);
         }
         
-        alg.normalizeRows(T, 1);
-        
-        //IDoubleArray M = doublesNew.fromFile("/Users/noe/data/msms/Anton-BPTI/tica-lag10000-dim2_regspace0.3/msm_lag1_rev/T.dat");
-        
-        int nev = 5;
-        IEigenvalueSolver solverSparse = algNew.eigensolverSparse(T, nev);
-        long t1 = System.currentTimeMillis();
-        solverSparse.perform();
-        long t2 = System.currentTimeMillis();
-        IEigenvalueDecomposition evdSparse = solverSparse.getResult();
-        IDoubleArray evalSparse = evdSparse.getEvalNorm();
-        System.out.println("SPARSE time: "+(t2-t1));
-        
-        /*
-        IEigenvalueSolver solverDense = algNew.eigensolverDense(T);
-        //solverDense.setNumberOfRequestedEigenvalues(5);
-        long t3 = System.currentTimeMillis();
-        solverDense.perform();
-        long t4 = System.currentTimeMillis();
-        IEigenvalueDecomposition evdDense = solverDense.getResult();
-        IDoubleArray evalDense = evdDense.getEvalNorm();
-        System.out.println("DENSE time:  "+(t4-t3));*/
 
-        for (int i=0; i<nev; i++)
-            System.out.println(evalSparse.get(i));//+"\t"+evalDense.get(i));
-        
     }
 }

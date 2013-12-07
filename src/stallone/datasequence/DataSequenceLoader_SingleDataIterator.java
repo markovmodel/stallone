@@ -62,7 +62,7 @@ public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleAr
         if (iindex >= loader.size(itraj))
         {
             itraj++;
-            iindex = 0 + (loader.size(itraj)-iindex);
+            iindex = 0 + iindex;
         }
     }
 
