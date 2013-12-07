@@ -37,7 +37,7 @@ public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleAr
     @Override
     public boolean hasNext()
     {
-        return (itraj < loader.numberOfSequences() - 1 || (itraj == loader.numberOfSequences() - 1 && iindex < loader.size(itraj)));
+        return (itraj < loader.numberOfSequences() - 1 || (itraj == loader.numberOfSequences() - 1 && iindex < loader.size(itraj) - 1));
     }
 
     @Override
@@ -52,6 +52,7 @@ public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleAr
         {
             throw (new RuntimeException(e));
         }
+        //System.out.println(" read: "+itraj+" "+iindex+"\t"+res.size());
         return (res);
     }
 
@@ -62,7 +63,7 @@ public class DataSequenceLoader_SingleDataIterator implements Iterator<IDoubleAr
         if (iindex >= loader.size(itraj))
         {
             itraj++;
-            iindex = 0 + iindex;
+            iindex = 0;
         }
     }
 

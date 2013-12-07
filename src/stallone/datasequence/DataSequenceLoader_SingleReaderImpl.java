@@ -101,7 +101,7 @@ public class DataSequenceLoader_SingleReaderImpl
     {
         info.clear();
         dimension = -1;
-
+        
         for (int i = 0; i < sources.size(); i++)
         {
             makeAvailable(i);

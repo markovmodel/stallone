@@ -30,8 +30,17 @@ public class Test
     public static void main(String[] args) 
             throws FileNotFoundException, IOException
     {        
-        String infile = "/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/long_md/tmp_tics.dat";
-        String outfile = "/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/long_md/tmp.dat";
+        /*IDataReader reader = dataNew.createASCIIDataReader("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long2.dat");
+        reader.scan();
+        for (int i=0; i<100; i++)
+        {
+            IDoubleArray x = reader.get(i);           
+            System.out.println(x.size());
+        }
+        System.exit(0);*/
+        
+        
+        //String outfile = "/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/long_md/tmp.dat";
         /*
         IDataReader reader = dataNew.dataSequenceLoader();
         reader.scan();
@@ -39,13 +48,17 @@ public class Test
         int d = reader.dimension();
         System.out.println("Input shape = "+N+" x "+d);*/
         List<String> names = new ArrayList();
-        names.add(infile);
+        names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long1.dat");
+        names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long2.dat");
+        names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long3.dat");
         IDataInput loader = dataNew.dataSequenceLoader(names);
         loader.scan();
         Iterable<IDoubleArray> it = loader.getSingleDataLoader();
         
-        IClustering clustering = clusterNew.createRegularSpatial(it, loader.size(), 1.0);
+        IClustering clustering = clusterNew.createRegularSpatial(it, loader.size(), 0.5);
         clustering.perform();
+        
+        /*
         IDiscretization assign = clustering.getClusterAssignment();
 
         System.out.println("number of clusters: "+clustering.getNumberOfClusters());
@@ -67,6 +80,6 @@ public class Test
             System.out.println(i);
         }
         
-
+*/
     }
 }

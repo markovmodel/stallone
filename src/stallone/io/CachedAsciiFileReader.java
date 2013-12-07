@@ -88,6 +88,7 @@ public class CachedAsciiFileReader
         if (randomAccessFile != null)
             randomAccessFile.close();
         randomAccessFile = new CachedRandomAccessFile(filename);
+        scanned = false;
     }
 
     /**
