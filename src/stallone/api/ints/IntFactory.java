@@ -255,7 +255,12 @@ public class IntFactory
     //
     // *****************************************************************************
 
-        public IIntArray table(int nrows, int ncols)
+    public IIntArray table(int[][] a) 
+    {
+        return new PrimitiveIntTable(a);
+    }
+    
+    public IIntArray table(int nrows, int ncols)
     {
         return (new PrimitiveIntTable(new int[nrows][ncols]));
     }
