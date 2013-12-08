@@ -63,13 +63,31 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         {
             return;
         }
-
-        // if (matrix.isComplex())
-        // throw new UnsupportedOperationException("Not supported yet.");
-
-        // Set up parameters
+        
         // # columns
         final int n = matrix.columns();
+        //final intW nev = new intW(n - 2);
+        // number of arnoldi vectors per iteration.
+        final int ncv = Math.max(2 + nev, 3 * nev);
+//        int ncv = n-2;
+
+        System.out.println("NEV = "+nev);
+        System.out.println("NCV = "+ncv);
+        System.out.println("NCV-NEV = " + (ncv-nev));
+        System.out.println("n = " + n);
+        
+        // NCV must satisfy the two inequalities 2 <= NCV-NEV and NCV <= N
+        if (!(ncv <= n))
+        {
+            throw new RuntimeException("constraint NCV("+ncv+") >= N(" + n + ") not satisfied.");
+        }
+        if (!((ncv - nev) >= 2))
+        {
+            throw new RuntimeException("constraint 2 <= NCV-NEV = " + (ncv - nev)
+                    + " not satisfied.");
+        }
+
+        // Set up parameters
         final IDoubleArray x;
         final IDoubleArray y;
         x = Doubles.create.array(n);
@@ -77,13 +95,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
 
         final String bmat = "I";
         final String which = "LM";
-        //final intW nev = new intW(n - 2);
-        final int ncv = Math.max(2 + nev, 3 * nev);
 
-        System.out.println("NEV = "+nev);
-        System.out.println("NCV = "+ncv);
-        System.out.println("NCV-NEV = " + (ncv-nev));
-        System.out.println("n = " + n);
         
         // the residual
         final double[] resid = new double[n];
@@ -517,7 +529,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
             // Give arpack the requested subsection of the result
             for (int pos = ipntr[1] - 1; pos < (ipntr[1] - 1 + n); pos++)
             {
-                workd[pos] = (float) y.get(pos - (ipntr[1] - 1));
+                workd[pos] = y.get(pos - (ipntr[1] - 1));
             }
         }
         while ((ido.val == -1) || (ido.val == 1));
@@ -643,44 +655,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         
         if (info.val < 0)
         {
-            String err = null;
-            if (info.val == 1)
-                err= "The Schur form computed by LAPACK routine dlahqr"
-                        + "could not be reordered by LAPACK routine dtrsen."
-                        + "Re-enter subroutine DNEUPD with IPARAM(5)=NCV and"
-                        + "increase the size of the arrays DR and DI to have"
-                        + "dimension at least dimension NCV and allocate at least NCV"
-                        + "columns for Z. NOTE: Not necessary if Z and V share"
-                        + "the same space. Please notify the authors if this error"
-                        + "occurs.";
-            else if (info.val == -1)
-                err = "N must be positive.";
-            else if (info.val == -2)
-                err = "NEV must be positive.";
-            else if (info.val == -3)
-                err = "NCV-NEV >= 2 and less than or equal to N.";
-            else if (info.val == -5)
-                err = "WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'";
-            else if (info.val == -6)
-                err = "BMAT must be one of 'I' or 'G'.";
-            else if (info.val == -7)
-                err = "Length of private work WORKL array is not sufficient.";
-            else if (info.val == -8)
-                err = "Error return from calculation of a real Schur form."
-                        + "Informational error from LAPACK routine dlahqr.";
-            else if (info.val == -9)
-                err = "Error return from calculation of eigenvectors."
-                        + "Informational error from LAPACK routine dtrevc.";
-            else if (info.val == -10)
-                err = "IPARAM(7) must be 1,2,3,4.";
-            else if (info.val == -11)
-                err = "IPARAM(7) = 1 and BMAT = 'G' are incompatible.";
-            else if (info.val == -12)
-                err = "HOWMNY = 'S' not yet implemented";
-            else if (info.val == -13)
-                err = "HOWMNY must be one of 'A' or 'P' if RVEC = .true.";
-            else if (info.val == -14)
-                err = "DNAUPD did not find any eigenvalues to sufficient accuracy";
+            String err = getErrorMessage(info);
             throw new RuntimeException("ARPACK error: snaupd(1) returned with info = " + info.val+ "\n"+err);
         }
         else
@@ -714,7 +689,9 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
             // Process the result
             if ((ierr.val != 0))
             {
-                throw new RuntimeException("ARPACK error: dneupd returned with info = " + ierr.val);
+                String error = getErrorMessage(ierr);
+                throw new RuntimeException("ARPACK error: dneupd returned with info = " 
+                        + ierr.val + "\n" +error);
             }
             else
             {
@@ -763,6 +740,53 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
                 } // end for
             } // end if-else
         } // end if-else
+    }
+
+    /**
+     * @param info
+     * @return
+     */
+    private String getErrorMessage(final intW info)
+    {
+        String err = null;
+        if (info.val == 1)
+            err= "The Schur form computed by LAPACK routine dlahqr"
+                    + "could not be reordered by LAPACK routine dtrsen."
+                    + "Re-enter subroutine DNEUPD with IPARAM(5)=NCV and"
+                    + "increase the size of the arrays DR and DI to have"
+                    + "dimension at least dimension NCV and allocate at least NCV"
+                    + "columns for Z. NOTE: Not necessary if Z and V share"
+                    + "the same space. Please notify the authors if this error"
+                    + "occurs.";
+        else if (info.val == -1)
+            err = "N must be positive.";
+        else if (info.val == -2)
+            err = "NEV must be positive.";
+        else if (info.val == -3)
+            err = "NCV-NEV >= 2 and less than or equal to N.";
+        else if (info.val == -5)
+            err = "WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'";
+        else if (info.val == -6)
+            err = "BMAT must be one of 'I' or 'G'.";
+        else if (info.val == -7)
+            err = "Length of private work WORKL array is not sufficient.";
+        else if (info.val == -8)
+            err = "Error return from calculation of a real Schur form."
+                    + "Informational error from LAPACK routine dlahqr.";
+        else if (info.val == -9)
+            err = "Error return from calculation of eigenvectors."
+                    + "Informational error from LAPACK routine dtrevc.";
+        else if (info.val == -10)
+            err = "IPARAM(7) must be 1,2,3,4.";
+        else if (info.val == -11)
+            err = "IPARAM(7) = 1 and BMAT = 'G' are incompatible.";
+        else if (info.val == -12)
+            err = "HOWMNY = 'S' not yet implemented";
+        else if (info.val == -13)
+            err = "HOWMNY must be one of 'A' or 'P' if RVEC = .true.";
+        else if (info.val == -14)
+            err = "DNAUPD did not find any eigenvalues to sufficient accuracy";
+        return err;
     }
 
     public IEigenvalueDecomposition getResult()
