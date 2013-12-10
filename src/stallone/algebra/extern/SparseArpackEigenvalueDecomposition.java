@@ -13,18 +13,24 @@
  */
 package stallone.algebra.extern;
 
-import stallone.api.complex.IComplexArray;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.netlib.arpack.ARPACK;
 import org.netlib.util.doubleW;
 import org.netlib.util.intW;
 
 import stallone.algebra.EigenvalueDecomposition;
-import stallone.complex.ComplexNumber;
-import stallone.api.algebra.*;
+import stallone.api.algebra.Algebra;
+import stallone.api.algebra.IComplexNumber;
+import stallone.api.algebra.IEigenvalueDecomposition;
+import stallone.api.algebra.IEigenvalueSolver;
 import stallone.api.complex.Complex;
+import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
+import stallone.complex.ComplexNumber;
+import stallone.io.Log;
 
 public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
 {
@@ -41,8 +47,44 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
     private int maxIter = 100;
     
     private IComplexArray eigenvalues;
+    /**
+     * note it is not possible to compute all eigenvectors of given matrix.
+     */
     private IComplexArray rightEigenvectors;
     private boolean bRightComputation = true;
+    
+    private static Map<Integer, String> snaupdErrors;
+    static {
+        snaupdErrors = new HashMap<Integer, String>();
+        snaupdErrors.put(1, "The Schur form computed by LAPACK routine dlahqr"
+                + "could not be reordered by LAPACK routine dtrsen."
+                + "Re-enter subroutine DNEUPD with IPARAM(5)=NCV and"
+                + "increase the size of the arrays DR and DI to have"
+                + "dimension at least dimension NCV and allocate at least NCV"
+                + "columns for Z. NOTE: Not necessary if Z and V share"
+                + "the same space. Please notify the authors if this error"
+                + "occurs.");
+        snaupdErrors.put(-1, "N must be positive.");
+        snaupdErrors.put(-2, "NEV must be positive.");
+        snaupdErrors.put(-3, "NCV-NEV >= 2 and less than or equal to N.");
+        snaupdErrors.put(-5,
+                "WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'");
+        snaupdErrors.put(-6, "BMAT must be one of 'I' or 'G'.");
+        snaupdErrors.put(-7,
+                "Length of private work WORKL array is not sufficient.");
+        snaupdErrors.put(-8,
+                "Error return from calculation of a real Schur form."
+                        + "Informational error from LAPACK routine dlahqr.");
+        snaupdErrors.put(-9, "Error return from calculation of eigenvectors."
+                + "Informational error from LAPACK routine dtrevc.");
+        snaupdErrors.put(-10, "IPARAM(7) must be 1,2,3,4.");
+        snaupdErrors.put(-11, "IPARAM(7) = 1 and BMAT = 'G' are incompatible.");
+        snaupdErrors.put(-12, "HOWMNY = 'S' not yet implemented");
+        snaupdErrors.put(-13,
+                "HOWMNY must be one of 'A' or 'P' if RVEC = .true.");
+        snaupdErrors.put(-14,
+                "DNAUPD did not find any eigenvalues to sufficient accuracy");
+    }
 
     private IEigenvalueDecomposition result;
 
@@ -61,15 +103,20 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
 
         if (!bRightComputation)
         {
-            return;
+            throw new RuntimeException("should not compute right eigenvectors,"
+                    + " but this is the only supported operation.");
+        }
+        
+        if(this.nev == 0) {
+            Log.logError("ARPACK eigensolver: number of requested eigenvalues not set. Defaulting to 1.");
+            setNumberOfRequestedEigenvalues(1);
         }
         
         // # columns
         final int n = matrix.columns();
-        //final intW nev = new intW(n - 2);
-        // number of arnoldi vectors per iteration.
-        final int ncv = Math.max(2 + nev, 3 * nev);
-//        int ncv = n-2;
+        // The number of Lanczos vectors generated
+        // `ncv` must be greater than `k`; it is recommended that ``ncv > 2*k``.
+        final int ncv = 2 * this.nev;
 
         System.out.println("NEV = "+nev);
         System.out.println("NCV = "+ncv);
@@ -94,13 +141,17 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         y = Doubles.create.array(n);
 
         final String bmat = "I";
+        // find largest magnitude Eigenvalues/vectors
         final String which = "LM";
-
         
         // the residual
         final double[] resid = new double[n];
 
         // workspace
+        /**
+         * self.workd = np.zeros(3 * n, self.tp)
+         * self.workl = np.zeros(3 * self.ncv * (self.ncv + 2), self.tp)
+         */
         final double[] workd = new double[3 * n];
 
         // workspace
@@ -128,6 +179,8 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         final int maxitr = Math.max(n, this.maxIter);
 
         // Type of eigenwert problem to solve
+        //         #    Solve the standard eigenvalue problem:
+        //      A*x = lambda*x
         final int mode1 = 1;
 
         // iparam is always an array of length 11
@@ -144,7 +197,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         calculate(n, x, y, bmat, which, ncv, resid, workd, lworkl, workl, v,
                 info, tol, iparam, ipntr, ido);
 
-        postProcess(n, bmat, which, ncv, resid, workd, lworkl, workl, v, info,
+        postprocess(n, bmat, which, ncv, resid, workd, lworkl, workl, v, info,
                 tol, iparam, ipntr);
 
         result = new EigenvalueDecomposition(null, eigenvalues, rightEigenvectors);
@@ -551,7 +604,7 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
      * @param ipntr
      * @throws RuntimeException
      */
-    private void postProcess(final int n, final String bmat,
+    private void postprocess(final int n, final String bmat,
             final String which, final int ncv, final double[] resid,
             final double[] workd, final int lworkl, final double[] workl,
             final double[] v, final intW info, final doubleW tol,
@@ -655,138 +708,90 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         
         if (info.val < 0)
         {
-            String err = getErrorMessage(info);
-            throw new RuntimeException("ARPACK error: snaupd(1) returned with info = " + info.val+ "\n"+err);
+            String err = snaupdErrors.get(info.val);
+            throw new RuntimeException(
+                    "ARPACK error: snaupd(1) returned with info = " 
+                    + info.val + "\n" + err);
         }
-        else
+
+        final boolean rvec = true;
+        final float sigmar = 0.0f;
+        final float sigmai = 0.0f;
+
+        // Returned error code
+        final intW ierr = new intW(0);
+
+        // In this mode used as additional workspace
+        final boolean[] select = new boolean[ncv];
+
+        // Real part of the ouput
+        final double[] dReal = new double[nev + 2];
+
+        // Imaginay part of the output
+        final double[] dImg = new double[nev + 2];
+
+        // Eigenvectors
+        final double[] z = new double[n * (nev + 1)];
+
+        // workspace
+        final double[] workev = new double[3 * ncv];
+
+        // Call into ARPACK
+        ARPACK.getInstance().dneupd(rvec, "A", select, dReal, dImg, z, n, sigmar, sigmai, workev, bmat, n, which,
+                new intW(nev), tol.val, resid, ncv, v, n, iparam, ipntr, workd, workl, lworkl, ierr);
+
+        // Process the result
+        if ((ierr.val != 0))
         {
-            final boolean rvec = true;
-            final float sigmar = 0.0f;
-            final float sigmai = 0.0f;
+            // note that dneupd error msgs are equal to dneupd ones.
+            String error = snaupdErrors.get(ierr.val);
+            throw new RuntimeException("ARPACK error: dneupd returned with info = " 
+                    + ierr.val + "\n" +error);
+        }
+        
+        eigenvalues = Complex.create.array(nev);
+        rightEigenvectors = Complex.create.array(n, nev);
 
-            // Returned error code
-            final intW ierr = new intW(0);
+        for (int i = 0; i < nev; i++)
+        {
+            eigenvalues.set(i, dReal[i], dImg[i]);
 
-            // In this mode used as additional workspace
-            final boolean[] select = new boolean[ncv];
+            int dest = 0;
 
-            // Real part of the ouput
-            final double[] dReal = new double[nev + 2];
-
-            // Imaginay part of the output
-            final double[] dImg = new double[nev + 2];
-
-            // Eigenvectors
-            final double[] z = new double[n * (nev + 1)];
-
-            // workspace
-            final double[] workev = new double[3 * ncv];
-
-            // Call into ARPACK
-            ARPACK.getInstance().dneupd(rvec, "A", select, dReal, dImg, z, n, sigmar, sigmai, workev, bmat, n, which,
-                    new intW(nev), tol.val, resid, ncv, v, n, iparam, ipntr, workd, workl, lworkl, ierr);
-
-            // Process the result
-            if ((ierr.val != 0))
+            // Copy real Eigenvector
+            if (dImg[i] == 0)
             {
-                String error = getErrorMessage(ierr);
-                throw new RuntimeException("ARPACK error: dneupd returned with info = " 
-                        + ierr.val + "\n" +error);
-            }
+
+                for (int source = i * n; source < ((i * n) + n); source++)
+                {
+                    rightEigenvectors.set(dest++, i, z[source]);
+                }
+            } // Copy complex Eigenvector
             else
             {
-                eigenvalues = Complex.create.array(nev);
-                rightEigenvectors = Complex.create.array(n, nev);
+                // Note: Complex Eigenvectors always appear in pairs that only differ in the sign of the
+                // imaginary part. Thus ARPACK stores those pairs of almost identical vector in two consecutive
+                // columns of z. Extracting this properly is handled by the following code.
 
-                for (int i = 0; i < nev; i++)
+                // Version of the Eigenvector with positive imaginary part
+                if (dImg[i] > 0)
                 {
-                    eigenvalues.set(i, dReal[i], dImg[i]);
 
-                    int dest = 0;
-
-                    // Copy real Eigenvector
-                    if (dImg[i] == 0)
+                    for (int source = i * n; source < ((i * n) + n); source++)
                     {
+                        rightEigenvectors.set(dest++, i, z[source], z[source + n]);
+                    }
+                } // Version of the Eigenvector with negative imaginary part
+                else
+                {
 
-                        for (int source = i * n; source < ((i * n) + n); source++)
-                        {
-                            rightEigenvectors.set(dest++, i, z[source]);
-                        }
-                    } // Copy complex Eigenvector
-                    else
+                    for (int source = i * n; source < ((i * n) + n); source++)
                     {
-                        // Note: Complex Eigenvectors always appear in pairs that only differ in the sign of the
-                        // imaginary part. Thus ARPACK stores those pairs of almost identical vector in two consecutive
-                        // columns of z. Extracting this properly is handled by the following code.
-
-                        // Version of the Eigenvector with positive imaginary part
-                        if (dImg[i] > 0)
-                        {
-
-                            for (int source = i * n; source < ((i * n) + n); source++)
-                            {
-                                rightEigenvectors.set(dest++, i, z[source], z[source + n]);
-                            }
-                        } // Version of the Eigenvector with negative imaginary part
-                        else
-                        {
-
-                            for (int source = i * n; source < ((i * n) + n); source++)
-                            {
-                                rightEigenvectors.set(dest++, i, z[source - n], -z[source]);
-                            }
-                        }
-                    } // end if-else
-                } // end for
+                        rightEigenvectors.set(dest++, i, z[source - n], -z[source]);
+                    }
+                }
             } // end if-else
-        } // end if-else
-    }
-
-    /**
-     * @param info
-     * @return
-     */
-    private String getErrorMessage(final intW info)
-    {
-        String err = null;
-        if (info.val == 1)
-            err= "The Schur form computed by LAPACK routine dlahqr"
-                    + "could not be reordered by LAPACK routine dtrsen."
-                    + "Re-enter subroutine DNEUPD with IPARAM(5)=NCV and"
-                    + "increase the size of the arrays DR and DI to have"
-                    + "dimension at least dimension NCV and allocate at least NCV"
-                    + "columns for Z. NOTE: Not necessary if Z and V share"
-                    + "the same space. Please notify the authors if this error"
-                    + "occurs.";
-        else if (info.val == -1)
-            err = "N must be positive.";
-        else if (info.val == -2)
-            err = "NEV must be positive.";
-        else if (info.val == -3)
-            err = "NCV-NEV >= 2 and less than or equal to N.";
-        else if (info.val == -5)
-            err = "WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'";
-        else if (info.val == -6)
-            err = "BMAT must be one of 'I' or 'G'.";
-        else if (info.val == -7)
-            err = "Length of private work WORKL array is not sufficient.";
-        else if (info.val == -8)
-            err = "Error return from calculation of a real Schur form."
-                    + "Informational error from LAPACK routine dlahqr.";
-        else if (info.val == -9)
-            err = "Error return from calculation of eigenvectors."
-                    + "Informational error from LAPACK routine dtrevc.";
-        else if (info.val == -10)
-            err = "IPARAM(7) must be 1,2,3,4.";
-        else if (info.val == -11)
-            err = "IPARAM(7) = 1 and BMAT = 'G' are incompatible.";
-        else if (info.val == -12)
-            err = "HOWMNY = 'S' not yet implemented";
-        else if (info.val == -13)
-            err = "HOWMNY must be one of 'A' or 'P' if RVEC = .true.";
-        else if (info.val == -14)
-            err = "DNAUPD did not find any eigenvalues to sufficient accuracy";
-        return err;
+        } // end for
     }
 
     public IEigenvalueDecomposition getResult()
