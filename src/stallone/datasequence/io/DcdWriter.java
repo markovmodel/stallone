@@ -12,6 +12,7 @@ import stallone.api.doubles.IDoubleArray;
  * Basic writer for DCD trajectory files.
  *
  * @author Martin Senne, Frank Noe
+ * FIXME: this class produces wrong output
  */
 public class DcdWriter implements IDataWriter
 {
