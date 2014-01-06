@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.cluster.IClustering;
-import stallone.api.datasequence.IDataList;
-import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataInput;
-import stallone.api.datasequence.IDataWriter;
+import stallone.api.datasequence.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.hmm.IExpectationMaximization;
@@ -55,7 +52,7 @@ public class AdaptiveDiscretization
 {
     // input data
     private List<String> inputFiles;
-    private List<IDataSequence> data;
+    private IDataInput data;
     // basic settings
     private int ninitclusters = 0;
     private IDataSequence initcenters;
@@ -472,9 +469,9 @@ public class AdaptiveDiscretization
         }
 
         System.out.println("reading input data ... ");
-        IDataInput loader = dataNew.dataSequenceLoader(inputFiles);
+        IDataSequenceLoader loader = dataNew.multiSequenceLoader(inputFiles);
         data = loader.loadAll();
-        System.out.println(" done. size: " + data.get(0).size() + " x " + data.get(0).dimension());
+        System.out.println(" done. size: " + data.getSequence(0).size() + " x " + data.getSequence(0).dimension());
 
 
         // data assignment metric
@@ -485,7 +482,7 @@ public class AdaptiveDiscretization
         }
         if (metricstring.equalsIgnoreCase("minrmsd"))
         {
-            metric = new MinimalRMSDistance3D(data.get(0).dimension() / 3);
+            metric = new MinimalRMSDistance3D(data.getSequence(0).dimension() / 3);
         }
 
         // initial discretization
@@ -496,7 +493,7 @@ public class AdaptiveDiscretization
         else
         {
             String initcenterfile = parser.getString("initcenters");
-            initcenters = dataNew.dataSequenceLoader(initcenterfile).load();
+            initcenters = dataNew.reader(initcenterfile).load();
         }
 
         // parameters
@@ -565,22 +562,22 @@ public class AdaptiveDiscretization
         if (cmd.ninitclusters > 0)
         {
             // k-means initial clustering and random splitting
-            IClustering clustering1 = clusterNew.createKmeans(cmd.ninitclusters, 10);
+            IClustering clustering1 = clusterNew.kmeans(cmd.ninitclusters, 10);
             clustering1.setMetric(cmd.metric);
-            IClustering clustering2 = clusterNew.createRandom(cmd.nsplit);
+            IClustering clustering2 = clusterNew.random(cmd.nsplit);
             //IClustering clustering2 = clusterNew.createKcenter(cmd.nsplit);
             clustering2.setMetric(cmd.metric);
             // construct multiclustering
             //cmd.mc = new MultiClustering(cmd.data.get(0), clustering1, clustering2);
-            cmd.mc = new MultiClusteringSplitMerge(cmd.data.get(0), clustering1, clustering2);
+            cmd.mc = new MultiClusteringSplitMerge(cmd.data.getSequence(0), clustering1, clustering2);
         }
         else
         {
-            IClustering clustering2 = clusterNew.createRandomCompact(cmd.nsplit, 10);
+            IClustering clustering2 = clusterNew.randomCompact(cmd.nsplit, 10);
             //IClustering clustering2 = clusterNew.createRandom(cmd.nsplit);
             //IClustering clustering2 = clusterNew.createKcenter(cmd.nsplit);
             clustering2.setMetric(cmd.metric);
-            cmd.mc = new MultiClusteringSplitMerge(cmd.data.get(0), cmd.initcenters, cmd.metric, clustering2);
+            cmd.mc = new MultiClusteringSplitMerge(cmd.data.getSequence(0), cmd.initcenters, cmd.metric, clustering2);
         }
 
         // fixed initial clustering

@@ -4,6 +4,7 @@
  */
 package stallone.api.cluster;
 
+import stallone.api.datasequence.IDataInput;
 import stallone.cluster.CompactRandomClustering;
 import stallone.cluster.FixedClustering;
 import stallone.cluster.DensityBasedClusteringSimpleN;
@@ -44,17 +45,17 @@ public class ClusterFactory
         }
     }
 
-    private void constructKmeans(KMeansClustering clustering,
-    		Iterable<IDoubleArray> data, int size, IMetric<IDoubleArray> metric,
+    private void kmeans(KMeansClustering clustering,
+    		IDataInput data, IMetric<IDoubleArray> metric,
     		int k, int maxIter)
     {
         clustering.setInitialClusterCentersByRandom(k);
         clustering.setMaxIterations(maxIter);
         clustering.setMetric(metric);
-        clustering.setClusterInput(data, size);
+        clustering.setInput(data);
     }
 
-    private void constructEmptyKmeans(KMeansClustering clustering,
+    private void kmeans(KMeansClustering clustering,
     		IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         clustering.setInitialClusterCentersByRandom(k);
@@ -62,61 +63,61 @@ public class ClusterFactory
         clustering.setMetric(metric);
     }
 
-    public IClustering createKmeans(IMetric metric, int k, int maxIter)
+    public IClustering kmeans(IMetric metric, int k, int maxIter)
     {
         KMeansClustering clustering = new KMeansClustering();
-        constructEmptyKmeans(clustering, metric, k, maxIter);
+        kmeans(clustering, metric, k, maxIter);
         return (clustering);
     }
 
-    public IClustering createKmeans(int k, int maxIter)
+    public IClustering kmeans(int k, int maxIter)
     {
         KMeansClustering clustering = new KMeansClustering();
-        constructEmptyKmeans(clustering, new EuclideanDistance(), k, maxIter);
+        kmeans(clustering, new EuclideanDistance(), k, maxIter);
         return (clustering);
     }
 
-    public IClustering createKmeans(int k)
+    public IClustering kmeans(int k)
     {
         KMeansClustering clustering = new KMeansClustering();
-        constructEmptyKmeans(clustering, new EuclideanDistance(), k, 1000);
+        kmeans(clustering, new EuclideanDistance(), k, 1000);
         return (clustering);
     }
 
-    public IClustering createKmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
+    public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
     {
-        return createKmeans(data, data.size(), metric, k, maxIter);
+        return kmeans(data, metric, k, maxIter);
     }
 
-    public IClustering createKmeans(Iterable<IDoubleArray> data, int size, IMetric metric, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, IMetric metric, int k, int maxIter)
     {
         KMeansClustering clustering = new KMeansClustering();
-        constructKmeans(clustering, data, size, metric, k, maxIter);
+        kmeans(clustering, data, metric, k, maxIter);
         return (clustering);
     }
 
-    public IClustering createKmeans(Iterable<IDoubleArray> data, int size, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, int k, int maxIter)
     {
-        return (createKmeans(data, size, new EuclideanDistance(), k, maxIter));
+        return (kmeans(data, new EuclideanDistance(), k, maxIter));
     }
 
-    public IClustering createKmeans(IDataSequence data, int k, int maxIter)
+    public IClustering kmeans(IDataSequence data, int k, int maxIter)
     {
-        return (createKmeans(data, new EuclideanDistance(), k, maxIter));
+        return (kmeans(data, new EuclideanDistance(), k, maxIter));
     }
 
-    public IClustering createKmeans(Iterable<IDoubleArray> data, int size, int k)
+    public IClustering kmeans(IDataInput data, int k)
     {
-        return (createKmeans(data, size, new EuclideanDistance(), k, 1000));
+        return (kmeans(data, new EuclideanDistance(), k, 1000));
     }
 
-    public IClustering createKmeans(IDataSequence data, int k)
+    public IClustering kmeans(IDataSequence data, int k)
     {
-        return (createKmeans(data, new EuclideanDistance(), k, 1000));
+        return (kmeans(data, new EuclideanDistance(), k, 1000));
     }
 
 
-    public IClustering createKcenter(IMetric metric, int k)
+    public IClustering kcenter(IMetric metric, int k)
     {
         KCenterClustering clustering = new KCenterClustering();
         clustering.setNumberOfClusters(k);
@@ -124,127 +125,125 @@ public class ClusterFactory
         return (clustering);
     }
 
-    public IClustering createKcenter(int k)
+    public IClustering kcenter(int k)
     {
         KCenterClustering clustering = new KCenterClustering();
         clustering.setNumberOfClusters(k);
         return (clustering);
     }
 
-    public IClustering createKcenter(Iterable<IDoubleArray> data, int size, IMetric metric, int k)
+    public IClustering kcenter(IDataInput data, IMetric metric, int k)
     {
         KCenterClustering clustering = new KCenterClustering();
         clustering.setNumberOfClusters(k);
         clustering.setMetric(metric);
-        clustering.setClusterInput(data, size);
+        clustering.setInput(data);
         return (clustering);
     }
 
-    public IClustering createKcenter(IDataSequence data, IMetric metric, int k)
+    public IClustering kcenter(IDataSequence data, IMetric metric, int k)
     {
-        return (createKcenter(data, data.size(), metric, k));
+        return (kcenter(data, metric, k));
     }
 
-    public IClustering createKcenter(Iterable<IDoubleArray> data, int size, int k)
+    public IClustering kcenter(IDataInput data, int k)
     {
-        return (createKcenter(data, size, new EuclideanDistance(), k));
+        return (kcenter(data, new EuclideanDistance(), k));
     }
 
-    public IClustering createKcenter(IDataSequence data, int k)
+    public IClustering kcenter(IDataSequence data, int k)
     {
-        return (createKcenter(data, new EuclideanDistance(), k));
+        return (kcenter(data, new EuclideanDistance(), k));
     }
 
 
 
-    public IClustering createRegularSpatial(Iterable<IDoubleArray> data,
-    		int size, IMetric<IDoubleArray> metric, double dmin)
+    public IClustering regspace(IDataInput data, IMetric<IDoubleArray> metric, double dmin)
     {
         RegularSpatialClustering clustering = new RegularSpatialClustering();
         clustering.setDmin(dmin);
         clustering.setMetric(metric);
-        clustering.setClusterInput(data,size);
+        clustering.setInput(data);
         return (clustering);
     }
 
-    public IClustering createRegularSpatial(IDataSequence data,
+    public IClustering regspace(IDataSequence data,
     		IMetric<IDoubleArray> metric, double dmin)
     {
-        return createRegularSpatial(data, data.size(), metric, dmin);
+        return regspace(data, metric, dmin);
     }
 
-    public IClustering createRegularSpatial(Iterable<IDoubleArray> data, int size, double dmin)
+    public IClustering regspace(IDataInput data, double dmin)
     {
-        return (createRegularSpatial(data, size, new EuclideanDistance(), dmin));
+        return (regspace(data, new EuclideanDistance(), dmin));
     }
 
-    public IClustering createRegularSpatial(IDataSequence data, double dmin)
+    public IClustering regspace(IDataSequence data, double dmin)
     {
-        return (createRegularSpatial(data, new EuclideanDistance(), dmin));
+        return (regspace(data, new EuclideanDistance(), dmin));
     }
 
-    public IClustering createDensityBased(IDataSequence data,
-    		IMetric<IDoubleArray> metric, double dmin, int minpts)
+    public IClustering densitybased(IDataSequence data, IMetric<IDoubleArray> metric, double dmin, int minpts)
     {
         DensityBasedClusteringSimple clustering = new DensityBasedClusteringSimple(dmin, minpts);
         clustering.setMetric(metric);
-        clustering.setClusterInput(data);
+        clustering.setInput(data);
         return (clustering);
     }
 
-    public IClustering createDensityBased(IDataSequence data, double dmin, int minpts)
+    public IClustering densitybased(IDataSequence data, double dmin, int minpts)
     {
-        return createDensityBased(data, new EuclideanDistance(), dmin, minpts);
+        return densitybased(data, new EuclideanDistance(), dmin, minpts);
     }
 
-    public IClustering createDensityBased(IDataSequence data, IMetric metric, int N)
+    public IClustering densitybased(IDataSequence data, IMetric metric, int N)
     {
         DensityBasedClusteringSimpleN clustering = new DensityBasedClusteringSimpleN(N);
         clustering.setMetric(metric);
-        clustering.setClusterInput(data);
+        clustering.setInput(data);
         return (clustering);
     }
 
-    public IClustering createDensityBased(IDataSequence data, int N)
+    public IClustering densitybased(IDataSequence data, int N)
     {
-        return createDensityBased(data, new EuclideanDistance(), N);
+        return densitybased(data, new EuclideanDistance(), N);
     }
 
-    public IClustering createRandom(int N)
+    public IClustering random(int N)
     {
         IClustering clustering = new RandomClustering(N);
         return clustering;
     }
 
-    public IClustering createRandom(IDataSequence data, int N)
+    public IClustering random(IDataSequence data, int N)
     {
-        IClustering rc = createRandom(N);
-        rc.setClusterInput(data, data.size());
+        IClustering rc = random(N);
+        rc.setInput(data);
         return rc;
     }
 
-    public IClustering createRandomCompact(int N, int nrepeat)
+    public IClustering randomCompact(int N, int nrepeat)
     {
         IClustering clustering = new CompactRandomClustering(N,nrepeat);
         return clustering;
     }
 
-    public IClustering createRandomCompact(IDataSequence data, int N, int nrepeat)
+    public IClustering randomCompact(IDataSequence data, int N, int nrepeat)
     {
-        IClustering rc = createRandomCompact(N,nrepeat);
-        rc.setClusterInput(data, data.size());
+        IClustering rc = randomCompact(N,nrepeat);
+        rc.setInput(data);
         return rc;
     }
 
-    public IClustering createFixed(IDataSequence clusters)
+    public IClustering fixed(IDataSequence clusters)
     {
         return new FixedClustering(clusters);
     }
 
-    public IClustering createFixed(IDataSequence data, IDataSequence clusters)
+    public IClustering fixed(IDataSequence data, IDataSequence clusters)
     {
         IClustering fc = new FixedClustering(clusters);
-        fc.setClusterInput(data, data.size());
+        fc.setInput(data);
         return fc;
     }
 

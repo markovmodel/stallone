@@ -7,13 +7,14 @@ package stallone.datasequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.datasequence.IDataSequence;
 import java.util.Iterator;
+import stallone.api.datasequence.IDataInput;
 import stallone.doubles.PrimitiveDoubleArray;
 
 /**
  *
  * @author noe
  */
-public class DataSequenceArray implements IDataSequence
+public class DataArray implements IDataSequence
 {
     protected double[] times = null;
     protected IDoubleArray[] data = null;
@@ -23,7 +24,16 @@ public class DataSequenceArray implements IDataSequence
      * Untimed data sequence
      * @param _data
      */
-    public DataSequenceArray(IDoubleArray[] _data)
+    public DataArray(int size)
+    {
+        this.data = new IDoubleArray[size];
+    }
+
+    /**
+     * Untimed data sequence
+     * @param _data
+     */
+    public DataArray(IDoubleArray[] _data)
     {
         this.data = _data;
     }
@@ -33,7 +43,7 @@ public class DataSequenceArray implements IDataSequence
      * @param _times
      * @param _data
      */
-    public DataSequenceArray(double[] _times, IDoubleArray[] _data)
+    public DataArray(double[] _times, IDoubleArray[] _data)
     {
         this.times = _times;
         this.data = _data;
@@ -43,7 +53,7 @@ public class DataSequenceArray implements IDataSequence
      * Untimed data array
      * @param _data
      */
-    public DataSequenceArray(double[][] _data)
+    public DataArray(double[][] _data)
     {
         this.data = new IDoubleArray[_data.length];
         for (int i=0; i<this.data.length; i++)
@@ -54,18 +64,18 @@ public class DataSequenceArray implements IDataSequence
      * Timed data array
      * @param _data
      */
-    public DataSequenceArray(double[] _times, double[][] _data)
+    public DataArray(double[] _times, double[][] _data)
     {
         this(_data);
         this.times = _times;
     }
 
-    public DataSequenceArray(IDoubleArray _data)
+    public DataArray(IDoubleArray _data)
     {
         this(_data.getTable());
     }
 
-    public DataSequenceArray(IDoubleArray _times, IDoubleArray _data)
+    public DataArray(IDoubleArray _times, IDoubleArray _data)
     {
         this(_times.getArray(), _data.getTable());
     }
@@ -96,15 +106,38 @@ public class DataSequenceArray implements IDataSequence
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return(new ElementIterator(data));
+        return(new DataSequenceIterator(this));
     }
 
-    //@Override
-    public Iterator<IDataSequence> pairIterator(int spacing)
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
     {
-        return(new PairIterator(data,spacing));
+        return new DataSequencePairIterator(this, spacing);
     }
 
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataSequence seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataSequence _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataSequencePairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
     @Override
     public double getTime(int i)
     {
@@ -114,72 +147,5 @@ public class DataSequenceArray implements IDataSequence
             return times[i];
     }
 
-    private class ElementIterator implements Iterator<IDoubleArray>
-    {
-        private IDoubleArray[] data;
-        private int i=0;
-
-        public ElementIterator(IDoubleArray[] _data)
-        {
-            this.data = _data;
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            return(i<data.length);
-        }
-
-        @Override
-        public IDoubleArray next()
-        {
-            IDoubleArray res = data[i];
-            i++;
-            return res;
-        }
-
-        @Override
-        public void remove()
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
-
-    private class PairIterator implements Iterator<IDataSequence>
-    {
-        private IDoubleArray[] data;
-        private int i=0, spacing;
-
-        private IDoubleArray[] d12 = new IDoubleArray[2];
-        private DataSequenceArray res = new DataSequenceArray(d12);
-
-
-        public PairIterator(IDoubleArray[] _data, int _spacing)
-        {
-            this.data = _data;
-            this.spacing = _spacing;
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            return(i+spacing<data.length);
-        }
-
-        @Override
-        public IDataSequence next()
-        {
-            d12[0] = data[i];
-            d12[1] = data[i+spacing];
-            i++;
-            return res;
-        }
-
-        @Override
-        public void remove()
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
 
 }

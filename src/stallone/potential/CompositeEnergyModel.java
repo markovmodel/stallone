@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import stallone.doubles.PrimitiveDoubleArray;
 
 /**
- * Energy model that is a sum of several terms, i.e. A full energy model plus bias or field terms
+ * Energy model that is a sum of several terms, e.g. A full energy model plus bias or field terms
  * @author noe
  */
 public class CompositeEnergyModel extends AbstractPotential

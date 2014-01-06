@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import stallone.api.cluster.IClustering;
-import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.hmm.ParameterEstimationException;
 import stallone.util.CommandLineParser;
 

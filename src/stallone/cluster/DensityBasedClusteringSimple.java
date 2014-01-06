@@ -7,6 +7,7 @@ package stallone.cluster;
 import java.util.*;
 import stallone.api.cluster.INeighborSearch;
 import stallone.api.datasequence.DataSequence;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
@@ -18,11 +19,7 @@ import stallone.api.ints.IntsPrimitive;
 import stallone.doubles.EuclideanDistance;
 
 /**
- * Density-based clustering algorithm OPTICS:
- *
- * Mihael Ankerst, Markus M. Breunig, Hans-Peter Kriegel, Jörg Sander (1999).
- * "OPTICS: Ordering Points To Identify the Clustering Structure". ACM SIGMOD
- * international conference on Management of data. ACM Press. pp. 49–60.
+ * Simple Density-based clustering algorithm 
  *
  * @author noe
  */
@@ -51,9 +48,9 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     }
 
     @Override
-    public void setClusterInput(IDataSequence data)
+    public void setInput(IDataSequence data)
     {
-        super.setClusterInput(data);
+        super.setInput(data);
         this.datasequence = data;
         neighborSearch.setData(data);
 
@@ -65,9 +62,9 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     }
 
     @Override
-    public void setClusterInput(Iterable<IDoubleArray> data, int size)
+    public void setInput(IDataInput data)
     {
-        throw new RuntimeException("Must use setClusterInput(IDataSequence)");
+        throw new RuntimeException("Currently not implemented");
     }
 
     @Override
@@ -81,7 +78,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
     public void perform()
     {
         // initialize all:
-        super.clusterCenters = DataSequence.create.createDatalist();
+        super.clusterCenters = DataSequence.create.list();
         java.util.Arrays.fill(this.nneighbors, -1);
         java.util.Arrays.fill(this.nneighbors, -1);
         java.util.Arrays.fill(done, false);
@@ -154,7 +151,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
 
     public static void main(String[] args)
     {
-        IDataList data = DataSequence.create.createDatalist();
+        IDataList data = DataSequence.create.list();
         data.add(Doubles.create.arrayFrom(-1.4));
         data.add(Doubles.create.arrayFrom(-1.3));
         data.add(Doubles.create.arrayFrom(-1.2));
@@ -176,7 +173,7 @@ public class DensityBasedClusteringSimple extends AbstractRegularClustering
         for (double d=0; d<4; d+=0.1)
         {
                 DensityBasedClusteringSimple clustering = new DensityBasedClusteringSimple(d, 3);
-                clustering.setClusterInput(data);
+                clustering.setInput(data);
                 clustering.setMetric(new EuclideanDistance());
                 clustering.perform();
                 System.out.println(d+"\t"+clustering.getNumberOfClusters());

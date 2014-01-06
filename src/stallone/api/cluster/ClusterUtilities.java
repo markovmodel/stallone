@@ -5,6 +5,7 @@
 package stallone.api.cluster;
 
 import static stallone.api.API.*;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.Ints;
@@ -27,69 +28,68 @@ public class ClusterUtilities
 
     public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
     {
-        return (perform(Cluster.create.createKmeans(data,metric,k,maxIter)));
+        return (perform(clusterNew.kmeans(data,metric,k,maxIter)));
     }
 
-    public IClustering kmeans(Iterable<IDoubleArray> data, int size, IMetric<?> metric, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, IMetric<?> metric, int k, int maxIter)
     {
-        return (perform(Cluster.create.createKmeans(data,size,metric,k,maxIter)));
+        return (perform(clusterNew.kmeans(data,metric,k,maxIter)));
     }
 
     public IClustering kmeans(IDataSequence data, int k, int maxIter)
     {
-        return (perform(Cluster.create.createKmeans(data,k,maxIter)));
+        return (perform(clusterNew.kmeans(data,k,maxIter)));
     }
 
-    public IClustering kmeans(Iterable<IDoubleArray> data, int size, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, int k, int maxIter)
     {
-        return (perform(Cluster.create.createKmeans(data,size,k,maxIter)));
+        return (perform(clusterNew.kmeans(data,k,maxIter)));
     }
 
     public IClustering kmeans(IDataSequence data, int k)
     {
-        return (perform(Cluster.create.createKmeans(data,k)));
+        return (perform(clusterNew.kmeans(data,k)));
     }
 
-    public IClustering kmeans(Iterable<IDoubleArray> data, int size, int k)
+    public IClustering kmeans(IDataInput data, int k)
     {
-        return (perform(Cluster.create.createKmeans(data,size,k)));
+        return (perform(clusterNew.kmeans(data,k)));
     }
 
     public IClustering kcenter(IDataSequence data, IMetric<?> metric, int k)
     {
-        return (perform(Cluster.create.createKcenter(data,k)));
+        return (perform(clusterNew.kcenter(data,k)));
     }
 
-    public IClustering kcenter(Iterable<IDoubleArray> data, int size, IMetric<?> metric, int k)
+    public IClustering kcenter(IDataInput data, IMetric<?> metric, int k)
     {
-        return (perform(Cluster.create.createKcenter(data,size,k)));
+        return (perform(clusterNew.kcenter(data,k)));
     }
 
-    public IClustering regularSpatial(IDataSequence data, IMetric<IDoubleArray> metric, double dmin)
+    public IClustering regspace(IDataSequence data, IMetric<IDoubleArray> metric, double dmin)
     {
-        return (perform(Cluster.create.createRegularSpatial(data, metric, dmin)));
+        return (perform(clusterNew.regspace(data, metric, dmin)));
     }
 
-    public IClustering regularSpatial(Iterable<IDoubleArray> data, int size,
-    		IMetric<IDoubleArray> metric, double dmin)
+    public IClustering regspace(IDataInput data, IMetric<IDoubleArray> metric, double dmin)
     {
-        return (perform(Cluster.create.createRegularSpatial(data,size,metric,dmin)));
+        return (perform(clusterNew.regspace(data,metric,dmin)));
     }
 
     public IClustering densityBased(IDataSequence data, IMetric metric, double dmin, int minpts)
     {
-        return (perform(Cluster.create.createDensityBased(data,metric,dmin,minpts)));
+        return (perform(clusterNew.densitybased(data,metric,dmin,minpts)));
     }
 
 
     public IClustering densityBased(IDataSequence data, double dmin, int minpts)
     {
-        return (perform(Cluster.create.createDensityBased(data,dmin,minpts)));
+        return (perform(clusterNew.densitybased(data,dmin,minpts)));
     }
 
     public IClustering densityBased(IDataSequence data, int N)
     {
-        return (perform(Cluster.create.createDensityBased(data,N)));
+        return (perform(clusterNew.densitybased(data,N)));
     }
 
     public IIntArray discretize(IDataSequence data, IDiscretization disc)

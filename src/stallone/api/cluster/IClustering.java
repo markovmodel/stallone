@@ -6,6 +6,7 @@ import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import java.util.Iterator;
 import stallone.api.datasequence.IDataSequence;
+import stallone.api.datasequence.IDataInput;
 
 /**
  * Each clustering algorithm implements this interface. It provides methods - to set input as an indexes set of vectors
@@ -22,7 +23,7 @@ public interface IClustering extends IDiscretization
      *
      * @param  datapoints
      */
-    public void setClusterInput(IDataSequence datapoints);
+    public void setInput(IDataSequence datapoints);
 
     /**
      * Set datapoints which are clustered.
@@ -30,7 +31,7 @@ public interface IClustering extends IDiscretization
      * @param datapoints
      * @param size number of data points.
      */
-    public void setClusterInput(Iterable<IDoubleArray> datapoints, int size);
+    public void setInput(IDataInput data);
 
     /**
      * Set the metric which is used for clustering.

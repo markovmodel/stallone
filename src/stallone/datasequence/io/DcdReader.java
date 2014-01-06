@@ -1,5 +1,7 @@
 package stallone.datasequence.io;
 
+import static stallone.api.API.*;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -13,7 +15,6 @@ import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
-import stallone.datasequence.DataSequenceLoaderIterator;
 import stallone.io.NicelyCachedRandomAccessFile;
 
 /**
@@ -49,7 +50,10 @@ public class DcdReader implements IDataReader
     private long framesizeWithFixed;
     private int nextFrameIndex;
 
-    private IDoubleArray preconstructedArray;
+    /** Selection for reading */
+    private int[] selection;
+    private boolean[] selected;
+    
     private Logger logger;
     
     /**
@@ -84,7 +88,10 @@ public class DcdReader implements IDataReader
         byteOrder = detectEndianess();
         readHeader();
         niceRandomAccessFile.changePageSize((int) framesizeRegular);
-        preconstructedArray = Doubles.create.array(numberOfAtoms,3);
+        
+        selection = intArrays.range(numberOfAtoms);
+        selected = new boolean[numberOfAtoms];
+        java.util.Arrays.fill(selected, true);
     }
 
     /**
@@ -128,7 +135,6 @@ public class DcdReader implements IDataReader
      */
     private ByteBuffer readNextRecord() throws IOException
     {
-
         // read record length (int)
         int recordLength = niceRandomAccessFile.readToBuffer(4).order(byteOrder).getInt();
 
@@ -367,13 +373,19 @@ public class DcdReader implements IDataReader
         FloatBuffer zBuffer = readNextRecord().asFloatBuffer();
 
         int r = 0;
-
+        float x,y,z;
         for (int i = 0; i < n; i++)
         {
-            r = i * 3;
-            target.set(r + 0, xBuffer.get());
-            target.set(r + 1, yBuffer.get());
-            target.set(r + 2, zBuffer.get());
+            x = xBuffer.get();
+            y = yBuffer.get();
+            z = zBuffer.get();
+            if (selected[i])
+            {
+                target.set(r, 0, x);
+                target.set(r, 1, y);
+                target.set(r, 2, z);
+                r++;
+            }
         }
 
         // increment last position
@@ -433,7 +445,6 @@ public class DcdReader implements IDataReader
     {
         try
         {
-
             // position if necessary
             if ((frameIndex < 0) || (this.numberOfFrames <= frameIndex))
             {
@@ -455,7 +466,8 @@ public class DcdReader implements IDataReader
             }
 
             return readNextFrame(target);
-        } catch (IOException ex)
+        } 
+        catch (IOException ex)
         {
             logger.log(Level.SEVERE, null, ex);
             throw new RuntimeException("Problems reading DCD, caught I/O exception.");
@@ -481,9 +493,27 @@ public class DcdReader implements IDataReader
     }
 
     @Override
+    public void select(int[] _selection)
+    {
+        if (_selection == null)
+            _selection = intArrays.range(numberOfAtoms);
+        this.selection = _selection;
+        java.util.Arrays.fill(selected, false);
+        for (int i=0; i<_selection.length; i++)
+            selected[_selection[i]] = true;
+    }
+    
+    @Override
+    public int[] getSelection()
+    {
+        return this.selection;
+    }
+
+    
+    @Override
     public IDoubleArray get(int frameIndex)
     {
-        return get(frameIndex, preconstructedArray);
+        return get(frameIndex, Doubles.create.array(selection.length,3));
     }
 
     @Override
@@ -495,13 +525,42 @@ public class DcdReader implements IDataReader
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return new DataSequenceLoaderIterator(this);
+        return new DataReaderIterator(this);
     }
 
     @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        return new DataReaderPairIterator(this, spacing);
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataReader seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataReader _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataReaderPairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
+    @Override
     public IDataSequence load()
     {
-        IDataList res = DataSequence.create.createDatalist();
+        IDataList res = DataSequence.create.list();
         for (int i=0; i<this.size(); i++)
             res.add(get(i));
         return res;
@@ -516,30 +575,5 @@ public class DcdReader implements IDataReader
     public long memorySize()
     {
         return this.size()*this.dimension()*8;
-    }
-
-    class DcdFrameDataIterator implements Iterator<IDoubleArray>
-    {
-        int index = 0;
-
-        @Override
-        public boolean hasNext()
-        {
-            return index < size();
-        }
-
-        @Override
-        public IDoubleArray next()
-        {
-            IDoubleArray res = get(index, preconstructedArray);
-            index++;
-            return res;
-        }
-
-        @Override
-        public void remove()
-        {
-            throw new UnsupportedOperationException("Remove not supported.");
-        }
     }
 }

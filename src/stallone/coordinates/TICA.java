@@ -4,56 +4,71 @@
  */
 package stallone.coordinates;
 
+import java.io.FileNotFoundException;
 import static stallone.api.API.*;
 
 import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.coordinates.IPCA;
-import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 
 import java.util.Random;
+import stallone.api.coordinates.ITICA;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
+import stallone.api.datasequence.IDataWriter;
+import stallone.api.potential.IEnergyModel;
+import stallone.dynamics.IIntegratorThermostatted;
+
 /**
- *
+ * Computes TICA using brute-force matrix inversion of the covariance matrix.
+ * This is not numerically stable and should be enhanced.
  * @author noe
  */
-public class PCA implements IPCA
+public class TICA implements ITICA
 {
+    // lag time
+    private int lag;
     // count and mean
     private IDoubleArray c,  mean;
     // product and covariance matrix
     private IDoubleArray CC, Cov;
+    // time-lagged product and covariance matrix
+    private IDoubleArray CCTau, CovTau;
     // input dimension
     private int dimIn;
     // total number of data points
     private int N;
     
+    // results
+    private IDoubleArray evalTICA;
+    private IDoubleArray evecTICA;
     
-    private IDoubleArray eval;
-    private IDoubleArray evec;
+    
     // output dimension
     private int dimOut;
     
-    public PCA(IDataInput _source)
+    public TICA(IDataInput _source, int _lag)
     {
+        this.lag = _lag;
         init(_source.dimension());
 
-        for (IDataSequence seq : _source.getSingleSequenceLoader())
+        for (IDataSequence seq : _source.sequences())
             addData(seq);
         
         computeTransform();
     }
 
-    public PCA(IDataSequence _source)
+    public TICA(IDataSequence _source, int _lag)
     {
+        this.lag = _lag;
         init(_source.dimension());
         addData(_source);        
         computeTransform();
     }
-    
-    public PCA()
+
+    public TICA(int _lag)
     {
+        this.lag = _lag;
     }
     
     final private void init(int _dimIn)
@@ -63,6 +78,8 @@ public class PCA implements IPCA
         this.mean = null;
         this.CC = doublesNew.matrix(dimIn, dimIn);
         this.Cov = null;
+        this.CCTau = doublesNew.matrix(dimIn, dimIn);
+        this.CovTau = null;
     }
     
 
@@ -76,24 +93,31 @@ public class PCA implements IPCA
         if (this.dimIn == 0 && this.N == 0)
             init(data.dimension());
 
-        for (IDoubleArray x : data)
-        {            
+        for (IDoubleArray[] X : data.pairs(lag))
+        {
             for (int i=0; i<dimIn; i++)
             {
                 // add counts
-                this.c.set(i, this.c.get(i)+x.get(i));
+                this.c.set(i, this.c.get(i)+X[0].get(i));
                 
-                // add product matrix
+                // add product matrix (symmetric)
                 for (int j=i; j<dimIn; j++)
                 {
-                    double xij = x.get(i) * x.get(j);
+                    double xij = X[0].get(i) * X[0].get(j);
                     this.CC.set(i,j, this.CC.get(i,j)+xij);
                     this.CC.set(j,i, this.CC.get(i,j));
+                }
+
+                // add time-lagged product matrix (nonsymmetric)
+                for (int j=0; j<dimIn; j++)
+                {
+                    double xij = X[0].get(i) * X[1].get(j);
+                    this.CCTau.set(i,j, this.CCTau.get(i,j)+xij);
                 }
             }
         }
         
-        N += data.size();
+        N += data.size() - lag;
     }
     
     /**
@@ -104,16 +128,42 @@ public class PCA implements IPCA
     @Override
     final public void computeTransform()
     {
+        // compute mean
         mean = alg.scaleToNew(1.0/(double)N, c);
         IDoubleArray meanT = alg.transposeToNew(mean);
         IDoubleArray M = alg.product(mean, meanT); // matrix of <x><y>
+        // compute covariance matrix
         Cov = alg.subtract(CC, M); // mean-free products
-        alg.scale(1.0/(double)(N-1), Cov); // covariances
-        IEigenvalueDecomposition evd = alg.evd(Cov);
-        this.eval = evd.getEvalNorm();
-        this.evec = evd.getRightEigenvectorMatrix().viewReal();
+        alg.scale(1.0/(double)(N-lag-1), Cov); // covariances
+        // compute time-lagged covariance matrix
+        CovTau = alg.subtract(CCTau, M); // mean-free products
+        CovTau = alg.addWeightedToNew(0.5, CovTau, 0.5, alg.transposeToNew(CovTau)); // symmetrize
+        alg.scale(1.0/(double)(N-lag-1), CovTau); // covariances
+        // simple implementation of TICA (note: this is not numerically robust!)
+        IDoubleArray W = alg.product(alg.inverse(Cov), CovTau);
+        IEigenvalueDecomposition evd = alg.evd(W);
+        this.evalTICA = evd.getEvalNorm();
+        this.evecTICA = evd.getRightEigenvectorMatrix().viewReal();
+        // Whiten data
+    }
+
+    @Override
+    public IDoubleArray getMeanVector()
+    {
+        return mean;
+    }
+
+    @Override
+    public IDoubleArray getCovarianceMatrix()
+    {
+        return Cov;
     }
     
+    @Override
+    public IDoubleArray getCovarianceMatrixLagged()
+    {
+        return CovTau;
+    }
     
     @Override
     public void setDimension(int d)
@@ -124,35 +174,55 @@ public class PCA implements IPCA
     @Override
     public IDoubleArray getEigenvalues()
     {
-        return eval;
+        return evalTICA;
     }
 
     @Override
     public IDoubleArray getEigenvector(int i)
     {
-        return evec.viewColumn(i);
+        return evecTICA.viewColumn(i);
     }
 
     @Override
     public IDoubleArray getEigenvectorMatrix()
     {
-        return evec;
+        return evecTICA;
     }
 
+    /**
+     * Projects x onto the principal subspace with given output dimension;
+     * @param x
+     */
     @Override
     public IDoubleArray transform(IDoubleArray x)
     {
+        IDoubleArray out = doublesNew.array(dimOut);
+        transform(x, out);
+        return out;
+    }    
+
+
+    /**
+     * Projects the in-array onto the out array. The dimension of the out array
+     * is used to determine the target dimension;
+     * @param in
+     * @param out 
+     */
+    @Override
+    public void transform(IDoubleArray in, IDoubleArray out)
+    {
         // subtract mean
-        x = alg.subtract(x, mean);
+        IDoubleArray x = alg.subtract(in, mean);
         
         // make a row
         if (x.rows() > 1)
             x = alg.transposeToNew(x);
         
-        IDoubleArray y = alg.product(x, evec);
-        IDoubleArray yproj = doubles.subToNew(y, 0, dimOut);
-        return yproj;
-    }    
+        IDoubleArray y = alg.product(x, evecTICA);
+        int d = Math.min(in.size(),out.size());
+        for (int i=0; i<d; i++)
+            out.set(i, y.get(i));
+    }
     
     @Override
     public int dimension()
@@ -160,36 +230,40 @@ public class PCA implements IPCA
         return dimOut;
     }
     
-    public static void main(String[] args)
-    {
-        Random rand = new Random();
+    public static void main(String[] args) throws FileNotFoundException
+    {        
+        // Using the function: 1/4 x^4 - 1/2 x^2 + 1/2 y^2
+        IEnergyModel pot = potNew.multivariateFromExpression(new String[]{"x","y"},
+                "1/4 x^4 - 1/2 x^2 + 1/2 y^2", // function expression
+                "x^3-x", "y"); // derivatives
+        // integrator
+        IDoubleArray masses = doublesNew.arrayFrom(1.0, 1.0);
+        double dt = 0.1, gamma = 1, kT = 0.2;
+        IIntegratorThermostatted langevin = dynNew.langevinLeapFrog(pot, masses, 0.1, gamma, kT);
+        // run
+        IDoubleArray x0 = doublesNew.arrayFrom(0,0);
+        int nsteps = 100000, nsave = 10;
+        IDataSequence seq = dyn.run(x0, langevin, nsteps, nsave);
         
-        IDataList seq = dataNew.createDatalist();
+        // TICA
+        int lag = 1;
+        TICA tica = new TICA(lag);
+        tica.addData(seq);
+        tica.computeTransform();
         
-        for (int i=0; i<10000; i++)
-        {
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()-2, 0.5*rand.nextGaussian()-2));
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+2, 0.5*rand.nextGaussian()+2));
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+4, 0.5*rand.nextGaussian()+4));
-        }
-        
-        PCA pca = new PCA();
-        pca.addData(seq);
-        pca.computeTransform();
-        
-        System.out.println("mean: \t"+doubles.toString(pca.mean, "\t"));
-        System.out.println("cov: \t"+doubles.toString(pca.Cov, "\t", "\n"));
+        System.out.println("mean: \t"+doubles.toString(tica.mean, "\t"));
+        System.out.println("cov: \t"+doubles.toString(tica.Cov, "\t", "\n"));
+        System.out.println("covTau: \t"+doubles.toString(tica.CovTau, "\t", "\n"));
         System.out.println();
-        System.out.println("eval: \t"+doubles.toString(pca.getEigenvalues(), "\t"));
-        System.out.println("evec1: \t"+doubles.toString(pca.getEigenvector(0), "\t"));
-        System.out.println("evec2: \t"+doubles.toString(pca.getEigenvector(1), "\t"));
+        System.out.println("eval: \t"+doubles.toString(tica.getEigenvalues(), "\t"));
+        System.out.println("evec1: \t"+doubles.toString(tica.getEigenvector(0), "\t"));
+        System.out.println("evec2: \t"+doubles.toString(tica.getEigenvector(1), "\t"));
         
-        pca.setDimension(1);
-        IDoubleArray y1 = pca.transform(doublesNew.arrayFrom(2,2));
+        tica.setDimension(1);
+        IDoubleArray y1 = tica.transform(doublesNew.arrayFrom(2,2));
         System.out.println("y1 = \t"+doubles.toString(y1, "\t"));
 
-        IDoubleArray y2 = pca.transform(doublesNew.arrayFrom(4,4));
+        IDoubleArray y2 = tica.transform(doublesNew.arrayFrom(4,4));
         System.out.println("y2 = \t"+doubles.toString(y2, "\t"));
-        
     }
 }

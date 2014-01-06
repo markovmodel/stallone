@@ -48,6 +48,16 @@ public interface IDataReader extends IDataSequence
     public long memorySize();
 
     /**
+     * Selects a subset of the data for reading.
+     * @param selection subset of indexes of each data set. A call to get(index)
+     * will return an array with a length equal to selection.length. A call to
+     * load() will return a sequence of such sub-data sets.
+     */
+    public void select(int[] selection);
+    
+    public int[] getSelection();
+    
+    /**
      * Gets single data object
      * @param index
      * @return

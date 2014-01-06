@@ -6,7 +6,6 @@ package stallone.api.datasequence;
 
 import java.io.IOException;
 import java.util.List;
-import stallone.api.doubles.IDoubleArray;
 
 /**
  *
@@ -17,9 +16,8 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public interface IDataInput
+public interface IDataSequenceLoader extends IDataInput
 {
-
     //public void setLoader(IDataReader loader);
 
     /**
@@ -39,30 +37,6 @@ public interface IDataInput
     public void scan()
             throws IOException;
 
-    /**
-     * Total number of sequences. Need to scan() first before calling this method.
-     * @return
-     */
-    public int numberOfSequences();
-
-    /**
-     * Dimension of the data objects.
-     * @return
-     */
-    public int dimension();
-
-    /**
-     * Total number of data objects. Need to scan() first before calling this method.
-     * @return
-     */
-    public int size();
-
-    /**
-     * size of the sequence with the given index.
-     * @param trajIndex
-     * @return
-     */
-    public int size(int trajIndex);
 
     /**
      * Memory requirement for the given sequence. Need to scan() first before calling this method.
@@ -87,45 +61,17 @@ public interface IDataInput
      */
     public long memorySizeTotal();
 
-
-    /**
-     * Returns an iterable that can iterate over single data objects. Does not require scan() to be called.
-     * Only single data objects are loaded into memory and only one file is open at a time
-     */
-    public Iterable<IDoubleArray> getSingleDataLoader();
-
-
-    /**
-     * Returns an iterable that can iterate over single data sequences. Does not require scan() to be called.
-     * Each data sequence is fully loaded into memory at a time. Only one file is open at a time
-     * @return
-     */
-    public Iterable<IDataSequence> getSingleSequenceLoader();
-
-    /**
-     * Load a single data set. Does not require scan() to be called.
-     * @param sequenceIndex
-     * @param frameIndex
-     * @return
-     * @throws IOException
-     */
-    public IDoubleArray load(int sequenceIndex, int frameIndex)
-            throws IOException;
-
     /**
      * Load a single data sequence. Does not require scan() to be called.
      * @param sequenceIndex
      * @return
      * @throws IOException
      */
-    public IDataSequence loadSequence(int sequenceIndex)
-            throws IOException;
+    public IDataSequence loadSequence(int sequenceIndex);
 
     /**
      * Loads everything into memory. Does not require scan() to be called.
      * @return
      */
-    public List<IDataSequence> loadAll()
-            throws IOException;
-
+    public IDataInput loadAll();    
 }

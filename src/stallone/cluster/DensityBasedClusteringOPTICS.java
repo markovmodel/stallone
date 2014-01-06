@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import stallone.api.cluster.INeighborSearch;
 import stallone.api.datasequence.DataSequence;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.Doubles;
@@ -55,9 +56,9 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     }
 
     @Override
-    public void setClusterInput(IDataSequence data)
+    public void setInput(IDataSequence data)
     {
-        super.setClusterInput(data);
+        super.setInput(data);
         this.datasequence = data;
         neighborSearch.setData(data);
 
@@ -70,11 +71,13 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         orderedPoints = new int[data.size()];
     }
 
+
     @Override
-    public void setClusterInput(Iterable<IDoubleArray> data, int size)
+    public void setInput(IDataInput data)
     {
-        throw new RuntimeException("Must use setClusterInput(IDataSequence)");
+        throw new RuntimeException("Currently not implemented");
     }
+
 
     @Override
     public void setMetric(IMetric<IDoubleArray> metric)
@@ -87,7 +90,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
     public void perform()
     {
         // initialize clusters:
-        super.clusterCenters = DataSequence.create.createDatalist();
+        super.clusterCenters = DataSequence.create.list();
 
         optics();
 
@@ -268,7 +271,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
 
     public static void main(String[] args)
     {
-        IDataList data = DataSequence.create.createDatalist();
+        IDataList data = DataSequence.create.list();
         data.add(Doubles.create.arrayFrom(-1.4));
         data.add(Doubles.create.arrayFrom(-1));
         data.add(Doubles.create.arrayFrom(1));
@@ -281,7 +284,7 @@ public class DensityBasedClusteringOPTICS extends AbstractRegularClustering
         data.add(Doubles.create.arrayFrom(1.4));
 
         DensityBasedClusteringOPTICS clustering = new DensityBasedClusteringOPTICS(0.5, 2, 2);
-        clustering.setClusterInput(data);
+        clustering.setInput(data);
         clustering.setMetric(new EuclideanDistance());
         clustering.perform();
     }

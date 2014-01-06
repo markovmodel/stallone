@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static stallone.api.API.*;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.util.CommandLineParser;
@@ -64,7 +64,7 @@ public class Validation
         for (int i=0; i<ifiles.length; i++)
             inputFiles.add(ifiles[i]);
         
-        IDataInput loader = dataNew.dataSequenceLoader(inputFiles);
+        IDataSequenceLoader loader = dataNew.multiSequenceLoader(inputFiles);
         data = intseq.loadIntSequences(inputFiles);
         for (int i=0; i<data.size(); i++)
         {

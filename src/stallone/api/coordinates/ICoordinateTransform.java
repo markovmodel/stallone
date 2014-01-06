@@ -4,8 +4,6 @@
  */
 package stallone.api.coordinates;
 
-import stallone.api.datasequence.IDataInput;
-import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 
 /**
@@ -20,27 +18,22 @@ import stallone.api.doubles.IDoubleArray;
 public interface ICoordinateTransform
 {
     /**
-     * adds data to prepare the transform computation
-     * @param data The data input
-     */
-    public void addData(IDataSequence data);
-    
-    /**
-     * recomputes the transform based on all data added to this point. 
-     * If the coordinate transform is constant, this call has no effect.
-     * @param X A data sequence. 
-     */
-    public void computeTransform();
-
-    /**
      * maps a single coordinate set using the current coordinate transform.
-     * Default behavior: will call compute() if compute() has not yet been called, or if
-     * data has been added after the last compute().
+     * Default behavior: will call compute() if compute() has not yet been called, 
+     * or if data has been added after the last compute().
      * @param c a coordinate set
      * @return the transformed coordinate set
      */
     public IDoubleArray transform(IDoubleArray c);
 
+    /**
+     * Same as transform(IDoubleArray), but writes the result into the provided
+     * output array
+     * @param in
+     * @param out 
+     */
+    public void transform(IDoubleArray in, IDoubleArray out);
+    
     /**
      * Returns the output dimension of this transform
      * @return 

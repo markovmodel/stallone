@@ -14,8 +14,26 @@ import stallone.api.doubles.IDoubleArray;
  * 
  * @author noe
  */
-public interface ITICA extends ICoordinateTransform
+public interface ITICA extends IParametrizedCoordinateTransform
 {
+    /**
+     * Returns the mean vector of the data
+     * @return 
+     */
+    public IDoubleArray getMeanVector();
+
+    /**
+     * Returns the covariance matrix of the data
+     * @return 
+     */
+    public IDoubleArray getCovarianceMatrix();
+
+    /**
+     * Returns the lagged covariance matrix of the data
+     * @return 
+     */
+    public IDoubleArray getCovarianceMatrixLagged();
+    
     /**
      * Sets the dimensionality of the principal subspace. 
      * transform(IDoubleArray) will project onto a subspace of this size. When not

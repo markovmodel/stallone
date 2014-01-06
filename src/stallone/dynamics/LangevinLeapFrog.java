@@ -80,7 +80,6 @@ public class LangevinLeapFrog implements IIntegratorThermostatted
     public void setEnergyModel(IEnergyModel _model)
     {
         this.model = _model;
-        this.a = (IDoubleArray)v.copy();
     }
 
     @Override

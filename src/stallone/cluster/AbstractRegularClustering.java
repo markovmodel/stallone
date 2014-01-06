@@ -5,6 +5,7 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import java.util.Iterator;
 import stallone.api.cluster.*;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.doubles.EuclideanDistance;
 
@@ -71,19 +72,19 @@ public abstract class AbstractRegularClustering implements IClustering
     }
 
     @Override
-    public void setClusterInput(IDataSequence data)
+    public void setInput(IDataSequence _data)
     {
         this.resultsAvailable = false;
-        this.data = data;
-        this.datasize = data.size();
+        this.data = _data;
+        this.datasize = _data.size();
     }
 
     @Override
-    public void setClusterInput(Iterable<IDoubleArray> data, int size)
+    public void setInput(IDataInput _data)
     {
         this.resultsAvailable = false;
-        this.data = data;
-        this.datasize = size;
+        this.data = _data.singles();
+        this.datasize = _data.size();
     }
 
     @Override

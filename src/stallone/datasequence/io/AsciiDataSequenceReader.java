@@ -4,6 +4,8 @@
  */
 package stallone.datasequence.io;
 
+import static stallone.api.API.*;
+
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.DataSequence;
@@ -12,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import stallone.api.doubles.*;
-import stallone.datasequence.DataSequenceLoaderIterator;
+import stallone.datasequence.DataSequencePairIterator;
 import stallone.io.CachedAsciiFileReader;
 import stallone.util.StringTools;
 
@@ -82,7 +84,9 @@ public class AsciiDataSequenceReader
                 return true;
             }
             catch(Exception e)
-            {return false;}
+            {
+                return false;
+            }
         }
         else
         {
@@ -171,7 +175,23 @@ public class AsciiDataSequenceReader
         }
         return value;
     }
-
+    
+    @Override
+    public void select(int[] selection)
+    {
+        this.selectedColumns = selection;
+    }
+    
+    @Override
+    public int[] getSelection()
+    {
+        if (this.selectedColumns == null)
+            return intArrays.range(dimension());
+        else
+            return this.selectedColumns;
+    }
+    
+    
     @Override
     public IDoubleArray get(int index)
     {
@@ -184,6 +204,7 @@ public class AsciiDataSequenceReader
         return (get(index));
     }
 
+    
     /**
      *
      * @param frameIndex
@@ -214,21 +235,18 @@ public class AsciiDataSequenceReader
                     double value = Double.parseDouble(entries[i]);
                     target.set(i, value);
                 }
-
             }
             else
             {
-                // creation should be moved outside
                 int n = selectedColumns.length;
-
                 for (int i = 0; i < n; i++)
                 {
-                    int pos = selectedColumns[i];
-                    double value = Double.parseDouble(entries[pos]);
+                    double value = Double.parseDouble(entries[selectedColumns[i]]);
                     target.set(i, value);
                 }
             }
-        } catch (NumberFormatException nfe)
+        } 
+        catch (NumberFormatException nfe)
         {
             System.out.println("frameIndex : " + frameIndex);
             //System.out.println(dataStartLine + " " + dataEndLine);
@@ -240,7 +258,7 @@ public class AsciiDataSequenceReader
     @Override
     public IDataSequence load()
     {
-        IDataList res = DataSequence.create.createDatalist();
+        IDataList res = DataSequence.create.list();
         for (Iterator<IDoubleArray> it = iterator(); it.hasNext();)
         {
             res.add(it.next());
@@ -252,6 +270,36 @@ public class AsciiDataSequenceReader
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return new DataSequenceLoaderIterator(this);
+        return new DataReaderIterator(this);
     }
+
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        return new DataReaderPairIterator(this, spacing);
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataReader seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataReader _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataReaderPairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
 }

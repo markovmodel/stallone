@@ -1,11 +1,9 @@
 package stallone.datasequence.io;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import stallone.api.datasequence.IDataWriter;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
@@ -18,58 +16,70 @@ import stallone.api.doubles.IDoubleArray;
  */
 public class AsciiDataSequenceWriter implements IDataWriter
 {
-    private boolean fixedPrecision = false;
-    private int predigits = 5,postdigits = 5;
-    
-    private String filename;
-    private BufferedWriter writer;
-    private double currentTime;
 
-    public AsciiDataSequenceWriter(String filename) throws IOException
+    private boolean fixedPrecision = false;
+    private int predigits = 5, postdigits = 5;
+    private String filename;
+    private PrintStream out;
+    private double currentTime;
+    private String dataDelimiter = " ", datasetDelimiter = "\n";
+
+    public AsciiDataSequenceWriter(String filename) 
+            throws FileNotFoundException 
     {
         this.filename = filename;
-        writer = new BufferedWriter(new FileWriter(filename));
+        out = new PrintStream(filename);
         currentTime = 0.0d;
     }
 
+    public AsciiDataSequenceWriter(PrintStream _out)
+    {
+        this.filename = filename;
+        out = _out;
+        currentTime = 0.0d;
+    }
+
+    public void setOutputDelimiters(String _dataDelimiter, String _datasetDelimiter)
+    {
+        this.dataDelimiter = _dataDelimiter;
+        this.datasetDelimiter = _datasetDelimiter;
+    }
+    
     public void setFixedPrecision(int pre, int post)
     {
         fixedPrecision = true;
         predigits = pre;
         postdigits = post;
     }
-    
+
     @Override
     public void add(IDoubleArray data)
     {
-        try
+        String strout;
+        if (fixedPrecision)
         {
-            String strout;
-            if (fixedPrecision)
-                strout = Doubles.util.toString(data," "," ",predigits,postdigits);
-            else
-                strout = Doubles.util.toString(data," "," ");
-            writer.write(strout+"\n");
+            strout = Doubles.util.toString(data, dataDelimiter, dataDelimiter, predigits, postdigits);
         }
-        catch (IOException ex)
+        else
         {
-            Logger.getLogger(AsciiDataSequenceWriter.class.getName()).log(Level.SEVERE, null, ex);
+            strout = Doubles.util.toString(data, dataDelimiter, dataDelimiter);
         }
-        // System.out.println( x );
+        out.print(strout+datasetDelimiter);
     }
 
     @Override
     public void addAll(Iterable<IDoubleArray> data)
     {
-        for (IDoubleArray arr: data)
+        for (IDoubleArray arr : data)
+        {
             add(arr);
+        }
     }
-
 
     @Override
     public void close()
             throws IOException
     {
-        writer.close();
+        out.close();
     }
 }

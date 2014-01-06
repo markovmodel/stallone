@@ -62,7 +62,7 @@ public class MatrixProduct //implements IMatrixProduct
         }
         else
         {
-            multiply(a,b,res);
+            multiplyDense(a,b,res);
         }
         return res;
     }

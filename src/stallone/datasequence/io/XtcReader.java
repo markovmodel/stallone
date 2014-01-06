@@ -1,5 +1,7 @@
 package stallone.datasequence.io;
 
+import static stallone.api.API.*;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -10,7 +12,7 @@ import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
-import stallone.datasequence.DataSequenceLoaderIterator;
+import stallone.doubles.PrimitiveDoubleTable;
 
 /**
  * Reader for compressed gromacs xtc format.
@@ -19,8 +21,9 @@ import stallone.datasequence.DataSequenceLoaderIterator;
  */
 public class XtcReader implements IDataReader
 {
-
     private XtcFile trajectory;
+    private IDoubleArray preconstructedFrame;
+    private int[] selection = null;
 
     /**
      * Constructor for XtcReader.
@@ -32,6 +35,7 @@ public class XtcReader implements IDataReader
     public XtcReader(String trajFilename) throws IOException
     {
         trajectory = new XtcFile(trajFilename);
+        preconstructedFrame = new PrimitiveDoubleTable(trajectory.nrAtoms, 3);
     }
 
     @Override
@@ -60,13 +64,41 @@ public class XtcReader implements IDataReader
         return trajectory.nFrames();
     }
 
+    @Override
+    public void select(int[] _selection)
+    {
+        this.selection = _selection;
+    }
+
+    @Override
+    public int[] getSelection()
+    {
+        if (this.selection == null)
+            return intArrays.range(trajectory.nrAtoms);
+        else
+            return this.selection;
+    }
+
     //@Override
     public IDoubleArray get(int frameIndex, IDoubleArray target)
     {
         try
         {
-            return trajectory.getPositionsAt(frameIndex);
-        } catch (IOException ex)
+            if (selection == null)
+                return trajectory.getPositionsAt(frameIndex, target);
+            else
+            {
+                trajectory.getPositionsAt(frameIndex, this.preconstructedFrame);
+                for (int i=0; i<selection.length; i++)
+                {
+                    target.set(i, 0, preconstructedFrame.get(selection[i],0));
+                    target.set(i, 1, preconstructedFrame.get(selection[i],1));
+                    target.set(i, 2, preconstructedFrame.get(selection[i],2));
+                }
+                return target;
+            }
+        } 
+        catch (IOException ex)
         {
             Logger.getLogger(XtcReader.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException("Unable to read frame " + frameIndex + ".");
@@ -103,7 +135,10 @@ public class XtcReader implements IDataReader
     @Override
     public IDoubleArray get(int frameIndex)
     {
-        return(get(frameIndex, null));
+        if (selection == null)
+            return(get(frameIndex, doublesNew.array(trajectory.nrAtoms,3)));
+        else
+            return(get(frameIndex, doublesNew.array(selection.length,3)));
     }
 
     @Override
@@ -115,13 +150,42 @@ public class XtcReader implements IDataReader
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return(new DataSequenceLoaderIterator(this));
+        return(new DataReaderIterator(this));
     }
 
     @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        return new DataReaderPairIterator(this, spacing);
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataReader seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataReader _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataReaderPairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
+    @Override
     public IDataSequence load()
     {
-        IDataList res = DataSequence.create.createDatalist();
+        IDataList res = DataSequence.create.list();
         for (int i=0; i<this.size(); i++) {
             // TODO : think about it: why should one use a copy here?
             //res.add(get(i).copy());
@@ -141,4 +205,5 @@ public class XtcReader implements IDataReader
     {
         return(this.size()*this.dimension()*8);
     }
+
 }

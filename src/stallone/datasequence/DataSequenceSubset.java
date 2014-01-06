@@ -63,4 +63,33 @@ public class DataSequenceSubset implements IDataSequence
         return new DataSequenceIterator(this);
     }
 
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        return new DataSequencePairIterator(this, spacing);
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataSequence seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataSequence _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataSequencePairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+
 }

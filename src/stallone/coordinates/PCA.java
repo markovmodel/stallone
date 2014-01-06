@@ -4,15 +4,16 @@
  */
 package stallone.coordinates;
 
+import java.io.IOException;
 import static stallone.api.API.*;
 
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.coordinates.IPCA;
-import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 
 import java.util.Random;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 /**
  *
@@ -39,7 +40,7 @@ public class PCA implements IPCA
     {
         init(_source.dimension());
 
-        for (IDataSequence seq : _source.getSingleSequenceLoader())
+        for (IDataSequence seq : _source.sequences())
             addData(seq);
         
         computeTransform();
@@ -77,7 +78,7 @@ public class PCA implements IPCA
             init(data.dimension());
 
         for (IDoubleArray x : data)
-        {            
+        {   
             for (int i=0; i<dimIn; i++)
             {
                 // add counts
@@ -114,6 +115,15 @@ public class PCA implements IPCA
         this.evec = evd.getRightEigenvectorMatrix().viewReal();
     }
     
+    public IDoubleArray getMeanVector()
+    {
+        return mean;
+    }
+
+    public IDoubleArray getCovarianceMatrix()
+    {
+        return Cov;
+    }
     
     @Override
     public void setDimension(int d)
@@ -139,20 +149,40 @@ public class PCA implements IPCA
         return evec;
     }
 
+    /**
+     * Projects x onto the principal subspace with given output dimension;
+     * @param x
+     */
     @Override
     public IDoubleArray transform(IDoubleArray x)
     {
+        IDoubleArray out = doublesNew.array(dimOut);
+        transform(x, out);
+        return out;
+    }    
+
+
+    /**
+     * Projects the in-array onto the out array. The dimension of the out array
+     * is used to determine the target dimension;
+     * @param in
+     * @param out 
+     */
+    @Override
+    public void transform(IDoubleArray in, IDoubleArray out)
+    {
         // subtract mean
-        x = alg.subtract(x, mean);
+        IDoubleArray x = alg.subtract(in, mean);
         
         // make a row
         if (x.rows() > 1)
             x = alg.transposeToNew(x);
         
         IDoubleArray y = alg.product(x, evec);
-        IDoubleArray yproj = doubles.subToNew(y, 0, dimOut);
-        return yproj;
-    }    
+        int d = Math.min(in.size(),out.size());
+        for (int i=0; i<d; i++)
+            out.set(i, y.get(i));
+    }
     
     @Override
     public int dimension()
@@ -160,36 +190,34 @@ public class PCA implements IPCA
         return dimOut;
     }
     
-    public static void main(String[] args)
+    public static void main(String[] args) 
+            throws IOException
     {
-        Random rand = new Random();
-        
-        IDataList seq = dataNew.createDatalist();
-        
+        /*Random rand = new Random();
+        IDataList seq = dataNew.list();
         for (int i=0; i<10000; i++)
         {
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()-2, 0.5*rand.nextGaussian()-2));
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+2, 0.5*rand.nextGaussian()+2));
-            seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+4, 0.5*rand.nextGaussian()+4));
+        seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()-2, 0.5*rand.nextGaussian()-2));
+        seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+2, 0.5*rand.nextGaussian()+2));
+        seq.add(doublesNew.arrayFrom(0.5*rand.nextGaussian()+4, 0.5*rand.nextGaussian()+4));
         }
-        
         PCA pca = new PCA();
         pca.addData(seq);
         pca.computeTransform();
-        
         System.out.println("mean: \t"+doubles.toString(pca.mean, "\t"));
         System.out.println("cov: \t"+doubles.toString(pca.Cov, "\t", "\n"));
         System.out.println();
         System.out.println("eval: \t"+doubles.toString(pca.getEigenvalues(), "\t"));
         System.out.println("evec1: \t"+doubles.toString(pca.getEigenvector(0), "\t"));
         System.out.println("evec2: \t"+doubles.toString(pca.getEigenvector(1), "\t"));
-        
         pca.setDimension(1);
         IDoubleArray y1 = pca.transform(doublesNew.arrayFrom(2,2));
         System.out.println("y1 = \t"+doubles.toString(y1, "\t"));
-
         IDoubleArray y2 = pca.transform(doublesNew.arrayFrom(4,4));
         System.out.println("y2 = \t"+doubles.toString(y2, "\t"));
+         */
         
+        IDataInput dataInput = dataNew.dataInput("/Users/noe/data/temp/tmp_ca.dcd");
+        PCA pca = new PCA(dataInput);
     }
 }

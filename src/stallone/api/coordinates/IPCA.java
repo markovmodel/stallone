@@ -10,8 +10,20 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public interface IPCA extends ICoordinateTransform
+public interface IPCA extends IParametrizedCoordinateTransform
 {
+    /**
+     * Returns the mean vector of the data
+     * @return 
+     */
+    public IDoubleArray getMeanVector();
+
+    /**
+     * Returns the covariance matrix of the data
+     * @return 
+     */
+    public IDoubleArray getCovarianceMatrix();
+
     /**
      * Sets the dimensionality of the principal subspace. 
      * transform(IDoubleArray) will project onto a subspace of this size. When not
@@ -39,7 +51,4 @@ public interface IPCA extends ICoordinateTransform
      * @return 
      */
     public IDoubleArray getEigenvectorMatrix();
-
-    @Override
-    public IDoubleArray transform(IDoubleArray x);    
 }
