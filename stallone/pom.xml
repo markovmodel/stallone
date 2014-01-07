@@ -215,20 +215,6 @@
 	</profiles>
 
 	<dependencies>
-		<!-- java netlib -->
-		<dependency>
-			<groupId>com.googlecode.netlib-java</groupId>
-			<artifactId>netlib-java</artifactId>
-			<version>0.9.3</version>
-		</dependency>
-
-		<!-- matrix-toolkits-java -->
-		<dependency>
-			<groupId>com.googlecode.matrix-toolkits-java</groupId>
-			<artifactId>mtj</artifactId>
-			<version>0.9.14</version>
-		</dependency>
-
 		<!-- jep library, has to be installed manually to local repo... -->
 		<dependency>
 			<groupId>jep</groupId>
@@ -242,6 +228,7 @@
 			<artifactId>colt</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+		
 		<!-- recent netlib bindings -->
 		<dependency>
 		  <groupId>com.github.fommil.netlib</groupId>
@@ -249,6 +236,8 @@
 		  <version>1.1.2</version>
 		  <type>pom</type>
 		</dependency>
+		
+		<!-- matrix tools kit --->
 		<dependency>
 			<groupId>com.googlecode.matrix-toolkits-java</groupId>
 			<artifactId>mtj</artifactId>

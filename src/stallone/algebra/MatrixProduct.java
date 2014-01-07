@@ -99,7 +99,7 @@ public class MatrixProduct //implements IMatrixProduct
     public void multiplySparseDense(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
-        final int r = a.columns();
+//        final int r = a.columns();
         final int colsB = b.columns();
         final int rowsA = a.rows();
 
@@ -121,7 +121,7 @@ public class MatrixProduct //implements IMatrixProduct
     public void multiplySparseSparse(final IDoubleArray a, final IDoubleArray b, final IDoubleArray target)
     {
         // Extract some parameters for easier access
-        final int r = a.columns();
+//        final int r = a.columns();
         final int colsB = b.columns();
         final int rowsA = a.rows();
 
@@ -188,7 +188,7 @@ public class MatrixProduct //implements IMatrixProduct
     public void sparseMultiply(final IComplexArray a, final IComplexArray b, final IComplexArray target)
     {
         // Extract some parameters for easier access
-        final int r = a.columns();
+//        final int r = a.columns();
         final int colsB = b.columns();
         final int rowsA = a.rows();
 
@@ -197,12 +197,12 @@ public class MatrixProduct //implements IMatrixProduct
         assertRows(target, a.rows());
         assertRows(target, b.columns());
 
-        IComplexArray ri,cj;
+//        IComplexArray ri,cj;
         for (int i=0; i<rowsA; i++)
         for (int j=0; j<colsB; j++)
         {
-            ri = a.viewRow(i);
-            cj = b.viewColumn(j);
+//            ri = a.viewRow(i);
+//            cj = b.viewColumn(j);
             target.set(i, j, ip.innerProductSparseSparse(a, b));
         }
     }

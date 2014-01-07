@@ -108,7 +108,6 @@ public class DoubleFactoryTest
         
         IDoubleArray result = instance.sparseColumn(size);
         
-        // FIXME: leads to array out of bounds exception
         result.set(4, 1.0f);
         result.set(8, 1.0f);
         
