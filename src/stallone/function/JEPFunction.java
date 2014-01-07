@@ -5,8 +5,12 @@
 package stallone.function;
 
 import stallone.api.doubles.IDoubleArray;
+
 import java.util.ArrayList;
+
 import org.nfunk.jep.JEP;
+import org.nfunk.jep.SymbolTable;
+
 import stallone.api.function.*;
 
 /**
@@ -35,20 +39,21 @@ public class JEPFunction implements IFunction
             jep.parseExpression(_expression);
 
             ArrayList<String> var = new ArrayList<String>();
-            if (jep.getVar("x") != null)
+            SymbolTable tab = jep.getSymbolTable();
+            if (tab.get("x") != null)
                 var.add("x");
             for (int i=0; i<10; i++)
-                if (jep.getVar("x"+i) != null)
+                if (tab.get("x"+i) != null)
                     var.add("x"+i);
-            if (jep.getVar("y") != null)
+            if (tab.get("y") != null)
                 var.add("y");
             for (int i=0; i<10; i++)
-                if (jep.getVar("y"+i) != null)
+                if (tab.get("y"+i) != null)
                     var.add("y"+i);
-            if (jep.getVar("z") != null)
+            if (tab.get("z") != null)
                 var.add("z");
             for (int i=0; i<10; i++)
-                if (jep.getVar("z"+i) != null)
+                if (tab.get("z"+i) != null)
                     var.add("z"+i);
             variables = new String[var.size()];
             var.toArray(variables);
