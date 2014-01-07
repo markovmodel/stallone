@@ -16,7 +16,7 @@ package stallone.algebra.extern;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.netlib.arpack.ARPACK;
+import com.github.fommil.netlib.ARPACK;
 import org.netlib.util.doubleW;
 import org.netlib.util.intW;
 
@@ -559,9 +559,10 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         c
         c-----------------------------------------------------------------------
          */
-        do
+    	ARPACK arpack = ARPACK.getInstance();
+    	do
         {
-            ARPACK.getInstance().dnaupd(ido, bmat, n, which, nev, tol, resid, ncv, v, n, iparam, ipntr, workd,
+            arpack.dnaupd(ido, bmat, n, which, nev, tol, resid, ncv, v, n, iparam, ipntr, workd,
                     workl, lworkl, info);
 
             // The algorithm is done => skip the rest of the loop
@@ -715,8 +716,8 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         }
 
         final boolean rvec = true;
-        final float sigmar = 0.0f;
-        final float sigmai = 0.0f;
+        double sigmar = 0.0f;
+        double sigmai = 0.0f;
 
         // Returned error code
         final intW ierr = new intW(0);
@@ -737,8 +738,10 @@ public class SparseArpackEigenvalueDecomposition implements IEigenvalueSolver
         final double[] workev = new double[3 * ncv];
 
         // Call into ARPACK
-        ARPACK.getInstance().dneupd(rvec, "A", select, dReal, dImg, z, n, sigmar, sigmai, workev, bmat, n, which,
-                new intW(nev), tol.val, resid, ncv, v, n, iparam, ipntr, workd, workl, lworkl, ierr);
+        ARPACK.getInstance().dneupd(rvec, "A", select, dReal, dImg, z, n,
+        		sigmar, sigmai, workev, bmat, n, which,
+                new intW(nev), tol.val, resid, ncv, v, n, 
+                iparam, ipntr, workd, workl, lworkl, ierr);
 
         // Process the result
         if ((ierr.val != 0))
