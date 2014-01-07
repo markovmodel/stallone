@@ -32,7 +32,8 @@ public class CompactRandomClustering extends AbstractRegularClustering
     {
         bestClustering = new RandomClustering(nclusters);
         bestClustering.setMetric(metric);
-        bestClustering.setClusterInput(data, datasize);
+        bestClustering.data = data;
+        bestClustering.datasize = datasize;
         bestClustering.perform();
         double DB = cluster.clusterIndexDaviesBouldin(data, bestClustering.getClusterCenters(), metric, bestClustering.getClusterIndexes());
         //double DB = cluster.clusterNoncompactness(data, bestClustering.getClusterCenters(), metric, bestClustering.getClusterIndexes());
@@ -42,7 +43,8 @@ public class CompactRandomClustering extends AbstractRegularClustering
         {
             RandomClustering rcnew = new RandomClustering(nclusters);
             rcnew.setMetric(metric);
-            rcnew.setClusterInput(data, datasize);
+            rcnew.data = data;
+            rcnew.datasize = datasize;
             rcnew.perform();
 
             double DBnew = cluster.clusterIndexDaviesBouldin(data, rcnew.getClusterCenters(), metric, rcnew.getClusterIndexes());
@@ -76,12 +78,12 @@ public class CompactRandomClustering extends AbstractRegularClustering
             System.exit(0);
         }
 
-        IDataSequence data = dataNew.dataSequenceLoader(args[0]).load();
+        IDataSequence data = dataNew.reader(args[0]).load();
         int nclusters = str.toInt(args[1]);
         int nrepeats = str.toInt(args[2]);
 
         CompactRandomClustering C = new CompactRandomClustering(nclusters, nrepeats);
-        C.setClusterInput(data);
+        C.setInput(data);
         C.setMetric(new EuclideanDistance());
         C.perform();
 

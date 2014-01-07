@@ -46,12 +46,35 @@ public class DataList
         return(get(i));
     }
 
-    //@Override
-    public Iterator<IDataSequence> pairIterator(int spacing)
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
     {
-        return(new DataPairIterator(this, spacing));
+        return new DataSequencePairIterator(this, spacing);
     }
 
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataSequence seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataSequence _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataSequencePairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
     @Override
     public double getTime(int i)
     {

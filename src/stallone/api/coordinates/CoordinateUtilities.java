@@ -26,6 +26,39 @@ public class CoordinateUtilities
     private int outputPrecisionPre = 5;
     private int outputPrecisionPost = 3;
 
+    public IDataSequence transform_data(IDataSequence X, ICoordinateTransform T)
+    {
+        IDoubleArray[] res = new IDoubleArray[X.size()];
+        for (int i=0; i<res.length; i++)
+            res[i] = T.transform(X.get(i));
+        return dataNew.array(res);
+    }
+
+    public void fixOutputPrecision(int pre, int post)
+    {
+        fixedOutputPrecision = true;
+        outputPrecisionPre = pre;
+        outputPrecisionPost = post;
+    }
+
+    public void fixOutputPrecision()
+    {
+        fixedOutputPrecision = false;
+    }
+    
+    public void transform_file(String infile, ICoordinateTransform T, String outfile) 
+            throws IOException
+    {
+        IDataReader reader = dataNew.reader(infile);
+        int N = reader.size();
+        IDataWriter writer = dataNew.writer(outfile, N, T.dimension());
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
+        for (IDoubleArray X : reader)
+            writer.add(T.transform(X));
+        writer.close();
+    }
+    
     /**
      * Computes the minimal root mean square distance between x1 and x2.
      * I.e. the result is minrmsd(x1,x2) = sqrt(|x1-x2'|^2 / N), 
@@ -48,112 +81,6 @@ public class CoordinateUtilities
             minrmsd = new MinimalRMSDistance3D(N);
         return minrmsd.distance(x1, x2);
     }
-
-    public void fixOutputPrecision(int pre, int post)
-    {
-        fixedOutputPrecision = true;
-        outputPrecisionPre = pre;
-        outputPrecisionPost = post;
-    }
-    
-    /**
-     * calls distanceMatrix(x,set) on every data set in the reader and writes it to the writer
-     * @param in a data sequence, e.g. a IDataReader on a file, or a data sequence in memory
-     * @param set a n-sized index set
-     * @param out a data writer
-     */
-    public void convertToDistances(String infile, String outfile, int[] set) 
-            throws IOException
-    {
-        AsciiDataSequenceWriter w = null;
-        
-        IDataReader reader = dataNew.dataSequenceLoader(infile);
-        int N = reader.size();
-        int dout = (set.length*(set.length-1))/2;
-        IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
-        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
-            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
-        for (IDoubleArray x : reader)
-        {
-            IDoubleArray y = distances(x, set);
-            writer.add(y);
-        }
-        writer.close();
-        reader.close();
-    }
-
-    /**
-     * calls distanceMatrix(x,set) on every data set in the reader and writes it to the writer
-     * @param in a data sequence, e.g. a IDataReader on a file, or a data sequence in memory
-     * @param set a n-sized index set
-     * @param out a data writer
-     */
-    public void convertToDistances(String infile, String outfile, int[][] set) 
-            throws IOException
-    {
-        IDataReader reader = dataNew.dataSequenceLoader(infile);
-        int N = reader.size();
-        int dout = (set.length*(set.length-1))/2;
-        IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
-        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
-            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
-        for (IDoubleArray x : reader)
-        {
-            IDoubleArray y = distances(x, set);
-            writer.add(y);
-        }
-        writer.close();
-        reader.close();
-    }
-
-    /**
-     * calls distanceMatrix(x,set1,set2) on every data set in the reader and writes it to the writer
-     * @param in a data sequence, e.g. a IDataReader on a file, or a data sequence in memory
-     * @param set a n-sized index set
-     * @param out a data writer
-     */
-    public void convertToDistances(String infile, String outfile, int[] set1, int[] set2) 
-            throws IOException
-    {
-        IDataReader reader = dataNew.dataSequenceLoader(infile);
-        int N = reader.size();
-        int dout = set1.length*set2.length;
-        IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
-        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
-            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
-        for (IDoubleArray x : reader)
-        {
-            IDoubleArray y = distanceMatrix(x, set1, set2);
-            writer.add(y);
-        }
-        writer.close();
-        reader.close();
-    }
-    
-
-    /**
-     * calls distanceMatrix(x,set1,set2) on every data set in the reader and writes it to the writer
-     * @param in a data sequence, e.g. a IDataReader on a file, or a data sequence in memory
-     * @param set a n-sized index set
-     * @param out a data writer
-     */
-    public void convertToDistances(String infile, String outfile, int[][] set1, int[][] set2) 
-            throws IOException
-    {
-        IDataReader reader = dataNew.dataSequenceLoader(infile);
-        int N = reader.size();
-        int dout = set1.length*set2.length;
-        IDataWriter writer = dataNew.createDataWriter(outfile, N, dout);
-        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
-            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
-        for (IDoubleArray x : reader)
-        {
-            IDoubleArray y = distanceMatrix(x, set1, set2);
-            writer.add(y);
-        }
-        writer.close();
-        reader.close();
-    }
     
     
     /**
@@ -172,6 +99,20 @@ public class CoordinateUtilities
     }
     
     /**
+     * computes the upper half of a (nxn) distance matrix between the indexes of the 
+     * n-sized distance set.
+     * @param x a Nx3 coordinate set
+     * @param set a n-sized index set
+     * @param out will receive the linearized upper triangle of the distance 
+     * matrix, i.e. (d11,...,d1n,d21,...,d2n-1,...,dnn-1)
+     */
+    public void distances(IDoubleArray x, int[] set, IDoubleArray out)
+    {
+        distances(x.getTable(), set, out.getArray());
+    }
+    
+    
+    /**
      * computes a upper half of a (nxn) minimal distance matrix between the indexes of the 
      * n-sized distance set.
      * @param x a Nx3 coordinate set
@@ -185,7 +126,19 @@ public class CoordinateUtilities
         distances(x.getTable(), set, res);
         return doublesNew.array(res);
     }
-    
+
+    /**
+     * computes a upper half of a (nxn) minimal distance matrix between the indexes of the 
+     * n-sized distance set.
+     * @param x a Nx3 coordinate set
+     * @param set n indes sets
+     * @param out will receive the linearized upper triangle of the distance 
+     * matrix, i.e. (d11,...,d1n,d21,...,d2n-1,...,dnn-1)
+     */
+    public void distances(IDoubleArray x, int[][] set, IDoubleArray out)
+    {
+        distances(x.getTable(), set, out.getArray());
+    }    
 
     /**
      * computes a (nxn) distance matrix between the indexes of the 
@@ -237,6 +190,23 @@ public class CoordinateUtilities
 
     
     /**
+     * computes a (mxn) distance matrix between the m-sized distance group 1 and
+     * the n-sized distance group 2.
+     * @param x a Nx3 coordinate set
+     * @param set1 a m-sized distance group
+     * @param set1 a n-sized distance group
+     * @param out mxn array to receive all distance pairs. If distanceGroup1 and 
+     * distanceGroup2 have overlap in their indexes, this will have both
+     * d_ij and d_ji and self-distances that are 0. I.e. the distance groups
+     * are not analyzed for possible redundancies before computation.
+     */
+    public void distanceMatrix(IDoubleArray x, int[] set1, int[] set2, IDoubleArray out)
+    {
+        distanceMatrix(x.getTable(), set1, set2, out.getTable());
+    }
+    
+    
+    /**
      * computes a (mxn) minimal distance matrix between the n index sets given.
      * d_i,j = min_k,l {dist(x[i][k], x[j][l])}  with i in set1 and j in set2
      * @param x a Nx3 coordinate set
@@ -251,6 +221,19 @@ public class CoordinateUtilities
         return doublesNew.array(res);
     }
     
+
+    /**
+     * computes a (mxn) minimal distance matrix between the n index sets given.
+     * d_i,j = min_k,l {dist(x[i][k], x[j][l])}  with i in set1 and j in set2
+     * @param x a Nx3 coordinate set
+     * @param set1 a mx* index array with n distance sets
+     * @param set2 a nx* index array with n distance sets
+     * @param out mxn array with all minimum distance pairs.
+     */
+    public void distanceMatrix(IDoubleArray x, int[][] set1, int[][] set2, IDoubleArray out)
+    {
+        distanceMatrix(x.getTable(), set1, set2, out.getTable());
+    }
     
     /**
      * computes the upper half of a (nxn) distance matrix between the indexes of the 
@@ -420,5 +403,79 @@ public class CoordinateUtilities
             }
         }
     }
+    
+    private boolean degrees = true;
+    
+    /**
+     * When called, subsequent angle computations will be made in degrees
+     * (default).
+     */
+    public void anglesInDegrees()
+    {
+        degrees = true;
+    }
+
+    /**
+     * When called, subsequent angle computations will be made in radians.
+     */
+    public void anglesInRadians()
+    {
+        degrees = false;
+    }
+    
+    /**
+     * Computes a set of angles or dihedral angles.
+     * @param x the coordinate set
+     * @param selection a sequence of triples or quadruples. For each triple,
+     * the corresponding angle will be computed. For each quadruple, the 
+     * corresponding dihedral (torsion) angle will be computed.
+     */
+    public IDoubleArray angles(IDoubleArray x, int[][] selection)
+    {
+        double[] res = new double[selection.length];
+        angles(x.getTable(), selection, res);
+        return doublesNew.array(res);
+    }
+    
+    /**
+     * Computes a set of angles or dihedral angles.
+     * @param x the coordinate set
+     * @param selection a sequence of triples or quadruples. For each triple,
+     * the corresponding angle will be computed. For each quadruple, the 
+     * corresponding dihedral (torsion) angle will be computed.
+     * @param out the target array into which angles will be written.
+     */
+    public void angles(double[][] x, int[][] selection, double[] out)
+    {
+        for (int i=0; i<selection.length; i++)
+        {
+            if (selection[i].length == 3)
+            {
+                if (degrees)
+                    out[i] = coor3d.angleDeg(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]]);
+                else
+                    out[i] = coor3d.angleRad(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]]);
+            }
+            else if (selection[i].length == 4)
+            {
+                if (degrees)
+                    out[i] = coor3d.torsionDeg(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]], x[selection[i][3]]);
+                else
+                    out[i] = coor3d.torsionRad(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]], x[selection[i][3]]);
+            }
+            else
+                throw new IllegalArgumentException("found a selection with "+selection[i].length+" elements. Can only handle 3 (angles) and 4 (torsions)");
+        }
+    }
+
+    public void select(IDoubleArray in, int[] selection, IDoubleArray out)
+    {
+        for (int i=0; i<selection.length; i++)
+        {
+            for (int j=0; j<in.columns(); j++)
+                out.set(i,j, in.get(selection[i],j));
+        }
+    }
+
     
 }

@@ -10,7 +10,6 @@ import java.io.IOException;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataWriter;
 import stallone.api.io.IO;
-import stallone.datasequence.StreamDataWriter;
 
 /**
  *
@@ -49,7 +48,7 @@ public class DataSequenceFileFormats
         return (internalFormat);
     }
 
-    public static IDataReader createLoader(String file)
+    public static IDataReader createReader(String file)
             throws IOException
     {
                 String internalFormat = getInputFileFormat(file);
@@ -85,7 +84,7 @@ public class DataSequenceFileFormats
         }
         else if (extension.equalsIgnoreCase("xtc"))
         {
-            writer = new StreamDataWriter(file);
+            throw new UnsupportedOperationException("xtc writer is not supported yet.");
         }
         else
         {

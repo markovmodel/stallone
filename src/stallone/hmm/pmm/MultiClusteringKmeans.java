@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import static stallone.api.API.*;
 import stallone.api.cluster.IClustering;
-import stallone.api.datasequence.IDataSequence;
 import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataSequence;
+import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.util.CommandLineParser;
@@ -24,7 +25,7 @@ import stallone.util.CommandLineParser;
 public class MultiClusteringKmeans
 {
     private List<String> inputFiles;
-    private List<IDataSequence> data;
+    private IDataInput data;
     private int nclusters, nsplit;
     private String outPrefix;
     
@@ -53,7 +54,7 @@ public class MultiClusteringKmeans
         for (int i=0; i<ifiles.length; i++)
             inputFiles.add(ifiles[i]);
         
-        IDataInput loader = dataNew.dataSequenceLoader(inputFiles);
+        IDataSequenceLoader loader = dataNew.multiSequenceLoader(inputFiles);
         data = loader.loadAll();
 
         nclusters = parser.getInt("ncluster");
@@ -103,11 +104,11 @@ public class MultiClusteringKmeans
             System.exit(0);
         }
 
-        IClustering clustering1 = clusterNew.createKmeans(cmd.nclusters, 10);
-        IClustering clustering2 = clusterNew.createKmeans(cmd.nsplit, 10);
+        IClustering clustering1 = clusterNew.kmeans(cmd.nclusters, 10);
+        IClustering clustering2 = clusterNew.kmeans(cmd.nsplit, 10);
 
         // split only on first trajectory:
-        cmd.mc = new MultiClustering(cmd.data.get(0), clustering1, clustering2);
+        cmd.mc = new MultiClustering(cmd.data.getSequence(0), clustering1, clustering2);
         cmd.mc.split(0);
         cmd.mc.split(0);
         cmd.mc.split(0);
@@ -125,7 +126,7 @@ public class MultiClusteringKmeans
             System.out.println("leaf size = "+leaf.size());
             for (int j=0; j<leaf.size(); j++)
             {
-                IDoubleArray data = cmd.data.get(0).get(leaf.get(j));
+                IDoubleArray data = cmd.data.getSequence(0).get(leaf.get(j));
                 out[i].println(data.get(0));
             }
             out[i].close();

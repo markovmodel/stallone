@@ -7,6 +7,7 @@ import java.util.List;
 import stallone.api.algebra.Algebra;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.discretization.Discretization;
@@ -84,7 +85,7 @@ public class KMeansClustering implements IClustering
 
     private void initialize()
     {
-        this.clusterCenters = DataSequence.create.createDatalist();
+        this.clusterCenters = DataSequence.create.list();
         this.assignments = new IntArrayList();
 
         if (initMode == INIT_RANDOM)
@@ -115,7 +116,7 @@ public class KMeansClustering implements IClustering
     }
 
     @Override
-    public void setClusterInput(IDataSequence _data)
+    public void setInput(IDataSequence _data)
     {
         this.data = _data;
         this.size = _data.size();
@@ -123,10 +124,10 @@ public class KMeansClustering implements IClustering
     }
 
     @Override
-    public void setClusterInput(Iterable<IDoubleArray> datapoints, int size)
+    public void setInput(IDataInput _data)
     {
-        this.data = datapoints;
-        this.size = size;
+        this.data = _data.singles();
+        this.size = _data.size();
         assignments = new IntArrayList(size);
     }
 

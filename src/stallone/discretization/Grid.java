@@ -232,6 +232,7 @@ public class Grid implements IGrid
         return(new GridPointIterator(sizes, pointPositions));
     }
 
+    
     @Override
     public IIntArray getNeighborIndexes(int index)
     {
@@ -291,6 +292,18 @@ public class Grid implements IGrid
     public double getTime(int i)
     {
         return i;
+    }
+
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 

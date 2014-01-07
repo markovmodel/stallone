@@ -291,6 +291,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
     //  INTERFACE FUNCTIONS
     //
     ////////////////////////////////////////////////////////////////
+    @Override
     public void setMaxIter(int nmax)
     {
         this.nIterMax = nmax;
@@ -301,6 +302,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
      * for nIterPer1 Consecutive steps.
      * @param nIterPer1
      */
+    @Override
     public void setConvergence(int niter)
     {
         this.nIterPer1 = niter;
@@ -348,6 +350,7 @@ public final class TransitionMatrixEstimatorRevFixPi implements ITransitionMatri
         return (T);
     }
 
+    @Override
     public double[] getLikelihoodHistory()
     {
         return(this.logliks.getArray());

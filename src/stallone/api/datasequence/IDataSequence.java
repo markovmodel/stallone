@@ -42,6 +42,13 @@ public interface IDataSequence extends Iterable<IDoubleArray>
      * @param lag
      * @return An iterator whose objects are pairs (2-sequences) of data objects of type T
      */
-    //public Iterator<IDataSequence> pairIterator(int spacing);
+    public Iterator<IDoubleArray[]> pairIterator(int spacing);
 
+    /**
+     * Returns an iterable that can iterate over pairs of data objects with the given spacing. 
+     * Does not require scan() to be called.
+     * Only two single data objects are loaded into memory and only one file is open at a time
+     */
+    public Iterable<IDoubleArray[]> pairs(int spacing);
+    
 }

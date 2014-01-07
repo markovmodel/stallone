@@ -25,6 +25,7 @@ public class DataSequenceConcatenated implements IDataSequence
     protected DataSequenceConcatenated()
     {
     }
+    
     public DataSequenceConcatenated(List<IDataSequence> _seqs)
     {
         this.seqs = _seqs;
@@ -88,31 +89,36 @@ public class DataSequenceConcatenated implements IDataSequence
     @Override
     public Iterator<IDoubleArray> iterator()
     {
-        return new DSCIterator();
+        return new DataSequenceIterator(this);
     }
-
-    class DSCIterator implements Iterator<IDoubleArray>
+    
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
     {
-        int i = 0;
-
-        @Override
-        public boolean hasNext()
-        {
-            return i < totalsize;
-        }
-
-        @Override
-        public IDoubleArray next()
-        {
-            IDoubleArray res = get(i);
-            i++;
-            return res;
-        }
-
-        @Override
-        public void remove()
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+        return new DataSequencePairIterator(this, spacing);
     }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        class PairIterable implements Iterable<IDoubleArray[]>
+        {
+            private IDataSequence seq;
+            private int spacing = 1;
+
+            public PairIterable(IDataSequence _seq, int _spacing)
+            {
+                this.seq = _seq;
+                this.spacing = _spacing;
+            }
+
+            @Override
+            public Iterator<IDoubleArray[]> iterator()
+            {
+                return (new DataSequencePairIterator(seq, spacing));
+            }
+        }
+        return new PairIterable(this,spacing);
+    }
+    
 }

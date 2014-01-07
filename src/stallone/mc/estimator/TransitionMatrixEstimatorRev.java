@@ -169,6 +169,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
     //  INTERFACE FUNCTIONS
     //
     ////////////////////////////////////////////////////////////////
+    @Override
     public void setMaxIter(int nmax)
     {
         this.nIterMax = nmax;
@@ -179,6 +180,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
      * for nIterPer1 Consecutive steps.
      * @param nIterPer1
      */
+    @Override
     public void setConvergence(int niter)
     {
         this.nIterPer1 = niter;
@@ -239,6 +241,7 @@ public final class TransitionMatrixEstimatorRev implements ITransitionMatrixEsti
         return(X);
     }
 
+    @Override
     public double[] getLikelihoodHistory()
     {
         return (this.logliks.getArray());

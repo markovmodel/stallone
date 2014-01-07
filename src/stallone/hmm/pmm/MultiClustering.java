@@ -55,7 +55,7 @@ public class MultiClustering
         this.clusterMethodLeaves = _clusterMethodLeaves;        
         
         // first clustering
-        _clusterMethodFull.setClusterInput(_data);
+        _clusterMethodFull.setInput(_data);
         _clusterMethodFull.perform();
         IDataSequence centers = _clusterMethodFull.getClusterCenters();
         // assignment 
@@ -111,7 +111,7 @@ public class MultiClustering
         // cluster leaf
         Leaf leaf = leaves.get(leafIndex);
         DataSequenceSubset subset = new DataSequenceSubset(data, leaf.indexes);
-        this.clusterMethodLeaves.setClusterInput(subset);
+        this.clusterMethodLeaves.setInput(subset);
         this.clusterMethodLeaves.perform();
         int nPieces = this.clusterMethodLeaves.getNumberOfClusters();
         if (nPieces == 1)

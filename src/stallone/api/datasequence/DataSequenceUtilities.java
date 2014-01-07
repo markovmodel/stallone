@@ -1,12 +1,15 @@
 /*
+ * TODO: This class needs a major cleanup!
+ * 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package stallone.api.datasequence;
 
+import static stallone.api.API.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +18,6 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.datasequence.*;
-import stallone.doubles.PrimitiveDoubleTable;
 
 /**
  *
@@ -29,7 +31,7 @@ public class DataSequenceUtilities
      * @param indexes nx2 array with trajectory and within-trajectory indexes
      * @return
      */
-    public List<IDataSequence> loadSubset(IDataInput loader, IIntArray indexes)
+    public List<IDataSequence> loadSubset(IDataSequenceLoader loader, IIntArray indexes)
             throws IOException
     {
         List<IDataSequence> res = new ArrayList<IDataSequence>();
@@ -52,7 +54,7 @@ public class DataSequenceUtilities
             }
 
             int iindex = indexes.get(i, 1);
-            list.add(loader.load(itraj, iindex));
+            list.add(loader.get(itraj, iindex));
         }
 
         res.add(list);
@@ -60,22 +62,19 @@ public class DataSequenceUtilities
         return (res);
     }
 
-    public List<IDoubleArray> readDataList(IDataSequence inp)
-    {
-        ArrayList<IDoubleArray> list = new ArrayList<IDoubleArray>();
-        for (int i = 0; i < inp.size(); i++)
-        {
-            list.add(inp.get(i));
-        }
-        return (list);
-    }
 
-    public IDataSequence readDataList(String inputFile)
+    /**
+     * Loads the content of the specified file as a data sequence
+     * @param inputFile the input file. The file type is 
+     * determined from the extension
+     * @return a data sequence
+     */
+    public IDataSequence loadSequence(String inputFile)
     {
         IDataSequence res = null;
         try
         {
-            IDataReader input = DataSequence.create.createASCIIDataReader(inputFile);
+            IDataReader input = dataNew.reader(inputFile);
             res = input.load();
         }
         catch (IOException ex)
@@ -86,56 +85,29 @@ public class DataSequenceUtilities
         return(res);
     }
 
-    public IDoubleArray readDataTable(IDataSequence inp)
+    /**
+     * Transforms the data sequence to a two-dimensional array, where the
+     * rows hold the serialized data sets
+     * @param inp a data sequence
+     * @return a double array
+     */
+    public IDoubleArray toArray(IDataSequence inp)
     {
-        IDoubleArray line1 = inp.get(0);
-        IDoubleArray table = new PrimitiveDoubleTable(inp.size(), line1.size());
-        for (int i = 0; i < line1.size(); i++)
+        int n = inp.size();
+        int d = inp.dimension();
+        IDoubleArray M = doublesNew.matrix(n, d);
+        IDoubleArray r;
+        for (int i=0; i<n; i++)
         {
-            table.set(0, i, line1.get(i));
-        }
-
-        for (int i = 1; i < inp.size(); i++)
-        {
-            IDoubleArray linei = inp.get(i);
-
-            for (int j = 0; j < linei.size(); j++)
+            r = inp.get(i);
+            for (int j=0; j<d; j++)
             {
-                table.set(i, j, linei.get(j));
+                M.set(i,j, r.get(j));
             }
         }
-
-        return (table);
+        return (M);
     }
 
-    public IDoubleArray readDataTable(String inputFile)
-    {
-        IDoubleArray res = null;
-        try
-        {
-            IDataReader input = DataSequence.create.createASCIIDataReader(inputFile);
-            input.scan();
-            res = new PrimitiveDoubleTable(input.size(), input.dimension());
-            int line = 0;
-            for (Iterator<IDoubleArray> it = input.iterator(); it.hasNext(); line++)
-            {
-                IDoubleArray arr = it.next();
-                for (int i=0; i<arr.size(); i++)
-                    res.set(line, i, arr.get(i));
-            }
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(DataSequenceUtilities.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(0);
-        }
-        return(res);
-    }
-
-    public IDataSequence readDataSequence(String inputFile)
-    {
-        return(new DataSequenceArray(readDataTable(inputFile)));
-    }
 
     public IDoubleArray readColumn(IDataSequence inp, int columnIndex)
     {
@@ -151,7 +123,7 @@ public class DataSequenceUtilities
 
         try
         {
-            IDataReader input = DataSequence.create.createASCIIDataReader(inputFile);
+            IDataReader input = DataSequence.create.readerASCII(inputFile);
             input.scan();
             res = Doubles.create.denseColumn(input.size());
             for (int i=0; i<res.size(); i++)
@@ -165,10 +137,10 @@ public class DataSequenceUtilities
         return(res);
     }
 
-    public void writeData(IDataSequence data, String file)
+    public void writeSequence(IDataSequence data, String file)
             throws IOException
     {
-        IDataWriter writer = DataSequence.create.createDataWriter(file, data.size(), data.dimension());
+        IDataWriter writer = DataSequence.create.writer(file, data.size(), data.dimension());
         writer.addAll(data);
         writer.close();
     }

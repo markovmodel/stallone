@@ -4,6 +4,8 @@
  */
 package stallone.api.dynamics;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.potential.*;
 import stallone.dynamics.BrownianDynamicsEuler;
@@ -31,6 +33,7 @@ public class DynamicsFactory
         IIntegratorThermostatted res = new LangevinLeapFrog(dt, gamma, kT);
         res.setEnergyModel(model);
         res.setMasses(masses);
+        res.setV(dyn.maxwellBoltzmannVelocities(masses, kT));
         return(res);
     }
 

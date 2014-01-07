@@ -3,6 +3,7 @@ package stallone.cluster;
 import java.util.Iterator;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.discretization.IDiscretization;
@@ -24,7 +25,7 @@ import stallone.doubles.fastutils.IntArrayList;
 public class KCenterClustering implements IClustering, IDiscretization
 {
 
-    private IDataList clusters = DataSequence.create.createDatalist();
+    private IDataList clusters = DataSequence.create.list();
     /**
      * data points which are going to be clustered.
      */
@@ -153,15 +154,15 @@ public class KCenterClustering implements IClustering, IDiscretization
     }
 
     @Override
-    public void setClusterInput(Iterable<IDoubleArray> datapoints, int _size)
+    public void setInput(IDataInput _data)
     {
-        this.data = datapoints;
-        this.size = _size;
+        this.data = _data.singles();
+        this.size = _data.size();
         assignedClusters = new IntArrayList();
     }
 
     @Override
-    public void setClusterInput(IDataSequence datapoints)
+    public void setInput(IDataSequence datapoints)
     {
         this.data = datapoints;
         this.size = datapoints.size();

@@ -43,7 +43,7 @@ public class RandomClustering extends AbstractRegularClustering
 
     private IDataList select(IIntArray indexes)
     {
-        IDataList res = dataNew.createDatalist();
+        IDataList res = dataNew.list();
         Iterator<IDoubleArray> dataIterator = data.iterator();
         IDoubleArray x;
         int k = 0;
@@ -69,7 +69,7 @@ public class RandomClustering extends AbstractRegularClustering
         int nfound = 0;
         int nsought = nClusters;
         IIntList acceptedCenterIndexes = intsNew.list(0);
-        IDataList acceptedCenters = dataNew.createDatalist();
+        IDataList acceptedCenters = dataNew.list();
 
         int nAttempts = 0;
         while (nfound < nClusters && nAttempts <= 10)

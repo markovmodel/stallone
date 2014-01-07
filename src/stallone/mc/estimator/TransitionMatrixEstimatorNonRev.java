@@ -5,6 +5,7 @@
 
 package stallone.mc.estimator;
 
+import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.mc.ITransitionMatrixEstimator;
@@ -57,6 +58,22 @@ public class TransitionMatrixEstimatorNonRev implements ITransitionMatrixEstimat
     public IDoubleArray getTransitionMatrix()
     {
         return(T);
+    }
+
+    @Override
+    public void setMaxIter(int nmax)
+    {
+    }
+
+    @Override
+    public void setConvergence(int niter)
+    {
+    }
+
+    @Override
+    public double[] getLikelihoodHistory()
+    {
+        return new double[]{msm.logLikelihood(T, C)};
     }
 
 }

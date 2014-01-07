@@ -17,12 +17,12 @@ public class TestKMeans
     @Before
     public void setUp() throws IOException {
         String files = "/home/marscher/md_simulation_data/trajall_500K.xtc";
-        IDataReader loader = API.dataNew.dataSequenceLoader(files);
+        IDataReader loader = API.dataNew.reader(files);
         IDataSequence data = loader.load();
         
         IMetric metric = API.clusterNew.metric(0, 0);
         
-        this.algo = API.clusterNew.createKmeans(data, metric, 10, 100);
+        this.algo = API.clusterNew.kmeans(data, metric, 10, 100);
     }
     @Test
     public void test()

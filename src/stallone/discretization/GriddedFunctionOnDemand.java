@@ -196,4 +196,16 @@ public class GriddedFunctionOnDemand
         return i;
     }
 
+    @Override
+    public Iterator<IDoubleArray[]> pairIterator(int spacing)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

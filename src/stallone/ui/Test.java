@@ -13,7 +13,7 @@ import static stallone.api.API.*;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.algebra.IEigenvalueSolver;
 import stallone.api.cluster.IClustering;
-import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IDoubleArray;
@@ -51,11 +51,10 @@ public class Test
         names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long1.dat");
         names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long2.dat");
         names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long3.dat");
-        IDataInput loader = dataNew.dataSequenceLoader(names);
+        IDataSequenceLoader loader = dataNew.multiSequenceLoader(names);
         loader.scan();
-        Iterable<IDoubleArray> it = loader.getSingleDataLoader();
         
-        IClustering clustering = clusterNew.createRegularSpatial(it, loader.size(), 0.5);
+        IClustering clustering = clusterNew.regspace(loader, 0.5);
         clustering.perform();
         
         /*

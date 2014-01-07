@@ -872,7 +872,7 @@ public class XtcFile implements IReleasableFile
      *
      * @return read result (true:=frame exists, false:=frame does not exist)
      */
-    protected boolean uncompressFrameCoordinates(int frameIndex) throws IOException
+    protected boolean uncompressFrameCoordinates(int frameIndex, IDoubleArray out) throws IOException
     {
 
         if (frameIndex >= this.numOfFrames)
@@ -907,7 +907,7 @@ public class XtcFile implements IReleasableFile
             { // coordinates of atoms are compressed => uncompress them , if coordinates are
                 // not compressed don't do anything
                 // uncompress coordinates
-                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision);
+                this.coordinatesUncompressed = xdr3dfcoord(this.coordinatesCompressed, this.nrAtoms, this.precision, out);
             }
         }
 
@@ -924,7 +924,7 @@ public class XtcFile implements IReleasableFile
      * @return coordinates of atoms randomAccessFile current frame ((amount
      * atoms)x3 array )
      */
-    public IDoubleArray getPositionsAt(int frameIndex) throws IOException
+    public IDoubleArray getPositionsAt(int frameIndex, IDoubleArray out) throws IOException
     {
         //      System.out.println("frame index "+frameIndex+" "+randomAccessFile.getFilePointer());
 
@@ -934,7 +934,7 @@ public class XtcFile implements IReleasableFile
         } // check if frame exists, read "frame header", "coordinate header" and coordinates (if compressed do not
         // decode them) of current frame
 
-        if (!uncompressFrameCoordinates(frameIndex))
+        if (!uncompressFrameCoordinates(frameIndex, out))
         {
             return null;
         } // read header of current frame and check if frame exists
@@ -1406,7 +1406,7 @@ public class XtcFile implements IReleasableFile
      * @return Method returns the uncompressed coordinates of the atoms
      * randomAccessFile the current frame
      */
-    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision)
+    private IDoubleArray xdr3dfcoord(int[] coordinatesCompressed, int nrAtoms, float precision, IDoubleArray out)
     {
         /*
          * private float[][] xdr3dfcoord(boolean readWriteMode) { XDR *xdrs :=
@@ -1416,9 +1416,6 @@ public class XtcFile implements IReleasableFile
          * compresed coordinates => precision readWriteMode: true=:read,
          * false=:write
          */
-
-        IDoubleArray lfp = new PrimitiveDoubleTable(nrAtoms, 3);
-
         int[] sizeInt = new int[3];
         int[] sizeSmall = new int[3];
 
@@ -1534,9 +1531,9 @@ public class XtcFile implements IReleasableFile
                         tmp = thiscoord[2];
                         thiscoord[2] = prevcoord[2];
                         prevcoord[2] = tmp;
-                        lfp.set(iOutput, 0, prevcoord[0] * inv_precision);
-                        lfp.set(iOutput, 1, prevcoord[1] * inv_precision);
-                        lfp.set(iOutput, 2, prevcoord[2] * inv_precision);
+                        out.set(iOutput, 0, prevcoord[0] * inv_precision);
+                        out.set(iOutput, 1, prevcoord[1] * inv_precision);
+                        out.set(iOutput, 2, prevcoord[2] * inv_precision);
                         iOutput++;
                     }
                     else
@@ -1547,18 +1544,18 @@ public class XtcFile implements IReleasableFile
                     }
 
                     // undo the conversion of atom coordinates from float to int
-                    lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
-                    lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
-                    lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                    out.set(iOutput, 0, thiscoord[0] * inv_precision);
+                    out.set(iOutput, 1, thiscoord[1] * inv_precision);
+                    out.set(iOutput, 2, thiscoord[2] * inv_precision);
                     iOutput++;
                 } // end for
             }
             else
             {
                 // undo the conversion of atom coordinates from float to int
-                lfp.set(iOutput, 0, thiscoord[0] * inv_precision);
-                lfp.set(iOutput, 1, thiscoord[1] * inv_precision);
-                lfp.set(iOutput, 2, thiscoord[2] * inv_precision);
+                out.set(iOutput, 0, thiscoord[0] * inv_precision);
+                out.set(iOutput, 1, thiscoord[1] * inv_precision);
+                out.set(iOutput, 2, thiscoord[2] * inv_precision);
                 iOutput++;
             } // end if-else
 
@@ -1586,6 +1583,6 @@ public class XtcFile implements IReleasableFile
             sizeSmall[0] = sizeSmall[1] = sizeSmall[2] = xtc_magicints[smallidx];
         } // end while
 
-        return lfp; // return decompressed atom coordinates
+        return out; // return decompressed atom coordinates
     }
 };

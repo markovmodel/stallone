@@ -4,13 +4,18 @@
  */
 package stallone.datasequence;
 
+import static stallone.api.API.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataInput;
+import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IO;
 
@@ -32,8 +37,9 @@ import stallone.api.io.IO;
  * @author noe
  */
 public class DataSequenceLoader_SingleReaderImpl
-        implements IDataInput
+        implements IDataSequenceLoader
 {
+
     private List<String> sources;
     private boolean scanned = false;
     private IDataReader reader;
@@ -53,6 +59,7 @@ public class DataSequenceLoader_SingleReaderImpl
 
     /**
      * Creates a loader object with the list of sources provided.
+     *
      * @param _sources
      */
     public DataSequenceLoader_SingleReaderImpl(List<String> _sources, IDataReader _reader)
@@ -64,11 +71,15 @@ public class DataSequenceLoader_SingleReaderImpl
         // basic checks: do files exist?
         // initialize file size info.
         if (sources == null)
+        {
             throw new NullPointerException("List of sources provided to DataSequenceLoader is null. Cannot open input files.");
-        for (int i=0; i<sources.size(); i++)
+        }
+        for (int i = 0; i < sources.size(); i++)
         {
             if (!(new File(sources.get(i))).exists())
-                throw new IOException("Could not open file: "+sources.get(i));
+            {
+                throw new IOException("Could not open file: " + sources.get(i));
+            }
             info.add(new DataSequenceInfo());
         }
     }
@@ -101,7 +112,7 @@ public class DataSequenceLoader_SingleReaderImpl
     {
         info.clear();
         dimension = -1;
-        
+
         for (int i = 0; i < sources.size(); i++)
         {
             makeAvailable(i);
@@ -157,8 +168,7 @@ public class DataSequenceLoader_SingleReaderImpl
             try
             {
                 makeAvailable(0);
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
             }
@@ -198,8 +208,7 @@ public class DataSequenceLoader_SingleReaderImpl
                 makeAvailable(trajIndex);
                 this.info.get(trajIndex).size = reader.size();
                 this.info.get(trajIndex).memorySize = reader.memorySize();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
             }
@@ -221,8 +230,7 @@ public class DataSequenceLoader_SingleReaderImpl
                 makeAvailable(trajIndex);
                 this.info.get(trajIndex).size = reader.size();
                 this.info.get(trajIndex).memorySize = reader.memorySize();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 IO.util.error("Exception while trying to open trajectory " + sources.get(0) + ":\n" + e);
             }
@@ -263,9 +271,20 @@ public class DataSequenceLoader_SingleReaderImpl
      * time
      */
     @Override
-    public Iterable<IDoubleArray> getSingleDataLoader()
+    public Iterable<IDoubleArray> singles()
     {
-        return (new DataSequenceLoader_SingleDataIterable(this));
+        return (new DataInput_SingleDataIterable(this));
+    }
+
+    /**
+     * Returns an iterable that can iterate over single data objects. Only
+     * single data objects are loaded into memory and only one file is open at a
+     * time
+     */
+    @Override
+    public Iterable<IDoubleArray[]> pairs(int spacing)
+    {
+        return (new DataInput_DataPairIterable(this, spacing));
     }
 
     /**
@@ -276,24 +295,50 @@ public class DataSequenceLoader_SingleReaderImpl
      * @return
      */
     @Override
-    public Iterable<IDataSequence> getSingleSequenceLoader()
+    public Iterable<IDataSequence> sequences()
     {
-        return (new DataSequenceLoader_SingleSequenceIterable(this));
+        return (new DataInput_SingleSequenceIterable(this));
     }
 
     @Override
-    public IDoubleArray load(int sequenceIndex, int frameIndex)
-            throws IOException
+    public IDoubleArray get(int sequenceIndex, int frameIndex)
     {
-        makeAvailable(sequenceIndex);
+        try
+        {
+            makeAvailable(sequenceIndex);
+        } 
+        catch (IOException ex)
+        {
+            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return reader.get(frameIndex);
     }
 
     @Override
-    public IDataSequence loadSequence(int sequenceIndex)
-            throws IOException
+    public IDataSequence getSequence(int sequenceIndex)
     {
-        makeAvailable(sequenceIndex);
+        try
+        {
+            makeAvailable(sequenceIndex);
+        } 
+        catch (IOException ex)
+        {
+            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return reader;
+    }
+    
+    
+    @Override
+    public IDataSequence loadSequence(int sequenceIndex)
+    {
+        try
+        {
+            makeAvailable(sequenceIndex);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return reader.load();
     }
 
@@ -303,15 +348,32 @@ public class DataSequenceLoader_SingleReaderImpl
      * @return
      */
     @Override
-    public List<IDataSequence> loadAll()
-            throws IOException
+    public IDataInput loadAll()
     {
         List<IDataSequence> res = new ArrayList<IDataSequence>();
         for (int i = 0; i < sources.size(); i++)
         {
-            makeAvailable(i);
+            try
+            {
+                makeAvailable(i);
+            } catch (IOException ex)
+            {
+                Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
             res.add(reader.load());
         }
-        return (res);
+
+        IDataInput ret = null;
+
+        try
+        {
+            dataNew.dataInput(res);
+        } 
+        catch (IOException ex) // this cannot happen
+        {
+            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return ret;
     }
 }

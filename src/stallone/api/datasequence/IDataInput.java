@@ -19,26 +19,6 @@ import stallone.api.doubles.IDoubleArray;
  */
 public interface IDataInput
 {
-
-    //public void setLoader(IDataReader loader);
-
-    /**
-     * Adds a link to a file or data base entry of a data sequence
-     * @param link filename or URL
-     */
-    //public void addSource(String link);
-
-    /**
-     * Scans all files or data base entries.
-     * This method needs to be called before any of the info methods (size, memorySize...) can be called.
-     * Scan will also check the file consistency, make sure that all source files have the same dimensionality
-     * and can be successfully read.
-     * It is not necessary to scan before using one of the iterables below, but in this case there is
-     * no guarantee that the iterable won't crash at a file inconsistency.
-     */
-    public void scan()
-            throws IOException;
-
     /**
      * Total number of sequences. Need to scan() first before calling this method.
      * @return
@@ -64,68 +44,45 @@ public interface IDataInput
      */
     public int size(int trajIndex);
 
-    /**
-     * Memory requirement for the given sequence. Need to scan() first before calling this method.
-     */
-    public long memorySizeOfSingleSequence(int index);
-
-    /**
-     * Memory requirement for the largest single sequence. Need to scan() first before calling this method.
-     */
-    public long memorySizeOfLargestSequence();
-
-    /**
-     * The entire subset, as given by the index set is loaded and returned. Need to scan() first before calling this method.
-     * @param indexes nx2 array with trajectory and within-trajectory indexes
-     * @return
-     */
-    //public IDataSequences loadSubset(IIntArray indexes)
-    //        throws IOException;
-
-    /**
-     * Memory requirement for everything. Need to scan() first before calling this method.
-     */
-    public long memorySizeTotal();
-
 
     /**
      * Returns an iterable that can iterate over single data objects. Does not require scan() to be called.
      * Only single data objects are loaded into memory and only one file is open at a time
      */
-    public Iterable<IDoubleArray> getSingleDataLoader();
+    public Iterable<IDoubleArray> singles();
 
+    
+    /**
+     * Returns an iterable that can iterate over pairs of data objects with the given spacing. 
+     * Does not require scan() to be called.
+     * Only two single data objects are loaded into memory and only one file is open at a time
+     */
+    public Iterable<IDoubleArray[]> pairs(int spacing);
+    
 
     /**
      * Returns an iterable that can iterate over single data sequences. Does not require scan() to be called.
      * Each data sequence is fully loaded into memory at a time. Only one file is open at a time
      * @return
      */
-    public Iterable<IDataSequence> getSingleSequenceLoader();
+    public Iterable<IDataSequence> sequences();
 
     /**
-     * Load a single data set. Does not require scan() to be called.
+     * Gets a single data set.
      * @param sequenceIndex
      * @param frameIndex
      * @return
      * @throws IOException
      */
-    public IDoubleArray load(int sequenceIndex, int frameIndex)
-            throws IOException;
+    public IDoubleArray get(int sequenceIndex, int frameIndex);
 
     /**
-     * Load a single data sequence. Does not require scan() to be called.
+     * Gets access to a single data sequence. If this object represents a reader, 
+     * this sequence will generally not be fully in memory but lazy loaded
+     * from disk or another resource.
      * @param sequenceIndex
-     * @return
+     * @return access to the requested data sequence
      * @throws IOException
      */
-    public IDataSequence loadSequence(int sequenceIndex)
-            throws IOException;
-
-    /**
-     * Loads everything into memory. Does not require scan() to be called.
-     * @return
-     */
-    public List<IDataSequence> loadAll()
-            throws IOException;
-
+    public IDataSequence getSequence(int sequenceIndex);
 }
