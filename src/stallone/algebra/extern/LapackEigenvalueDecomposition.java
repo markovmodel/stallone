@@ -18,7 +18,7 @@ import stallone.complex.ComplexNumber;
 import stallone.complex.AbstractComplexArray;
 import stallone.complex.DenseComplexArray;
 import stallone.api.complex.IComplexArray;
-import org.netlib.lapack.LAPACK;
+import com.github.fommil.netlib.LAPACK;
 import org.netlib.util.intW;
 
 import stallone.api.algebra.*;
