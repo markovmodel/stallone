@@ -256,6 +256,7 @@
 	</dependencies>
 
 	<reporting>
+	<!-- TODO: add javadoc plugin -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
