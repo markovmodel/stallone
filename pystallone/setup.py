@@ -47,10 +47,7 @@ def getVersionFromManifest(jarFile):
     splitted = re.split('^(.*)\:.', content, flags=re.MULTILINE)
     ind = splitted.index('version')
     version = splitted[ind+1]
-    version.strip('\n')
-    if '\n' in version:
-        print "version fufckd"
-        os.abort()
+    version = version.strip() # strip whitespaces
     return version
 
 version = getVersionFromManifest(stallone_whole_in_one_jar)
