@@ -24,29 +24,46 @@ print "Using setuptools version: ", st_version
 from setuptools import setup, Extension, find_packages
 #used for custom commands on stallone jcc setup
 from distutils.command.build import build
-#from setuptools.command.build_py import build_py
 from setuptools.command.install import install
-#from setuptools.command.sdist import sdist
 """
 ################################################################################
     Stallone Python Wrapper Setup
 ################################################################################
 """
+
+import glob
+stallone_api_jar = glob.glob('stallone*api.jar')[0]
+stallone_whole_in_one_jar = glob.glob('stallone*jar-with-dependencies-proguard.jar')[0]
+stallone_module_name = 'stallone'
+
+def getVersionFromManifest(jarFile):
+    from zipfile import ZipFile
+    import re
+    
+    z = ZipFile(jarFile)
+    f = z.open('META-INF/MANIFEST.MF')
+    content = f.read()
+    
+    splitted = re.split('^(.*)\:.', content, flags=re.MULTILINE)
+    ind = splitted.index('version')
+    version = splitted[ind+1]
+    version.strip('\n')
+    if '\n' in version:
+        print "version fufckd"
+        os.abort()
+    return version
+
+version = getVersionFromManifest(stallone_whole_in_one_jar)
+
 def jcc_args(additional_args = []):
     """
     default arguments to build stallone wrapper.
+    Note:
+    * All of the public class/interface content of the --jar option is wrapped.
+    * All of the public class/interface content of additional packages passed via
+     --package option is wrapped.
     """
-    from os.path import abspath
-    #TODO: make these path relative to __file__, so setup may be executed with prepended relative paths.
-    # if this should be also used in stallone maven builds, make sure relative path is correct
-    stallone_api_jar = abspath('stallone-1.0-SNAPSHOT-api.jar')
-    stallone_whole_in_one_jar = abspath(
-        'stallone-1.0-SNAPSHOT-jar-with-dependencies.jar')
-    
-    stallone_module_name = 'stallone'
-    
     args = ['--jar', stallone_api_jar,
-            #TODO: read packages from manifest
          '--package', 'stallone.api.coordinates',
          '--package', 'stallone.mc',
          '--package', 'stallone.algebra',
@@ -61,12 +78,9 @@ def jcc_args(additional_args = []):
          '--include', stallone_whole_in_one_jar,
          #'--use_full_names', # does not work...
          '--python', stallone_module_name,
-         '--version', '1.0', #TODO: read from manifest
+         '--version', version,
          '--reserved', 'extern',
-         # TODO: this is ignored for some build files.
          '--output', 'build_stallone',
-         #'--output', 'target', # output directory, name 'build' is buggy in
-                               # case of setup.py sdist, which does not include stuff from this dirs
          '--files', '2']
 
     if isinstance(additional_args, list):
@@ -104,7 +118,7 @@ def jcc_run(args):
         print args
         print "==================================================="
     except subprocess.CalledProcessError as cpe:
-        print "Something went wrong:\n", cpe.output
+        print "Something went wrong:\n", cpe
         raise
     return args
 
@@ -132,11 +146,7 @@ class myinstall(install):
         jcc_run(args)
 
 setup(name = 'stallone',
-      # TODO: compare version of stallone stored in manifest of jar.
-      # may be set this to version stored in manifest and rely on several things:
-      # 1. the version is a git tag (hash id's are not incremental)
-      # 2. the setup routine will update properly, when a higher version is found
-      version = '9999', # insane build number to ensure local version always wins over release version
+      version = version,
       cmdclass=dict(build=mybuild,
                     install=myinstall),
       # build time dependencies
