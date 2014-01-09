@@ -5,6 +5,7 @@
 package stallone.mc.sampling;
 
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.mc.IReversibleSamplingStep;
 import stallone.api.mc.MarkovModel;
 
 /**

@@ -6,10 +6,10 @@ package stallone.mc.sampling;
 
 import cern.jet.random.Beta;
 import cern.jet.random.engine.MersenneTwister;
-
 import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
+import stallone.api.mc.IReversibleSamplingStep;
 import stallone.util.MathTools;
 
 /**

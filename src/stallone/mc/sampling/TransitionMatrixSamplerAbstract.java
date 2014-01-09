@@ -9,6 +9,7 @@ import stallone.api.algebra.Algebra;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IDoubleIterator;
+import stallone.api.mc.ITransitionMatrixSampler;
 import stallone.api.mc.MarkovModel;
 
 /**
