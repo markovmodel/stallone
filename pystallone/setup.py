@@ -32,6 +32,7 @@ from setuptools.command.install import install
 """
 
 import glob
+# TODO: what if the cwd is poluted with older versions?
 stallone_api_jar = glob.glob('stallone*api.jar')[0]
 stallone_whole_in_one_jar = glob.glob('stallone*jar-with-dependencies-proguard.jar')[0]
 stallone_module_name = 'stallone'
