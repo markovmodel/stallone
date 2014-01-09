@@ -3,30 +3,260 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>compmolbio</groupId>
-	<artifactId>Stallone</artifactId>
+	<artifactId>stallone</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
-	<name>Stallone</name>
 	<url>http://compmolbio.biocomputing-berlin.de/index.php</url>
 
-	<modules>
-		<module>stallone</module>
-	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-	<profiles>
-		<profile>
-			<!-- profile -Ppython-wrapper to build the pythonic wrapper for stallone -->
-			<id>python-wrapper</id>
-			<modules>
-				<module>pystallone</module>
-			</modules>
-		</profile>
+		<!-- introduce a property buildNumber -->
+		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+		<buildNumber>${maven.build.timestamp}</buildNumber>
+	</properties>
 
-		<profile>
-			<!-- profile -P buildDistribution to construct the final compressed jar 
-				containing all dependencies -->
-			<id>buildDistribution</id>
-		</profile>
-	</profiles>
+	<!-- <profiles> <profile>python-wrapper</profile> </profiles> -->
+
+
+	<!-- the build -->
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<optimize>true</optimize>
+					<useIncrementalCompilation>false</useIncrementalCompilation>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+					<compilerArgs>
+						<arg>-Xlint:unchecked</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<!-- build api jar, works -->
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>api</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<classifier>api</classifier>
+							<!-- make sure all public api classes are included -->
+							<includes>
+								<include>stallone/api/**/*</include>
+								<include>stallone/dynamics/I*</include>
+								<!-- <include>stallone/ints/**</include> -->
+								<!-- <include>stallone/doubles/**</include> -->
+								<include>stallone/mc/sampling/I*</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<!-- Goal assembly:single is bound to maven execution phase "prepare-package" -->
+				<executions>
+					<execution>
+						<id>distro-assembly</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<!-- HERE, the configuration (which is loaded from file assemblyDescriptor.xml) 
+							of the assembly is setup -->
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- build runtime jar, which includes all dependencies -->
+			<plugin>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<groupId>com.github.wvengen</groupId>
+				<version>2.0.6</version>
+
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.proguard</groupId>
+						<artifactId>proguard-base</artifactId>
+						<version>4.10</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+
+				<configuration>
+					<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+					<outjar>${project.build.finalName}-jar-with-dependencies-proguard.jar</outjar>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jsse.jar</lib>
+					</libs>
+					<addMavenDescriptor>false</addMavenDescriptor>
+
+					<!-- do not include any libraries. we depend on: we are already working 
+						on a jar which contains all dependencies in one jar See: previous package 
+						step -->
+					<includeDependency>false</includeDependency>
+
+					<obfuscate>false</obfuscate>
+
+					<options>
+						<option>-allowaccessmodification</option>
+						<!-- <option>-keep class * implements AbstractCmd</option> -->
+						<option>-keep class
+							edu.cornell.lassp.houle.RngPack.RandomElement</option>
+						<option>-dontoptimize</option>
+						<option>-keepclasseswithmembers public class * { public static
+							void main(java.lang.String[]); }</option>
+					</options>
+				</configuration>
+			</plugin>
+
+			<!-- copy jars for stallone jcc setup to build dir (where setup lies) -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>2.4.3</version>
+
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<outputDirectory>../pystallone</outputDirectory>
+					<resources>
+						<resource>
+							<directory>${project.build.directory}</directory>
+							<includes>
+								<include>
+									${project.build.finalName}-jar-with-dependencies-proguard.jar
+								</include>
+								<include>
+									${project.build.finalName}-api.jar
+								</include>
+							</includes>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+			
+			<!-- this maps maven cycles to setup.py -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<executable>python</executable>
+					<workingDirectory>pystallone/</workingDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>setuptools install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<arguments>
+								<argument>setup.py</argument>
+								<argument>build</argument>
+								<argument>develop</argument>
+								<argument>--user</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<!-- jep library, for function string parsing/evaluation -->
+		<dependency>
+			<groupId>jep</groupId>
+			<artifactId>jep</artifactId>
+			<version>2.24</version>
+		</dependency>
+
+		<!-- cern colt library used for Step_Rev_Quad_Trendelkamp -->
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
+		<!-- recent netlib bindings which supports native libs -->
+		<dependency>
+			<groupId>com.github.fommil.netlib</groupId>
+			<artifactId>all</artifactId>
+			<version>1.1.2</version>
+			<type>pom</type>
+		</dependency>
+
+		<!-- matrix tools kit -->
+		<dependency>
+			<groupId>com.googlecode.matrix-toolkits-java</groupId>
+			<artifactId>mtj</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
+		<!-- junit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+					<rulesets>
+						<ruleset>/rulesets/braces.xml</ruleset>
+						<ruleset>/rulesets/naming.xml</ruleset>
+						<ruleset>/rulesets/design.xml</ruleset>
+					</rulesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
