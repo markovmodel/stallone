@@ -4,26 +4,17 @@
 
 	<groupId>compmolbio</groupId>
 	<artifactId>stallone</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<url>http://compmolbio.biocomputing-berlin.de/index.php</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- introduce a property buildNumber -->
-		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-		<buildNumber>${maven.build.timestamp}</buildNumber>
 	</properties>
 
-	<!-- <profiles> <profile>python-wrapper</profile> </profiles> -->
-
-
-	<!-- the build -->
+	<!-- TODO: describe build process -->
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -41,31 +32,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- build api jar, works -->
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>api</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<phase>compile</phase>
-						<configuration>
-							<classifier>api</classifier>
-							<!-- make sure all public api classes are included -->
-							<includes>
-								<include>stallone/api/**/*</include>
-								<include>stallone/dynamics/I*</include>
-								<!-- <include>stallone/ints/**</include> -->
-								<!-- <include>stallone/doubles/**</include> -->
-								<include>stallone/mc/sampling/I*</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- Goal assembly:single is bound to maven execution phase "prepare-package" -->
@@ -82,6 +48,16 @@
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
+
+							<archive>
+								<index>true</index>
+								<manifest>
+									<addClasspath>true</addClasspath>
+								</manifest>
+								<manifestEntries>
+									<version>${project.version}</version>
+								</manifestEntries>
+							</archive>
 						</configuration>
 					</execution>
 				</executions>
@@ -133,77 +109,113 @@
 						<!-- <option>-keep class * implements AbstractCmd</option> -->
 						<option>-keep class
 							edu.cornell.lassp.houle.RngPack.RandomElement</option>
+						<option>-keep class
+							stallone.coordinates.AbstractCoordinateTransform</option>
+						<option>-keep class stallone.stat.RunningAverage</option>
+						<option>-keep class stallone.stat.modelselection.ExitTimeSplitter</option>
+						<option>-keep class stallone.intsequence.IntArrayTokenizer</option>
+						<!-- TODO: activated optimization leads to errors in jep library: investigate! -->
 						<option>-dontoptimize</option>
 						<option>-keepclasseswithmembers public class * { public static
 							void main(java.lang.String[]); }</option>
 					</options>
 				</configuration>
 			</plugin>
-
-			<!-- copy jars for stallone jcc setup to build dir (where setup lies) -->
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<groupId>org.apache.maven.plugins</groupId>
-				<version>2.4.3</version>
-
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-					</execution>
-				</executions>
-
-				<configuration>
-					<outputDirectory>../pystallone</outputDirectory>
-					<resources>
-						<resource>
-							<directory>${project.build.directory}</directory>
-							<includes>
-								<include>
-									${project.build.finalName}-jar-with-dependencies-proguard.jar
-								</include>
-								<include>
-									${project.build.finalName}-api.jar
-								</include>
-							</includes>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>
-			
-			<!-- this maps maven cycles to setup.py -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<configuration>
-					<executable>python</executable>
-					<workingDirectory>pystallone/</workingDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<id>setuptools install</id>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<arguments>
-								<argument>setup.py</argument>
-								<argument>build</argument>
-								<argument>develop</argument>
-								<argument>--user</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
-	
+
+	<profiles>
+		<profile>
+			<id>python-wrapper</id>
+			<build>
+				<plugins>
+					<!-- build stallone api jar, which is used to easily wrap all api packages -->
+					<plugin>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>api</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<phase>compile</phase>
+								<configuration>
+									<classifier>api</classifier>
+									<!-- include the stallone.api package recursively -->
+									<includes>
+										<include>stallone/api/**/*</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- copy jars for stallone jcc setup to build dir (where setup lies) -->
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<groupId>org.apache.maven.plugins</groupId>
+						<version>2.4.3</version>
+
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+							</execution>
+						</executions>
+
+						<configuration>
+							<outputDirectory>pystallone</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}</directory>
+									<includes>
+										<include>
+											${project.build.finalName}-jar-with-dependencies-proguard.jar
+										</include>
+										<include>
+											${project.build.finalName}-api.jar
+										</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</plugin>
+
+					<!-- performs the building of the wrapper and installs it locally -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<configuration>
+							<executable>python</executable>
+							<workingDirectory>pystallone/</workingDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<id>setuptools install</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<argument>setup.py</argument>
+										<argument>build</argument>
+										<argument>install</argument>
+										<argument>--user</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<!-- jep library, for function string parsing/evaluation -->
 		<dependency>
@@ -238,7 +250,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
