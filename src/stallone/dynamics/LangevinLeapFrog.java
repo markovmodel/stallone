@@ -5,7 +5,10 @@
 package stallone.dynamics;
 
 import java.util.Random;
+
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.dynamics.IIntegrator;
+import stallone.api.dynamics.IIntegratorThermostatted;
 import stallone.api.potential.IEnergyModel;
 
 /**

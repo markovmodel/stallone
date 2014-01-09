@@ -7,11 +7,11 @@ package stallone.api.dynamics;
 import static stallone.api.API.*;
 
 import java.util.Random;
+
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.datasequence.IDataWriter;
-import stallone.dynamics.IIntegrator;
 
 /**
  *
