@@ -4,17 +4,9 @@
  */
 package stallone.api.coordinates;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static stallone.api.API.*;
-
-import javax.naming.OperationNotSupportedException;
+import static stallone.api.API.coor;
 import stallone.api.datasequence.IDataInput;
-import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
-import stallone.api.datasequence.IDataSequenceLoader;
 import stallone.api.doubles.IDoubleArray;
 import stallone.coordinates.AbstractCoordinateTransform;
 import stallone.coordinates.MinimalRMSDistance3D;
