@@ -1,98 +1,145 @@
 #!/usr/bin/env python
-from os import listdir, rmdir
-from os.path import isfile, join
-import shlex
-import shutil
-import subprocess
+'''
+Created on 08.01.2014
+
+@author: marscher
+'''
+import os
 import sys
 
-__version__ = '1.0'
-__name__ = 'pystallone'
-
-# prefer setuptools in favor of distutils
-try:
-    from setuptools.core import setup
-    from setuptools.command.build import compile
-    from setuptools.command.install import install
-    from setuptools.command.clean import clean
-    print "using setuptools"
-except ImportError:
+if len(sys.argv) < 2:
+    """
+        in case we have no args let distutils setup show a basic error message
+    """
     from distutils.core import setup
-    from distutils.command.build import build   
-    from distutils.command.install import install
-    from distutils.command.clean import clean
-    print "using distutils"
+    setup()
 
-stallone_api_jar = 'stallone-1.0-SNAPSHOT-api.jar'
-
-lib_dir = 'libs/'
-
-def create_include_jar_list():
-    jars = [ f for f in listdir(lib_dir) if isfile(join(lib_dir, f)) ]
-    cp_string = ''.join("--include " + lib_dir + "%s " \
-                        % ''.join(map(str, x)) for x in jars)
-    return cp_string
-
-def create_packages(packages):
-    cp_string = ''.join("--package %s " \
-                        % ''.join(map(str, x)) for x in packages)
-    return cp_string
-
-def jcc_run(extra_args):
-        """
-            will generate a string containing the invocation of apache jcc
-            to build a wrapper for the given stallone api jar. All depedencies
-            of stallone will be included in the distribution 
-            (added to java classpath).
-        """
-        
-        """
-            these are currently needed, since the markov model factory 
-            depends on them
-        """
-        additional_packages = ['stallone.mc', 
-                               'stallone.algebra',
-                               'stallone.cluster']
-        #additional_packages = '[]'
-        
-        call = sys.executable + ' -m jcc --jar ' + stallone_api_jar \
-             + ' ' + create_include_jar_list() \
-             + ' ' + create_packages(additional_packages) \
-             + " --python " + __name__ + ' ' \
-             + " --version " + __version__ + " --reserved extern" \
-             + " --module util/ArrayWrapper.py" \
-             + ' --files 2 '\
-             + ' ' + extra_args
-        return call
+"""
+we are using setuptools via the bootstrapper ez_setup
+"""
+from ez_setup import use_setuptools
+use_setuptools(version="2.0.2")
+from setuptools import __version__ as st_version
+print "Using setuptools version: ", st_version
+from setuptools import setup, Extension, find_packages
+#used for custom commands on stallone jcc setup
+from distutils.command.build import build
+#from setuptools.command.build_py import build_py
+from setuptools.command.install import install
+#from setuptools.command.sdist import sdist
+"""
+################################################################################
+    Stallone Python Wrapper Setup
+################################################################################
+"""
+def jcc_args(additional_args = []):
+    """
+    default arguments to build stallone wrapper.
+    """
+    from os.path import abspath
+    #TODO: make these path relative to __file__, so setup may be executed with prepended relative paths.
+    # if this should be also used in stallone maven builds, make sure relative path is correct
+    stallone_api_jar = abspath('stallone-1.0-SNAPSHOT-api.jar')
+    stallone_whole_in_one_jar = abspath(
+        'stallone-1.0-SNAPSHOT-jar-with-dependencies.jar')
     
+    stallone_module_name = 'stallone'
+    
+    args = ['--jar', stallone_api_jar,
+            #TODO: read packages from manifest
+         '--package', 'stallone.api.coordinates',
+         '--package', 'stallone.mc',
+         '--package', 'stallone.algebra',
+         '--package', 'stallone.coordinates',
+         '--package', 'stallone.cluster',
+         '--package', 'java.lang',
+         '--package', 'java.util',
+         '--sequence', 'stallone.api.datasequence.IDataSequence', 'size:()I',
+         'get:(I)Lstallone.api.doubles.IDoubleArray;',
+         '--sequence', 'stallone.api.IDoubleArray', 'size:()I',
+         'get:(I)jdouble;',
+         '--include', stallone_whole_in_one_jar,
+         #'--use_full_names', # does not work...
+         '--python', stallone_module_name,
+         '--version', '1.0', #TODO: read from manifest
+         '--reserved', 'extern',
+         # TODO: this is ignored for some build files.
+         '--output', 'build_stallone',
+         #'--output', 'target', # output directory, name 'build' is buggy in
+                               # case of setup.py sdist, which does not include stuff from this dirs
+         '--files', '2']
+
+    if isinstance(additional_args, list):
+        args.extend(additional_args)
+    else:
+        args.append(additional_args)
+
+    return args
+
+def jcc_run(args):
+    """
+    Invokes python with jcc module to perform the setup. This method fails, if
+    JCC is not installed. But since it is required via setup(), it should always
+    be available. The actual jcc call is performed via subprocess, because currently
+    jcc only allows one jvm instance per process and we call it multiple times.
+    
+    Note: JCC is itself a setuptools wrapper.
+    """
+    import subprocess
+    # reuse environment of current process to ensure runtime dependencies to be
+    # on the python path.
+    env = os.environ
+    env['PYTHONPATH'] = ':'.join(sys.path)
+    # invoke python with module jcc (if not already present)
+    if args[0] != sys.executable:
+        jcc_invocation = [sys.executable, '-m', 'jcc']
+        for arg in reversed(jcc_invocation):
+            args.insert(0, arg)
+    try:
+        print args
+        subprocess.check_call(args,
+                          stderr = subprocess.STDOUT, env=env)
+        print "==================================================="
+        print "Finished STALLONE build step:"
+        print args
+        print "==================================================="
+    except subprocess.CalledProcessError as cpe:
+        print "Something went wrong:\n", cpe.output
+        raise
+    return args
+
 class mybuild(build):
     """
     invokes apache jcc to build a wrapper for the public api of stallone 
     """
     def run(self):
-        call = jcc_run('--build')
-        print 'invoking: ', call
-        return subprocess.call(shlex.split(call))
+        print "==================================================="
+        print "Building the STALLONE wrapper"
+        print "==================================================="
+        args = jcc_args(['--build'])
+        
+        jcc_run(args)
 
 class myinstall(install):
     def run(self):
-        # install to users home directory, because we know its writeable
-        call = jcc_run('--install --extra-setup-arg --user')
-        print 'invoking: ', call
-        return subprocess.call(shlex.split(call))
-            
-class myclean(clean):
-    def run(self):
-        shutil.rmtree('build', ignore_errors=True)
-        shutil.rmtree('dist', ignore_errors=True)
-        shutil.rmtree('libs', ignore_errors=True)
-        shutil.rmtree(__name__ + ".egg-info", ignore_errors=True)
-    
-setup(name=__name__,
-      version=__version__,
+        print "==================================================="
+        print "Installing the STALLONE wrapper"
+        print "==================================================="
+        args = jcc_args('--install')
+        if '--user' in sys.argv:
+            args.append('--extra-setup-arg')
+            args.append('--user')
+        jcc_run(args)
+
+setup(name = 'stallone',
+      # TODO: compare version of stallone stored in manifest of jar.
+      # may be set this to version stored in manifest and rely on several things:
+      # 1. the version is a git tag (hash id's are not incremental)
+      # 2. the setup routine will update properly, when a higher version is found
+      version = '9999', # insane build number to ensure local version always wins over release version
       cmdclass=dict(build=mybuild,
-                    install=myinstall,
-                    clean=myclean),
-      # build time dependencies                                                 
-      install_requires = ['JCC >=2.17']
-) 
+                    install=myinstall),
+      # build time dependencies
+      setup_requires = ['JCC >=2.18'],
+      install_requires = ['JCC >=2.18']
+)
