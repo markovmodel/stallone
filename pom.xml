@@ -17,7 +17,7 @@
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
-		
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -286,20 +286,25 @@
 	</dependencies>
 
 	<reporting>
-		<!-- TODO: add javadoc plugin -->
 		<plugins>
+			<!-- javadoc generation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.0.1</version>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
 				<configuration>
-					<rulesets>
-						<ruleset>/rulesets/braces.xml</ruleset>
-						<ruleset>/rulesets/naming.xml</ruleset>
-						<ruleset>/rulesets/design.xml</ruleset>
-					</rulesets>
+				<!-- TODO: include only public api -->
+					<sourceFileExcludes>
+						<sourceFileExclude>stallone.algebra.*</sourceFileExclude>
+					</sourceFileExcludes>
 				</configuration>
 			</plugin>
+
+			<!-- PMD static code analysis -->
+			<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-pmd-plugin</artifactId> 
+				<version>3.0.1</version> <configuration> <rulesets> <ruleset>/rulesets/braces.xml</ruleset> 
+				<ruleset>/rulesets/naming.xml</ruleset> <ruleset>/rulesets/design.xml</ruleset> 
+				</rulesets> </configuration> </plugin -->
 		</plugins>
 	</reporting>
 </project>
