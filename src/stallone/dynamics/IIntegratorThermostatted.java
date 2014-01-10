@@ -11,4 +11,5 @@ package stallone.dynamics;
 public interface IIntegratorThermostatted extends IIntegrator
 {
     public void setkT(double kT);
+    public double getkT();
 }

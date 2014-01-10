@@ -141,4 +141,10 @@ public class BrownianDynamicsEuler implements IIntegratorThermostatted
         this.kT = kT;
     }
 
+    @Override
+    public double getkT()
+    {
+        return this.kT;
+    }
+
 }

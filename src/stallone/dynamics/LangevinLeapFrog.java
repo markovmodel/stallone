@@ -214,4 +214,10 @@ public class LangevinLeapFrog implements IIntegratorThermostatted
     {
         this.kT = _kT;
     }
+
+    @Override
+    public double getkT()
+    {
+        return this.kT;
+    }
 }
