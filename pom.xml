@@ -15,6 +15,9 @@
 
 	<!-- TODO: describe build process -->
 	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -129,6 +132,34 @@
 			<id>python-wrapper</id>
 			<build>
 				<plugins>
+					<!-- clean pystallone directory artifacts before copying new ones -->
+					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.5</version>
+						<executions>
+							<execution>
+								<id>auto-clean</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+								<configuration>
+									<filesets>
+										<fileset>
+											<directory>pystallone</directory>
+											<includes>
+												<include>*/**</include>
+											</includes>
+											<excludes>
+												<exclude>*.py</exclude>
+											</excludes>
+										</fileset>
+									</filesets>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
 					<!-- build stallone api jar, which is used to easily wrap all api packages -->
 					<plugin>
 						<artifactId>maven-jar-plugin</artifactId>
@@ -150,7 +181,6 @@
 							</execution>
 						</executions>
 					</plugin>
-
 					<!-- copy jars for stallone jcc setup to build dir (where setup lies) -->
 					<plugin>
 						<artifactId>maven-resources-plugin</artifactId>
@@ -256,7 +286,7 @@
 	</dependencies>
 
 	<reporting>
-	<!-- TODO: add javadoc plugin -->
+		<!-- TODO: add javadoc plugin -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
