@@ -106,22 +106,7 @@
 					<includeDependency>false</includeDependency>
 
 					<obfuscate>false</obfuscate>
-
-					<options>
-						<option>-allowaccessmodification</option>
-						<!-- <option>-keep class * implements AbstractCmd</option> -->
-						<option>-keep class
-							edu.cornell.lassp.houle.RngPack.RandomElement</option>
-						<option>-keep class
-							stallone.coordinates.AbstractCoordinateTransform</option>
-						<option>-keep class stallone.stat.RunningAverage</option>
-						<option>-keep class stallone.stat.modelselection.ExitTimeSplitter</option>
-						<option>-keep class stallone.intsequence.IntArrayTokenizer</option>
-						<!-- TODO: activated optimization leads to errors in jep library: investigate! -->
-						<option>-dontoptimize</option>
-						<option>-keepclasseswithmembers public class * { public static
-							void main(java.lang.String[]); }</option>
-					</options>
+					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -151,6 +136,8 @@
 												<include>*/**</include>
 											</includes>
 											<excludes>
+												<exclude>M*</exclude>
+												<exclude>requi*</exclude>
 												<exclude>*.py</exclude>
 											</excludes>
 										</fileset>
