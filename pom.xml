@@ -11,6 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<base.jar.name>${project.artifactId}-${project.version}</base.jar.name>
 	</properties>
 
 	<!-- TODO: describe build process -->
@@ -34,14 +35,13 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- Goal assembly:single is bound to maven execution phase "prepare-package" -->
 				<executions>
 					<execution>
 						<id>distro-assembly</id>
-						<phase>compile</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
@@ -51,7 +51,6 @@
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
-
 							<archive>
 								<index>true</index>
 								<manifest>
@@ -65,22 +64,19 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<!-- build runtime jar, which includes all dependencies -->
 			<plugin>
 				<artifactId>proguard-maven-plugin</artifactId>
 				<groupId>com.github.wvengen</groupId>
 				<version>2.0.6</version>
-
 				<executions>
 					<execution>
-						<phase>compile</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>proguard</goal>
 						</goals>
 					</execution>
 				</executions>
-
 				<dependencies>
 					<dependency>
 						<groupId>net.sf.proguard</groupId>
@@ -89,7 +85,6 @@
 						<scope>runtime</scope>
 					</dependency>
 				</dependencies>
-
 				<configuration>
 					<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
 					<outjar>${project.build.finalName}-jar-with-dependencies-proguard.jar</outjar>
@@ -99,12 +94,10 @@
 						<lib>${java.home}/lib/jsse.jar</lib>
 					</libs>
 					<addMavenDescriptor>false</addMavenDescriptor>
-
 					<!-- do not include any libraries. we depend on: we are already working 
 						on a jar which contains all dependencies in one jar See: previous package 
 						step -->
 					<includeDependency>false</includeDependency>
-
 					<obfuscate>false</obfuscate>
 					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
 				</configuration>
@@ -129,6 +122,7 @@
 									<goal>clean</goal>
 								</goals>
 								<configuration>
+									<excludeDefaultDirectories>true</excludeDefaultDirectories>
 									<filesets>
 										<fileset>
 											<directory>pystallone</directory>
@@ -146,7 +140,6 @@
 							</execution>
 						</executions>
 					</plugin>
-
 					<!-- build stallone api jar, which is used to easily wrap all api packages -->
 					<plugin>
 						<artifactId>maven-jar-plugin</artifactId>
@@ -157,7 +150,7 @@
 								<goals>
 									<goal>jar</goal>
 								</goals>
-								<phase>compile</phase>
+								<phase>package</phase>
 								<configuration>
 									<classifier>api</classifier>
 									<!-- include the stallone.api package recursively -->
@@ -173,16 +166,14 @@
 						<artifactId>maven-resources-plugin</artifactId>
 						<groupId>org.apache.maven.plugins</groupId>
 						<version>2.4.3</version>
-
 						<executions>
 							<execution>
-								<phase>compile</phase>
+								<phase>package</phase>
 								<goals>
 									<goal>copy-resources</goal>
 								</goals>
 							</execution>
 						</executions>
-
 						<configuration>
 							<outputDirectory>pystallone</outputDirectory>
 							<resources>
@@ -192,9 +183,7 @@
 										<include>
 											${project.build.finalName}-jar-with-dependencies-proguard.jar
 										</include>
-										<include>
-											${project.build.finalName}-api.jar
-										</include>
+										<include>${project.build.finalName}-api.jar</include>
 									</includes>
 								</resource>
 							</resources>
@@ -209,21 +198,35 @@
 						<configuration>
 							<executable>python</executable>
 							<workingDirectory>pystallone/</workingDirectory>
+							<detail>true</detail>
 						</configuration>
 						<executions>
 							<execution>
-								<id>setuptools install</id>
-								<phase>install</phase>
+								<id>create-sdist</id>
+								<phase>package</phase>
 								<goals>
 									<goal>exec</goal>
 								</goals>
 								<configuration>
 									<arguments>
-										<argument>setup.py</argument>
-										<argument>build</argument>
-										<argument>install</argument>
-										<argument>--user</argument>
+										<argument>invoke_jcc.py</argument>
+										<argument>--basename</argument>
+										<argument>${base.jar.name}</argument>
+										<argument>--version</argument>
+										<argument>${project.version}</argument>
 									</arguments>
+								</configuration>
+							</execution>
+							<!-- now we have a generated setup.py, use it to build and install 
+								locally -->
+							<execution>
+								<id>build-install</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<commandlineArgs>setup.py --install user</commandlineArgs>
 								</configuration>
 							</execution>
 						</executions>
@@ -280,7 +283,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<configuration>
-				<!-- TODO: include only public api -->
+					<!-- TODO: include only public api -->
 					<sourceFileExcludes>
 						<sourceFileExclude>stallone.algebra.*</sourceFileExclude>
 					</sourceFileExcludes>
