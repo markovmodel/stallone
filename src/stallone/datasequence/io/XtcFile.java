@@ -348,17 +348,21 @@ public class XtcFile implements IReleasableFile
      * used in receivebits method
      */
     private byte[] cbuf = new byte[4];
-    private static int[] size_of_ints_bytes;
+    
+    /**
+     * used in sizeofints function
+     */
+    private static int[] size_of_ints_bytes = new int[32];
+
+    public XtcFile()
+    {
+    }
 
     /**
      * Constructor, open and read input file trajectory.
      *
      * @param filename trajectory (xtc) filename and path
      */
-    public XtcFile()
-    {
-    }
-
     public XtcFile(String _filename) throws FileNotFoundException, IOException
     {
         this.filename = _filename;
