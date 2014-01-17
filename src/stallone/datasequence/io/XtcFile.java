@@ -343,6 +343,12 @@ public class XtcFile implements IReleasableFile
      * indicates, that currently set files header has been scanned.
      */
     protected boolean initialized = false;
+    
+    /**
+     * used in receivebits method
+     */
+    private byte[] cbuf = new byte[4];
+    private static int[] size_of_ints_bytes;
 
     /**
      * Constructor, open and read input file trajectory.
@@ -689,7 +695,7 @@ public class XtcFile implements IReleasableFile
             return false;
         }
         else
-        { // frame exist  and is not marked as brocken => read header information from current frame
+        { // frame exist  and is not marked as broken => read header information from current frame
 
             if (this.nrOfCurrentFrameHeader != frameIndex)
             { // only read data of new (not current) frame
@@ -728,18 +734,10 @@ public class XtcFile implements IReleasableFile
                     // e.g. 0,100,200,....
                     this.t = bb.getFloat(); // floating point representation of simulation time randomAccessFile
                     // trajectory
-                    this.box = new float[]
-                    {
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat(),
-                        bb.getFloat()
-                    };
+                    //TODO: test
+                    for(int i = 0; i < 9; i++) {
+                        this.box[i] = bb.getFloat();
+                    }
                     this.nrAtomsCoordinatesHeader = bb.getInt(); // in the compressed atom coordinates
                     // block the number of atoms is allso added =>
                     // redundant => read it and throw it away !
@@ -748,14 +746,15 @@ public class XtcFile implements IReleasableFile
                     { // coordinates of atoms are compressed
                         this.coordinatesHeaderSize = 40; // size randomAccessFile byts of "coordiantes header"
                         this.precision = bb.getFloat(); // read precision of compressed atom coordinates
-                        this.minInt = new int[]
-                        {
-                            bb.getInt(), bb.getInt(), bb.getInt()
-                        };
-                        this.maxInt = new int[]
-                        {
-                            bb.getInt(), bb.getInt(), bb.getInt()
-                        };
+                        
+                        this.minInt[0] = bb.getInt();
+                        this.minInt[1] = bb.getInt();
+                        this.minInt[2] = bb.getInt();
+                        
+                        this.maxInt[0] = bb.getInt();
+                        this.maxInt[1] = bb.getInt();
+                        this.maxInt[2] = bb.getInt();
+                        
                         this.amountBitsForCompressedCoordinates = bb.getInt();
                         this.compressedCoordinatesLengthInByte = bb.getInt();
 
@@ -763,7 +762,12 @@ public class XtcFile implements IReleasableFile
                         // compressed coordinates (without
                         // coordinates header
                         // 40byte=10*4byte)
-                        this.coordinatesCompressed = new int[compressedCoordinatesSizeInFourBytesMeasure + 3];
+                        // TODO: test
+                        if(this.coordinatesCompressed.length < 
+                                compressedCoordinatesSizeInFourBytesMeasure + 3)
+                        {
+                            this.coordinatesCompressed = new int[compressedCoordinatesSizeInFourBytesMeasure + 3];
+                        }
 
                         if ((this.compressedCoordinatesLengthInByte
                                 + ((4 - (this.compressedCoordinatesLengthInByte % 4)) % 4))
@@ -840,24 +844,24 @@ public class XtcFile implements IReleasableFile
         } // end if-else
     }
 
-    public static String byteToString(byte in)
+    protected static String byteToString(byte in)
     {
         byte ch = 0x00;
-        String out = new String("");
-        final String[] pseudo =
+        char out[] = new char[2];
+        final char[] pseudo =
         {
-            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
         };
 
         ch = (byte) (in & 0xF0); // Strip off high nibble
         ch = (byte) (ch >>> 4); // shift the bits down
         ch = (byte) (ch & 0x0F); // must do this is high order bit is on!
-        out += pseudo[(int) ch]; // convert the nibble to a String Character
+        out[0] = pseudo[(int) ch]; // convert the nibble to a String Character
 
         ch = (byte) (in & 0x0F); // Strip off low nibble
-        out += pseudo[(int) ch]; // convert the nibble to a String Character
+        out[1] = pseudo[(int) ch]; // convert the nibble to a String Character
 
-        return out;
+        return new String(out);
     }
 
     /**
@@ -1144,31 +1148,31 @@ public class XtcFile implements IReleasableFile
      */
     private static int sizeofints(int[] sizes)
     {
-        int i, num;
-        int num_of_bytes;
-        int num_of_bits;
-        int[] bytes = new int[32];
+        int num;
+        int num_of_bytes = 1;
+        int num_of_bits = 0;
+//        size_of_ints_bytes = new int[32];
+        //TODO: is this neccessary?
+        Arrays.fill(size_of_ints_bytes, 0);
        // randomAccessFile c:  int bytes[32]
         int bytecnt;
         int tmp;
-        num_of_bytes = 1;
-        bytes[0] = 1;
-        num_of_bits = 0;
+        size_of_ints_bytes[0] = 1;
 
-        for (i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         { // loop over all 3 dimensions;  c variable "num_of_ints" replaced by 3;
             tmp = 0;
 
             for (bytecnt = 0; bytecnt < num_of_bytes; bytecnt++)
             {
-                tmp = (bytes[bytecnt] * sizes[i]) + tmp;
-                bytes[bytecnt] = tmp & 0xff;
+                tmp = (size_of_ints_bytes[bytecnt] * sizes[i]) + tmp;
+                size_of_ints_bytes[bytecnt] = tmp & 0xff;
                 tmp >>= 8;
             }
 
             while (tmp != 0)
             {
-                bytes[bytecnt++] = tmp & 0xff;
+                size_of_ints_bytes[bytecnt++] = tmp & 0xff;
                 tmp >>= 8;
             }
 
@@ -1178,7 +1182,7 @@ public class XtcFile implements IReleasableFile
         num = 1;
         num_of_bytes--;
 
-        while (bytes[num_of_bytes] >= num)
+        while (size_of_ints_bytes[num_of_bytes] >= num)
         {
             num_of_bits++;
             num *= 2;
@@ -1244,12 +1248,6 @@ public class XtcFile implements IReleasableFile
             // reserved;
             cnt_tmp = cnt % 4; // remainder
             cnt_tmpStart = cnt_tmp; // create a copy of remainder for updating cnt=buf[0]
-
-            // int ii_timesFour=0, ii_plusThree=0 , bufLegth_minusThree=buf.length-3; // tmp variables to optimise
-            // loop execution
-            byte[] cbuf = new byte[4]; // randomAccessFile c unsigned char array (1 byte), java char can store unicode
-            // (2 byte), java byte (1 byte) => change variable datatyp to byte
-
             num = 0;
 
             while (num_of_bits >= 8)
@@ -1585,4 +1583,5 @@ public class XtcFile implements IReleasableFile
 
         return out; // return decompressed atom coordinates
     }
+    
 };
