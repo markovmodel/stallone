@@ -6,7 +6,7 @@ package stallone.api.ints;
 
 
 /**
- *
+ * TODO: change this copy paste documentation
  * This is a joint interface for all primitive double containers with a fixed order
  * of elements, e.g. arrays, tables, lists. In principle real-valued tensors can
  * also be handled by this object, although we currently provide no method to
