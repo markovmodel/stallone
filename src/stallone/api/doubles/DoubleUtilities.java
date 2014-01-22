@@ -14,7 +14,6 @@ import java.io.PrintStream;
 import java.util.*;
 import stallone.doubles.DoubleIO;
 import stallone.doubles.QuickSortDouble;
-import stallone.doubles.fastutils.DoubleIterator;
 
 /**
  *
