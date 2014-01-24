@@ -83,6 +83,7 @@ public class JobTools
         String strStarter = wdir + "/___starter" + MathTools.randomInt(0, Integer.MAX_VALUE) + ".exe";
         FileOutputStream starter = new FileOutputStream(strStarter);
         starter.write(content.getBytes());
+        starter.close();
 
         // making the starter executable
         Process p = Runtime.getRuntime().exec("chmod 700 " + strStarter);
@@ -180,6 +181,7 @@ public class JobTools
         FileInputStream inFile = new FileInputStream(strInputFile);
         byte[] byteIn = new byte[inFile.available()];
         inFile.read(byteIn);
+        inFile.close();
 
         FileOutputStream outFile = new FileOutputStream(strOutputFile);
 
