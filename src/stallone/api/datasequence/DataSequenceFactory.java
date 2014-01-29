@@ -63,7 +63,7 @@ public class DataSequenceFactory
     public IDataSequenceLoader multiSequenceLoader(String file, IDataReader reader)
             throws IOException
     {
-        List<String> files = new ArrayList();
+        List<String> files = new ArrayList<String>();
         files.add(file);
         return multiSequenceLoader(files, reader);
     }
@@ -78,7 +78,7 @@ public class DataSequenceFactory
             throws IOException
     {
         IDataReader reader = DataSequenceFileFormats.createReader(file);
-        List<String> files = new ArrayList();
+        List<String> files = new ArrayList<String>();
         files.add(file);
         return multiSequenceLoader(files, reader);
     }
