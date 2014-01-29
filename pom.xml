@@ -64,46 +64,55 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- build runtime jar, which includes all dependencies -->
-			<plugin>
-				<artifactId>proguard-maven-plugin</artifactId>
-				<groupId>com.github.wvengen</groupId>
-				<version>2.0.6</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>proguard</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>net.sf.proguard</groupId>
-						<artifactId>proguard-base</artifactId>
-						<version>4.10</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
-					<outjar>${project.build.finalName}-jar-with-dependencies-proguard.jar</outjar>
-					<outputDirectory>${project.build.directory}</outputDirectory>
-					<libs>
-						<lib>${java.home}/lib/rt.jar</lib>
-						<lib>${java.home}/lib/jsse.jar</lib>
-					</libs>
-					<addMavenDescriptor>false</addMavenDescriptor>
-					<!-- do not include any libraries. we depend on: we are already working 
-						on a jar which contains all dependencies in one jar See: previous package 
-						step -->
-					<includeDependency>false</includeDependency>
-					<obfuscate>false</obfuscate>
-					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>buildDistribution</id>
+			<build>
+				<plugins>
+					<!-- build runtime jar, which includes all dependencies -->
+					<plugin>
+						<artifactId>proguard-maven-plugin</artifactId>
+						<groupId>com.github.wvengen</groupId>
+						<version>2.0.6</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>proguard</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>net.sf.proguard</groupId>
+								<artifactId>proguard-base</artifactId>
+								<version>4.10</version>
+								<scope>runtime</scope>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+							<outjar>${project.build.finalName}-jar-with-dependencies-proguard.jar</outjar>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<libs>
+								<lib>${java.home}/lib/rt.jar</lib>
+								<lib>${java.home}/lib/jsse.jar</lib>
+							</libs>
+							<addMavenDescriptor>false</addMavenDescriptor>
+							<!-- do not include any libraries. we depend on: we are already working 
+								on a jar which contains all dependencies in one jar See: previous package 
+								step -->
+							<includeDependency>false</includeDependency>
+							<obfuscate>false</obfuscate>
+							<proguardInclude>${basedir}/proguard.conf</proguardInclude>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<!-- jep library, for function string parsing/evaluation -->
