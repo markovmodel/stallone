@@ -4,10 +4,10 @@
  */
 package stallone.datasequence;
 
-import stallone.api.doubles.IDoubleArray;
-import stallone.api.datasequence.IDataSequence;
 import java.util.Iterator;
-import stallone.api.datasequence.IDataInput;
+
+import stallone.api.datasequence.IDataSequence;
+import stallone.api.doubles.IDoubleArray;
 import stallone.doubles.PrimitiveDoubleArray;
 
 /**
@@ -18,7 +18,6 @@ public class DataArray implements IDataSequence
 {
     protected double[] times = null;
     protected IDoubleArray[] data = null;
-    //double[][] data;
 
     /**
      * Untimed data sequence
