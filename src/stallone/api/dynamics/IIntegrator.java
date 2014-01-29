@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.dynamics;
+package stallone.api.dynamics;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.potential.IEnergyModel;

@@ -1,9 +1,10 @@
 package stallone.mc.pcca;
 
 import static stallone.api.API.*;
-
+import stallone.api.IAlgorithm;
 import stallone.api.algebra.Algebra;
 import stallone.api.algebra.IEigenvalueDecomposition;
+import stallone.api.cluster.IClustering;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
@@ -30,7 +31,7 @@ import stallone.ints.PrimitiveIntArray;
  *
  * @author  meerbach@math.fu-berlin.de
  */
-public final class PCCA
+public final class PCCA implements IAlgorithm
 {
 
     /**

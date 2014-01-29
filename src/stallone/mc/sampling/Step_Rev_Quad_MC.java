@@ -5,8 +5,8 @@
 package stallone.mc.sampling;
 
 import static stallone.api.API.*;
-
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.mc.IReversibleSamplingStep;
 import stallone.util.MathTools;
 
 /**

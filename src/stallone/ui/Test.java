@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import static stallone.api.API.*;
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.algebra.IEigenvalueSolver;
@@ -18,7 +19,7 @@ import stallone.api.datasequence.IDataReader;
 import stallone.api.discretization.IDiscretization;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
-import stallone.mc.sampling.ITransitionMatrixSampler;
+import stallone.api.mc.ITransitionMatrixSampler;
 import stallone.util.MathTools;
 
 /**

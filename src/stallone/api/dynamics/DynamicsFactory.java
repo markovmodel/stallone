@@ -5,12 +5,9 @@
 package stallone.api.dynamics;
 
 import static stallone.api.API.*;
-
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.potential.*;
 import stallone.dynamics.BrownianDynamicsEuler;
-import stallone.dynamics.IIntegrator;
-import stallone.dynamics.IIntegratorThermostatted;
 import stallone.dynamics.LangevinLeapFrog;
 import stallone.dynamics.VelocityVerlet;
 

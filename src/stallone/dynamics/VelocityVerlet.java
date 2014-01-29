@@ -5,6 +5,7 @@
 package stallone.dynamics;
 
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.dynamics.IIntegrator;
 import stallone.api.potential.IEnergyModel;
 
 

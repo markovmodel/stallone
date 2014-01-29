@@ -4,20 +4,17 @@
  */
 package stallone.coordinates;
 
-import java.io.FileNotFoundException;
 import static stallone.api.API.*;
 
-import stallone.api.algebra.IEigenvalueDecomposition;
-import stallone.api.datasequence.IDataSequence;
-import stallone.api.doubles.IDoubleArray;
+import java.io.FileNotFoundException;
 
-import java.util.Random;
+import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.coordinates.ITICA;
 import stallone.api.datasequence.IDataInput;
-import stallone.api.datasequence.IDataList;
-import stallone.api.datasequence.IDataWriter;
+import stallone.api.datasequence.IDataSequence;
+import stallone.api.doubles.IDoubleArray;
+import stallone.api.dynamics.IIntegratorThermostatted;
 import stallone.api.potential.IEnergyModel;
-import stallone.dynamics.IIntegratorThermostatted;
 
 /**
  * Computes TICA using brute-force matrix inversion of the covariance matrix.

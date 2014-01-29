@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.mc.sampling;
+package stallone.api.mc;
 
 import stallone.api.doubles.IDoubleArray;
 

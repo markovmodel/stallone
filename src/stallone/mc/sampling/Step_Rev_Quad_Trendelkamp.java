@@ -9,6 +9,7 @@ import cern.jet.random.Exponential;
 import cern.jet.random.Uniform;
 import cern.jet.random.engine.MersenneTwister;
 import stallone.api.doubles.IDoubleArray;
+import stallone.api.mc.IReversibleSamplingStep;
 
 /**
  *
