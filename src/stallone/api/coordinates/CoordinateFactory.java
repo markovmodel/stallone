@@ -133,7 +133,7 @@ public class CoordinateFactory
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
-                coor.angles(in.getTable(), selection, out.getArray());
+                coor.angles(in, selection, out);
             }
         }
         return new Transform_Ang(selection);

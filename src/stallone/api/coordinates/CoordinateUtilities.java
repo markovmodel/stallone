@@ -14,6 +14,8 @@ import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.coordinates.MinimalRMSDistance3D;
 import stallone.datasequence.io.AsciiDataSequenceWriter;
+import stallone.doubles.DenseDoubleArray;
+import stallone.util.MathTools;
 
 /**
  *
@@ -26,6 +28,98 @@ public class CoordinateUtilities
     private int outputPrecisionPre = 5;
     private int outputPrecisionPost = 3;
 
+    private double dotprod(IDoubleArray X, int i, int j)
+    {
+        return (X.get(i,0) * X.get(j,0) + X.get(i,1) * X.get(j,1) + X.get(i,2) * X.get(j,2));
+    }
+
+    // for internal use
+    private double[] v1 = {0,0,0};
+    private double[] v2 = {0,0,0};
+    
+    
+    /**
+     * Computes the connection vector from atom i to atom j v_ij
+     * @param X Nx3 coordinate set
+     * @param i atom index i
+     * @param j atom index j
+     * @param v length 3 array
+     * @return 
+     */
+    public void vector(IDoubleArray X, int i, int j, double[] v)
+    {
+        v[0] = X.get(j,0) - X.get(i,0);
+        v[1] = X.get(j,1) - X.get(i,1);
+        v[2] = X.get(j,2) - X.get(i,2);
+    }
+
+    /**
+     * Computes the connection vector from atom i to atom j v_ij
+     * @param X Nx3 coordinate set
+     * @param i atom index i
+     * @param j atom index j
+     * @return 
+     */
+    public double[] vector(IDoubleArray X, int i, int j)
+    {
+        double[] v = new double[3];
+        vector(X,i,j,v);
+        return v;
+    }
+    
+    /** returns distance between two points*/
+    public double squaredistance(IDoubleArray X, int i, int j)
+    {
+        vector(X,i,j,v1);
+        return v1[0]*v1[0] + v1[1]*v1[1] + v1[2]*v1[2];
+    }
+
+    /** returns distance between two points*/
+    public double distance(IDoubleArray X, int i, int j)
+    {
+        return(Math.sqrt(squaredistance(X,i,j)));
+    }
+    
+    /** compute angle between three points p1,p2,p3
+    as angle between p2->p1 and p2->p3*/
+    public double angleRad(IDoubleArray X, int i, int j, int k)
+    {
+        vector(X,j,i,v1);
+        vector(X,j,k,v2);
+        return coor3d.angleRad(v1, v2);
+    }
+
+    private double rad2deg = 180.0 / Math.PI;
+    /** compute angle between three points p1,p2,p3
+    as angle between p2->p1 and p2->p3*/
+    public double angleDeg(IDoubleArray X, int i, int j, int k)
+    {
+        return rad2deg * angleRad(X,i,j,k);
+    }
+
+    /** torsion angle by 3-dimensional coordinates in radians!*/
+    public double torsionRad(IDoubleArray X, int p1, int p2, int p3, int p4)
+    {
+        vector(X,p2,p1,v1);
+        vector(X,p2,p3,v2);
+        double[] cv1 = coor3d.crossprod(v1, v2);
+        vector(X,p3,p2,v1);
+        vector(X,p3,p4,v2);
+        double[] cv2 = coor3d.crossprod(v1, v2);
+        double angle = coor3d.angleRad(cv1, cv2);
+        if (coor3d.dotprod(v2, cv1) > 0)
+        {
+            angle = -angle;
+        }
+        return (angle);
+    }
+
+    /** torsion angle by 3-dimensional coordinates in degrees!*/
+    public double torsionDeg(IDoubleArray X, int p1, int p2, int p3, int p4)
+    {
+        return (rad2deg*torsionRad(X,p1, p2, p3, p4));
+    }
+    
     public IDataSequence transform_data(IDataSequence X, ICoordinateTransform T)
     {
         IDoubleArray[] res = new IDoubleArray[X.size()];
@@ -93,9 +187,9 @@ public class CoordinateUtilities
      */
     public IDoubleArray distances(IDoubleArray x, int[] set)
     {
-        double[] res = new double[(set.length*(set.length-1))/2];
-        distances(x.getTable(), set, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array((set.length*(set.length-1))/2);
+        distances(x, set, res);
+        return res;
     }
     
     /**
@@ -108,7 +202,15 @@ public class CoordinateUtilities
      */
     public void distances(IDoubleArray x, int[] set, IDoubleArray out)
     {
-        distances(x.getTable(), set, out.getArray());
+        int n = set.length;
+        if (out.size() != (n*(n-1))/2)
+            throw new IllegalArgumentException("target array has illegal size "+out.size()+". requiring "+((n*n-1)/2));
+        int p = 0;
+        for (int i=0; i<n-1; i++)
+            for (int j=i+1; j<n; j++)
+            {
+                out.set(p++, distance(x, set[i], set[j]));
+            }
     }
     
     
@@ -122,9 +224,9 @@ public class CoordinateUtilities
      */
     public IDoubleArray distances(IDoubleArray x, int[][] set)
     {
-        double[] res = new double[(set.length*(set.length-1))/2];
-        distances(x.getTable(), set, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array((set.length*(set.length-1))/2);
+        distances(x, set, res);
+        return res;
     }
 
     /**
@@ -137,8 +239,30 @@ public class CoordinateUtilities
      */
     public void distances(IDoubleArray x, int[][] set, IDoubleArray out)
     {
-        distances(x.getTable(), set, out.getArray());
-    }    
+        int n = set.length;
+        if (out.size() != (n*(n-1))/2)
+            throw new IllegalArgumentException("target array has illegal size "+out.size()+". requiring "+((n*n-1)/2));
+        int p = 0;
+        for (int i=0; i<n-1; i++)
+        {
+            for (int j=i+1; j<n; j++)
+            {
+                double dmin = Double.POSITIVE_INFINITY;
+                int ni = set[i].length;
+                int nj = set[j].length;
+                for (int k=0; k<ni; k++)
+                {
+                    for (int l=0; l<nj; l++)
+                    {
+                        double d = distance(x, set[i][k], set[j][l]);
+                        if (d < dmin)
+                            dmin = d;
+                    }
+                }
+                out.set(p++, dmin);
+            }
+        }
+    }
 
     /**
      * computes a (nxn) distance matrix between the indexes of the 
@@ -149,9 +273,30 @@ public class CoordinateUtilities
      */
     public IDoubleArray distanceMatrix(IDoubleArray x, int[] set)
     {
-        double[][] res = new double[set.length][set.length];
-        distanceMatrix(x.getTable(), set, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array(set.length,set.length);
+        distanceMatrix(x, set, res);
+        return res;
+    }
+
+    /**
+     * computes a (nxn) distance matrix between the indexes of the 
+     * n-sized distance set.
+     * @param x a Nx3 coordinate set
+     * @param set a n-sized index set
+     * @param target a nxn array to be filled with the result
+     */
+    public void distanceMatrix(IDoubleArray x, int[] set, IDoubleArray target)
+    {
+        int n = set.length;
+        if (target.rows() != n && target.columns() != n)
+            throw new IllegalArgumentException("target array has illegal size ("+target.rows()+","+target.columns()+"). requiring ("+n+","+n+")");
+        for (int i=0; i<n-1; i++)
+            for (int j=i+1; j<n; j++)
+            {
+                double dij = distance(x, set[i], set[j]);
+                target.set(i,j,dij);
+                target.set(j,i,dij);
+            }
     }
     
     
@@ -164,11 +309,45 @@ public class CoordinateUtilities
      */
     public IDoubleArray distanceMatrix(IDoubleArray x, int[][] set)
     {
-        double[][] res = new double[set.length][set.length];
-        distanceMatrix(x.getTable(), set, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array(set.length, set.length);
+        distanceMatrix(x, set, res);
+        return res;
     }
 
+    
+    /**
+     * computes a (nxn) distance matrix between the indexes of the 
+     * n-sized distance set.
+     * @param x a Nx3 coordinate set
+     * @param set a n-sized index set
+     * @param target a nxn array to be filled with the result
+     */
+    public void distanceMatrix(IDoubleArray x, int[][] set, IDoubleArray target)
+    {
+        int n = set.length;
+        if (target.rows() != n && target.columns() != n)
+            throw new IllegalArgumentException("target array has illegal size ("+target.rows()+","+target.columns()+"). requiring ("+n+","+n+")");
+        for (int i=0; i<n-1; i++)
+        {
+            for (int j=i+1; j<n; j++)
+            {
+                double dmin = Double.POSITIVE_INFINITY;
+                int ni = set[i].length;
+                int nj = set[j].length;
+                for (int k=0; k<ni; k++)
+                {
+                    for (int l=0; l<nj; l++)
+                    {
+                        double d = distance(x,set[i][k], set[j][l]);
+                        if (d < dmin)
+                            dmin = d;
+                    }
+                }
+                target.set(i,j,dmin);
+                target.set(j,i,dmin);
+            }
+        }
+    }    
     
     /**
      * computes a (mxn) distance matrix between the m-sized distance group 1 and
@@ -183,9 +362,9 @@ public class CoordinateUtilities
      */
     public IDoubleArray distanceMatrix(IDoubleArray x, int[] set1, int[] set2)
     {
-        double[][] res = new double[set1.length][set2.length];
-        distanceMatrix(x.getTable(), set1, set2, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array(set1.length,set2.length);
+        distanceMatrix(x, set1, set2, res);
+        return res;
     }
 
     
@@ -200,9 +379,15 @@ public class CoordinateUtilities
      * d_ij and d_ji and self-distances that are 0. I.e. the distance groups
      * are not analyzed for possible redundancies before computation.
      */
-    public void distanceMatrix(IDoubleArray x, int[] set1, int[] set2, IDoubleArray out)
+    public void distanceMatrix(IDoubleArray x, int[] set1, int[] set2, IDoubleArray target)
     {
-        distanceMatrix(x.getTable(), set1, set2, out.getTable());
+        int m = set1.length;
+        int n = set2.length;
+        if (target.rows() != m && target.columns() != n)
+            throw new IllegalArgumentException("target array has illegal size ("+target.rows()+","+target.columns()+"). requiring ("+m+","+n+")");
+        for (int i=0; i<m; i++)
+            for (int j=0; j<n; j++)
+                target.set(i,j,distance(x, set1[i], set2[j]));
     }
     
     
@@ -216,9 +401,9 @@ public class CoordinateUtilities
      */
     public IDoubleArray distanceMatrix(IDoubleArray x, int[][] set1, int[][] set2)
     {
-        double[][] res = new double[set1.length][set2.length];
-        distanceMatrix(x.getTable(), set1, set2, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array(set1.length,set2.length);
+        distanceMatrix(x, set1, set2, res);
+        return res;
     }
     
 
@@ -230,159 +415,12 @@ public class CoordinateUtilities
      * @param set2 a nx* index array with n distance sets
      * @param out mxn array with all minimum distance pairs.
      */
-    public void distanceMatrix(IDoubleArray x, int[][] set1, int[][] set2, IDoubleArray out)
-    {
-        distanceMatrix(x.getTable(), set1, set2, out.getTable());
-    }
-    
-    /**
-     * computes the upper half of a (nxn) distance matrix between the indexes of the 
-     * n-sized distance set.
-     * @param x a Nx3 coordinate set
-     * @param set a n-sized index set
-     * @param target the linearized upper triangle of the distance matrix, i.e.
-     * (d11,...,d1n,d21,...,d2n-1,...,dnn-1)
-     */
-    public void distances(double[][] x, int[] set, double[] target)
-    {
-        int n = set.length;
-        if (target.length != (n*(n-1))/2)
-            throw new IllegalArgumentException("target array has illegal size "+target.length+". requiring "+((n*n-1)/2));
-        int p = 0;
-        for (int i=0; i<n-1; i++)
-            for (int j=i+1; j<n; j++)
-            {
-                target[p++] = doubleArrays.distance(x[set[i]], x[set[j]]);
-            }
-    }
-
-    /**
-     * computes a upper half of a (nxn) minimal distance matrix between the indexes of the 
-     * n-sized distance set.
-     * @param x a Nx3 coordinate set
-     * @param set n indes sets
-     * @param target the linearized upper triangle of the distance matrix, i.e.
-     * (d11,...,d1n,d21,...,d2n-1,...,dnn-1)
-     */
-    public void distances(double[][] x, int[][] set, double[] target)
-    {
-        int n = set.length;
-        if (target.length != (n*(n-1))/2)
-            throw new IllegalArgumentException("target array has illegal size "+target.length+". requiring "+((n*n-1)/2));
-        int p = 0;
-        for (int i=0; i<n-1; i++)
-        {
-            for (int j=i+1; j<n; j++)
-            {
-                double dmin = Double.POSITIVE_INFINITY;
-                int ni = set[i].length;
-                int nj = set[j].length;
-                for (int k=0; k<ni; k++)
-                {
-                    for (int l=0; l<nj; l++)
-                    {
-                        double d = doubleArrays.distance(x[set[i][k]], x[set[j][l]]);
-                        if (d < dmin)
-                            dmin = d;
-                    }
-                }
-                target[p++] = dmin;
-            }
-        }
-    }
-    
-    
-    /**
-     * computes a (nxn) distance matrix between the indexes of the 
-     * n-sized distance set.
-     * @param x a Nx3 coordinate set
-     * @param set a n-sized index set
-     * @param target a nxn array to be filled with the result
-     */
-    public void distanceMatrix(double[][] x, int[] set, double[][] target)
-    {
-        int n = set.length;
-        if (target.length != n && target[0].length != n)
-            throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+n+","+n+")");
-        for (int i=0; i<n-1; i++)
-            for (int j=i+1; j<n; j++)
-            {
-                double dij = doubleArrays.distance(x[set[i]], x[set[j]]);
-                target[i][j] = dij;
-                target[j][i] = dij;
-            }
-    }
-
-    /**
-     * computes a (nxn) distance matrix between the indexes of the 
-     * n-sized distance set.
-     * @param x a Nx3 coordinate set
-     * @param set a n-sized index set
-     * @param target a nxn array to be filled with the result
-     */
-    public void distanceMatrix(double[][] x, int[][] set, double[][] target)
-    {
-        int n = set.length;
-        if (target.length != n && target[0].length != n)
-            throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+n+","+n+")");
-        for (int i=0; i<n-1; i++)
-        {
-            for (int j=i+1; j<n; j++)
-            {
-                double dmin = Double.POSITIVE_INFINITY;
-                int ni = set[i].length;
-                int nj = set[j].length;
-                for (int k=0; k<ni; k++)
-                {
-                    for (int l=0; l<nj; l++)
-                    {
-                        double d = doubleArrays.distance(x[set[i][k]], x[set[j][l]]);
-                        if (d < dmin)
-                            dmin = d;
-                    }
-                }
-                target[i][j] = dmin;
-                target[j][i] = dmin;
-            }
-        }
-    }
-    
-    /**
-     * computes a (mxn) distance matrix between the m-sized distance group 1 and
-     * the n-sized distance group 2.
-     * @param x a Nx3 coordinate set
-     * @param set1 a m-sized distance group
-     * @param set2 a n-sized distance group
-     * @return mxn array with all distance pairs. If distanceGroup1 and 
-     * distanceGroup2 have overlap in their indexes, this will have both
-     * d_ij and d_ji and self-distances that are 0. I.e. the distance groups
-     * are not analyzed for possible redundancies before computation.
-     */
-    public void distanceMatrix(double[][] x, int[] set1, int[] set2, double[][] target)
+    public void distanceMatrix(IDoubleArray x, int[][] set1, int[][] set2, IDoubleArray target)
     {
         int m = set1.length;
         int n = set2.length;
-        if (target.length != m && target[0].length != n)
-            throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+m+","+n+")");
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++)
-                target[i][j] = doubleArrays.distance(x[set1[i]], x[set2[j]]);
-    }
-
-    /**
-     * computes a (mxn) distance matrix between the indexes of the 
-     * m-sized distance set 1 and the n-sized distance set 2.
-     * @param x a Nx3 coordinate set
-     * @param set1 a m-sized index set
-     * @param set2 a n-sized index set
-     * @param target a nxn array to be filled with the result
-     */
-    public void distanceMatrix(double[][] x, int[][] set1, int[][] set2, double[][] target)
-    {
-        int m = set1.length;
-        int n = set2.length;
-        if (target.length != m && target[0].length != n)
-            throw new IllegalArgumentException("target array has illegal size ("+target.length+","+target[0].length+"). requiring ("+m+","+n+")");
+        if (target.rows() != m && target.columns() != n)
+            throw new IllegalArgumentException("target array has illegal size ("+target.rows()+","+target.columns()+"). requiring ("+m+","+n+")");
         for (int i=0; i<m; i++)
         {
             for (int j=0; j<n; j++)
@@ -394,16 +432,20 @@ public class CoordinateUtilities
                 {
                     for (int l=0; l<nj; l++)
                     {
-                        double d = doubleArrays.distance(x[set1[i][k]], x[set2[j][l]]);
+                        double d = distance(x, set1[i][k], set2[j][l]);
                         if (d < dmin)
                             dmin = d;
                     }
                 }
-                target[i][j] = dmin;
+                target.set(i,j, dmin);
             }
         }
     }
     
+    
+
+
+        
     private boolean degrees = true;
     
     /**
@@ -432,9 +474,9 @@ public class CoordinateUtilities
      */
     public IDoubleArray angles(IDoubleArray x, int[][] selection)
     {
-        double[] res = new double[selection.length];
-        angles(x.getTable(), selection, res);
-        return doublesNew.array(res);
+        IDoubleArray res = doublesNew.array(selection.length);
+        angles(x, selection, res);
+        return res;
     }
     
     /**
@@ -445,23 +487,23 @@ public class CoordinateUtilities
      * corresponding dihedral (torsion) angle will be computed.
      * @param out the target array into which angles will be written.
      */
-    public void angles(double[][] x, int[][] selection, double[] out)
+    public void angles(IDoubleArray x, int[][] selection, IDoubleArray out)
     {
         for (int i=0; i<selection.length; i++)
         {
             if (selection[i].length == 3)
             {
                 if (degrees)
-                    out[i] = coor3d.angleDeg(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]]);
+                    out.set(i, angleDeg(x, selection[i][0], selection[i][1], selection[i][2]));
                 else
-                    out[i] = coor3d.angleRad(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]]);
+                    out.set(i, angleRad(x, selection[i][0], selection[i][1], selection[i][2]));
             }
             else if (selection[i].length == 4)
             {
                 if (degrees)
-                    out[i] = coor3d.torsionDeg(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]], x[selection[i][3]]);
+                    out.set(i, torsionDeg(x, selection[i][0], selection[i][1], selection[i][2], selection[i][3]));
                 else
-                    out[i] = coor3d.torsionRad(x[selection[i][0]], x[selection[i][1]], x[selection[i][2]], x[selection[i][3]]);
+                    out.set(i, torsionRad(x, selection[i][0], selection[i][1], selection[i][2], selection[i][3]));
             }
             else
                 throw new IllegalArgumentException("found a selection with "+selection[i].length+" elements. Can only handle 3 (angles) and 4 (torsions)");
