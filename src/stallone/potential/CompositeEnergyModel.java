@@ -7,7 +7,6 @@ package stallone.potential;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.potential.IEnergyModel;
 import java.util.ArrayList;
-import stallone.doubles.PrimitiveDoubleArray;
 
 /**
  * Energy model that is a sum of several terms, e.g. A full energy model plus bias or field terms
@@ -43,7 +42,7 @@ public class CompositeEnergyModel extends AbstractPotential
     public void setCoordinates(IDoubleArray crd)
     {
         if (coordinates == null)
-            coordinates = new PrimitiveDoubleArray(crd.getArray());
+            coordinates = crd.copy();
         else
             coordinates.copyFrom(crd);
         for (int i = 0; i < models.size(); i++)

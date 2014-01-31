@@ -4,9 +4,10 @@ import java.io.*;
 import java.nio.*;
 import java.util.Arrays;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IReleasableFile;
-import stallone.doubles.PrimitiveDoubleTable;
 import stallone.doubles.fastutils.LongArrayList;
 import stallone.io.CachedRandomAccessFile;
 
@@ -553,7 +554,7 @@ public class XtcFile implements IReleasableFile
         tempFramePositions = null; // free memory
 
         // fix size of atom coordinates, to improve optimization
-        this.coordinatesUncompressed = new PrimitiveDoubleTable(new double[this.nrAtoms][3]);
+        this.coordinatesUncompressed = doublesNew.matrix(this.nrAtoms,3);
 
         // clean up and reset stuff
         this.randomAccessFile.seek(0); // set inputfile pointer to start position

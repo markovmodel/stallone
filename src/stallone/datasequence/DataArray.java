@@ -6,9 +6,10 @@ package stallone.datasequence;
 
 import java.util.Iterator;
 
+import static stallone.api.API.*;
+
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
-import stallone.doubles.PrimitiveDoubleArray;
 
 /**
  *
@@ -56,7 +57,7 @@ public class DataArray implements IDataSequence
     {
         this.data = new IDoubleArray[_data.length];
         for (int i=0; i<this.data.length; i++)
-            this.data[i] = new PrimitiveDoubleArray(_data[i]);
+            this.data[i] = doublesNew.array(_data[i]);
     }
 
     /**

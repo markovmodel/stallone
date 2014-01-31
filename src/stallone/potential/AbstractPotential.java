@@ -4,10 +4,12 @@
  */
 package stallone.potential;
 
+import static stallone.api.API.*;
+
 import stallone.api.potential.IEnergyModel;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.function.IFunctionC1;
-import stallone.doubles.PrimitiveDoubleArray;
+import stallone.doubles.DenseDoubleArray;
 
 /**
  *
@@ -16,7 +18,7 @@ import stallone.doubles.PrimitiveDoubleArray;
 public abstract class AbstractPotential
     implements IEnergyModel, IFunctionC1
 {
-    PrimitiveDoubleArray tmp_x;
+    IDoubleArray tmp_x;
 
     @Override
     public double f(IDoubleArray x)
@@ -30,9 +32,9 @@ public abstract class AbstractPotential
     public double f(double... x)
     {
         if (tmp_x == null)
-            tmp_x = new PrimitiveDoubleArray(x);
+            tmp_x = doublesNew.array(x);
         else
-            tmp_x.set(x);
+            doubles.set(tmp_x,x);
         return(f(tmp_x));
     }
 
@@ -48,9 +50,9 @@ public abstract class AbstractPotential
     public IDoubleArray grad(double... x)
     {
         if (tmp_x == null)
-            tmp_x = new PrimitiveDoubleArray(x);
+            tmp_x = doublesNew.array(x);
         else
-            tmp_x.set(x);
+            doubles.set(tmp_x,x);
         return(grad(tmp_x));
 
     }

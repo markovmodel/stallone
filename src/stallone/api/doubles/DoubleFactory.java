@@ -9,15 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import stallone.api.strings.Strings;
-import stallone.doubles.DoubleArrayList_FastUtilWrapper;
-import stallone.doubles.DoubleIO;
-import stallone.doubles.PrimitiveDoubleArray;
-import stallone.doubles.PrimitiveDoubleTable;
-import stallone.doubles.PrimitiveDoubleTools;
-import stallone.doubles.SparseDiagonalMatrix;
-import stallone.doubles.SparseRealMatrix;
-import stallone.doubles.SparseRealVector;
-import stallone.doubles.SymmetricMatrix;
+import stallone.doubles.*;
 
 /**
  *
@@ -34,13 +26,13 @@ public class DoubleFactory
 
     public IDoubleArray denseColumn(int size)
     {
-        return (new PrimitiveDoubleArray(new double[size]));
+        return (new DenseDoubleArray(new double[size]));
     }
 
     //TODO: create Row and Column Version of 1D-Arrays.
     public IDoubleArray denseRow(int size)
     {
-        return (new PrimitiveDoubleTable(1,size));
+        return (new DenseDoubleArray(1,size));
     }
 
     public IDoubleArray sparseColumn(int size)
@@ -76,7 +68,7 @@ public class DoubleFactory
 
     public IDoubleArray array(double[] init)
     {
-        return (new PrimitiveDoubleArray(init));
+        return (new DenseDoubleArray(init));
     }
 
     // TODO:
@@ -84,7 +76,7 @@ public class DoubleFactory
     // create primitive types from IDoubleArray, IDoubleMatrix
     public IDoubleArray denseMatrix(int nrows, int ncols)
     {
-        return (new PrimitiveDoubleTable(new double[nrows][ncols]));
+        return (new DenseDoubleArray(nrows,ncols));
     }
 
     // TODO:
@@ -97,7 +89,7 @@ public class DoubleFactory
 
     public IDoubleArray array(double[][] init)
     {
-        return (new PrimitiveDoubleTable(init));
+        return (new DenseDoubleArray(init));
     }
 
     /**
@@ -183,8 +175,9 @@ public class DoubleFactory
      */
     public IDoubleArray arrayFrom(double d)
     {
-        double[] arr = PrimitiveDoubleTools.getDoubleArray(d);
-        return (array(arr));
+        IDoubleArray res = new DenseDoubleArray(1);
+        res.set(0,d);
+        return res;
     }
 
     /**
@@ -193,8 +186,11 @@ public class DoubleFactory
      */
     public IDoubleArray arrayFrom(double d1, double... d2)
     {
-        double[] arr = PrimitiveDoubleTools.concat(PrimitiveDoubleTools.getDoubleArray(d1), d2);
-        return (array(arr));
+        IDoubleArray res = new DenseDoubleArray(1);
+        res.set(0,d1);
+        for (int i=0; i<d2.length; i++)
+            res.set(i+1,d2[i]);
+        return res;
     }
 
     /**
@@ -207,14 +203,18 @@ public class DoubleFactory
 
     public IDoubleArray arrayFrom(int[] a)
     {
-        double[] res = PrimitiveDoubleTools.from(a);
-        return (array(res));
+        IDoubleArray res = new DenseDoubleArray(a.length);
+        for (int i=0; i<a.length; i++)
+            res.set(i,a[i]);
+        return res;
     }
 
     public IDoubleArray arrayFrom(float[] a)
     {
-        double[] res = PrimitiveDoubleTools.from(a);
-        return (array(res));
+        IDoubleArray res = new DenseDoubleArray(a.length);
+        for (int i=0; i<a.length; i++)
+            res.set(i,a[i]);
+        return res;
     }
 
     /**
@@ -255,23 +255,20 @@ public class DoubleFactory
 
     public IDoubleArray matrix(int nrows, int ncols)
     {
-        double[][] arr = new double[nrows][ncols];
-        return (array(arr));
+        return new DenseDoubleArray(nrows,ncols);
     }
 
     public IDoubleArray matrix(int nrows, int ncols, double value)
     {
-        double[][] arr = new double[nrows][ncols];
-        for (int i = 0; i < nrows; i++)
-        {
-            java.util.Arrays.fill(arr[i], value);
-        }
-        return (array(arr));
+        DenseDoubleArray res = new DenseDoubleArray(nrows,ncols);
+        for (int i=0; i<res.size(); i++)
+            res.set(i,value);
+        return res;
     }
 
     public IDoubleArray matrix(double[][] res)
     {
-        return (array(res));
+        return new DenseDoubleArray(res);
     }
 
     /**
@@ -286,106 +283,45 @@ public class DoubleFactory
 
     public IDoubleArray matrixFrom(float[][] a)
     {
-        double[][] res = new double[a.length][];
+        DenseDoubleArray res = new DenseDoubleArray(a.length,a[0].length);
         for (int i = 0; i < a.length; i++)
         {
-            res[i] = new double[a[i].length];
             for (int j = 0; j < a[i].length; j++)
             {
-                res[i][j] = a[i][j];
+                res.set(i,j, a[i][j]);
             }
         }
-        return (array(res));
+        return res;
     }
 
     public IDoubleArray matrixFrom(int[][] a)
     {
-        double[][] res = new double[a.length][];
+        DenseDoubleArray res = new DenseDoubleArray(a.length,a[0].length);
         for (int i = 0; i < a.length; i++)
         {
-            res[i] = new double[a[i].length];
             for (int j = 0; j < a[i].length; j++)
             {
-                res[i][j] = a[i][j];
+                res.set(i,j, a[i][j]);
             }
         }
-        return (array(res));
-    }
-
-    /**
-    reshapes the given 1-dimensional double array into a two-dimensional
-    double array of size d1*d2
-     */
-    public IDoubleArray matrixReshape(IDoubleArray arr, int d1, int d2)
-    {
-        if (arr.size() != d1 * d2)
-        {
-            throw (new IllegalArgumentException("Illegal array size"));
-        }
-        IDoubleArray res = array(d1, d2);
-        for (int i = 0; i < d1; i++)
-        {
-            for (int j = 0; j < d2; j++)
-            {
-                res.set(i, j, arr.get(i * d2 + j));
-            }
-        }
-        return (res);
+        return res;
     }
 
     public IDoubleArray diag(int size, double value)
     {
         double[] diag = new double[size];
         Arrays.fill(diag, value);
-        return new SparseDiagonalMatrix(diag);
-//        IDoubleArray M = null;
-//
-//        if(size > 100)
-//            M = sparseMatrix(size, size);
-//        else
-//            M = matrix(size, size);
-//
-//        for (int i = 0; i < size; i++)
-//        {
-//            M.set(i, i, value);
-//        }
-//        return (M);
+        return new DiagonalMatrix(diag);
     }
 
     public IDoubleArray diag(double... values)
     {
-//        int size = values.length;
-//        IDoubleArray M = null;
-//
-//        if(size > 100)
-//            M = sparseMatrix(size, size);
-//        else
-//            M = matrix(size, size);
-//
-//        for (int i = 0; i < size; i++)
-//        {
-//            M.set(i, i, values[i]);
-//        }
-//        return (M);
-        return new SparseDiagonalMatrix(values);
+        return new DiagonalMatrix(values);
     }
 
     public IDoubleArray diag(IDoubleArray values)
     {
-//        int size = values.size();
-//        IDoubleArray M = null;
-//
-//        if(size > 100)
-//            M = sparseMatrix(size, size);
-//        else
-//            M = matrix(size, size);
-//
-//        for (int i = 0; i < size; i++)
-//        {
-//            M.set(i, i, values.get(i));
-//        }
-//        return (M);
-        return new SparseDiagonalMatrix(values);
+        return new DiagonalMatrix(values);
     }
 
     public IDoubleArray symmetric(final IDoubleArray matrix)

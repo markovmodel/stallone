@@ -24,7 +24,6 @@ import stallone.api.doubles.IDoubleIterator;
  */
 public class SparseRealVector extends AbstractDoubleArray
 {
-
     private SparseVectorIndexMap sparseIndexMap;
     protected double[] data;
 
@@ -117,12 +116,6 @@ public class SparseRealVector extends AbstractDoubleArray
     public IDoubleIterator nonzeroIterator()
     {
         return new SparseVectorNonzeroIterator(this, sparseIndexMap);
-    }
-
-    @Override
-    public IDoubleIterator iterator()
-    {
-        return new DoubleArrayIterator(this);
     }
 
     @Override

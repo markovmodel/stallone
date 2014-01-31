@@ -10,8 +10,7 @@ import stallone.api.doubles.IDoubleArray;
  * @author marscher
  *
  */
-public class SparseDiagonalMatrix extends AbstractDoubleArray implements
-        IDoubleArray
+public class DiagonalMatrix extends AbstractDoubleArray
 {
     private double[] diagonal;
 
@@ -21,7 +20,7 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
      *
      * @param diagonal
      */
-    public SparseDiagonalMatrix(double[] diagonal)
+    public DiagonalMatrix(double[] diagonal)
     {
         this.diagonal = diagonal;
     }
@@ -31,7 +30,7 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
      *
      * @param matrixOrVector
      */
-    public SparseDiagonalMatrix(IDoubleArray matrixOrVector)
+    public DiagonalMatrix(IDoubleArray matrixOrVector)
     {
         switch (matrixOrVector.order())
         {
@@ -93,19 +92,19 @@ public class SparseDiagonalMatrix extends AbstractDoubleArray implements
     public IDoubleArray copy()
     {
         double[] diag = Arrays.copyOf(this.diagonal, this.diagonal.length);
-        return new SparseDiagonalMatrix(diag);
+        return new DiagonalMatrix(diag);
     }
 
     @Override
     public IDoubleArray create(int size)
     {
-        return new SparseDiagonalMatrix(new double[size]);
+        return new DiagonalMatrix(new double[size]);
     }
 
     @Override
     public IDoubleArray create(int rows, int columns)
     {
-        return new SparseDiagonalMatrix(new double[rows]);
+        return new DiagonalMatrix(new double[rows]);
     }
 
     @Override

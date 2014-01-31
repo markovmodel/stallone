@@ -13,10 +13,10 @@
  */
 package stallone.doubles.mtj;
 
+import static stallone.api.API.*;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.doubles.AbstractDoubleArray;
-import stallone.doubles.PrimitiveDoubleTable;
 
 /**
  * This class wraps a MTJ matrix into the Sherlock IMatrix interfaces.
@@ -79,7 +79,7 @@ public class WrappedMTJMatrix extends AbstractDoubleArray
     @Override
     public IDoubleArray copy()
     {
-        IDoubleArray res = new PrimitiveDoubleTable(rows,cols);
+        IDoubleArray res = doublesNew.matrix(rows,cols);
         res.copyFrom(this);
         return(res);
     }

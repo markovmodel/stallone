@@ -4,12 +4,13 @@
  */
 package stallone.discretization;
 
+import static stallone.api.API.*;
+
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.function.*;
 import java.util.Iterator;
-import stallone.doubles.PrimitiveDoubleArray;
 
 /**
  * A grid discretization which calculates functional values on demand and
@@ -163,7 +164,7 @@ public class GriddedFunctionOnDemand
     @Override
     public double f(double... x)
     {
-        return(f(new PrimitiveDoubleArray(x)));
+        return(f(doublesNew.array(x)));
     }
 
     @Override

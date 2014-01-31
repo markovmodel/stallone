@@ -4,8 +4,8 @@
  */
 package stallone.discretization;
 
-import stallone.doubles.PrimitiveDoubleArray;
-import stallone.doubles.PrimitiveDoubleTable;
+import static stallone.api.API.*;
+
 import stallone.doubles.DoubleArrayView;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
@@ -56,7 +56,7 @@ public class Grid implements IGrid
 
     public Grid(IDoubleArray bounds, double _step)
     {
-        IDoubleArray griddef = new PrimitiveDoubleTable(bounds.rows(), 3);
+        IDoubleArray griddef = doublesNew.matrix(bounds.rows(), 3);
         for (int i=0; i<griddef.rows(); i++)
         {
             griddef.set(i,0,bounds.get(i,0));
@@ -96,7 +96,7 @@ public class Grid implements IGrid
             numbers[i] = numbers[i+1] * sizes[i];
         preNeighborIndexes = new IntArrayView(new PrimitiveIntArray(dim*2), 0, dim*2);
         preMultIndex = new IntArrayView(new PrimitiveIntArray(dim), 0, dim);
-        prePoint = new DoubleArrayView(new PrimitiveDoubleArray(dim),0, dim);
+        prePoint = new DoubleArrayView(doublesNew.array(dim),0, dim);
         preNeighborMultIndexes = new IntArrayView(new PrimitiveIntTable(dim*2,dim), 0, 0, dim*2, dim);
     }
 

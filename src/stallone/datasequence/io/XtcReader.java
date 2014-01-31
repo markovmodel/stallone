@@ -12,7 +12,6 @@ import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
-import stallone.doubles.PrimitiveDoubleTable;
 
 /**
  * Reader for compressed gromacs xtc format.
@@ -35,7 +34,7 @@ public class XtcReader implements IDataReader
     public XtcReader(String trajFilename) throws IOException
     {
         trajectory = new XtcFile(trajFilename);
-        preconstructedFrame = new PrimitiveDoubleTable(trajectory.nrAtoms, 3);
+        preconstructedFrame = doublesNew.matrix(trajectory.nrAtoms, 3);
     }
 
     @Override

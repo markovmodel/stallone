@@ -530,22 +530,7 @@ public class DoubleFactoryTest
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of matrixReshape method, of class DoubleFactory.
-     */
-    @Test
-    public void testMatrixReshape()
-    {
-        IDoubleArray arr = null;
-        int d1 = 0;
-        int d2 = 0;
 
-        IDoubleArray expResult = null;
-        IDoubleArray result = instance.matrixReshape(arr, d1, d2);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of diag method, of class DoubleFactory.

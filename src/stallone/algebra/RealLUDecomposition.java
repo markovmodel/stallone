@@ -17,7 +17,6 @@ import static stallone.api.API.*;
 
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.algebra.*;
-import stallone.doubles.PrimitiveDoubleTable;
 
 /**
  * LU Decomposition.
@@ -67,7 +66,7 @@ public class RealLUDecomposition implements ILUDecomposition
     @Override
     public void setMatrix(final IDoubleArray matrixA)
     {
-        luMatrix = new PrimitiveDoubleTable(matrixA.rows(), matrixA.columns());
+        luMatrix = doublesNew.matrix(matrixA.rows(), matrixA.columns());
         luMatrix.copyFrom(matrixA);
         m = matrixA.rows();
         n = matrixA.columns();
@@ -184,7 +183,7 @@ public class RealLUDecomposition implements ILUDecomposition
     @Override
     public IDoubleArray getL()
     {
-        final IDoubleArray X = new PrimitiveDoubleTable(m, n);
+        final IDoubleArray X = doublesNew.matrix(m, n);
 
         for (int i = 0; i < m; i++)
         {
@@ -218,7 +217,7 @@ public class RealLUDecomposition implements ILUDecomposition
     @Override
     public IDoubleArray getU()
     {
-        final IDoubleArray X = new PrimitiveDoubleTable(n, n);
+        final IDoubleArray X = doublesNew.matrix(n, n);
 
         for (int i = 0; i < n; i++)
         {
@@ -305,7 +304,7 @@ public class RealLUDecomposition implements ILUDecomposition
         }
 
         // copy right hand side in pivot order
-        final IDoubleArray X = new PrimitiveDoubleTable(b_rows, b_cols);
+        final IDoubleArray X = doublesNew.matrix(b_rows, b_cols);
 
         for (int i = 0; i < b_rows; i++)
         {

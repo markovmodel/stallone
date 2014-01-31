@@ -13,7 +13,8 @@
  */
 package stallone.doubles.mtj;
 
-import stallone.doubles.PrimitiveDoubleArray;
+import static stallone.api.API.*;
+
 import stallone.doubles.AbstractDoubleArray;
 import stallone.api.doubles.IDoubleArray;
 import static stallone.doubles.DoubleArrayTest.*;
@@ -91,7 +92,7 @@ public class WrappedMTJVector extends AbstractDoubleArray {
     @Override
     public IDoubleArray copy()
     {
-        IDoubleArray res = new PrimitiveDoubleArray(size);
+        IDoubleArray res = doublesNew.array(size);
         res.copyFrom(this);
         return res;
     }

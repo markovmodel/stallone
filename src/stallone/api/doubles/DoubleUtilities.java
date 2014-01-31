@@ -12,6 +12,7 @@ import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;
 import java.io.PrintStream;
 import java.util.*;
+import stallone.doubles.DenseDoubleArray;
 import stallone.doubles.DoubleIO;
 import stallone.doubles.QuickSortDouble;
 
@@ -24,6 +25,18 @@ public class DoubleUtilities
 
     private static DoubleIO io;
 
+
+    /**
+     * Sets the values to be the elements of the array. 
+     */ 
+    public void set(IDoubleArray arr, double[] values)
+    {
+        if (arr instanceof DenseDoubleArray)
+            ((DenseDoubleArray)arr).set(values);
+        else
+            throw new UnsupportedOperationException("Mass value setting not (yet) supported for the given matrix type.");
+
+    }
 
     public void fill(IDoubleArray arr, double d)
     {
@@ -872,7 +885,8 @@ public class DoubleUtilities
         T res = (T)a.create(a.rows() + 1, a.columns());
 
         copyInto(a, 0, 0, rowIndex, a.columns(), res, 0, 0);
-        copyInto(Doubles.create.matrixReshape(r, 1, r.size()), res, rowIndex, 0);
+        for (int i=0; i<r.size(); i++)
+            res.set(rowIndex, i, r.get(i));
         copyInto(a, rowIndex, 0, a.rows(), a.columns(), res, rowIndex + 1, 0);
 
         return (res);

@@ -15,7 +15,7 @@ public class SymmetricMatrix extends AbstractDoubleArray
 {
     private IDoubleArray underlyingMatrix;
     private int rows, cols;
-
+    
     public SymmetricMatrix(IDoubleArray _underlyingMatrix)
     {
         rows = _underlyingMatrix.rows();
@@ -34,7 +34,7 @@ public class SymmetricMatrix extends AbstractDoubleArray
     {
         return(underlyingMatrix.copy());
     }
-
+    
     @Override
     public void zero()
     {
@@ -55,7 +55,7 @@ public class SymmetricMatrix extends AbstractDoubleArray
         else
             return(underlyingMatrix.get(j,i));
     }
-
+        
         @Override
     public void set(int i, int j, double x)
     {
@@ -64,13 +64,13 @@ public class SymmetricMatrix extends AbstractDoubleArray
         else
             underlyingMatrix.set(j,i,x);
     }
-
+        
     @Override
         public int rows()
         {
             return rows;
         }
-
+        
     @Override
         public int columns()
         {
