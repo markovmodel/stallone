@@ -13,30 +13,34 @@ import stallone.function.JEPFunctionC1;
  */
 public class FunctionFactory
 {
-    public IFunction createFunction(String[] variables, String expression)
+    public IFunction function(String[] variables, String expression)
     {
         return(new JEPFunction(variables, expression));
     }
 
-    public IFunction createFunction(String expression)
+    public IFunction function(String expression)
     {
         return(new JEPFunction(expression));
     }
 
-    public IFunctionC1 createDifferentiableFunction(String[] variables, String expression, String... derivatives)
+    public IFunctionC1 differentiableFunction(String[] variables, String expression, String... derivatives)
     {
         return(new JEPFunctionC1(variables, expression, derivatives));
     }
 
-    public IFunctionC1 createDifferentiableFunction(String expression, String... derivatives)
+    public IFunctionC1 differentiableFunction(String expression, String... derivatives)
     {
         return(new JEPFunctionC1(expression, derivatives));
     }
 
+    /*public IProductFunction product(IFunction... functions)
+    {
+    }*/
+    
     public static void main(String[] args)
     {
         String[] var = {"x"};
-        IFunction f = Functions.create.createFunction("z*x+y");
+        IFunction f = Functions.create.function("z*x+y");
 
         for (int i=0; i<10; i++)
         {

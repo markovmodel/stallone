@@ -193,7 +193,9 @@ public class DenseDoubleArray extends AbstractDoubleArray
     @Override
     public IDoubleArray copy()
     {
-        return(new DenseDoubleArray(PrimitiveDoubleTools.copy(x)));
+        DenseDoubleArray res = new DenseDoubleArray(PrimitiveDoubleTools.copy(x));
+        res.reshape(nrow, ncol);
+        return(res);
     }
 
     @Override

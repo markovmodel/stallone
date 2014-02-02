@@ -15,6 +15,7 @@ import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.dynamics.IIntegratorThermostatted;
 import stallone.api.potential.IEnergyModel;
+import stallone.stat.RunningMomentsMultivariate;
 
 /**
  * Computes TICA using brute-force matrix inversion of the covariance matrix.
@@ -25,18 +26,13 @@ public class TICA implements ITICA
 {
     // lag time
     private int lag;
-    // count and mean
-    private IDoubleArray c,  mean;
-    // product and covariance matrix
-    private IDoubleArray CC, Cov;
-    // time-lagged product and covariance matrix
-    private IDoubleArray CCTau, CovTau;
+    // running moments
+    RunningMomentsMultivariate moments;
     // input dimension
     private int dimIn;
-    // total number of data points
-    private int N;
     
     // results
+    private IDoubleArray CovTauSym;
     private IDoubleArray evalTICA;
     private IDoubleArray evecTICA;
     
@@ -71,12 +67,9 @@ public class TICA implements ITICA
     final private void init(int _dimIn)
     {
         this.dimIn = _dimIn;
-        this.c = doublesNew.array(dimIn);
-        this.mean = null;
-        this.CC = doublesNew.matrix(dimIn, dimIn);
-        this.Cov = null;
-        this.CCTau = doublesNew.matrix(dimIn, dimIn);
-        this.CovTau = null;
+        if (this.dimOut == 0)
+            this.dimOut = _dimIn; // by default full output dimension
+        moments = statNew.runningMomentsMultivar(dimIn, lag);
     }
     
 
@@ -87,34 +80,10 @@ public class TICA implements ITICA
     @Override
     final public void addData(IDataSequence data)
     {
-        if (this.dimIn == 0 && this.N == 0)
+        if (this.dimIn == 0)// && this.N == 0)
             init(data.dimension());
 
-        for (IDoubleArray[] X : data.pairs(lag))
-        {
-            for (int i=0; i<dimIn; i++)
-            {
-                // add counts
-                this.c.set(i, this.c.get(i)+X[0].get(i));
-                
-                // add product matrix (symmetric)
-                for (int j=i; j<dimIn; j++)
-                {
-                    double xij = X[0].get(i) * X[0].get(j);
-                    this.CC.set(i,j, this.CC.get(i,j)+xij);
-                    this.CC.set(j,i, this.CC.get(i,j));
-                }
-
-                // add time-lagged product matrix (nonsymmetric)
-                for (int j=0; j<dimIn; j++)
-                {
-                    double xij = X[0].get(i) * X[1].get(j);
-                    this.CCTau.set(i,j, this.CCTau.get(i,j)+xij);
-                }
-            }
-        }
-        
-        N += data.size() - lag;
+        moments.addData(data);
     }
     
     /**
@@ -125,41 +94,48 @@ public class TICA implements ITICA
     @Override
     final public void computeTransform()
     {
-        // compute mean
-        mean = alg.scaleToNew(1.0/(double)N, c);
-        IDoubleArray meanT = alg.transposeToNew(mean);
-        IDoubleArray M = alg.product(mean, meanT); // matrix of <x><y>
-        // compute covariance matrix
-        Cov = alg.subtract(CC, M); // mean-free products
-        alg.scale(1.0/(double)(N-lag-1), Cov); // covariances
-        // compute time-lagged covariance matrix
-        CovTau = alg.subtract(CCTau, M); // mean-free products
-        CovTau = alg.addWeightedToNew(0.5, CovTau, 0.5, alg.transposeToNew(CovTau)); // symmetrize
-        alg.scale(1.0/(double)(N-lag-1), CovTau); // covariances
-        // simple implementation of TICA (note: this is not numerically robust!)
-        IDoubleArray W = alg.product(alg.inverse(Cov), CovTau);
-        IEigenvalueDecomposition evd = alg.evd(W);
-        this.evalTICA = evd.getEvalNorm();
-        this.evecTICA = evd.getRightEigenvectorMatrix().viewReal();
-        // Whiten data
+        // PCA
+        IDoubleArray Cov = moments.getCov();
+        IEigenvalueDecomposition evd = alg.evd(Cov);
+        IDoubleArray evalPCA = evd.getEvalNorm();
+        IDoubleArray evecPCA = evd.getRightEigenvectorMatrix().viewReal();
+        
+        // normalize principal components
+        IDoubleArray S = doublesNew.array(evalPCA.size());
+        for (int i=0; i<S.size(); i++)
+            S.set(i, 1.0*Math.sqrt(evalPCA.get(i)));
+        // normalize weights by dividing by the standard deviation of the pcs 
+        IDoubleArray evecPCAscaled = alg.product(evecPCA, doublesNew.diag(S));
+
+        // time-lagged covariance matrix
+        this.CovTauSym = moments.getCovLagged();
+        // symmetrize
+        CovTauSym = alg.addWeightedToNew(0.5, CovTauSym, 0.5, alg.transposeToNew(CovTauSym)); // symmetrize
+
+        // TICA weights
+        IDoubleArray pcCovTau = alg.product(alg.product(alg.transposeToNew(evecPCAscaled), CovTauSym), evecPCAscaled);
+
+        IEigenvalueDecomposition evd2 = alg.evd(pcCovTau);
+        this.evalTICA = evd2.getEvalNorm();
+        this.evecTICA = alg.product(evecPCAscaled, evd2.getRightEigenvectorMatrix().viewReal());        
     }
 
     @Override
     public IDoubleArray getMeanVector()
     {
-        return mean;
+        return moments.getMean();
     }
 
     @Override
     public IDoubleArray getCovarianceMatrix()
     {
-        return Cov;
+        return moments.getCov();
     }
     
     @Override
     public IDoubleArray getCovarianceMatrixLagged()
     {
-        return CovTau;
+        return CovTauSym;
     }
     
     @Override
@@ -208,8 +184,14 @@ public class TICA implements ITICA
     @Override
     public void transform(IDoubleArray in, IDoubleArray out)
     {
+        // if necessary, flatten input data
+        if (in.columns() != 1)
+        {
+            in = doublesNew.array(in.getArray());
+        }
+
         // subtract mean
-        IDoubleArray x = alg.subtract(in, mean);
+        IDoubleArray x = alg.subtract(in, moments.getMean());
         
         // make a row
         if (x.rows() > 1)
@@ -248,9 +230,9 @@ public class TICA implements ITICA
         tica.addData(seq);
         tica.computeTransform();
         
-        System.out.println("mean: \t"+doubles.toString(tica.mean, "\t"));
-        System.out.println("cov: \t"+doubles.toString(tica.Cov, "\t", "\n"));
-        System.out.println("covTau: \t"+doubles.toString(tica.CovTau, "\t", "\n"));
+        System.out.println("mean: \t"+doubles.toString(tica.getMeanVector(), "\t"));
+        System.out.println("cov: \t"+doubles.toString(tica.getCovarianceMatrix(), "\t", "\n"));
+        System.out.println("covTau: \t"+doubles.toString(tica.getCovarianceMatrixLagged(), "\t", "\n"));
         System.out.println();
         System.out.println("eval: \t"+doubles.toString(tica.getEigenvalues(), "\t"));
         System.out.println("evec1: \t"+doubles.toString(tica.getEigenvector(0), "\t"));

@@ -20,7 +20,17 @@ public class StatisticsFactory
     {
         return(new RunningAverage());
     }
+    
+    public RunningMomentsMultivariate runningMomentsMultivar(int _dimension)
+    {
+        return new RunningMomentsMultivariate(_dimension);
+    }
 
+    public RunningMomentsMultivariate runningMomentsMultivar(int _dimension, int _tau)
+    {
+        return new RunningMomentsMultivariate(_dimension, _tau);
+    }
+    
     public IParameterEstimator parameterEstimatorGaussian1D()
     {
         return new GaussianUnivariate(0,0);

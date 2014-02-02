@@ -37,6 +37,7 @@ public class DataSequenceFactory
             throws IOException
     {
         DataSequenceLoader_SingleReaderImpl loader = new DataSequenceLoader_SingleReaderImpl(files, reader);
+        loader.scan();
         return (loader);
     }
 
@@ -50,6 +51,7 @@ public class DataSequenceFactory
             throws IOException
     {
         IDataReader sequenceLoader = DataSequenceFileFormats.createReader(files.get(0));
+        sequenceLoader.scan();
         return multiSequenceLoader(files, sequenceLoader);
     }
 

@@ -186,7 +186,7 @@ public class DoubleFactory
      */
     public IDoubleArray arrayFrom(double d1, double... d2)
     {
-        IDoubleArray res = new DenseDoubleArray(1);
+        IDoubleArray res = new DenseDoubleArray(1+d2.length);
         res.set(0,d1);
         for (int i=0; i<d2.length; i++)
             res.set(i+1,d2[i]);

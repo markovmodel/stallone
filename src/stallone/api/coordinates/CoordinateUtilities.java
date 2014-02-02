@@ -28,6 +28,28 @@ public class CoordinateUtilities
     private int outputPrecisionPre = 5;
     private int outputPrecisionPost = 3;
 
+    /**
+     * Apply a coordinate transform to all coordinates in a file and write the
+     * result to an output file.
+     * @param infile
+     * @param T
+     * @param outfile
+     * @throws IOException 
+     */
+    public void transform_file(String infile, ICoordinateTransform T, String outfile) 
+            throws IOException
+    {
+        IDataReader reader = dataNew.reader(infile);
+        int N = reader.size();
+        IDataWriter writer = dataNew.writer(outfile, N, T.dimension());
+        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
+            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
+        for (IDoubleArray X : reader)
+            writer.add(T.transform(X));
+        writer.close();
+    }
+    
+    
     private double dotprod(IDoubleArray X, int i, int j)
     {
         return (X.get(i,0) * X.get(j,0) + X.get(i,1) * X.get(j,1) + X.get(i,2) * X.get(j,2));
@@ -140,18 +162,6 @@ public class CoordinateUtilities
         fixedOutputPrecision = false;
     }
     
-    public void transform_file(String infile, ICoordinateTransform T, String outfile) 
-            throws IOException
-    {
-        IDataReader reader = dataNew.reader(infile);
-        int N = reader.size();
-        IDataWriter writer = dataNew.writer(outfile, N, T.dimension());
-        if (writer instanceof AsciiDataSequenceWriter && fixedOutputPrecision)
-            ((AsciiDataSequenceWriter)writer).setFixedPrecision(outputPrecisionPre, outputPrecisionPost);
-        for (IDoubleArray X : reader)
-            writer.add(T.transform(X));
-        writer.close();
-    }
     
     /**
      * Computes the minimal root mean square distance between x1 and x2.
