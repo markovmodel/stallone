@@ -367,7 +367,7 @@ public class DataSequenceLoader_SingleReaderImpl
 
         try
         {
-            dataNew.dataInput(res);
+            ret = dataNew.dataInput(res);
         } 
         catch (IOException ex) // this cannot happen
         {
