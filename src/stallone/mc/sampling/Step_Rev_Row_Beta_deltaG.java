@@ -35,6 +35,10 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
 
     // pre-instantiated data holders
     private double[] backupRow;
+    private double[] backupMu;
+    private double[] backupU;
+
+    private MersenneTwister mt;
 
     public Step_Rev_Row_Beta()
     {}
@@ -49,6 +53,8 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
 
         // data holders
         this.backupRow = new double[n];
+        this.backupMu = new double[n];
+        this.backupU = new double[n];
 
         // free energies
         u = doublesNew.array(n);
@@ -70,14 +76,16 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
             }
         }
 
+        mt = new MersenneTwister();
+
         // init beta distributions
         rowDistribution = new Beta[Csum.length];
-        for (int i = 0; i < Csum.length; i++)
+        for ( int i = 0; i < Csum.length; i++ )
         {
             //double alpha = Csum[i] - C.get(i, i) + 1;
-            double alpha = Csum[i] + dof[i] - C.get(i, i) - 1;
+            double alpha = Csum[i] + dof[i] - C.get(i,i) - 1;
             double beta = C.get(i, i) + 1;
-            rowDistribution[i] = new Beta(alpha, beta, new MersenneTwister());
+            rowDistribution[i] = new Beta( alpha, beta, mt );
         }
 
         // check counts.
@@ -111,60 +119,74 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
      * backs up row i
      * @param row
      */
-    private void backupRow(int row)
+    private void backupRow( int row )
     {
         for (int k=0; k<n; k++)
-            backupRow[k] = T.get(row, k);
+            backupRow[k] = T.get(row,k);
     }
 
-    private void restoreRow(int row)
+    private void restoreRow( int row )
     {
         for (int k=0; k<n; k++)
-            T.set(row, k, backupRow[k]);
+            T.set( row, k, backupRow[k] );
+    }
+
+    private void backupVecs()
+    {
+        for ( int k=0; k<n; k++ )
+        {
+            backupMu[k] = mu.get(k);
+            backupU[k] = u.get(k);
+        }
+    }
+
+    private void restoreVecs()
+    {
+        for ( int k=0; k<n; k++ )
+        {
+            mu.set( k, backupMu[k] );
+            u.set( k, backupU[k] );
+        }
     }
 
     /**
      * Samples from one row shift distribution via a beta distribution
      */
-    public void sampleRow(int i)
+    public void sampleRow( int i, IDeltaGDistribution dG )
     {
         double x = rowDistribution[i].nextDouble();
-        double a = x / (1.0 - T.get(i, i));
-
-        // backup
-        backupRow(i);
-
-        // update matrix
-        double sum = 0;
-        for (int k = 0; k < T.columns(); k++)
+        if ( ( 0.0 == x) || ( 1.0 == x ) )
+            return;
+        double alpha = x / ( 1.0 - T.get(i,i) );
+        backupRow( i );
+        double sum = 0.0;
+        for ( int k=0; k<T.columns(); ++k )
         {
-            if (k != i)
-            {
-                T.set(i, k, T.get(i, k) * a);
-                //ensureValidElement(i, k);
-                sum += T.get(i, k);
-            }
+            if ( k == i )
+                continue;
+            T.set( i, k, T.get(i,k) * alpha );
+            sum += T.get(i,k);
         }
-        T.set(i, i, 1 - sum);
-
-        // check if there are problems and then revert to backup
-        if ( TransitionMatrixSamplingTools.isRowIn01( T, i ) )
+        T.set( i, i, 1.0 - sum );
+        if ( ! TransitionMatrixSamplingTools.isRowIn01( T, i ) )
         {
-            u.set( i, u.get(i) + Math.log( a ) );
-            mu.set( i, Math.exp( -u.get(i) ) );
-
-            // rescale u if necessary
-            if ( Math.abs( doubles.min( u ) ) > 1 )
-            {
-                alg.addTo( u, -doubles.min( u ) );
-                for ( int k=0; k<T.columns(); k++ )
-                    mu.set( k, Math.exp( -u.get(k) ) );
-            }
+            restoreRow( i );
+            return;
         }
-        else
+        backupVecs();
+        u.set( i, u.get(i) + Math.log( alpha ) );
+        mu.set( i, Math.exp( -u.get(i) ) );
+        double minu = double.min( u );
+        if ( Math.abs( minu ) > 1.0 )
         {
-            restoreRow(i);
+            alg.addTo( u, -minu );
+            for ( int k=0; k<T.columns(); ++k )
+                mu.set( k, Math.exp( -u.get(k) ) );
         }
+        if ( dG.accept( mu, mt.nextDouble() ) )
+            return;
+        restoreRow( i );
+        restoreVecs();
     }
 
     @Override
@@ -176,7 +198,7 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
             i = MathTools.randomInt( 0, T.rows() );
         }
 
-        sampleRow( i );
+        sampleRow( i, dG );
 
         return true;
     }
