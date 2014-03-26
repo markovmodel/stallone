@@ -10,6 +10,7 @@ import stallone.api.doubles.IDoubleArray;
  */
 public abstract class DeltaGDistributionAbstract
 {
+	@Override
 	public boolean accept( IDoubleArray pi, double randomNumber )
 	{
 		return true;
