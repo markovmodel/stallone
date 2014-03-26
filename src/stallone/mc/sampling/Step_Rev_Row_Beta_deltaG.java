@@ -148,17 +148,17 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
         T.set(i, i, 1 - sum);
 
         // check if there are problems and then revert to backup
-        if (TransitionMatrixSamplingTools.isRowIn01(T, i))
+        if ( TransitionMatrixSamplingTools.isRowIn01( T, i ) )
         {
-            u.set(i, u.get(i) + Math.log(a));
-            mu.set(i, Math.exp(-u.get(i)));
+            u.set( i, u.get(i) + Math.log( a ) );
+            mu.set( i, Math.exp( -u.get(i) ) );
 
             // rescale u if necessary
-            if (Math.abs(doubles.min(u)) > 1)
+            if ( Math.abs( doubles.min( u ) ) > 1 )
             {
-                alg.addTo(u, -doubles.min(u));
-                for (int k=0; k<T.columns(); k++)
-                    mu.set(k, Math.exp(-u.get(k)));
+                alg.addTo( u, -doubles.min( u ) );
+                for ( int k=0; k<T.columns(); k++ )
+                    mu.set( k, Math.exp( -u.get(k) ) );
             }
         }
         else
@@ -170,13 +170,13 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
     @Override
     public boolean step( IDeltaGDistribution dG )
     {
-        int i = MathTools.randomInt(0, T.rows());
-        while (C.get(i, i) <= 0 || dof[i] < 2)
+        int i = MathTools.randomInt( 0, T.rows() );
+        while ( C.get(i,i) <= 0 || dof[i] < 2 )
         {
-            i = MathTools.randomInt(0, T.rows());
+            i = MathTools.randomInt( 0, T.rows() );
         }
 
-        sampleRow(i);
+        sampleRow( i );
 
         return true;
     }
