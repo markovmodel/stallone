@@ -10,7 +10,7 @@ import stallone.api.mi.IDeltaGDistribution;
 
 /**
  *
- * @author cwehmeyer
+ * @author noe, cwehmeyer
  */
 public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbstract
 {
@@ -54,7 +54,7 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
         mu = msm.stationaryDistribution( T );
 
         // initialize steps
-        this.step_row = new Step_Rev_Row_Beta();
+        this.step_row = new Step_Rev_Row_Beta_deltaG();
         this.step_row.init( C, T, mu );
         this.step_quad = new Step_Rev_Quad_MC();
         this.step_quad.init( C, T, mu );
@@ -107,7 +107,7 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
     {
         if ( Math.random() < this.p_step_row ) // Reversible edge shift
         {
-            return step_row.step();
+            return step_row.step( deltaG );
         }
         else
         {
