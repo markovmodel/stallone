@@ -8,6 +8,7 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
 import stallone.api.mc.tpt.ICommittor;
 import stallone.api.mc.tpt.ITPTFlux;
+import stallone.api.mc.IDeltaGDistribution;
 import stallone.api.algebra.*;
 import stallone.api.doubles.IDoubleIterator;
 import stallone.api.function.IGriddedFunction;
@@ -164,6 +165,48 @@ public class MarkovModelFactory
         ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevFixPi(counts, piFix);
 
         return(sampler);
+    }
+
+    /**
+     * Creates a reversible transition matrix sampler with a deltaG model acceptance criterion
+     * @param counts the posterior count matrix
+     * @param deltaG the acceptance criterion object regarding the dG of two states
+     * @return
+     */
+    public ITransitionMatrixSampler createTransitionMatrixSamplerRev( IDoubleArray counts, IDeltaGDistribution deltaG )
+    {
+        ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevDeltaG( counts, deltaG );
+
+        return( sampler );
+    }
+
+    /**
+     * Creates a reversible transition matrix sampler with a deltaG model acceptance criterion
+     * @param counts the posterior count matrix
+     * @param deltaG the acceptance criterion object regarding the dG of two states
+     * @param Tinit the intial guess for the transition matrix
+     * @return
+     */
+    public ITransitionMatrixSampler createTransitionMatrixSamplerRev( IDoubleArray counts, IDeltaGDistribution deltaG, IDoubleArray Tinit )
+    {
+        ITransitionMatrixSampler sampler = new TransitionMatrixSamplerRevDeltaG( counts, deltaG, Tinit );
+
+        return( sampler );
+    }
+
+    /**
+     * Creates a gaussian model for the deltaG acceptance criterion
+     * @param mu the mean dG in kT, dG from log(pi_a/pi_b)
+     * @param siga the dimensionless standard deviation of the dG distribution
+     * @param a one of the two states (pi_a/pi_b)
+     * @param b the second state (pi_a/pi_b)
+     * @return
+     */
+    public IDeltaGDistribution createDeltaGGaussian( double mu, double sigma, int a, int b )
+    {
+        IDeltaGDistribution deltaG = new DeltaGGaussian( mu, sigma, a, b );
+
+        return( deltaG );
     }
 
     public PCCA createPCCA(IDoubleArray M, int nstates)
