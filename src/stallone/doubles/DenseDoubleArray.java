@@ -5,9 +5,9 @@
 
 package stallone.doubles;
 
+import static stallone.api.API.alg;
+import stallone.api.API;
 import stallone.api.doubles.IDoubleArray;
-
-import static stallone.api.API.*;
 
 /**
  *
@@ -154,10 +154,11 @@ public class DenseDoubleArray extends AbstractDoubleArray
             if (ncol == 1 && j == 0)
                 x[i] = val;
             // row vector access
-            if (nrow == 1 && i == 0)
+            else if (nrow == 1 && i == 0)
                 x[j] = val;
+            else
             // matrix access
-            x[i*ncol + j] = val;
+                x[i*ncol + j] = val;
         }
         catch(ArrayIndexOutOfBoundsException e)
         {
@@ -245,11 +246,10 @@ public class DenseDoubleArray extends AbstractDoubleArray
         da.set(0,1,0.1);
         da.set(1,0,0.1);
         da.set(1,1,0.9);
-
+    
         
         IDoubleArray da2 = alg.product(da, da);
         System.out.println(da2);
-
     }
 
 }
