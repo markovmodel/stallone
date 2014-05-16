@@ -63,7 +63,7 @@ public class ClusterFactory
         clustering.setMetric(metric);
     }
 
-    public IClustering kmeans(IMetric metric, int k, int maxIter)
+    public IClustering kmeans(IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         KMeansClustering clustering = new KMeansClustering();
         kmeans(clustering, metric, k, maxIter);
@@ -84,12 +84,12 @@ public class ClusterFactory
         return (clustering);
     }
 
-    public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
+    public IClustering kmeans(IDataSequence data, IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         return kmeans(data, metric, k, maxIter);
     }
 
-    public IClustering kmeans(IDataInput data, IMetric metric, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         KMeansClustering clustering = new KMeansClustering();
         kmeans(clustering, data, metric, k, maxIter);
@@ -117,7 +117,7 @@ public class ClusterFactory
     }
 
 
-    public IClustering kcenter(IMetric metric, int k)
+    public IClustering kcenter(IMetric<IDoubleArray> metric, int k)
     {
         KCenterClustering clustering = new KCenterClustering();
         clustering.setNumberOfClusters(k);
@@ -132,7 +132,7 @@ public class ClusterFactory
         return (clustering);
     }
 
-    public IClustering kcenter(IDataInput data, IMetric metric, int k)
+    public IClustering kcenter(IDataInput data, IMetric<IDoubleArray> metric, int k)
     {
         KCenterClustering clustering = new KCenterClustering();
         clustering.setNumberOfClusters(k);
@@ -141,7 +141,7 @@ public class ClusterFactory
         return (clustering);
     }
 
-    public IClustering kcenter(IDataSequence data, IMetric metric, int k)
+    public IClustering kcenter(IDataSequence data, IMetric<?> metric, int k)
     {
         return (kcenter(data, metric, k));
     }
@@ -196,7 +196,7 @@ public class ClusterFactory
         return densitybased(data, new EuclideanDistance(), dmin, minpts);
     }
 
-    public IClustering densitybased(IDataSequence data, IMetric metric, int N)
+    public IClustering densitybased(IDataSequence data, IMetric<IDoubleArray> metric, int N)
     {
         DensityBasedClusteringSimpleN clustering = new DensityBasedClusteringSimpleN(N);
         clustering.setMetric(metric);
