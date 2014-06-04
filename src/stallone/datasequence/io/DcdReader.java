@@ -470,7 +470,8 @@ public class DcdReader implements IDataReader
         catch (IOException ex)
         {
             logger.log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Problems reading DCD, caught I/O exception.");
+            throw new RuntimeException("Problems reading DCD, caught I/O exception."
+                    + " Message: " + ex.getMessage());
         } // end try-catch
     }
 
