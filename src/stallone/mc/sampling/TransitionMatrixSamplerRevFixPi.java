@@ -27,11 +27,13 @@ public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbst
     public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray piFixed)
     {
         super(counts);
+        this.piFixed=piFixed;
     }
 
     public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray Tinit, IDoubleArray piFixed)
     {
         super(counts, Tinit);
+        this.piFixed=piFixed;
     }
 
     @Override
