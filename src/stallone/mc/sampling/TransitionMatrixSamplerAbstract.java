@@ -22,6 +22,9 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     protected IDoubleArray T, C;
     protected double logLikelihood = 0;
 
+    /** empty, so init this will init() method **/
+    public TransitionMatrixSamplerAbstract() {}
+    
     public TransitionMatrixSamplerAbstract(IDoubleArray counts)
     {
         this.init(counts);
