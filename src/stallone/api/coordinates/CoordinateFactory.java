@@ -5,6 +5,7 @@
 package stallone.api.coordinates;
 
 import static stallone.api.API.coor;
+import stallone.api.API;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
@@ -107,6 +108,17 @@ public class CoordinateFactory
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.select(in, selection, out);
+            }
+        };
+    }
+    
+    public ICoordinateTransform linear_operator(final IDoubleArray A) {
+        return new AbstractCoordinateTransform(1)
+        {
+            @Override
+            public void transform(IDoubleArray in, IDoubleArray out)
+            {
+                API.alg.product(in, A, out);
             }
         };
     }
