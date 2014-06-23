@@ -13,6 +13,8 @@ import stallone.coordinates.AbstractCoordinateTransform;
 import stallone.coordinates.MinimalRMSDistance3D;
 import stallone.coordinates.PCA;
 import stallone.coordinates.TICA;
+import stallone.doubles.DenseDoubleArray;
+import stallone.doubles.PrimitiveDoubleTools;
 
 /**
  *
@@ -112,13 +114,28 @@ public class CoordinateFactory
         };
     }
     
+    /**
+     * intended to perform the application of a linear operator A with
+     * shape (n,m) to a vector with shape (n)
+     * @param A matrix operator
+     * @return CoordinateTransformation which performs <A, b> = x
+     */
     public ICoordinateTransform linear_operator(final IDoubleArray A) {
-        return new AbstractCoordinateTransform(1)
+        int rows = A.rows(), cols = 1;
+        return new AbstractCoordinateTransform(rows, cols)
         {
             @Override
-            public void transform(IDoubleArray in, IDoubleArray out)
+            public void transform(final IDoubleArray in, IDoubleArray out)
             {
-                API.alg.product(in, A, out);
+                IDoubleArray input = in;
+                // TODO: temporary workaround to handle n x 3 vectors given by trajectory readers like DCD.
+                // flatten array, if compatible. Unfortunately super inefficient...
+                if(in.rows() * in.columns() == A.columns())
+                {
+                    double[] flat = PrimitiveDoubleTools.flatten(in.getTable());
+                    input = new DenseDoubleArray(flat);
+                }
+                API.alg.product(A, input, out);
             }
         };
     }
