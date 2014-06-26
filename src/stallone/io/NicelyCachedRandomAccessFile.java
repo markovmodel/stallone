@@ -411,12 +411,14 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
     @Override
     public void close() throws IOException
     {
+        System.out.println("called close");
         randomAccessFile.close();
     }
 
     @Override
     public void open() throws IOException
     {
+        System.out.println("called open");
         this.randomAccessFile = new RandomAccessFile(filename, "r");
         this.randomAccessChannel = randomAccessFile.getChannel();
     }

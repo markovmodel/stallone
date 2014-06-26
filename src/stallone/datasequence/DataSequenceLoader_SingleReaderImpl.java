@@ -91,11 +91,14 @@ public class DataSequenceLoader_SingleReaderImpl
         {
             if (isOpen)
             {
+                System.out.println(" ma: closing");
                 reader.close();
             }
             reader.setSource(sources.get(index));
+            System.out.println(" ma: opening");
             reader.open();
             isOpen = true;
+            System.out.println(" ma: scanning");
             reader.scan();
 
             currentSource = index;
