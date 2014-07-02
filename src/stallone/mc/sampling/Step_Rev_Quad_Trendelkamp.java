@@ -57,37 +57,43 @@ public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
      */
     public void sampleQuad(int i, int j)
     {
-        //Compute parameters
-        double a=C.get(i,j)+C.get(j,i);
+    	//Ensure that the element is only updated if all counts are non-negative
+    	//This ensures that the quad step can handle negative counts
+    	//resulting from a prior with negative entries
+    	if(i<j && C.get(i, j)+C.get(j, i)>=0.0 && C.get(i,i)>=0.0 && C.get(j, j)>=0.0){
+            //Compute parameters
+            double a=C.get(i,j)+C.get(j,i);
 
-        double delta=T.get(i,i)+T.get(i,j);
-        double lambda=mu.get(j)/mu.get(i)*(T.get(j,j)+T.get(j,i));
-        double b,c,d;
+            double delta=T.get(i,i)+T.get(i,j);
+            double lambda=mu.get(j)/mu.get(i)*(T.get(j,j)+T.get(j,i));
+            double b,c,d;
 
-        //Ensure that d won't grow out of bounds
-        if(delta>1e-15 && lambda>1e-15)
-        {
-            //Assign parameters according to ordering of delta and lambda
-            if(delta<=lambda){
-                b=C.get(i,i);
-                c=C.get(j,j);
-                d=lambda/delta;
+            //Ensure that d won't grow out of bounds
+            if(delta>1e-15 && lambda>1e-15)
+            {
+                //Assign parameters according to ordering of delta and lambda
+                if(delta<=lambda){
+                    b=C.get(i,i);
+                    c=C.get(j,j);
+                    d=lambda/delta;
+                }
+                else{
+                    b=C.get(j,j);
+                    c=C.get(i,i);
+                    d=delta/lambda;
+                }
+                //Generate random variate
+                double x=ScaledElementSampler.sample(randU, randE, randB, a, b, c, d);
+
+                //Update T
+                T.set(i,j, x*Math.min(delta,lambda));
+                T.set(i,i, delta-T.get(i,j));
+                T.set(j,i, mu.get(i)/mu.get(j)*T.get(i,j));
+                T.set(j,j, mu.get(i)/mu.get(j)*lambda-T.get(j,i));
             }
-            else{
-                b=C.get(j,j);
-                c=C.get(i,i);
-                d=delta/lambda;
-            }
-            //Generate random variate
-            double x=ScaledElementSampler.sample(randU, randE, randB, a, b, c, d);
-
-            //Update T
-            T.set(i,j, x*Math.min(delta,lambda));
-            T.set(i,i, delta-T.get(i,j));
-            T.set(j,i, mu.get(i)/mu.get(j)*T.get(i,j));
-            T.set(j,j, mu.get(i)/mu.get(j)*lambda-T.get(j,i));
-        }
-        //Else do nothing.
+            //Else do nothing.
+    	}
+    	//Else do noting
     }
 
     @Override
