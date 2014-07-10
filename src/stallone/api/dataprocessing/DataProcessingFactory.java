@@ -10,7 +10,8 @@ import static stallone.api.API.*;
 import java.util.List;
 import stallone.api.coordinates.ICoordinateTransform;
 import stallone.api.datasequence.*;
-import stallone.datasequence.DataOutput;
+import stallone.dataprocessing.DataOutput;
+import stallone.dataprocessing.Pipeline;
 
 
 /**
@@ -90,8 +91,9 @@ public class DataProcessingFactory
     //
     // =========================================================================
 
-    //public IPipeline pipeline(IDataProcessor... dp)
-    //{
-    //}
+    public IPipeline pipeline(IDataProcessor... dp)
+    {
+        return new Pipeline(dp);
+    }
 
 }

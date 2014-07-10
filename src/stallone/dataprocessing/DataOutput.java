@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.datasequence;
+package stallone.dataprocessing;
 
 import static stallone.api.API.*;
 import java.io.File;

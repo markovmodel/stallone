@@ -44,20 +44,13 @@ public class TICA implements ITICA
     public TICA(IDataInput _source, int _lag)
     {
         this.lag = _lag;
-        init(_source.dimension());
-
-        for (IDataSequence seq : _source.sequences())
-            addData(seq);
-        
-        computeTransform();
+        setupTransform(_source);
     }
 
     public TICA(IDataSequence _source, int _lag)
     {
         this.lag = _lag;
-        init(_source.dimension());
-        addData(_source);        
-        computeTransform();
+        setupTransform(_source);
     }
 
     public TICA(int _lag)
@@ -65,27 +58,6 @@ public class TICA implements ITICA
         this.lag = _lag;
     }
     
-    final private void init(int _dimIn)
-    {
-        this.dimIn = _dimIn;
-        if (this.dimOut == 0)
-            this.dimOut = _dimIn; // by default full output dimension
-        moments = statNew.runningMomentsMultivar(dimIn, lag);
-    }
-    
-
-    /**
-     * adds data to prepare the transform computation
-     * @param data The data input
-     */
-    //@Override
-    final public void addData(IDataSequence data)
-    {
-        if (this.dimIn == 0)// && this.N == 0)
-            init(data.dimension());
-
-        moments.addData(data);
-    }
     
     /**
      * recomputes the transform based on all data added to this point. 
@@ -93,8 +65,18 @@ public class TICA implements ITICA
      * @param X A data sequence. 
      */
     //@Override
-    final public void computeTransform()
+    final public void setupTransform(IDataInput input)
     {
+        // set up moments
+        this.dimIn = input.dimension();
+        if (this.dimOut == 0)
+            this.dimOut = input.dimension(); // by default full output dimension
+        moments = statNew.runningMomentsMultivar(dimIn, lag);
+
+        // add data to moments
+        for (IDataSequence seq : input.sequences())
+            moments.addData(seq);
+        
         // PCA
         IDoubleArray Cov = moments.getCov();
         IEigenvalueDecomposition evd = alg.evd(Cov);
@@ -121,6 +103,12 @@ public class TICA implements ITICA
         this.evecTICA = alg.product(evecPCAscaled, evd2.getRightEigenvectorMatrix().viewReal());        
     }
 
+    @Override
+    public void setupTransform(IDataSequence _input)
+    {
+        setupTransform(dataNew.dataInput(_input));
+    }    
+    
     @Override
     public IDoubleArray getMeanVector()
     {
@@ -228,8 +216,7 @@ public class TICA implements ITICA
         // TICA
         int lag = 1;
         TICA tica = new TICA(lag);
-        tica.addData(seq);
-        tica.computeTransform();
+        tica.setupTransform(seq);
         
         System.out.println("mean: \t"+doubles.toString(tica.getMeanVector(), "\t"));
         System.out.println("cov: \t"+doubles.toString(tica.getCovarianceMatrix(), "\t", "\n"));
@@ -247,33 +234,5 @@ public class TICA implements ITICA
         System.out.println("y2 = \t"+doubles.toString(y2, "\t"));
     }
 
-    @Override
-    public void addSender(IDataProcessor sender)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
-    @Override
-    public void addReceiver(IDataProcessor receiver)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void init()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void run()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void cleanup()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

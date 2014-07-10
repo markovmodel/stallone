@@ -40,44 +40,10 @@ public class PCA implements IPCA
     public PCA(IDataInput _source)
     {
         this.input = _source;
-        this.init();
+        this.setupTransform(_source);
     }
     
     public PCA()
-    {
-    }
-
-    
-    //==========================================================================
-    //
-    // Data processing methods
-    //
-    //==========================================================================
-    
-    /**
-     * Sets the receiver when called once. 
-     * @throws RuntimeException when called twice because PCA can only have one input.
-     * @param receiver
-     */
-    @Override
-    public void addSender(IDataProcessor sender)
-    {
-        if (this.input != null)
-            throw new RuntimeException("Trying to add a second sencer to PCA. This is not possible.");
-        
-        if (sender instanceof IDataInput)
-            this.input = (IDataInput)sender;
-        else
-            throw new IllegalArgumentException("Illegal input type: sender must be an instance of IDataInput");
-    }
-
-
-    /**
-     * Does nothing
-     * @param sender 
-     */
-    @Override
-    public void addReceiver(IDataProcessor receiver)
     {
     }
     
@@ -88,7 +54,7 @@ public class PCA implements IPCA
      * @param X A data sequence. 
      */
     @Override
-    public void init()
+    public void setupTransform(IDataInput _input)
     {
         // set input dimension
         this.dimIn = this.input.dimension();
@@ -97,7 +63,7 @@ public class PCA implements IPCA
         moments = statNew.runningMomentsMultivar(dimIn);
         
         // iterate all data and feed moments
-        for (IDataSequence x : input.sequences())
+        for (IDataSequence x : _input.sequences())
             moments.addData(x);
         
         // compute transformation
@@ -107,21 +73,12 @@ public class PCA implements IPCA
         this.evec = evd.getRightEigenvectorMatrix().viewReal();
     }
 
-    /**
-     * Don't do anything
-     */
     @Override
-    public void run()
+    public void setupTransform(IDataSequence _input)
     {
-    }
-
-    /**
-     * Don't do anything
-     */
-    @Override
-    public void cleanup()
-    {
+        setupTransform(dataNew.dataInput(_input));
     }    
+    
 
     //==========================================================================
     //

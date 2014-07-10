@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package stallone.datasequence;
+package stallone.dataprocessing;
 
+import stallone.dataprocessing.DataInput_SingleDataIterable;
+import stallone.dataprocessing.DataInput_DataPairIterable;
+import stallone.dataprocessing.DataInput_SingleSequenceIterable;
 import java.util.ArrayList;
 import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.datasequence.IDataInput;

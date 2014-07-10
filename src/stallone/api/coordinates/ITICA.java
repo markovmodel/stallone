@@ -14,7 +14,7 @@ import stallone.api.doubles.IDoubleArray;
  * 
  * @author noe
  */
-public interface ITICA extends IDataTransformer
+public interface ITICA extends IParametrizedCoordinateTransform
 {
     /**
      * Returns the mean vector of the data

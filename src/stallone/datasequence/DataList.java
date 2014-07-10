@@ -55,24 +55,7 @@ public class DataList
     @Override
     public Iterable<IDoubleArray[]> pairs(int spacing)
     {
-        class PairIterable implements Iterable<IDoubleArray[]>
-        {
-            private IDataSequence seq;
-            private int spacing = 1;
-
-            public PairIterable(IDataSequence _seq, int _spacing)
-            {
-                this.seq = _seq;
-                this.spacing = _spacing;
-            }
-
-            @Override
-            public Iterator<IDoubleArray[]> iterator()
-            {
-                return (new DataSequencePairIterator(seq, spacing));
-            }
-        }
-        return new PairIterable(this,spacing);
+        return new DataSequencePairIterable(this,spacing);
     }
     
     @Override

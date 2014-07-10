@@ -10,5 +10,8 @@ package stallone.api.dataprocessing;
  */
 public interface IPipeline
 {
-    
+    public void run();
+
+    public void cleanup();
+            
 }
