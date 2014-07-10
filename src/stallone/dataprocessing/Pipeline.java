@@ -23,9 +23,16 @@ public class Pipeline implements IPipeline
     @Override
     public void run()
     {
+        // connect if necessary
+        for (int i=1; i<processors.length; i++)
+            if (!processors[i].hasInput())
+                processors[i].addSender(processors[i-1]);
+        
+        // initialize all
         for (IDataProcessor p : processors)
             p.init();
-        
+
+        // run all
         for (IDataProcessor p : processors)
             p.run();        
     }

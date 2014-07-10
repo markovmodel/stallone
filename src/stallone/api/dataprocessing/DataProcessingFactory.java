@@ -12,6 +12,7 @@ import stallone.api.coordinates.ICoordinateTransform;
 import stallone.api.datasequence.*;
 import stallone.dataprocessing.DataOutput;
 import stallone.dataprocessing.Pipeline;
+import stallone.dataprocessing.Transformer;
 
 
 /**
@@ -54,7 +55,12 @@ public class DataProcessingFactory
 
     public IDataProcessor transformer(ICoordinateTransform T)
     {
-        return null;
+        return new Transformer(T);
+    }
+
+    public IDataProcessor transformer(IDataInput _input, ICoordinateTransform T)
+    {
+        return new Transformer(_input, T);
     }
     
     

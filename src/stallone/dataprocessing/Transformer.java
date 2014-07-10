@@ -21,19 +21,37 @@ public class Transformer implements IDataInput
     private IDataInput input;
 
     
+    public Transformer(ICoordinateTransform _transform)
+    {
+        this.transform = _transform;
+    }
+
+    public Transformer(IDataInput _input, ICoordinateTransform _transform)
+    {
+        addSender(_input);
+        this.transform = _transform;
+    }
+    
     //==========================================================================
     //
     // Data processing methods
     //
     //==========================================================================
     
+
+    @Override
+    public boolean hasInput()
+    {
+        return (this.input != null);
+    }
+
     /**
      * Sets the receiver when called once. 
      * @throws RuntimeException when called twice because PCA can only have one input.
      * @param receiver
      */
     @Override
-    public void addSender(IDataProcessor sender)
+    public final void addSender(IDataProcessor sender)
     {
         if (this.input != null)
             throw new RuntimeException("Trying to add a second sencer to PCA. This is not possible.");
@@ -141,5 +159,6 @@ public class Transformer implements IDataInput
     {
         return new TransformedSequence(input.getSequence(sequenceIndex), transform);
     }
+
     
 }

@@ -19,6 +19,19 @@ import stallone.api.doubles.IDoubleArray;
  */
 public class DataSequenceList extends ArrayList<IDataSequence> implements IDataInput
 {
+    
+    /**
+     * Always returns true, because the only input needed are the data that 
+     * have been defined at this point.
+     * @return 
+     */
+    @Override
+    public boolean hasInput()
+    {
+        return true;
+    }
+    
+    
     /**
      * Does nothing
      */

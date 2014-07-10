@@ -47,38 +47,7 @@ public class DataInput_SingleReaderImpl
     private int currentSource; // the source that is currently in the loader
     private boolean isOpen = false; // when the loader is currently open
 
-    
-    /**
-     * Does nothing
-     */
-    @Override
-    public void addSender(IDataProcessor sender)
-    {
-    }
 
-    /**
-     * Does nothing
-     */
-    @Override
-    public void addReceiver(IDataProcessor receiver)
-    {
-    }
-
-    /**
-     * Does nothing
-     */
-    @Override
-    public void run()
-    {
-    }
-
-    /**
-     * Does nothing
-     */
-    @Override
-    public void cleanup()
-    {
-    }
 
     // info
     class DataSequenceInfo
@@ -138,6 +107,49 @@ public class DataInput_SingleReaderImpl
         }
     }
 
+    /**
+     * Always returns true, because the only input needed are the files that 
+     * have been defined at this point.
+     * @return 
+     */
+    @Override
+    public boolean hasInput()
+    {
+        return true;
+    }
+    
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addSender(IDataProcessor sender)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addReceiver(IDataProcessor receiver)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void run()
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void cleanup()
+    {
+    }    
+    
     /**
      * Scans all files or data base entries. Makes the info methods available,
      * i.e. methods to query the memory requirements, number of frames, etc.

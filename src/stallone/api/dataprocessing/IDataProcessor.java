@@ -11,6 +11,12 @@ package stallone.api.dataprocessing;
 public interface IDataProcessor
 {
     /**
+     * Returns true if this processor has all input set that it needs.
+     * @return 
+     */
+    public boolean hasInput();
+    
+    /**
      * Adds another data processor as input that sends data to this processor.
      * @param sender 
      */

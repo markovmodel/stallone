@@ -117,6 +117,12 @@ public class DataOutput implements IDataOutput
     // Data processing methods
     //
     //==========================================================================
+
+    @Override
+    public boolean hasInput()
+    {
+        return (this.input != null);
+    }
     
     /**
      * Sets the receiver when called once. 
@@ -210,6 +216,7 @@ public class DataOutput implements IDataOutput
     public void cleanup()
     {
     }
+
     
     
 }
