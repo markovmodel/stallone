@@ -4,7 +4,7 @@
  */
 package stallone.api.coordinates;
 
-import static stallone.api.API.coor;
+import static stallone.api.API.*;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
@@ -171,7 +171,8 @@ public class CoordinateFactory
 
     public IPCA pca(IDataSequence X)
     {
-        return new PCA(X);
+        IDataInput input = dataNew.dataInput(X);
+        return new PCA(input);
     }
 
     public ITICA tica(IDataInput input, int lagtime)

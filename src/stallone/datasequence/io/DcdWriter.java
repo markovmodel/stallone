@@ -24,11 +24,11 @@ public class DcdWriter implements IDataWriter
      * Dimension of data to write out. Is cartesian coordinates and must be
      * dividable by 3.
      */
-    private final int nDimension;
+    private int nDimension;
     /**
      * Number of frames to write out.
      */
-    private final int nFrames;
+    private int nFrames;
     /**
      * Number of frames alread written.
      */
@@ -45,6 +45,15 @@ public class DcdWriter implements IDataWriter
      * @param nDimensions number of dimension.
      */
     public DcdWriter(String filename, int _nFrames, int _nDimensions)
+            throws IOException
+    {
+        this.open(filename, _nFrames, _nDimensions);
+    }
+
+
+    @Override
+    public final void open(String filename, int _nFrames, int _nDimensions)
+            throws IOException
     {
         try
         {
@@ -64,7 +73,7 @@ public class DcdWriter implements IDataWriter
         // write out header information
         writeHeader(nFrames, _nDimensions);
     }
-
+    
     /**
      * Write out header. TODO: Fix header information properly. Is this
      * CHARMM??? What is it? What about endianess?

@@ -39,6 +39,15 @@ public class AsciiDataSequenceWriter implements IDataWriter
         currentTime = 0.0d;
     }
 
+    @Override
+    public void open(String filename, int nFrames, int nDimensions)
+            throws IOException
+    {
+        this.filename = filename;
+        out = new PrintStream(filename);
+        currentTime = 0.0d;
+    }
+    
     public void setOutputDelimiters(String _dataDelimiter, String _datasetDelimiter)
     {
         this.dataDelimiter = _dataDelimiter;
@@ -82,4 +91,5 @@ public class AsciiDataSequenceWriter implements IDataWriter
     {
         out.close();
     }
+
 }

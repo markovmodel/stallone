@@ -53,7 +53,7 @@ public class Test
         names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long2.dat");
         names.add("/Users/noe/data/open_projects/adaptive_sampling_local/data/TrypsinBenzamidine/new_model_test/model/tics/long3.dat");
         IDataSequenceLoader loader = dataNew.multiSequenceLoader(names);
-        loader.scan();
+        loader.init();
         
         IClustering clustering = clusterNew.regspace(loader, 0.5);
         clustering.perform();

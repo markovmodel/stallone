@@ -5,6 +5,7 @@
 package stallone.datasequence;
 
 import java.util.ArrayList;
+import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
@@ -15,6 +16,47 @@ import stallone.api.doubles.IDoubleArray;
  */
 public class DataSequenceList extends ArrayList<IDataSequence> implements IDataInput
 {
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addSender(IDataProcessor sender)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addReceiver(IDataProcessor receiver)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void init()
+    {
+    }
+    
+    /**
+     * Does nothing
+     */
+    @Override
+    public void run()
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void cleanup()
+    {
+    }
+    
+    
     @Override
     public int dimension()
     {
@@ -32,7 +74,13 @@ public class DataSequenceList extends ArrayList<IDataSequence> implements IDataI
     {
         return get(0).size();
     }
-
+    
+    @Override
+    public String name(int trajIndex)
+    {
+        return String.valueOf(trajIndex);
+    }
+    
     @Override
     public Iterable<IDoubleArray> singles()
     {

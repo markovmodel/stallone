@@ -128,6 +128,12 @@ public class IOUtilities
         return getBasename(f.getName());
     }
 
+    /**
+     * Returns the base name (before extension) of a file. I.e. in a fullname
+     * '/dir/to/file.ext', it will return 'file'
+     * @param fullname full path name
+     * @return 
+     */
     public String getBasename(String fullname)
     {
         String filename = (new File(fullname)).getName();
@@ -142,6 +148,12 @@ public class IOUtilities
         }
     }
 
+    /**
+     * Returns the file name (before extension) of a file path. 
+     * I.e. in a fullname '/dir/to/file.ext', it will return 'file.ext'
+     * @param fullname full path name
+     * @return 
+     */
     public String getFilename(String fullname)
     {
         return (new File(fullname)).getName();

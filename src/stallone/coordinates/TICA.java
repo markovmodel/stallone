@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 
 import stallone.api.algebra.IEigenvalueDecomposition;
 import stallone.api.coordinates.ITICA;
+import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
@@ -77,7 +78,7 @@ public class TICA implements ITICA
      * adds data to prepare the transform computation
      * @param data The data input
      */
-    @Override
+    //@Override
     final public void addData(IDataSequence data)
     {
         if (this.dimIn == 0)// && this.N == 0)
@@ -91,7 +92,7 @@ public class TICA implements ITICA
      * If the coordinate transform is constant, this call has no effect.
      * @param X A data sequence. 
      */
-    @Override
+    //@Override
     final public void computeTransform()
     {
         // PCA
@@ -244,5 +245,35 @@ public class TICA implements ITICA
 
         IDoubleArray y2 = tica.transform(doublesNew.arrayFrom(4,4));
         System.out.println("y2 = \t"+doubles.toString(y2, "\t"));
+    }
+
+    @Override
+    public void addSender(IDataProcessor sender)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addReceiver(IDataProcessor receiver)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void init()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void run()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void cleanup()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataReader;
 import stallone.api.datasequence.IDataSequence;
@@ -36,16 +37,48 @@ import stallone.api.io.IO;
  *
  * @author noe
  */
-public class DataSequenceLoader_SingleReaderImpl
+public class DataInput_SingleReaderImpl
         implements IDataSequenceLoader
 {
-
     private List<String> sources;
     private boolean scanned = false;
     private IDataReader reader;
     private int dimension = -1;
     private int currentSource; // the source that is currently in the loader
     private boolean isOpen = false; // when the loader is currently open
+
+    
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addSender(IDataProcessor sender)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void addReceiver(IDataProcessor receiver)
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void run()
+    {
+    }
+
+    /**
+     * Does nothing
+     */
+    @Override
+    public void cleanup()
+    {
+    }
 
     // info
     class DataSequenceInfo
@@ -62,7 +95,7 @@ public class DataSequenceLoader_SingleReaderImpl
      *
      * @param _sources
      */
-    public DataSequenceLoader_SingleReaderImpl(List<String> _sources, IDataReader _reader)
+    public DataInput_SingleReaderImpl(List<String> _sources, IDataReader _reader)
             throws IOException
     {
         this.sources = _sources;
@@ -110,16 +143,23 @@ public class DataSequenceLoader_SingleReaderImpl
      * i.e. methods to query the memory requirements, number of frames, etc.
      */
     @Override
-    public void scan()
-            throws IOException
+    public void init()
+            //throws IOException
     {
         info.clear();
         dimension = -1;
 
         for (int i = 0; i < sources.size(); i++)
         {
-            makeAvailable(i);
-
+            try
+            {
+                makeAvailable(i);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
+            
             DataSequenceInfo ds = new DataSequenceInfo();
             if (this.dimension == -1)
             {
@@ -129,7 +169,7 @@ public class DataSequenceLoader_SingleReaderImpl
             {
                 if (dimension != reader.dimension())
                 {
-                    throw (new IOException("Input files have inconsistent dimension: " + sources.get(i) + " has dimension " + reader.dimension() + ", while dimension " + dimension + " was set be the file(s) read earlier."));
+                    throw (new RuntimeException("Input files have inconsistent dimension: " + sources.get(i) + " has dimension " + reader.dimension() + ", while dimension " + dimension + " was set be the file(s) read earlier."));
                 }
             }
             ds.memorySize = reader.memorySize();
@@ -220,6 +260,17 @@ public class DataSequenceLoader_SingleReaderImpl
         return (this.info.get(trajIndex).size);
     }
 
+    /**
+     * Returns the trajectory name. This is either a unique identifier or a full file path.
+     * @param trajIndex
+     * @return 
+     */
+    @Override
+    public String name(int trajIndex)
+    {
+        return this.sources.get(trajIndex);
+    }
+    
     /**
      * Memory requirement for the given sequence
      */
@@ -312,7 +363,7 @@ public class DataSequenceLoader_SingleReaderImpl
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataInput_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return reader.get(frameIndex);
     }
@@ -326,7 +377,7 @@ public class DataSequenceLoader_SingleReaderImpl
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataInput_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return reader;
     }
@@ -340,7 +391,7 @@ public class DataSequenceLoader_SingleReaderImpl
             makeAvailable(sequenceIndex);
         } catch (IOException ex)
         {
-            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataInput_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return reader.load();
     }
@@ -361,7 +412,7 @@ public class DataSequenceLoader_SingleReaderImpl
                 makeAvailable(i);
             } catch (IOException ex)
             {
-                Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DataInput_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
             res.add(reader.load());
         }
@@ -374,7 +425,7 @@ public class DataSequenceLoader_SingleReaderImpl
         } 
         catch (IOException ex) // this cannot happen
         {
-            Logger.getLogger(DataSequenceLoader_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataInput_SingleReaderImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return ret;

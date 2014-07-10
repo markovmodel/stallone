@@ -18,26 +18,6 @@ import java.util.List;
  */
 public interface IDataSequenceLoader extends IDataInput
 {
-    //public void setLoader(IDataReader loader);
-
-    /**
-     * Adds a link to a file or data base entry of a data sequence
-     * @param link filename or URL
-     */
-    //public void addSource(String link);
-
-    /**
-     * Scans all files or data base entries.
-     * This method needs to be called before any of the info methods (size, memorySize...) can be called.
-     * Scan will also check the file consistency, make sure that all source files have the same dimensionality
-     * and can be successfully read.
-     * It is not necessary to scan before using one of the iterables below, but in this case there is
-     * no guarantee that the iterable won't crash at a file inconsistency.
-     */
-    public void scan()
-            throws IOException;
-
-
     /**
      * Memory requirement for the given sequence. Need to scan() first before calling this method.
      */

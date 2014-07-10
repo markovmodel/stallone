@@ -13,6 +13,7 @@ import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 
 import java.util.Random;
+import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataList;
 import stallone.stat.RunningMomentsMultivariate;
@@ -22,19 +23,14 @@ import stallone.stat.RunningMomentsMultivariate;
  */
 public class PCA implements IPCA
 {
+    // input
+    private IDataInput input;
+    
     // running moments
-    RunningMomentsMultivariate moments;
+    private RunningMomentsMultivariate moments;
     
     // input dimension
     private int dimIn;
-    /*
-    // count and mean
-    private IDoubleArray c,  mean;
-    // product and covariance matrix
-    private IDoubleArray CC, Cov;
-    // total number of data points
-    private int N;
-    */
     
     private IDoubleArray eval;
     private IDoubleArray evec;
@@ -43,62 +39,96 @@ public class PCA implements IPCA
     
     public PCA(IDataInput _source)
     {
-        init(_source.dimension());
-
-        for (IDataSequence seq : _source.sequences())
-            addData(seq);
-        
-        computeTransform();
-    }
-
-    public PCA(IDataSequence _source)
-    {
-        init(_source.dimension());
-        addData(_source);        
-        computeTransform();
+        this.input = _source;
+        this.init();
     }
     
     public PCA()
     {
     }
-    
-    
-    final private void init(int _dimIn)
-    {
-        this.dimIn = _dimIn;
-        if (this.dimOut == 0)
-            this.dimOut = _dimIn; // by default full output dimension
-        moments = statNew.runningMomentsMultivar(dimIn);
-    }
-    
 
+    
+    //==========================================================================
+    //
+    // Data processing methods
+    //
+    //==========================================================================
+    
     /**
-     * adds data to prepare the transform computation
-     * @param data The data input
+     * Sets the receiver when called once. 
+     * @throws RuntimeException when called twice because PCA can only have one input.
+     * @param receiver
      */
     @Override
-    final public void addData(IDataSequence data)
+    public void addSender(IDataProcessor sender)
     {
-        // initialize if necesssary
-        if (this.dimIn == 0)
-            init(data.dimension());
+        if (this.input != null)
+            throw new RuntimeException("Trying to add a second sencer to PCA. This is not possible.");
         
-        moments.addData(data);
+        if (sender instanceof IDataInput)
+            this.input = (IDataInput)sender;
+        else
+            throw new IllegalArgumentException("Illegal input type: sender must be an instance of IDataInput");
+    }
+
+
+    /**
+     * Does nothing
+     * @param sender 
+     */
+    @Override
+    public void addReceiver(IDataProcessor receiver)
+    {
     }
     
+            
     /**
      * recomputes the transform based on all data added to this point. 
      * If the coordinate transform is constant, this call has no effect.
      * @param X A data sequence. 
      */
     @Override
-    final public void computeTransform()
+    public void init()
     {
+        // set input dimension
+        this.dimIn = this.input.dimension();
+        if (this.dimOut == 0)
+            this.dimOut = dimIn; // by default full output dimension
+        moments = statNew.runningMomentsMultivar(dimIn);
+        
+        // iterate all data and feed moments
+        for (IDataSequence x : input.sequences())
+            moments.addData(x);
+        
+        // compute transformation
         IDoubleArray Cov = moments.getCov();
         IEigenvalueDecomposition evd = alg.evd(Cov);
         this.eval = evd.getEvalNorm();
         this.evec = evd.getRightEigenvectorMatrix().viewReal();
     }
+
+    /**
+     * Don't do anything
+     */
+    @Override
+    public void run()
+    {
+    }
+
+    /**
+     * Don't do anything
+     */
+    @Override
+    public void cleanup()
+    {
+    }    
+
+    //==========================================================================
+    //
+    // Getters
+    //
+    //==========================================================================
+    
     
     @Override
     public IDoubleArray getMeanVector()
@@ -136,6 +166,14 @@ public class PCA implements IPCA
         return evec;
     }
 
+    
+    //==========================================================================
+    //
+    // CoordinateTransform methods
+    //
+    //==========================================================================
+    
+    
     /**
      * Projects x onto the principal subspace with given output dimension;
      * @param x
@@ -182,6 +220,13 @@ public class PCA implements IPCA
     {
         return dimOut;
     }
+
+    
+    //==========================================================================
+    //
+    // Test main
+    //
+    //==========================================================================
     
     public static void main(String[] args) 
             throws IOException
@@ -213,4 +258,6 @@ public class PCA implements IPCA
         IDataInput dataInput = dataNew.dataInput("/Users/noe/data/software_projects/emma2/ipython/resources/Trypsin_Ca_dt1ns.dcd");
         PCA pca = new PCA(dataInput);
     }
+
+
 }

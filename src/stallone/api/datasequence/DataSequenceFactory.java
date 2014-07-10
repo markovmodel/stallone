@@ -15,7 +15,7 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.datasequence.DataArray;
 import stallone.datasequence.DataList;
 import stallone.datasequence.DataSequenceList;
-import stallone.datasequence.DataSequenceLoader_SingleReaderImpl;
+import stallone.datasequence.DataInput_SingleReaderImpl;
 import stallone.datasequence.io.AsciiDataSequenceReader;
 import stallone.datasequence.io.AsciiDataSequenceWriter;
 import stallone.datasequence.io.DataSequenceFileFormats;
@@ -36,8 +36,8 @@ public class DataSequenceFactory
     public IDataSequenceLoader multiSequenceLoader(List<String> files, IDataReader reader)
             throws IOException
     {
-        DataSequenceLoader_SingleReaderImpl loader = new DataSequenceLoader_SingleReaderImpl(files, reader);
-        loader.scan();
+        DataInput_SingleReaderImpl loader = new DataInput_SingleReaderImpl(files, reader);
+        loader.init();
         return (loader);
     }
 

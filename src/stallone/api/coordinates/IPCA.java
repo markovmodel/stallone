@@ -10,7 +10,7 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public interface IPCA extends IParametrizedCoordinateTransform
+public interface IPCA extends IDataTransformer
 {
     /**
      * Returns the mean vector of the data

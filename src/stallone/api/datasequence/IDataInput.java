@@ -6,6 +6,7 @@ package stallone.api.datasequence;
 
 import java.io.IOException;
 import java.util.List;
+import stallone.api.dataprocessing.IDataProcessor;
 import stallone.api.doubles.IDoubleArray;
 
 /**
@@ -17,10 +18,10 @@ import stallone.api.doubles.IDoubleArray;
  *
  * @author noe
  */
-public interface IDataInput
+public interface IDataInput extends IDataProcessor
 {
     /**
-     * Total number of sequences. Need to scan() first before calling this method.
+     * Total number of sequences. Need to init() first before calling this method.
      * @return
      */
     public int numberOfSequences();
@@ -32,18 +33,24 @@ public interface IDataInput
     public int dimension();
 
     /**
-     * Total number of data objects. Need to scan() first before calling this method.
+     * Total number of data objects. Need to init() first before calling this method.
      * @return
      */
     public int size();
 
     /**
      * size of the sequence with the given index.
-     * @param trajIndex
+     * @param trajIndex trajectory index
      * @return
      */
     public int size(int trajIndex);
 
+    /**
+     * Returns the name of the trajectory with given index
+     * @param trajIndex trajectory index
+     * @return 
+     */
+    public String name(int trajIndex);
 
     /**
      * Returns an iterable that can iterate over single data objects. Does not require scan() to be called.
