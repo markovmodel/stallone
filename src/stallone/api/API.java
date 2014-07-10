@@ -19,6 +19,8 @@ import stallone.api.complex.ComplexUtilities;
 import stallone.api.coordinates.CoordinateFactory;
 import stallone.api.coordinates.CoordinateUtilities;
 import stallone.api.coordinates.CoordinateUtilities3D;
+import stallone.api.dataprocessing.DataProcessingFactory;
+import stallone.api.dataprocessing.DataProcessingUtilities;
 import stallone.api.discretization.DiscretizationFactory;
 import stallone.api.discretization.DiscretizationUtilities;
 import stallone.api.dynamics.DynamicsFactory;
@@ -88,6 +90,9 @@ public class API
 
     public static StatisticsUtilities stat = new StatisticsUtilities();
     public static StatisticsFactory statNew = new StatisticsFactory();
+
+    public static DataProcessingUtilities dataproc = new DataProcessingUtilities();
+    public static DataProcessingFactory dataprocNew = new DataProcessingFactory();
 
     public static DiscretizationUtilities disc = new DiscretizationUtilities();
     public static DiscretizationFactory discNew = new DiscretizationFactory();
