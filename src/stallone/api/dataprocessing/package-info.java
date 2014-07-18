@@ -5,4 +5,4 @@
  * define the data processing logic and dependencies. From this, the sequence 
  * in which computations are made is defined.
  */
-package stallone.dataprocessing;
+package stallone.api.dataprocessing;
