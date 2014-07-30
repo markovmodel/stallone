@@ -5,7 +5,7 @@ import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.mc.IReversibleSamplingStep;
 import stallone.api.mc.MarkovModel;
-import stallone.api.mi.IDeltaGDistribution;
+import stallone.api.mc.IDeltaGDistribution;
 
 
 /**
@@ -54,7 +54,7 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
         mu = msm.stationaryDistribution( T );
 
         // initialize steps
-        this.step_row = new Step_Rev_Row_Beta_deltaG();
+        this.step_row = new Step_Rev_Row_Beta_deltaG(deltaG);
         this.step_row.init( C, T, mu );
         this.step_quad = new Step_Rev_Quad_MC();
         this.step_quad.init( C, T, mu );
@@ -74,9 +74,9 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
         this.p_step_row = (double) dofRow / (double) ( dofQuad + dofRow );
     }
 
-    public static TransitionMatrixSamplerRevDeltaG create( IDoubleArray _C, IDoubleArray Tinit, IReversibleSamplingStep _step_row, IReversibleSamplingStep _step_quad )
+    public static TransitionMatrixSamplerRevDeltaG create( IDoubleArray _C, IDeltaGDistribution deltaG, IDoubleArray Tinit, IReversibleSamplingStep _step_row, IReversibleSamplingStep _step_quad )
     {
-        TransitionMatrixSamplerRevDeltaG res = new TransitionMatrixSamplerRevDeltaG( _C, Tinit );
+        TransitionMatrixSamplerRevDeltaG res = new TransitionMatrixSamplerRevDeltaG( _C, deltaG, Tinit );
 
         res.step_row = _step_row;
         res.step_row.init( _C, res.T, res.mu );
@@ -87,7 +87,7 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
         return res;
     }
 
-    public static TransitionMatrixSamplerRevDeltaG create( IDoubleArray counts, IReversibleSamplingStep _step_row, IReversibleSamplingStep _step_quad )
+    public static TransitionMatrixSamplerRevDeltaG create( IDoubleArray counts, IDeltaGDistribution deltaG, IReversibleSamplingStep _step_row, IReversibleSamplingStep _step_quad )
     {
         return create( counts, null, _step_row, _step_quad );
     }
@@ -107,7 +107,7 @@ public class TransitionMatrixSamplerRevDeltaG extends TransitionMatrixSamplerAbs
     {
         if ( Math.random() < this.p_step_row ) // Reversible edge shift
         {
-            return step_row.step( deltaG );
+            return step_row.step( );
         }
         else
         {

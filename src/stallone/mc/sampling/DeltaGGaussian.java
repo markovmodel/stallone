@@ -4,12 +4,13 @@ package stallone.mc.sampling;
 
 import stallone.api.doubles.IDoubleArray;
 import java.lang.Math;
+import stallone.api.mc.IDeltaGDistribution;
 
 /**
  *
  * @author cwehmeyer
  */
-public abstract class DeltaGGaussian extends DeltaGDistributionAbstract
+public class DeltaGGaussian implements IDeltaGDistribution
 {
 
 	private double mu;
@@ -29,7 +30,7 @@ public abstract class DeltaGGaussian extends DeltaGDistributionAbstract
 	@Override
 	public boolean accept( IDoubleArray pi, double randomNumber )
 	{
-		double diff = Math.log( pi[stateA] / pi[stateB] ) - mu;
+		double diff = Math.log( pi.get(stateA) / pi.get(stateB) ) - mu;
 		double dbs = diff / sigma;
 		double model = Math.exp( -0.5 * dbs * dbs );
 		if ( randomNumber < model )

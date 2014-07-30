@@ -37,11 +37,16 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
     private double[] backupRow;
     private double[] backupMu;
     private double[] backupU;
+    
+    // object for accepting to the given DeltaG distribution
+    private IDeltaGDistribution dG;
 
     private MersenneTwister mt;
 
-    public Step_Rev_Row_Beta()
-    {}
+    public Step_Rev_Row_Beta_deltaG(IDeltaGDistribution _dG)
+    {
+        this.dG = _dG;
+    }
 
     @Override
     public void init(IDoubleArray _C, IDoubleArray _T, IDoubleArray _mu)
@@ -176,7 +181,7 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
         backupVecs();
         u.set( i, u.get(i) + Math.log( alpha ) );
         mu.set( i, Math.exp( -u.get(i) ) );
-        double minu = double.min( u );
+        double minu = doubles.min( u );
         if ( Math.abs( minu ) > 1.0 )
         {
             alg.addTo( u, -minu );
@@ -190,7 +195,7 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
     }
 
     @Override
-    public boolean step( IDeltaGDistribution dG )
+    public boolean step( )
     {
         int i = MathTools.randomInt( 0, T.rows() );
         while ( C.get(i,i) <= 0 || dof[i] < 2 )
@@ -198,7 +203,7 @@ public class Step_Rev_Row_Beta_deltaG implements IReversibleSamplingStep
             i = MathTools.randomInt( 0, T.rows() );
         }
 
-        sampleRow( i, dG );
+        sampleRow( i, this.dG );
 
         return true;
     }
