@@ -157,31 +157,6 @@ public class PathwayDecomposition
         
         int[][] res = intArrays.concat(pathway,b);
         return res;
-
-            /*
-        if (pathway.length == 0)
-            return new int[][]{b};
-        
-        for (int i=0; i<pathway.length; i++)
-        {
-            if (pathway[i][0] == b[1])
-            {
-        	int[][] res = intArrays.concat(intArrays.subarray(pathway,0,i),b);
-        	res = intArrays.concat(res, intArrays.subarray(pathway,i,pathway.length));
-                return res;
-            }
-        }
-        
-        // append at end
-        if (pathway[pathway.length-1][1] == b[1])
-        {
-            int[][] res = intArrays.concat(pathway,b);
-            return res;
-        }
-        else
-        {
-            throw new RuntimeException("Cannot insert new edge as it does not fit into pathway");
-        }*/
     }
 
     public int[] edges2vertices(int[][] path)
