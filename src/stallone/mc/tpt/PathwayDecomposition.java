@@ -265,7 +265,39 @@ public class PathwayDecomposition
 	return(this.currentFlux);
     }
 
+    public static void main(String[] args)
+    {
+        IDoubleArray Fnet = doublesNew.array(new double[][]{
+                                 {0.00000000e+00,   7.71791768e-03,   3.08716707e-03,   0.00000000e+00,  0.00000000e+00},
+                                 {0.00000000e+00,   0.00000000e+00,   5.14527845e-04,   0.00000000e+00,  7.20338983e-03},
+                                 {0.00000000e+00,   0.00000000e+00,   0.00000000e+00,   0.00000000e+00,  3.60169492e-03},
+                                 {0.00000000e+00,   4.33680869e-19,   0.00000000e+00,   0.00000000e+00,  0.00000000e+00},
+                                 {0.00000000e+00,   0.00000000e+00,   0.00000000e+00,   0.00000000e+00,  0.00000000e+00}});
+        double[] Q = new double[]{0.,          0.35714286,  0.42857143,  0.35714286,  1.        };
+        int[] A = {0};
+        int[] B = {4};
+        PathwayDecomposition decomp = new PathwayDecomposition(Fnet, Q, A, B);
+        
+        
+        decomp.nextPathway();
+        int[] p1 = decomp.getCurrentPathway();
+        intArrays.print(p1);
+        System.out.println();
+        
+        decomp.nextPathway();
+        int[] p2 = decomp.getCurrentPathway();
+        intArrays.print(p2);
+        System.out.println();
+
+        decomp.nextPathway();
+        int[] p3 = decomp.getCurrentPathway();
+        intArrays.print(p3);
+        System.out.println();
+
+    }
 }
+
+
 class Bisection
 {
     int nV = 0;
