@@ -282,16 +282,19 @@ public class PathwayDecomposition
         decomp.nextPathway();
         int[] p1 = decomp.getCurrentPathway();
         intArrays.print(p1);
+        System.out.println(decomp.computeCurrentFlux());
         System.out.println();
         
         decomp.nextPathway();
         int[] p2 = decomp.getCurrentPathway();
         intArrays.print(p2);
+        System.out.println(decomp.computeCurrentFlux());
         System.out.println();
 
         decomp.nextPathway();
         int[] p3 = decomp.getCurrentPathway();
         intArrays.print(p3);
+        System.out.println(decomp.computeCurrentFlux());
         System.out.println();
 
     }
