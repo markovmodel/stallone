@@ -195,11 +195,13 @@ public class PathwayDecomposition
     {
 	BigDecimal res = (BigDecimal)F.get(this.currentPathway[0],
 					   this.currentPathway[1]);
+        System.out.println(this.currentPathway[0]+"\t"+this.currentPathway[1]+"\t"+F.get(this.currentPathway[0], this.currentPathway[1]));
 
 	for (int i=1; i<this.currentPathway.length-1; i++)
 	    {
 		BigDecimal w = (BigDecimal)F.get(this.currentPathway[i],
 						 this.currentPathway[i+1]);
+                System.out.println(this.currentPathway[i]+"\t"+this.currentPathway[i+1]+"\t"+F.get(this.currentPathway[i], this.currentPathway[i+1]));
 		if (w.compareTo(res) < 1)
 		    res = w;
 	    }
