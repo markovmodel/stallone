@@ -148,7 +148,7 @@ public class PathwayDecomposition
             {
         	int[][] res = new int[0][2];
                 if (i>0)
-                     res = intArrays.subarray(pathway,0,i-1);
+                     res = intArrays.subarray(pathway,0,i);
                 res = intArrays.concat(res, b);
                 res = intArrays.concat(res, intArrays.subarray(pathway,i,pathway.length));
                 return res;
