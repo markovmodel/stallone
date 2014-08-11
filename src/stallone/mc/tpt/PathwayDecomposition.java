@@ -280,12 +280,15 @@ public class PathwayDecomposition
         int[] B = {4};
         PathwayDecomposition decomp = new PathwayDecomposition(Fnet, Q, A, B);
         
+        System.out.println(decomp.F.toString());
         
         decomp.nextPathway();
         int[] p1 = decomp.getCurrentPathway();
         intArrays.print(p1);
         System.out.println(decomp.getCurrentFlux());
         System.out.println();
+
+        System.out.println(decomp.F.toString());
         
         decomp.nextPathway();
         int[] p2 = decomp.getCurrentPathway();
@@ -293,12 +296,16 @@ public class PathwayDecomposition
         System.out.println(decomp.getCurrentFlux());
         System.out.println();
 
+        System.out.println(decomp.F.toString());
+        
         decomp.nextPathway();
         int[] p3 = decomp.getCurrentPathway();
         intArrays.print(p3);
         System.out.println(decomp.getCurrentFlux());
         System.out.println();
 
+        System.out.println(decomp.F.toString());
+        
     }
 }
 
