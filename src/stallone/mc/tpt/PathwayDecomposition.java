@@ -4,6 +4,8 @@
  */
 package stallone.mc.tpt;
 
+import cern.colt.list.IntArrayList;
+import cern.colt.list.ObjectArrayList;
 import static stallone.api.API.*;
 
 import java.util.*;
@@ -280,7 +282,13 @@ public class PathwayDecomposition
         int[] B = {4};
         PathwayDecomposition decomp = new PathwayDecomposition(Fnet, Q, A, B);
         
-        System.out.println(decomp.F.toString());
+        IntArrayList I = new IntArrayList();
+        IntArrayList J = new IntArrayList();
+        ObjectArrayList O = new ObjectArrayList();
+        decomp.F.getNonZeros(I, J, O);
+        for (int i=0; i<I.size(); i++)
+            System.out.println(I.get(i)+" "+J.get(i)+"\t"+((BigDecimal)O.get(i)).floatValue());
+        System.out.println();
         
         decomp.nextPathway();
         int[] p1 = decomp.getCurrentPathway();
