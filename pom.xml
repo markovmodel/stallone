@@ -1,28 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<name>Stallone</name>
+	<description>Library for creating Markov models for analyzing molecular trajectory data</description>
 	<groupId>compmolbio</groupId>
 	<artifactId>stallone</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
 	<url>http://compmolbio.biocomputing-berlin.de/index.php</url>
-
+	<licenses>
+		<license>
+			<name>BSD</name>
+		</license>
+	</licenses>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<base.jar.name>${project.artifactId}-${project.version}</base.jar.name>
 	</properties>
-	
 	<scm>
+		<url>https://bitbucket.org/cmb_fu/stallone</url>
 		<connection>scm:git:https://bitbucket.org/cmb_fu/stallone.git</connection>
 	</scm>
-
 	<!-- TODO: describe build process -->
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -39,7 +40,6 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-			
 			<!-- generate a build number -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -56,10 +56,9 @@
 				<configuration>
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
-          			<shortRevisionLength>6</shortRevisionLength>
+					<shortRevisionLength>6</shortRevisionLength>
 				</configuration>
 			</plugin>
-			
 			<!-- create single jar from stallone classes -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -71,7 +70,7 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
-						<!-- HERE, the configuration (which is loaded from file assemblyDescriptor.xml) 
+						<!-- HERE, the configuration (which is loaded from file assemblyDescriptor.xml)
 							of the assembly is setup -->
 						<configuration>
 							<descriptorRefs>
@@ -129,8 +128,9 @@
 								<lib>${java.home}/lib/jsse.jar</lib>
 							</libs>
 							<addMavenDescriptor>false</addMavenDescriptor>
-							<!-- do not include any libraries. we depend on: we are already working 
-								on a jar which contains all dependencies in one jar See: previous package 
+							<!-- do not include any libraries. we depend on: we are already working
+								on a jar which contains all dependencies in one jar See: previous 
+								package
 								step -->
 							<includeDependency>false</includeDependency>
 							<obfuscate>false</obfuscate>
@@ -141,7 +141,6 @@
 			</build>
 		</profile>
 	</profiles>
-
 	<dependencies>
 		<!-- jep library, for function string parsing/evaluation -->
 		<dependency>
@@ -149,29 +148,25 @@
 			<artifactId>jep</artifactId>
 			<version>2.24</version>
 		</dependency>
-
 		<!-- cern colt library used for Step_Rev_Quad_Trendelkamp -->
 		<dependency>
 			<groupId>colt</groupId>
 			<artifactId>colt</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-
 		<!-- recent netlib bindings which supports native libs -->
-		<dependency>
-			<groupId>com.github.fommil.netlib</groupId>
-			<artifactId>all</artifactId>
-			<version>1.1.2</version>
-			<type>pom</type>
-		</dependency>
-
 		<!-- matrix tools kit -->
 		<dependency>
 			<groupId>com.googlecode.matrix-toolkits-java</groupId>
 			<artifactId>mtj</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-
+		<!-- cern colt library used for Step_Rev_Quad_Trendelkamp -->
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 		<!-- junit testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -179,8 +174,74 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- matrix tools kit -->
+		<dependency>
+			<groupId>com.googlecode.matrix-toolkits-java</groupId>
+			<artifactId>mtj</artifactId>
+			<version>1.0.1</version>
+			<!-- try to exclude native support -->
+			<exclusions>
+				<exclusion>
+					<artifactId>netlib-native_ref-osx-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_ref-linux-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-osx-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_ref-win-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_ref-linux-armhf</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-linux-i686</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-linux-armhf</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-win-i686</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_ref-win-i686</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-linux-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_system-win-x86_64</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netlib-native_ref-linux-i686</artifactId>
+					<groupId>com.github.fommil.netlib</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- dependency>
+			<groupId>com.github.fommil.netlib</groupId>
+			<artifactId>core</artifactId>
+			<version>1.1.2</version>
+			</dependency>
+			<dependency>
+			<groupId>com.github.fommil.netlib</groupId>
+			<artifactId>native_ref-java</artifactId>
+			<version>1.1</version>
+			</dependency -->
 	</dependencies>
-
 	<reporting>
 		<plugins>
 			<!-- javadoc generation -->
@@ -195,11 +256,10 @@
 					</sourceFileExcludes>
 				</configuration>
 			</plugin>
-
 			<!-- PMD static code analysis -->
-			<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-pmd-plugin</artifactId> 
-				<version>3.0.1</version> <configuration> <rulesets> <ruleset>/rulesets/braces.xml</ruleset> 
-				<ruleset>/rulesets/naming.xml</ruleset> <ruleset>/rulesets/design.xml</ruleset> 
+			<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-pmd-plugin</artifactId>
+				<version>3.0.1</version> <configuration> <rulesets> <ruleset>/rulesets/braces.xml</ruleset>
+				<ruleset>/rulesets/naming.xml</ruleset> <ruleset>/rulesets/design.xml</ruleset>
 				</rulesets> </configuration> </plugin -->
 		</plugins>
 	</reporting>
