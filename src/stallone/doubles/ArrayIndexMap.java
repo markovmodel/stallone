@@ -114,8 +114,6 @@ class ArrayBlockIndexMap implements IArrayIndexMap
 
 class ArraySelectedIndexMap implements IArrayIndexMap
 {
-
-    private IDoubleArray data;
     private IIntArray Irows, Icols;
     private int nrows, ncols, size;
 

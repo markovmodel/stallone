@@ -16,5 +16,5 @@ public interface IDatasetTransform
     
     public void writeOutput();
     
-    public void differentNAme();
+    public void differentName();
 }
