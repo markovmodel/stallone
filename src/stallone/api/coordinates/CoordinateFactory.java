@@ -128,13 +128,22 @@ public class CoordinateFactory
             public void transform(final IDoubleArray in, IDoubleArray out)
             {
                 IDoubleArray input = in;
-                // TODO: temporary workaround to handle n x 3 vectors given by trajectory readers like DCD.
-                // flatten array, if compatible. Unfortunately super inefficient...
+                // workaround to handle n x 3 vectors given by trajectory readers like DCD.
+                // flatten array, if compatible. Efficient for DenseDoubleArray, since it has linear memory layout.
                 if(in.rows() * in.columns() == A.columns())
                 {
-                    double[] flat = PrimitiveDoubleTools.flatten(in.getTable());
+                    double[] flat = null;
+                    if (in instanceof DenseDoubleArray)
+                    {
+                        flat = ((DenseDoubleArray) in).getArray();
+                    }
+                    else
+                    {
+                        flat = PrimitiveDoubleTools.flatten(in.getTable());
+                    }
                     input = new DenseDoubleArray(flat);
                 }
+                // apply operator
                 API.alg.product(A, input, out);
             }
         };

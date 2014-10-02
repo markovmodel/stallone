@@ -4,6 +4,8 @@
  */
 package stallone.mc.tpt;
 
+import cern.colt.list.IntArrayList;
+import cern.colt.list.ObjectArrayList;
 import static stallone.api.API.*;
 
 import java.util.*;
@@ -146,7 +148,7 @@ public class PathwayDecomposition
             {
         	int[][] res = new int[0][2];
                 if (i>0)
-                     res = intArrays.subarray(pathway,0,i-1);
+                     res = intArrays.subarray(pathway,0,i);
                 res = intArrays.concat(res, b);
                 res = intArrays.concat(res, intArrays.subarray(pathway,i,pathway.length));
                 return res;
@@ -155,31 +157,6 @@ public class PathwayDecomposition
         
         int[][] res = intArrays.concat(pathway,b);
         return res;
-
-            /*
-        if (pathway.length == 0)
-            return new int[][]{b};
-        
-        for (int i=0; i<pathway.length; i++)
-        {
-            if (pathway[i][0] == b[1])
-            {
-        	int[][] res = intArrays.concat(intArrays.subarray(pathway,0,i),b);
-        	res = intArrays.concat(res, intArrays.subarray(pathway,i,pathway.length));
-                return res;
-            }
-        }
-        
-        // append at end
-        if (pathway[pathway.length-1][1] == b[1])
-        {
-            int[][] res = intArrays.concat(pathway,b);
-            return res;
-        }
-        else
-        {
-            throw new RuntimeException("Cannot insert new edge as it does not fit into pathway");
-        }*/
     }
 
     public int[] edges2vertices(int[][] path)
@@ -195,11 +172,13 @@ public class PathwayDecomposition
     {
 	BigDecimal res = (BigDecimal)F.get(this.currentPathway[0],
 					   this.currentPathway[1]);
+        System.out.println(this.currentPathway[0]+"\t"+this.currentPathway[1]+"\t"+F.get(this.currentPathway[0], this.currentPathway[1]));
 
 	for (int i=1; i<this.currentPathway.length-1; i++)
 	    {
 		BigDecimal w = (BigDecimal)F.get(this.currentPathway[i],
 						 this.currentPathway[i+1]);
+                System.out.println(this.currentPathway[i]+"\t"+this.currentPathway[i+1]+"\t"+F.get(this.currentPathway[i], this.currentPathway[i+1]));
 		if (w.compareTo(res) < 1)
 		    res = w;
 	    }
@@ -265,7 +244,61 @@ public class PathwayDecomposition
 	return(this.currentFlux);
     }
 
+    private void printFlux()
+    {
+        IntArrayList I = new IntArrayList();
+        IntArrayList J = new IntArrayList();
+        ObjectArrayList O = new ObjectArrayList();
+        F.getNonZeros(I, J, O);
+        for (int i=0; i<I.size(); i++)
+            System.out.println(I.get(i)+" "+J.get(i)+"\t"+((BigDecimal)O.get(i)).floatValue());
+        System.out.println();
+    }
+    
+    public static void main(String[] args)
+    {
+        IDoubleArray Fnet = doublesNew.array(new double[][]{
+                                 {0.00000000e+00,   7.71791768e-03,   3.08716707e-03,   0.00000000e+00,  0.00000000e+00},
+                                 {0.00000000e+00,   0.00000000e+00,   5.14527845e-04,   0.00000000e+00,  7.20338983e-03},
+                                 {0.00000000e+00,   0.00000000e+00,   0.00000000e+00,   0.00000000e+00,  3.60169492e-03},
+                                 {0.00000000e+00,   4.33680869e-19,   0.00000000e+00,   0.00000000e+00,  0.00000000e+00},
+                                 {0.00000000e+00,   0.00000000e+00,   0.00000000e+00,   0.00000000e+00,  0.00000000e+00}});
+        double[] Q = new double[]{0.,          0.35714286,  0.42857143,  0.35714286,  1.        };
+        int[] A = {0};
+        int[] B = {4};
+        PathwayDecomposition decomp = new PathwayDecomposition(Fnet, Q, A, B);
+        
+
+        decomp.printFlux();
+        
+        decomp.nextPathway();
+        int[] p1 = decomp.getCurrentPathway();
+        intArrays.print(p1);
+        System.out.println(decomp.getCurrentFlux());
+        System.out.println();
+
+        decomp.printFlux();
+        
+        decomp.nextPathway();
+        int[] p2 = decomp.getCurrentPathway();
+        intArrays.print(p2);
+        System.out.println(decomp.getCurrentFlux());
+        System.out.println();
+
+        decomp.printFlux();
+        
+        decomp.nextPathway();
+        int[] p3 = decomp.getCurrentPathway();
+        intArrays.print(p3);
+        System.out.println(decomp.getCurrentFlux());
+        System.out.println();
+
+        decomp.printFlux();
+        
+    }
 }
+
+
 class Bisection
 {
     int nV = 0;
