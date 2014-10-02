@@ -247,6 +247,16 @@ public class MarkovModelFactoryTest
         ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
         testSampler2x2(sampler, C, 100000, 1e-2);
     }
+    
+    @Test
+    public void testCreateTransitionMatrixSamplerRevGibbsGibbs()
+    {
+        IDoubleArray C = doublesNew.array(new double[][]{
+            {5,2},
+            {1,10}});
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_Gibbs_MC());
+        testSampler2x2(sampler, C, 100000, 1e-2);
+    }
 
     /**
      * Test of createTransitionMatrixSamplerRev method, of class MarkovModelFactory.
