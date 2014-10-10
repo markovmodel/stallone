@@ -231,8 +231,16 @@ public class MarkovModelFactoryTest
         IDoubleArray C = doublesNew.array(new double[][]{
             {5,2},
             {1,10}});
-        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_MC());
+        Step_Rev_Row_Beta rowstep=new Step_Rev_Row_Beta();
+        Step_Rev_Quad_MC quadstep=new Step_Rev_Quad_MC();
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, rowstep, quadstep);
+        // ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_MC());
         testSampler2x2(sampler, C, 100000, 1e-2);
+        
+        int[] Nrow=rowstep.getStepCount();
+        int[] Nquad=quadstep.getStepCount();        
+        System.out.println("Rowsteps: "+Nrow[0]+" "+Nrow[1]);
+        System.out.println("Quadsteps: "+Nquad[0]+" "+Nquad[1]);
     }
 
     /**
@@ -241,11 +249,19 @@ public class MarkovModelFactoryTest
     @Test
     public void testCreateTransitionMatrixSamplerRevGibbs()
     {
+        Step_Rev_Row_MC rowstep=new Step_Rev_Row_MC();
+        Step_Rev_Quad_MC quadstep=new Step_Rev_Quad_MC();
         IDoubleArray C = doublesNew.array(new double[][]{
             {5,2},
             {1,10}});
-        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, rowstep, quadstep);
+        // ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_MC(), new Step_Rev_Quad_MC());
         testSampler2x2(sampler, C, 100000, 1e-2);
+        
+        int[] Nrow=rowstep.getStepCount();
+        int[] Nquad=quadstep.getStepCount();        
+        System.out.println("Rowsteps: "+Nrow[0]+" "+Nrow[1]);
+        System.out.println("Quadsteps: "+Nquad[0]+" "+Nquad[1]);
     }
     
     @Test
@@ -254,8 +270,16 @@ public class MarkovModelFactoryTest
         IDoubleArray C = doublesNew.array(new double[][]{
             {5,2},
             {1,10}});
-        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_Gibbs_MC());
+        Step_Rev_Row_Beta rowstep=new Step_Rev_Row_Beta();
+        Step_Rev_Quad_Gibbs_MC quadstep=new Step_Rev_Quad_Gibbs_MC();
+        ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, rowstep, quadstep);
+        // ITransitionMatrixSampler sampler = TransitionMatrixSamplerRev.create(C, new Step_Rev_Row_Beta(), new Step_Rev_Quad_Gibbs_MC());
         testSampler2x2(sampler, C, 100000, 1e-2);
+        
+        int[] Nrow=rowstep.getStepCount();
+        int[] Nquad=quadstep.getStepCount();        
+        System.out.println("Rowsteps: "+Nrow[0]+" "+Nrow[1]);
+        System.out.println("Quadsteps: "+Nquad[0]+" "+Nquad[1]);
     }
 
     /**

@@ -36,7 +36,8 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
     private double[] backupRow;
 
     // success rate
-    private int nsample, naccept;
+    private int nsample=0;
+    private int naccept=0;
 
     public Step_Rev_Row_MC()
     {}
@@ -120,7 +121,7 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
      */
     public boolean sampleRow(int i)
     {
-        nsample++;
+        this.nsample++;
 
         double maxTij = 0;
         for (int j = 0; j < n; j++)
@@ -199,4 +200,10 @@ public class Step_Rev_Row_MC implements IReversibleSamplingStep
         return sampleRow(i);
     }
 
+    public int[] getStepCount(){
+        int[] count=new int[2];
+        count[0]=this.nsample;
+        count[1]=this.naccept;
+        return count;
+    }
 }

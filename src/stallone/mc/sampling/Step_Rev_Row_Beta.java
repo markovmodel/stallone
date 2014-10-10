@@ -34,6 +34,9 @@ public class Step_Rev_Row_Beta implements IReversibleSamplingStep
 
     // pre-instantiated data holders
     private double[] backupRow;
+    
+    int nprop=0;
+    int nacc=0;    
 
     public Step_Rev_Row_Beta()
     {}
@@ -176,8 +179,16 @@ public class Step_Rev_Row_Beta implements IReversibleSamplingStep
         }
 
         sampleRow(i);
+        this.nprop++;
+        this.nacc++;
 
         return true;
     }
 
+    public int[] getStepCount(){
+        int[] count=new int[2];
+        count[0]=this.nprop;
+        count[1]=this.nacc;
+        return count;
+    }
 }
