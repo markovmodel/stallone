@@ -167,22 +167,5 @@ public class ForeignBufferDoubleArray extends AbstractDoubleArray implements
     {
         return false;
     }
-    
-    public static void main(String[] args)
-    {
-        int rows = 10;//Integer.parseInt(args[0]);
-        System.out.println("rows: " + rows);
-        int cols = rows;
-        int size = rows*cols;
-        ByteBuffer bb = ByteBuffer.allocateDirect(Double.SIZE/8*size);
-        ForeignBufferDoubleArray da = new ForeignBufferDoubleArray(bb, rows,cols);
-        IDoubleArray d2 = da.create(cols,rows);
-        API.doubles.fill(da, 1);
-        API.doubles.fill(d2, 2);
-        System.out.println("arrays filled");
-        
-        IDoubleArray da2 = alg.product(da, d2);
-        System.out.println("product calculated.\n"+da2);
-    }
 
 }
