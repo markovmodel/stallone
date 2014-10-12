@@ -4,6 +4,9 @@
  */
 package stallone.api.ints;
 
+import java.nio.ByteBuffer;
+
+import stallone.ints.ForeignBufferIntArray;
 import stallone.ints.IntArrayList_FastUtilWrapper;
 import stallone.ints.PrimitiveIntArray;
 import stallone.ints.PrimitiveIntTable;
@@ -93,6 +96,18 @@ public class IntFactory
     {
         int[] res = PrimitiveIntTools.from(a);
         return (new PrimitiveIntArray(res));
+    }
+    
+    /**
+     * wraps a bytebuffer in an integer array interface. Note that this buffer 
+     * may lay outside of jvm memory (direct buffer).
+     * @param bb
+     * @param rows
+     * @param cols
+     * @return IIntArray
+     */
+    public IIntArray arrayFrom(ByteBuffer bb, int rows, int cols) {
+        return new ForeignBufferIntArray(bb, rows, cols);
     }
 
 
