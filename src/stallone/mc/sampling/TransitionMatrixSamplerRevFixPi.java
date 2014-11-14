@@ -19,19 +19,21 @@ import stallone.api.mc.MarkovModel;
  */
 public class TransitionMatrixSamplerRevFixPi extends TransitionMatrixSamplerAbstract
 {
-    protected IDoubleArray piFixed;
+    protected final IDoubleArray piFixed;
 
     private IReversibleSamplingStep step_quad;
 
 
     public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray piFixed)
     {
-        super(counts);
+        this.piFixed=piFixed;
+        init(counts);
     }
 
     public TransitionMatrixSamplerRevFixPi(IDoubleArray counts, IDoubleArray Tinit, IDoubleArray piFixed)
     {
-        super(counts, Tinit);
+        this.piFixed=piFixed;
+        init(counts, Tinit);
     }
 
     @Override

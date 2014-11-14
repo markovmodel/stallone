@@ -26,12 +26,12 @@ public class ClusterUtilities
         return clustering;
     }
 
-    public IClustering kmeans(IDataSequence data, IMetric<?> metric, int k, int maxIter)
+    public IClustering kmeans(IDataSequence data, IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         return (perform(clusterNew.kmeans(data,metric,k,maxIter)));
     }
 
-    public IClustering kmeans(IDataInput data, IMetric<?> metric, int k, int maxIter)
+    public IClustering kmeans(IDataInput data, IMetric<IDoubleArray> metric, int k, int maxIter)
     {
         return (perform(clusterNew.kmeans(data,metric,k,maxIter)));
     }

@@ -1,7 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package stallone.mc.sampling;
 
 import cern.jet.random.Beta;
@@ -13,14 +15,16 @@ import stallone.api.mc.IReversibleSamplingStep;
 
 /**
  *
- * Implements the reversible element quadruple shift described in Trendelkamp-Schroer and Noe JCP 2013
- *
- * TODO: This does not yet work in combination with the row shift. The proposal probability needs to corrected when mixing these steps
- * See Noe JCP 2008
- *
- * @author trendelkamp, noe
+ * Implements the reversible element quadruple shift described
+ * in Trendelkamp-Schroer and Noe JCP 2013.
+ * 
+ * This implementation adds a rejection step
+ * according to Noe JCP 2008 in order to enable usage of this step
+ * in a reversible sampler with varying stationary distribution.
+ * 
+ * @author trendelkamp
  */
-public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
+public class Step_Rev_Quad_Gibbs_MC implements IReversibleSamplingStep 
 {
     private int n;
     private IDoubleArray C;
@@ -34,10 +38,12 @@ public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
     private Uniform randU = new Uniform(0.0, 1.0, rand);
     private Exponential randE = new Exponential(1.0, rand);
     private Beta randB = new Beta(1.0, 1.0, rand);
+    
+    double Tnew_ij, Tnew_ji, Tnew_ii, Tnew_jj;
+    double r, rprime;
+    double pacc;
 
-    private double Tii_backup, Tij_backup, Tji_backup, Tjj_backup;
-
-    public Step_Rev_Quad_Trendelkamp()
+    public Step_Rev_Quad_Gibbs_MC()
     {}
 
     @Override
@@ -52,7 +58,12 @@ public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
 
     /**
      * Gibbs sampling step of a random quadruple of four elements (i,j), (i,i), (j,j), (j,i)
-     * according to the method described in Trendelkamp+Noe JCP 2013
+     * according to the method described in Trendelkamp+Noe JCP 2013 
+     * 
+     * The methods adds a rejection step according to Noe JCP2008 in order to
+     * enable usage in a reversible sampler with varying stationary
+     * distribution.
+     * 
      * @return
      */
     public void sampleQuad(int i, int j)
@@ -85,11 +96,25 @@ public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
                 //Generate random variate
                 double x=ScaledElementSampler.sample(randU, randE, randB, a, b, c, d);
 
-                //Update T
-                T.set(i,j, x*Math.min(delta,lambda));
-                T.set(i,i, delta-T.get(i,j));
-                T.set(j,i, mu.get(i)/mu.get(j)*T.get(i,j));
-                T.set(j,j, mu.get(i)/mu.get(j)*lambda-T.get(j,i));
+                //Proposed quadruple
+                Tnew_ij=x*Math.min(delta, lambda);
+                Tnew_ii=delta-Tnew_ij;
+                Tnew_ji=mu.get(i)/mu.get(j)*Tnew_ij;
+                Tnew_jj=mu.get(i)/mu.get(j)*lambda-Tnew_ji;
+                
+                //Acceptance ratio according to Noe JCP08
+                rprime=Math.sqrt(Tnew_ij*Tnew_ij+Tnew_ji*Tnew_ji);
+                r=Math.sqrt(T.get(i,j)*T.get(i,j)+T.get(j,i)*T.get(j,i));                
+                pacc=Math.min(1.0,rprime/r);
+                
+                if(randU.nextDouble()<=pacc){
+                    //Update T
+                    T.set(i,j, Tnew_ij);
+                    T.set(i,i, Tnew_ii);
+                    T.set(j,i, Tnew_ji);
+                    T.set(j,j, Tnew_jj);
+                }
+                //Else do not update quadruple
             }
             //Else do nothing.
     	}
@@ -114,5 +139,5 @@ public class Step_Rev_Quad_Trendelkamp implements IReversibleSamplingStep
         sampleQuad(i,j);
         return true;
     }
-
+    
 }

@@ -41,8 +41,7 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
     public NicelyCachedRandomAccessFile(String _filename, int pageSize) throws FileNotFoundException, IOException
     {
         this.filename = _filename;
-        this.randomAccessFile = new RandomAccessFile(_filename, "r");
-        this.randomAccessChannel = randomAccessFile.getChannel();
+        open();
         
         this.logger = Logger.getLogger(NicelyCachedRandomAccessFile.class.getName());
 
@@ -419,6 +418,10 @@ public class NicelyCachedRandomAccessFile implements IReleasableFile
     public void open() throws IOException
     {
         System.out.println("called open");
+        // Do not open this twice.
+        if(this.randomAccessChannel != null && this.randomAccessChannel.isOpen())
+            return;
+
         this.randomAccessFile = new RandomAccessFile(filename, "r");
         this.randomAccessChannel = randomAccessFile.getChannel();
     }

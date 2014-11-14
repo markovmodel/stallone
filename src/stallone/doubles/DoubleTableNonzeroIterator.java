@@ -28,12 +28,9 @@ public class DoubleTableNonzeroIterator extends DoubleTableIterator
 
     private void proceedToNonzero()
     {
-        if (hasNext())
+        while (hasNext() && X.get(i, j) == 0)
         {
-            while (hasNext() && X.get(i, j) == 0)
-            {
-                advance();
-            }
+            super.advance();
         }
     }
 

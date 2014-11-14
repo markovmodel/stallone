@@ -3,9 +3,9 @@ package stallone.datasequence.io;
 import java.io.*;
 import java.nio.*;
 import java.util.Arrays;
+import java.util.BitSet;
 
 import static stallone.api.API.*;
-
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IReleasableFile;
 import stallone.doubles.fastutils.LongArrayList;
@@ -227,7 +227,7 @@ public class XtcFile implements IReleasableFile
     /**
      * Stores status of all frames (false:= frame ok, true:= frame broken).
      */
-    protected boolean[] frameBroken;
+    protected BitSet frameBroken;
     /**
      * Store the number of the current frame (from 0 to numOfFrames-1), to avoid
      * reading same frame data.
@@ -523,7 +523,7 @@ public class XtcFile implements IReleasableFile
         // copy starting postion of frames from vector into an array and check their size
         int numberOfFrames = tempFramePositions.size();
         this.framePos = new long[numberOfFrames];
-        this.frameBroken = new boolean[numberOfFrames];
+        this.frameBroken = new BitSet(numberOfFrames);
 
         long tmpPosition_old = 0; // tmp variable to calculate the size of a frame
 
@@ -533,7 +533,7 @@ public class XtcFile implements IReleasableFile
 
             if (((tmpPosition - tmpPosition_old) % 4) != 0)
             { // check if the frame size is a multiple of 4 bytes
-                this.frameBroken[i] = true; // mark frame as broken
+                this.frameBroken.set(i); // mark frame as broken
                 System.err.println("WARNING: Frame " + i
                         + " (numbering goes from 0 to n-1) has a wrong size. It's not a multiple of 4 bytes. This indicates that the frame may be broken. The frame is marked as broken.");
             }
@@ -546,7 +546,7 @@ public class XtcFile implements IReleasableFile
         { // check if the frame size is a multiple of 4 bytes
 
             int frameNr = numberOfFrames - 1;
-            this.frameBroken[frameNr] = true; // mark frame as broken
+            this.frameBroken.set(frameNr); // mark frame as broken
             System.err.println("WARNING: Last frame " + frameNr
                     + " (numbering goes from 0 to n-1) which was read from the trajectory has a wrong size. It's not a multiple of 4 bytes. This indicates that this frame may be broken. The frame is marked as broken.");
         }
@@ -682,7 +682,7 @@ public class XtcFile implements IReleasableFile
             return false;
         }
 
-        if (this.frameBroken[frameIndex])
+        if(this.frameBroken.get(frameIndex))
         { // frame is marked as broken
             System.err.println("WARNING: You are trying to read from a broken frame " + frameIndex
                     + " (numbering goes from 0 to n-1). This is not allowed! Please fix first the error in your trajectory.");
@@ -770,7 +770,7 @@ public class XtcFile implements IReleasableFile
                                 + ((4 - (this.compressedCoordinatesLengthInByte % 4)) % 4))
                                 != (this.coordinatesHeaderAndCoordinatesSize - this.coordinatesHeaderSize))
                         { // check if frame "coordinates" is a multiple of 4
-                            this.frameBroken[frameIndex] = true; // mark frame as broken
+                            this.frameBroken.set(frameIndex); // mark frame as broken
                             System.err.println("WARNING: Coordinates section of frame " + frameIndex
                                     + " (numbering goes from 0 to n-1) has a wrong size. It's not a multiple of 4 bytes. This indicates that this frames may be broken. Frame marked as broken.");
                         }
@@ -881,7 +881,7 @@ public class XtcFile implements IReleasableFile
             return false;
         }
 
-        if (this.frameBroken[frameIndex])
+        if(this.frameBroken.get(frameIndex))
         { // frame is marked as broken
             System.err.println("WARNING: You are trying to read from a broken frame " + frameIndex
                     + " (numbering goes from 0 to n-1). This is not allowed! Please fix first the error in your trajectory.");

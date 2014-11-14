@@ -60,7 +60,8 @@ public class TransitionMatrixSamplerRev extends TransitionMatrixSamplerAbstract
         // initialize steps
         this.step_row = new Step_Rev_Row_Beta();
         this.step_row.init(C, T, mu);
-        this.step_quad = new Step_Rev_Quad_MC();
+        //this.step_quad = new Step_Rev_Quad_MC();
+        this.step_quad=new Step_Rev_Quad_Gibbs_MC();
         this.step_quad.init(C, T, mu);
 
         // weights

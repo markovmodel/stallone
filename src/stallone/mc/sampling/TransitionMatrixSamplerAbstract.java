@@ -22,6 +22,9 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     protected IDoubleArray T, C;
     protected double logLikelihood = 0;
 
+    /** empty, so init this will init() method **/
+    public TransitionMatrixSamplerAbstract() {}
+    
     public TransitionMatrixSamplerAbstract(IDoubleArray counts)
     {
         this.init(counts);
@@ -75,8 +78,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     }
 
     /**
-    Checks whether the given element is still within [0,1] or else puts it back to that
-    value.
+     * Checks whether the given element is still within [0,1] or else puts it back to that value.
      */
     protected void ensureValidElement(int i, int j)
     {
@@ -122,7 +124,7 @@ public abstract class TransitionMatrixSamplerAbstract implements ITransitionMatr
     }
 
     /**
-    Makes sure that the row still sums up to 1.
+     * Makes sure that the row still sums up to 1.
      */
     protected void ensureValidRow(int i)
     {

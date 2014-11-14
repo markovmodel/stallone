@@ -5,6 +5,7 @@
 package stallone.api.coordinates;
 
 import static stallone.api.API.coor;
+import stallone.api.API;
 import stallone.api.datasequence.IDataInput;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
@@ -12,6 +13,8 @@ import stallone.coordinates.AbstractCoordinateTransform;
 import stallone.coordinates.MinimalRMSDistance3D;
 import stallone.coordinates.PCA;
 import stallone.coordinates.TICA;
+import stallone.doubles.DenseDoubleArray;
+import stallone.doubles.PrimitiveDoubleTools;
 
 /**
  *
@@ -19,124 +22,78 @@ import stallone.coordinates.TICA;
  */
 public class CoordinateFactory
 {
-    public ICoordinateTransform transform_minrmsd(IDoubleArray Xref)
+    public ICoordinateTransform transform_minrmsd(final IDoubleArray Xref)
     {
-        class Transform_MinRMSD extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(1)
         {
-            IDoubleArray Xref;
-            MinimalRMSDistance3D minrmsd;
-            public Transform_MinRMSD(IDoubleArray _Xref)
-            {
-                super(1);
-                Xref = _Xref;
-                minrmsd = new MinimalRMSDistance3D(Xref.rows());
-            }
+            MinimalRMSDistance3D minrmsd = new MinimalRMSDistance3D(Xref.rows());
+
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
-                out.set(0,minrmsd.distance(Xref, in));
+                out.set(0, minrmsd.distance(Xref, in));
             }
-        }
-        return new Transform_MinRMSD(Xref);
+        };
     }
 
-    public ICoordinateTransform transform_distances(int[] set1)
+    public ICoordinateTransform transform_distances(final int[] set1)
     {
-        class Transform_Dist extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform((set1.length * (set1.length-1)) / 2)
         {
-            int[] set1;
-            public Transform_Dist(int[] _set1)
-            {
-                super((_set1.length * (_set1.length-1)) / 2);
-                set1 = _set1;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.distances(in, set1, out);
             }
-        }
-        return new Transform_Dist(set1);
+        };
     }
 
-    public ICoordinateTransform transform_distances(int[] set1, int[] set2)
+    public ICoordinateTransform transform_distances(final int[] set1, final int[] set2)
     {
-        class Transform_Dist extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(set1.length, set2.length)
         {
-            int[] set1;
-            int[] set2;
-            public Transform_Dist(int[] _set1, int[] _set2)
-            {
-                super(_set1.length, _set2.length);
-                set1 = _set1;
-                set2 = _set2;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.distanceMatrix(in, set1, set2, out);
             }
-        }
-        return new Transform_Dist(set1,set2);
+        };
     }
     
-    public ICoordinateTransform transform_distances(int[][] set1)
+    public ICoordinateTransform transform_distances(final int[][] set1)
     {
-        class Transform_Dist extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(set1.length * (set1.length-1) / 2)
         {
-            int[][] set1;
-            public Transform_Dist(int[][] _set1)
-            {
-                super((_set1.length * (_set1.length-1)) / 2);
-                set1 = _set1;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.distances(in, set1, out);
             }
-        }
-        return new Transform_Dist(set1);
+        };
     }
 
-    public ICoordinateTransform transform_distances(int[][] set1, int[][] set2)
+    public ICoordinateTransform transform_distances(final int[][] set1, final int[][] set2)
     {
-        class Transform_Dist extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(set1.length, set2.length)
         {
-            int[][] set1;
-            int[][] set2;
-            public Transform_Dist(int[][] _set1, int[][] _set2)
-            {
-                super(_set1.length, _set2.length);
-                set1 = _set1;
-                set2 = _set2;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.distanceMatrix(in, set1, set2, out);
             }
-        }
-        return new Transform_Dist(set1,set2);
+        };
     }
 
-    public ICoordinateTransform transform_angles(int[][] selection)
+    public ICoordinateTransform transform_angles(final int[][] selection)
     {
-        class Transform_Ang extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(selection.length)
         {
-            int[][] selection;
-            public Transform_Ang(int[][] _selection)
-            {
-                super(_selection.length);
-                selection = _selection;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.angles(in, selection, out);
             }
-        }
-        return new Transform_Ang(selection);
+        };
     }
 
     public ICoordinateTransform transform_dihedrals(int[][] selection)
@@ -145,23 +102,51 @@ public class CoordinateFactory
         return transform_angles(selection);
     }
 
-    public ICoordinateTransform transform_selection(int[] selection)
+    public ICoordinateTransform transform_selection(final int[] selection)
     {
-        class Transform_Sel extends AbstractCoordinateTransform
+        return new AbstractCoordinateTransform(selection.length, 3)
         {
-            int[] selection;
-            public Transform_Sel(int[] _selection)
-            {
-                super(_selection.length,3);
-                selection = _selection;
-            }
             @Override
             public void transform(IDoubleArray in, IDoubleArray out)
             {
                 coor.select(in, selection, out);
             }
-        }
-        return new Transform_Sel(selection);
+        };
+    }
+    
+    /**
+     * intended to perform the application of a linear operator A with
+     * shape (n,m) to a vector with shape (n)
+     * @param A matrix operator
+     * @return CoordinateTransformation which performs <A, b> = x
+     */
+    public ICoordinateTransform linear_operator(final IDoubleArray A) {
+        int rows = A.rows(), cols = 1;
+        return new AbstractCoordinateTransform(rows, cols)
+        {
+            @Override
+            public void transform(final IDoubleArray in, IDoubleArray out)
+            {
+                IDoubleArray input = in;
+                // workaround to handle n x 3 vectors given by trajectory readers like DCD.
+                // flatten array, if compatible. Efficient for DenseDoubleArray, since it has linear memory layout.
+                if(in.rows() * in.columns() == A.columns())
+                {
+                    double[] flat = null;
+                    if (in instanceof DenseDoubleArray)
+                    {
+                        flat = ((DenseDoubleArray) in).getArray();
+                    }
+                    else
+                    {
+                        flat = PrimitiveDoubleTools.flatten(in.getTable());
+                    }
+                    input = new DenseDoubleArray(flat);
+                }
+                // apply operator
+                API.alg.product(A, input, out);
+            }
+        };
     }
     
     public IPCA pca(IDataInput datainput)

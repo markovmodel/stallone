@@ -6,6 +6,7 @@ package stallone.datasequence.io;
 
 import java.io.IOException;
 import java.util.Iterator;
+
 import stallone.api.datasequence.IDataReader;
 import stallone.api.doubles.IDoubleArray;
 
@@ -38,17 +39,6 @@ public class DataReaderIterator implements Iterator<IDoubleArray>
         }
     }
 
-    private void closeThisReader(IDataReader _reader)
-    {
-        try
-        {
-            _reader.close();
-        } catch (IOException e)
-        {
-            throw (new RuntimeException("IOException during Trajectory iteration: " + e));
-        }
-    }
-
     @Override
     public boolean hasNext()
     {
@@ -67,12 +57,5 @@ public class DataReaderIterator implements Iterator<IDoubleArray>
     public void remove()
     {
         throw new UnsupportedOperationException("Remove not supported.");
-    }
-
-    @Override
-    protected void finalize() throws Throwable
-    {
-        closeThisReader(reader);
-        super.finalize();
-    }
+    } 
 }

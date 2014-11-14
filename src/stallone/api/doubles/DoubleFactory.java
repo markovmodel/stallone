@@ -6,6 +6,7 @@ package stallone.api.doubles;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import stallone.api.strings.Strings;
@@ -158,6 +159,25 @@ public class DoubleFactory
         Doubles.util.fill(res, value);
         return res;
     }
+    
+    /**
+     * creates array with memory allocated optionally outside the JVM
+     * @param size number of elements
+     * @param allocateInSysMem if true, allocate mem outside JVM
+     * @return IDoubleArray(ForeignBufferDoubleArray)
+     */
+    public IDoubleArray array(int size, boolean allocateInSysMem) {
+        IDoubleArray res;
+        
+        if(allocateInSysMem) {
+            ByteBuffer bb = ByteBuffer.allocateDirect(size * Double.SIZE);
+            res = new ForeignBufferDoubleArray(bb, 1, size);
+        } else {
+            res = array(size);
+        }
+        
+        return res;
+    }
 
     /**
      * Creates an array from a string representation
@@ -199,6 +219,18 @@ public class DoubleFactory
     public IDoubleArray arrayFrom(double[] arr)
     {
         return (array(arr));
+    }
+    
+    /**
+     * create an IDoubleArray from an ByteBuffer, which may be allocated outside
+     * the JVM. This buffer should contain doubles only.
+     * @param b ByteBuffer either allocated on heap or directly 
+     * @param rows
+     * @param cols
+     * @return a ForeignBufferDoubleArray
+     */
+    public IDoubleArray arrayFrom(ByteBuffer b, int rows, int cols) {
+        return new ForeignBufferDoubleArray(b, rows, cols);
     }
 
     public IDoubleArray arrayFrom(int[] a)

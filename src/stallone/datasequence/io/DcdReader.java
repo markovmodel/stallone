@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.BitSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataList;
 import stallone.api.datasequence.IDataReader;
@@ -52,9 +54,17 @@ public class DcdReader implements IDataReader
 
     /** Selection for reading */
     private int[] selection;
-    private boolean[] selected;
+    private BitSet selected;
     
     private Logger logger;
+
+    /**
+     * empty DcdReader, use {@link DcdReader#setSource(String)},
+     * {@link DcdReader#open()} and {@link DcdReader#scan()}
+     */
+    public DcdReader()
+    {
+    }
     
     /**
      * constructs DcdReader with given filename
@@ -64,9 +74,8 @@ public class DcdReader implements IDataReader
     public DcdReader(String _filename) throws IOException
     {
         this.filename = _filename;
-        this.logger = Logger.getLogger(DcdReader.class.getName());
-        niceRandomAccessFile = new NicelyCachedRandomAccessFile(_filename);
-        this.initialize();
+        this.logger = Logger.getLogger(DcdReader.class.getName()); 
+        initialize();
     }
 
     @Override
@@ -74,24 +83,24 @@ public class DcdReader implements IDataReader
     {
         this.filename = name;
     }
-
+    
     @Override
     public void scan()
             throws IOException
     {
-        niceRandomAccessFile = new NicelyCachedRandomAccessFile(this.filename);
         this.initialize();
     }
 
     private void initialize() throws IOException
     {
+        niceRandomAccessFile = new NicelyCachedRandomAccessFile(this.filename);
         byteOrder = detectEndianess();
         readHeader();
         niceRandomAccessFile.changePageSize((int) framesizeRegular);
         
         selection = intArrays.range(numberOfAtoms);
-        selected = new boolean[numberOfAtoms];
-        java.util.Arrays.fill(selected, true);
+        selected = new BitSet(numberOfAtoms);
+        selected.set(0, numberOfAtoms);
     }
 
     /**
@@ -379,7 +388,7 @@ public class DcdReader implements IDataReader
             x = xBuffer.get();
             y = yBuffer.get();
             z = zBuffer.get();
-            if (selected[i])
+            if (selected.get(i))
             {
                 target.set(r, 0, x);
                 target.set(r, 1, y);
@@ -470,7 +479,8 @@ public class DcdReader implements IDataReader
         catch (IOException ex)
         {
             logger.log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Problems reading DCD, caught I/O exception.");
+            throw new RuntimeException("Problems reading DCD, caught I/O exception."
+                    + " Message: " + ex.getMessage());
         } // end try-catch
     }
 
@@ -498,9 +508,12 @@ public class DcdReader implements IDataReader
         if (_selection == null)
             _selection = intArrays.range(numberOfAtoms);
         this.selection = _selection;
-        java.util.Arrays.fill(selected, false);
+        
+        // clear current selection
+        selected.clear();
+        // adopt to given selection
         for (int i=0; i<_selection.length; i++)
-            selected[_selection[i]] = true;
+            selected.set(_selection[i]);
     }
     
     @Override
