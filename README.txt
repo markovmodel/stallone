@@ -1,10 +1,7 @@
-To compile stallone you need maven (>= 2.0) and a recent JDK (>= 1.6)
+To compile stallone you need maven (>= 2.0) and a recent JDK (>= 1.6).
 
 To build a distribution of stallone you invoke maven like this:
-mvn -PbuildDistribution -Dmaven.test.skip=true install
-
-To build the pythonic wrapper (named 'pystallone') you invoke:
-mvn -Ppython-wrapper -Dmaven.test.skip=true install
+mvn -PbuildDistribution -Dmaven.test.skip=true package 
 
 Note: 
 Some tests are currently failing (not yet impled), so they have to be skipped
