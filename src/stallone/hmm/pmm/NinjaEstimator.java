@@ -8,6 +8,8 @@ import static stallone.api.API.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import stallone.api.API;
 import stallone.api.datasequence.IDataSequence;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.ints.IIntArray;
@@ -221,7 +223,10 @@ public class NinjaEstimator implements IExpectationMaximization
         
         // initial parameters
         IHMMParameters par0 = hmmNew.parameters(nhidden, true, true);
-        par0.setTransitionMatrix(TCInit.copy());
+        // FIXME: converted to dense, because sparse impl IDoubleArray runs out of bounds in Tarjan algo of graph/connectivity/IntStrongConnectivity 
+        IDoubleArray dense = API.doublesNew.array(TCInit.rows(), TCInit.columns());
+        TCInit.copyInto(dense);
+        par0.setTransitionMatrix(dense);
         for (int i = 0; i < nhidden; i++)
         {
             par0.setOutputParameters(i, ChiInit.viewColumn(i));
