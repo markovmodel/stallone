@@ -42,6 +42,9 @@ public class Step_Rev_Quad_Gibbs_MC implements IReversibleSamplingStep
     double Tnew_ij, Tnew_ji, Tnew_ii, Tnew_jj;
     double r, rprime;
     double pacc;
+    
+    int nprop=0;
+    int nacc=0;
 
     public Step_Rev_Quad_Gibbs_MC()
     {}
@@ -94,7 +97,8 @@ public class Step_Rev_Quad_Gibbs_MC implements IReversibleSamplingStep
                     d=delta/lambda;
                 }
                 //Generate random variate
-                double x=ScaledElementSampler.sample(randU, randE, randB, a, b, c, d);
+                double x=ScaledElementSampler.sample(randU, randE, randB, a, b, c, d);                
+                this.nprop++;
 
                 //Proposed quadruple
                 Tnew_ij=x*Math.min(delta, lambda);
@@ -113,6 +117,7 @@ public class Step_Rev_Quad_Gibbs_MC implements IReversibleSamplingStep
                     T.set(i,i, Tnew_ii);
                     T.set(j,i, Tnew_ji);
                     T.set(j,j, Tnew_jj);
+                    this.nacc++;
                 }
                 //Else do not update quadruple
             }
@@ -138,6 +143,13 @@ public class Step_Rev_Quad_Gibbs_MC implements IReversibleSamplingStep
 
         sampleQuad(i,j);
         return true;
+    }
+    
+    public int[] getStepCount(){
+        int[] count=new int[2];
+        count[0]=this.nprop;
+        count[1]=this.nacc;
+        return count;
     }
     
 }

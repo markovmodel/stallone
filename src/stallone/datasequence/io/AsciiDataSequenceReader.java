@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import stallone.api.doubles.*;
-import stallone.datasequence.DataSequencePairIterator;
 import stallone.io.CachedAsciiFileReader;
 import stallone.util.StringTools;
 
@@ -27,10 +26,9 @@ public class AsciiDataSequenceReader
         implements IDataReader
 {
 
-    private int noOfElements = 0;
     private int dimension = 0;
-    private boolean noElementsDetermined = false;
     private int dataStartLine = 0;
+    
     /**
      * The column which stores time information, by default this is column 1. If
      * timeColumn is set to -1, that means, there is no time information.
@@ -248,7 +246,7 @@ public class AsciiDataSequenceReader
         } 
         catch (NumberFormatException nfe)
         {
-            System.out.println("frameIndex : " + frameIndex);
+            System.out.println("nfe frameIndex : " + frameIndex + "exe detail:" +nfe);
             //System.out.println(dataStartLine + " " + dataEndLine);
         }
 

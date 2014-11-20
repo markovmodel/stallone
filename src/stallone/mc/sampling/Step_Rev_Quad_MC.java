@@ -22,6 +22,9 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
     private IDoubleArray mu;
 
     private double Tii_backup, Tij_backup, Tji_backup, Tjj_backup;
+    
+    int nprop=0;
+    int nacc=0;
 
     public Step_Rev_Quad_MC()
     {
@@ -68,6 +71,7 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
 
         d1 = MathTools.randomDouble(dmin, dmax);
         d2 = d1 / q;
+        this.nprop++;
 
         double prop = Math.sqrt((((T.get(i, j) - d1) * (T.get(i, j) - d1)) + ((T.get(j, i) - d2) * (T.get(j, i) - d2)))
                 / ((T.get(i, j) * T.get(i, j)) + (T.get(j, i) * T.get(j, i))));
@@ -82,6 +86,7 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
 
         if (accept)
         {
+            this.nacc++;
             Tii_backup = T.get(i,i);
             Tij_backup = T.get(i,j);
             Tji_backup = T.get(j,i);
@@ -121,6 +126,13 @@ public class Step_Rev_Quad_MC implements IReversibleSamplingStep
         while (i == j);
 
         return sampleQuad(i,j);
+    }
+    
+    public int[] getStepCount(){
+        int[] count=new int[2];
+        count[0]=this.nprop;
+        count[1]=this.nacc;
+        return count;
     }
 
 }
