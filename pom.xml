@@ -55,7 +55,7 @@
 				</executions>
 				<configuration>
 					<doCheck>false</doCheck> <!-- allow dirty repo on build -->
-					<doUpdate>true</doUpdate>
+					<doUpdate>false</doUpdate>
 					<shortRevisionLength>6</shortRevisionLength>
 				</configuration>
 			</plugin>
@@ -220,6 +220,13 @@
 					<groupId>com.github.fommil.netlib</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- fastutils -->
+		<dependency>
+			<groupId>fastutil</groupId>
+			<artifactId>fastutil</artifactId>
+			<version>5.0.9</version>
 		</dependency>
 		<!-- dependency>
 			<groupId>com.github.fommil.netlib</groupId>

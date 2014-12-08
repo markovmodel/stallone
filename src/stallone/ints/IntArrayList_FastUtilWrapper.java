@@ -4,6 +4,7 @@
  */
 package stallone.ints;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntList;
 import stallone.api.ints.IIntArray;
@@ -15,26 +16,26 @@ import stallone.api.ints.IIntIterator;
  */
 public class IntArrayList_FastUtilWrapper implements IIntList
 {
-    private stallone.doubles.fastutils.IntArrayList list;
+    private IntArrayList list;
 
-    private IntArrayList_FastUtilWrapper(stallone.doubles.fastutils.IntArrayList _list)
+    private IntArrayList_FastUtilWrapper(IntArrayList _list)
     {
         this.list = _list;
     }
 
     public IntArrayList_FastUtilWrapper()
     {
-        list = new stallone.doubles.fastutils.IntArrayList();
+        list = new IntArrayList();
     }
 
     public IntArrayList_FastUtilWrapper(final int capacity)
     {
-        list = new stallone.doubles.fastutils.IntArrayList(capacity);
+        list = new IntArrayList(capacity);
     }
 
     public IntArrayList_FastUtilWrapper(final int[] a)
     {
-        list = new stallone.doubles.fastutils.IntArrayList(a);
+        list = new IntArrayList(a);
     }
 
 
@@ -118,7 +119,7 @@ public class IntArrayList_FastUtilWrapper implements IIntList
     @Override
     public IIntList copy()
     {
-        return(new IntArrayList_FastUtilWrapper((stallone.doubles.fastutils.IntArrayList)list.clone()));
+        return(new IntArrayList_FastUtilWrapper((IntArrayList)list.clone()));
     }
 
     @Override

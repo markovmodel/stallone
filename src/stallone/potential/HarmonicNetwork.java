@@ -4,11 +4,13 @@
  */
 package stallone.potential;
 
-import stallone.api.doubles.IDifferentiableMetric;
-import stallone.api.doubles.Doubles;
-import stallone.api.doubles.IDoubleArray;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
 import java.util.ArrayList;
-import stallone.doubles.fastutils.DoubleArrayList;
+
+import stallone.api.doubles.Doubles;
+import stallone.api.doubles.IDifferentiableMetric;
+import stallone.api.doubles.IDoubleArray;
 
 
 /**

@@ -1,11 +1,13 @@
 package stallone.graph.connectivity;
 
-import stallone.doubles.fastutils.IntSortedSet;
-import stallone.doubles.fastutils.IntAVLTreeSet;
 import stallone.api.ints.Ints;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntIterator;
+import it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
+
 import java.util.*;
+
 import stallone.api.graph.*;
 
 /**

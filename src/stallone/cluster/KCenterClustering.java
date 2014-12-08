@@ -1,6 +1,10 @@
 package stallone.cluster;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.util.Iterator;
+
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
 import stallone.api.datasequence.IDataInput;
@@ -11,8 +15,6 @@ import stallone.api.doubles.IDoubleArray;
 import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
-import stallone.doubles.fastutils.DoubleArrayList;
-import stallone.doubles.fastutils.IntArrayList;
 
 /**
  * Implementation based on the work of "A Fast Geometric Clustering Method on

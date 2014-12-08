@@ -1,5 +1,7 @@
 package stallone.datasequence.io;
 
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+
 import java.io.*;
 import java.nio.*;
 import java.util.Arrays;
@@ -8,7 +10,6 @@ import java.util.BitSet;
 import static stallone.api.API.*;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.io.IReleasableFile;
-import stallone.doubles.fastutils.LongArrayList;
 import stallone.io.CachedRandomAccessFile;
 
 /**

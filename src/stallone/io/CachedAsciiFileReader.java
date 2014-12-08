@@ -1,13 +1,13 @@
 package stallone.io;
 
-import stallone.doubles.fastutils.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
 import stallone.io.CachedRandomAccessFile;
 
 /**

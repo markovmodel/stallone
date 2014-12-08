@@ -1,9 +1,12 @@
 package stallone.cluster;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 import stallone.api.algebra.Algebra;
 import stallone.api.cluster.IClustering;
 import stallone.api.datasequence.DataSequence;
@@ -18,7 +21,6 @@ import stallone.api.doubles.IMetric;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.Ints;
 import stallone.doubles.EuclideanDistance;
-import stallone.doubles.fastutils.IntArrayList;
 
 /**
  * Perform k-means Clustering.

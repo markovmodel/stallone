@@ -4,6 +4,7 @@
  */
 package stallone.doubles;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import stallone.api.doubles.IDoubleList;
 import stallone.api.doubles.IDoubleArray;
 
@@ -15,26 +16,26 @@ public class DoubleArrayList_FastUtilWrapper
     extends AbstractDoubleArray
     implements IDoubleList
 {
-    private stallone.doubles.fastutils.DoubleArrayList list;
+    private DoubleArrayList list;
 
-    private DoubleArrayList_FastUtilWrapper(stallone.doubles.fastutils.DoubleArrayList _list)
+    private DoubleArrayList_FastUtilWrapper(DoubleArrayList _list)
     {
         this.list = _list;
     }
 
     public DoubleArrayList_FastUtilWrapper()
     {
-        list = new stallone.doubles.fastutils.DoubleArrayList();
+        list = new DoubleArrayList();
     }
 
     public DoubleArrayList_FastUtilWrapper(final int capacity)
     {
-        list = new stallone.doubles.fastutils.DoubleArrayList(capacity);
+        list = new DoubleArrayList(capacity);
     }
 
     public DoubleArrayList_FastUtilWrapper(final double[] a)
     {
-        list = new stallone.doubles.fastutils.DoubleArrayList(a);
+        list = new DoubleArrayList(a);
     }
 
 
@@ -112,7 +113,7 @@ public class DoubleArrayList_FastUtilWrapper
     @Override
     public IDoubleList copy()
     {
-        return(new DoubleArrayList_FastUtilWrapper((stallone.doubles.fastutils.DoubleArrayList)list.clone()));
+        return(new DoubleArrayList_FastUtilWrapper((DoubleArrayList)list.clone()));
     }
 
     @Override

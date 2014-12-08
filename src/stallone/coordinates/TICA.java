@@ -26,12 +26,12 @@ public class TICA implements ITICA
 {
     // lag time
     private int lag;
-    // running moments
+    // count and mean
     RunningMomentsMultivariate moments;
     // input dimension
     private int dimIn;
+    // total number of data points
     
-    // results
     private IDoubleArray CovTauSym;
     private IDoubleArray evalTICA;
     private IDoubleArray evecTICA;
@@ -94,20 +94,20 @@ public class TICA implements ITICA
     @Override
     final public void computeTransform()
     {
-        // PCA
+        // compute mean
         IDoubleArray Cov = moments.getCov();
         IEigenvalueDecomposition evd = alg.evd(Cov);
         IDoubleArray evalPCA = evd.getEvalNorm();
         IDoubleArray evecPCA = evd.getRightEigenvectorMatrix().viewReal();
-        
-        // normalize principal components
+        // compute covariance matrix
+        // compute time-lagged covariance matrix
         IDoubleArray S = doublesNew.array(evalPCA.size());
         for (int i=0; i<S.size(); i++)
             S.set(i, 1.0*Math.sqrt(evalPCA.get(i)));
-        // normalize weights by dividing by the standard deviation of the pcs 
+        // simple implementation of TICA (note: this is not numerically robust!)
         IDoubleArray evecPCAscaled = alg.product(evecPCA, doublesNew.diag(S));
 
-        // time-lagged covariance matrix
+        // Whiten data
         this.CovTauSym = moments.getCovLagged();
         // symmetrize
         CovTauSym = alg.addWeightedToNew(0.5, CovTauSym, 0.5, alg.transposeToNew(CovTauSym)); // symmetrize
@@ -184,7 +184,7 @@ public class TICA implements ITICA
     @Override
     public void transform(IDoubleArray in, IDoubleArray out)
     {
-        // if necessary, flatten input data
+        // subtract mean
         if (in.columns() != 1)
         {
             in = doublesNew.array(in.getArray());
