@@ -71,12 +71,12 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
-						<!-- HERE, the configuration (which is loaded from file assemblyDescriptor.xml)
-							of the assembly is setup -->
 						<configuration>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
+							<!-- used to override on github release -->
+							<finalName>${finalName}</finalName>
 							<archive>
 								<index>true</index>
 								<manifest>
@@ -96,6 +96,7 @@
 	</build>
 	<profiles>
 		<profile>
+		    <!-- FIXME: proguard produces non-working jar! -->
 			<id>buildDistribution</id>
 			<build>
 				<plugins>
@@ -121,8 +122,8 @@
 							</dependency>
 						</dependencies>
 						<configuration>
-							<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
-							<outjar>${project.build.finalName}-jar-with-dependencies-proguard.jar</outjar>
+							<injar>${finalName}-jar-with-dependencies.jar</injar>
+							<outjar>${project.build.finalName}-opt.jar</outjar>
 							<outputDirectory>${project.build.directory}</outputDirectory>
 							<libs>
 								<lib>${java.home}/lib/rt.jar</lib>
