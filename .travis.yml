@@ -1,6 +1,7 @@
 language: java
-
-install: mvn install -DskipTests=true
+env:
+  jar_name: stallone-$TRAVIS_TAG
+install: mvn install -DskipTests=true -DfinalName=$jar_name
 
 # skip tests
 script: true
@@ -14,7 +15,7 @@ deploy:
   provider: releases
   api_key:
     secure: T0lO78HfZaAoe1tb4iI4/SZ9gcGBtTKivFkBHEm9WxPB8IHbeUqci1Z98mEjm4fqclwfH1b8dN1fH5YFZq4SG0EGMxvOzJHK9uUfcwnC5X/hGRRef4vd2RKeadHCUZrfCZieuDQ9g3kEeUjUR+U+1OJHfSa2GvAFrBikZzRp33o=
-  file: stallone-jar-with-dependencies-proguard.jar
+  file: $jar_name-jar-with-dependencies-proguard.jar
   on:
     tags: true
     all_branches: true
