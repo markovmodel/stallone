@@ -1,8 +1,10 @@
 language: java
 
-before_install: mvn install -DskipTests=true -DfinalName=stallone -PbuildDistribution
+install: mvn install -DskipTests=true -DfinalName=stallone -PbuildDistribution
 # skip tests
-script: true
+#script: true
+
+after_success: - ls -alh target/
 
 deploy:
   provider: releases
