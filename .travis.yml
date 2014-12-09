@@ -4,7 +4,8 @@ install: mvn install -DskipTests=true -DfinalName=stallone -PbuildDistribution
 # skip tests
 script: true
 
-after_success: - ls -alh target/
+after_success: 
+  - ls -alh target/
 
 deploy:
   provider: releases
