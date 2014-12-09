@@ -56,7 +56,7 @@
 				</executions>
 				<configuration>
 					<doCheck>false</doCheck> <!-- allow dirty repo on build -->
-					<doUpdate>true</doUpdate>
+					<doUpdate>false</doUpdate>
 					<shortRevisionLength>6</shortRevisionLength>
 				</configuration>
 			</plugin>
