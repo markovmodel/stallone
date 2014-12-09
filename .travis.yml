@@ -1,16 +1,20 @@
 language: java
 
-install: mvn install -DskipTests=true -DfinalName=stallone -PbuildDistribution
+install: mvn install -DskipTests=true
+
 # skip tests
 script: true
 
-after_success: 
-  - ls -alh target/
+after_success:
+- ls -alh target/
+
+#before_deploy: git fetch --tags
 
 deploy:
   provider: releases
-  api-key:
-  file: stallone-jar-with-dependencies-proguard.jar 
+  api_key:
+    secure: T0lO78HfZaAoe1tb4iI4/SZ9gcGBtTKivFkBHEm9WxPB8IHbeUqci1Z98mEjm4fqclwfH1b8dN1fH5YFZq4SG0EGMxvOzJHK9uUfcwnC5X/hGRRef4vd2RKeadHCUZrfCZieuDQ9g3kEeUjUR+U+1OJHfSa2GvAFrBikZzRp33o=
+  file: stallone-jar-with-dependencies-proguard.jar
   on:
     tags: true
     all_branches: true
