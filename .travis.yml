@@ -1,7 +1,7 @@
 language: java
 env:
-  jar_name: stallone-$TRAVIS_TAG
   global:
+    jar_name: stallone-$TRAVIS_TAG
     secure: FlvwJo+0bjLuK3xk3VM/tQQPezMWmNwc5IanLbEWn0bVHJpaoV5/D3DNAz6N5b3XS3DjGG5tTkFBC2RztA6qAavOw16pjvB+gwMLmLPlSK+ahVFIJjuqCH3mCPWE2TjSRj8n+ZHIb7vdyxMQUQdgaEFe/BNADAz4w42xN4FbltY=
 install: 
 - echo $jar_name
