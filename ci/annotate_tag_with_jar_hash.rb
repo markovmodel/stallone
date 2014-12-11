@@ -1,9 +1,9 @@
 # author: Martin K. Scherer
 require 'octokit'
 
-# use token from travis somehow
+# github api token 
 token = ENV['token']
-# info about release and asset name
+# tag name, which is being released
 tag = ENV['TRAVIS_TAG']
 # filename of jar file which has just been published
 jar = ENV['jarname']
