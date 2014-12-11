@@ -237,7 +237,7 @@ public class NinjaEstimator implements IExpectationMaximization
         double[] uniformPrior = new double[nObservableStates];
         java.util.Arrays.fill(uniformPrior, 1.0 / (double) uniformPrior.length);
         IExpectationMaximization EM = hmmNew.emDiscrete(observations, par0, uniformPrior);
-        EM.setMaximumNumberOfStep(nIterHMMMax);
+        EM.setMaximumNumberOfSteps(nIterHMMMax);
         EM.setLikelihoodDecreaseTolerance(maxHMMLInc);
 
         System.out.println(" running hmm on " + observations.size() + " x " + observations.get(0).size() + " observations with maxIter " + nIterHMMMax);
@@ -389,7 +389,7 @@ public class NinjaEstimator implements IExpectationMaximization
     }
 
     @Override
-    public void setMaximumNumberOfStep(int nsteps)
+    public void setMaximumNumberOfSteps(int nsteps)
     {
         this.nIterHMMMax = nsteps;
     }

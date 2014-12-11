@@ -87,7 +87,7 @@ public class EMHierarchical implements IHMMOptimizer
                 double[] likelihoodsRep = null;
                 try
                 {
-                    emlast.setMaximumNumberOfStep(optsteps);
+                    emlast.setMaximumNumberOfSteps(optsteps);
                     emlast.setLikelihoodDecreaseTolerance(dectol);
                     emlast.run();
                     likelihoodsRep = emlast.getLogLikelihoodHistory();

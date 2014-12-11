@@ -21,7 +21,7 @@ public interface IExpectationMaximization extends IHMMOptimizer
      * Sets the number of EM steps after which the algorithm terminates
      * @param nsteps
      */
-    public void setMaximumNumberOfStep(int nsteps);
+    public void setMaximumNumberOfSteps(int nsteps);
 
     /**
      * Sets the maximum admissible decrease of the likelihood over the previous maximum after which the optimization still continues.

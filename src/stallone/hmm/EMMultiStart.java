@@ -72,7 +72,7 @@ public class EMMultiStart implements IHMMOptimizer
             double[] likelihoods = null;
             try
             {
-                em.setMaximumNumberOfStep(nscansteps);
+                em.setMaximumNumberOfSteps(nscansteps);
                 em.setLikelihoodDecreaseTolerance(dectol);
                 em.run();
                 likelihoods = em.getLogLikelihoodHistory();
@@ -120,7 +120,7 @@ public class EMMultiStart implements IHMMOptimizer
          * likelihood = "+emBest.getHidden(0).logLikelihood());
          */
 
-        emBest.setMaximumNumberOfStep(nconvsteps);
+        emBest.setMaximumNumberOfSteps(nconvsteps);
         emBest.setLikelihoodDecreaseTolerance(dectol);
         emBest.run();
         double[] likelihoods = emBest.getLogLikelihoodHistory();

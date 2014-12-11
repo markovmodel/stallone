@@ -142,7 +142,7 @@ public class EM implements IExpectationMaximization, IHMM
      * @param nsteps
      */
     @Override
-    public void setMaximumNumberOfStep(int nsteps)
+    public void setMaximumNumberOfSteps(int nsteps)
     {
         this.nStepsMax = nsteps;
     }
