@@ -1,3 +1,4 @@
+# author: Martin K. Scherer
 require 'octokit'
 
 # use token from travis somehow
@@ -8,10 +9,10 @@ client = Octokit::Client.new(:access_token => token)
 
 # info about release and asset name
 tag = ENV['TRAVIS_TAG']
-jar_name = "#{ENV['jar_name']}-jar-with-dependencies.jar"
+filename = "#{ENV['jarname']}-jar-with-dependencies.jar"
 
 # generate hash for jar
-text = "sha256: " + `cd target/; sha256sum #{jar_name}`
+text = "sha256: " + `cd target/; sha256sum #{filename}`
 
 # get latest release, assumes latest rel is first list element. Seems to be true.
 latest = Octokit.releases({:user => "markovmodel", :repo => "stallone" })[0]
