@@ -13,6 +13,7 @@ import stallone.ints.IntElement;
 import stallone.api.graph.IIntGraph;
 import stallone.api.graph.IIntEdge;
 import java.util.Iterator;
+import stallone.api.doubles.IDoubleElement;
 import stallone.api.ints.*;
 
 
@@ -98,72 +99,84 @@ public class MatrixIntGraph implements IIntGraph
         return res;
     }
 }
+
 class MatrixGraphNeighborIterator implements IIntIterator
 {
     private int myself;
     private IDoubleIterator it;
+    
+    private IDoubleElement next = null;
 
     public MatrixGraphNeighborIterator(int _myself, IDoubleIterator _it)
     {
         this.myself = _myself;
         this.it = _it;
-        skipmyself();
+        
+        advance();
     }
 
     @Override
     public boolean hasNext()
     {
-        return(it.hasNext());
+        return(next != null);
     }
 
     @Override
     public IIntElement next()
     {
-        it.advance();
-        return(new IntElement(it.row(), it.column(), it.getIndex(), it.getIndex()));
+        IIntElement ie = new IntElement(next.row(), next.column(), next.index(), next.index());
+        advance();
+        return ie;
     }
 
     @Override
     public int get()
     {
-        return(it.getIndex());
+        return(next.index());
     }
 
     @Override
     public void reset()
     {
         it.reset();
-    }
-
-    private void skipmyself()
-    {
-        if (it.getIndex() == myself)
-            it.advance();
+        advance();
     }
 
     @Override
     public void advance()
     {
-        it.advance();
-        skipmyself();
+        if (this.it.hasNext())
+        {
+            this.next = this.it.next();
+            // skip self
+            if (this.next.index() == myself)
+            {
+                if (this.it.hasNext())
+                    this.next = this.it.next();
+                else
+                    this.next = null;
+            }
+        }
+        else
+            this.next = null;
     }
 
     @Override
     public int getIndex()
     {
-        return(it.getIndex());
+        return(next.index());
     }
 
     @Override
     public int row()
     {
-        return(it.row());
+        return(next.row());
     }
 
     @Override
     public int column()
     {
-        return(it.column());
+        return(next.column());
     }
 
     @Override
@@ -178,6 +191,88 @@ class MatrixGraphNeighborIterator implements IIntIterator
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
+
+
+//class MatrixGraphNeighborIterator implements IIntIterator
+//{
+//    private int myself;
+//    private IDoubleIterator it;
+//
+//    public MatrixGraphNeighborIterator(int _myself, IDoubleIterator _it)
+//    {
+//        this.myself = _myself;
+//        this.it = _it;
+//        skipmyself();
+//    }
+//
+//    @Override
+//    public boolean hasNext()
+//    {
+//        return(it.hasNext());
+//    }
+//
+//    @Override
+//    public IIntElement next()
+//    {
+//        it.advance();
+//        return(new IntElement(it.row(), it.column(), it.getIndex(), it.getIndex()));
+//    }
+//
+//    @Override
+//    public int get()
+//    {
+//        return(it.getIndex());
+//    }
+//
+//    @Override
+//    public void reset()
+//    {
+//        it.reset();
+//    }
+//
+//    private void skipmyself()
+//    {
+//        if (it.getIndex() == myself)
+//            it.advance();
+//    }
+//
+//    @Override
+//    public void advance()
+//    {
+//        it.advance();
+//        skipmyself();
+//    }
+//
+//    @Override
+//    public int getIndex()
+//    {
+//        return(it.getIndex());
+//    }
+//
+//    @Override
+//    public int row()
+//    {
+//        return(it.row());
+//    }
+//
+//    @Override
+//    public int column()
+//    {
+//        return(it.column());
+//    }
+//
+//    @Override
+//    public void set(int x)
+//    {
+//        throw new UnsupportedOperationException("Not supported yet.");
+//    }
+//
+//    @Override
+//    public void remove()
+//    {
+//        throw new UnsupportedOperationException("Not supported yet.");
+//    }
+//}
 
 class MatrixGraphEdgeIterator implements Iterator<IIntEdge>
 {

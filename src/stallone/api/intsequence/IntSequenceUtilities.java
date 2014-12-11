@@ -6,6 +6,7 @@ package stallone.api.intsequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import stallone.api.ints.IIntArray;
 import stallone.api.ints.IIntList;

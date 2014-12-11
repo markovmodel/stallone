@@ -4,6 +4,7 @@
  */
 package stallone.mc.correlations;
 
+import stallone.mc.TransitionMatrixPropagator;
 import stallone.mc.*;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;

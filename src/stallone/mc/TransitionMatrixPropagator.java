@@ -4,12 +4,12 @@
  */
 package stallone.mc;
 
+import stallone.api.API;
 import stallone.api.algebra.*;
 import stallone.api.complex.IComplexArray;
 import stallone.api.doubles.Doubles;
 import stallone.api.doubles.IDoubleArray;
 import stallone.api.mc.IMarkovPropagator;
-
 
 /**
  *
@@ -18,20 +18,27 @@ import stallone.api.mc.IMarkovPropagator;
 public final class TransitionMatrixPropagator implements IMarkovPropagator
 {
     // input T
+
     private IDoubleArray T;
     private boolean reversible;
-
-    private IDoubleArray R,L;
+    private IDoubleArray R, L;
     private IDoubleArray evalReal;
 
     public TransitionMatrixPropagator(IDoubleArray _T)
     {
         set(_T);
+
+        IDoubleArray array1 = API.doublesNew.array(10);
+        for (int i = 0; i < array1.size(); i++)
+        {
+            array1.set(0, i);
+        }
     }
 
     /**
      * Sets the basic propagator
-     * @param _P the propagator
+     * 
+     * @param _P transition matrix
      */
     @Override
     public void set(IDoubleArray _P)
@@ -47,7 +54,9 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
             R = evd.getRightEigenvectorMatrix();
         }
         else
+        {
             reversible = false;
+        }
     }
 
     @Override
@@ -58,20 +67,24 @@ public final class TransitionMatrixPropagator implements IMarkovPropagator
         if (reversible)
         {
             IDoubleArray evalPower = Doubles.create.array(evalReal.size());
-            for (int i=0; i<evalPower.size(); i++)
-                evalPower.set(i, Math.pow(evalReal.get(i),t));
+            for (int i = 0; i < evalPower.size(); i++)
+            {
+                evalPower.set(i, Math.pow(evalReal.get(i), t));
+            }
 
             IDoubleArray D = Doubles.create.diag(evalPower);
             res = Algebra.util.product(R, Algebra.util.product(D, L));
         }
         else
         {
-            if (((int)t - t) != 0)
-                throw(new IllegalArgumentException("Can only use integer times for propagating transition matrices. Attempted t = "+t));
+            if (((int) t - t) != 0)
+            {
+                throw (new IllegalArgumentException("Can only use integer times for propagating transition matrices. Attempted t = " + t));
+            }
 
-            res =   Algebra.util.power(T, (int)t);
+            res = Algebra.util.power(T, (int) t);
         }
 
-        return(res);
+        return (res);
     }
 }
