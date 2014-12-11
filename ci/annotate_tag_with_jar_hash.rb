@@ -26,9 +26,10 @@ latest = Octokit.releases({:user => "markovmodel", :repo => "stallone" })[0]
 # extract release url of current tag
 release_url = latest.url
 
+# this can be nil, since only annotated commits fill up the body.
 old_body = latest.body
 
-new_body = old_body + '<br><br>' + text
+new_body = "#{old_body}<br><br>#{text}"
 
 # update release body message
 client.update_release(release_url, {:body => new_body})
