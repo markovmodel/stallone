@@ -26,6 +26,7 @@ public class HMMHiddenVariables implements IHMMHiddenVariables
 
     public HMMHiddenVariables(int ntimesteps, int _nstates)
     {
+        Runtime r = Runtime.getRuntime();
         this.capacity = ntimesteps;
         this.length = ntimesteps;
         this.nstates = _nstates;

@@ -299,7 +299,7 @@ public class HMMFactory
             int nHiddenStates, 
             int lag)
     {
-        int timeshift = Math.min(lag/10, 1);
+        int timeshift = Math.max(lag/10, 1);
         int nconvsteps = 100 * nHiddenStates * nHiddenStates;
         double dectol = -0.1;
         IDoubleArray TCinit = null;
