@@ -3,13 +3,19 @@ require 'octokit'
 
 # use token from travis somehow
 token = ENV['token']
+# info about release and asset name
+tag = ENV['TRAVIS_TAG']
+# filename of jar file which has just been published
+jar = ENV['jarname']
   
+raise "no token given" unless token.to_s != ''
+raise "no jar name given" unless jar.to_s != ''
+
+
 # authorize with github api token
 client = Octokit::Client.new(:access_token => token)
 
-# info about release and asset name
-tag = ENV['TRAVIS_TAG']
-filename = "#{ENV['jarname']}-jar-with-dependencies.jar"
+filename = "#{jar}-jar-with-dependencies.jar"
 
 # generate hash for jar
 text = "sha256: " + `cd target/; sha256sum #{filename}`
