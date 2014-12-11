@@ -1,16 +1,12 @@
 language: java
 env:
   jar_name: stallone-$TRAVIS_TAG
+  global:
+    secure: FlvwJo+0bjLuK3xk3VM/tQQPezMWmNwc5IanLbEWn0bVHJpaoV5/D3DNAz6N5b3XS3DjGG5tTkFBC2RztA6qAavOw16pjvB+gwMLmLPlSK+ahVFIJjuqCH3mCPWE2TjSRj8n+ZHIb7vdyxMQUQdgaEFe/BNADAz4w42xN4FbltY=
 install: mvn install -DskipTests=true -DfinalName=$jar_name
-
-# skip tests
 script: true
-
 after_success:
 - ls -alh target/
-
-#before_deploy: git fetch --tags
-
 deploy:
   provider: releases
   api_key:
@@ -19,3 +15,5 @@ deploy:
   on:
     tags: true
     all_branches: true
+after_deploy:
+- ruby ci/annotate_tag_with_jar_hash.rb
