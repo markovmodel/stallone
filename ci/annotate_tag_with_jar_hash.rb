@@ -8,7 +8,7 @@ client = Octokit::Client.new(:access_token => token)
 
 # info about release and asset name
 tag = ENV['TRAVIS_TAG']
-jar_name = ENV['jar_name']
+jar_name = "#{ENV['jar_name']}-jar-with-dependencies.jar"
 
 # generate hash for jar
 text = "sha256: " + `cd target/; sha256sum #{jar_name}`
