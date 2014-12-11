@@ -1,0 +1,20 @@
+language: java
+env:
+  global:
+    - secure: FlvwJo+0bjLuK3xk3VM/tQQPezMWmNwc5IanLbEWn0bVHJpaoV5/D3DNAz6N5b3XS3DjGG5tTkFBC2RztA6qAavOw16pjvB+gwMLmLPlSK+ahVFIJjuqCH3mCPWE2TjSRj8n+ZHIb7vdyxMQUQdgaEFe/BNADAz4w42xN4FbltY=
+    - jarname=stallone-$TRAVIS_TAG
+install: 
+- mvn install -DskipTests=true -DfinalName=$jarname
+script: true
+after_success:
+- ls -alh target/
+deploy:
+  provider: releases
+  api_key:
+    secure: T0lO78HfZaAoe1tb4iI4/SZ9gcGBtTKivFkBHEm9WxPB8IHbeUqci1Z98mEjm4fqclwfH1b8dN1fH5YFZq4SG0EGMxvOzJHK9uUfcwnC5X/hGRRef4vd2RKeadHCUZrfCZieuDQ9g3kEeUjUR+U+1OJHfSa2GvAFrBikZzRp33o=
+  file: target/$jarname-jar-with-dependencies.jar
+  on:
+    tags: true
+    all_branches: true
+after_deploy:
+- ruby ci/annotate_tag_with_jar_hash.rb
