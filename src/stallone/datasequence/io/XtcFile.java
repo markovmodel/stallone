@@ -363,6 +363,7 @@ public class XtcFile implements IReleasableFile
     public void setSource(String _filename)
     {
         this.filename = _filename;
+        this.initialized = false;
     }
 
     public void scan()
